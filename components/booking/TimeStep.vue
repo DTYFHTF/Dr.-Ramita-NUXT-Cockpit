@@ -92,7 +92,7 @@ const selectTime = (slot) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .time-step {
   max-width: 800px;
   margin: 0 auto;

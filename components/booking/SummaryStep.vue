@@ -67,7 +67,7 @@ const confirmBooking = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .summary-step {
   max-width: 800px;
   margin: 0 auto;

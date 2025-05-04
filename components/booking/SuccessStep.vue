@@ -67,7 +67,7 @@ const resetBooking = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .success-step {
   max-width: 600px;
   margin: 0 auto;

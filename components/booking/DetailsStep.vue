@@ -79,7 +79,7 @@ const handleSubmit = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .details-step {
   max-width: 600px;
   margin: 0 auto;
