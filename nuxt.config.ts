@@ -1,7 +1,24 @@
+// nuxt.config.ts
 export default defineNuxtConfig({
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
+    // "@/assets/scss/main.scss" // Add this if you have main SCSS file
   ],
+  plugins: [
+    { src: '~/plugins/bootstrap.client.ts', mode: 'client' }
+  ],
+  
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `
+            @use "@/assets/scss/variables" as *;
+          `
+        }
+      }
+    }
+  },
   build: {
     transpile: ["bootstrap"],
   },
@@ -10,17 +27,16 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', href: '/favicon.ico' },
       ],
-    },
+    }
   },
-  compatibilityDate: "2025-04-27",
   modules: [
-    '@pinia/nuxt' // Must be in modules array
+    '@pinia/nuxt'
   ],
   pinia: {
     autoImports: [
-      'defineStore', // Required
-      'acceptHMRUpdate', // Optional
-      'storeToRefs' // Required for destructuring
+      'defineStore',
+      'acceptHMRUpdate',
+      'storeToRefs'
     ]
   },
   runtimeConfig: {

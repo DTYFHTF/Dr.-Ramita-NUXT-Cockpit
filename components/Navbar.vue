@@ -18,31 +18,33 @@
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Navigation Items -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <!-- Individual Navigation Items -->
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <SmoothLink
               to="courses"
               fallbackRoute="/course"
               class="nav-link text-dark"
-              >Courses</SmoothLink
             >
-
-            <!-- <a class="nav-link text-dark" href="#courses">Courses</a> -->
+              Courses
+            </SmoothLink>
           </li>
           <li class="nav-item">
             <SmoothLink
               to="ynm"
               fallbackRoute="/yoganmeditation"
               class="nav-link text-dark"
-              >Yoga & Meditation</SmoothLink
             >
+              Yoga & Meditation
+            </SmoothLink>
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark" href="#">Recipes</a>
@@ -56,9 +58,11 @@
         </ul>
 
         <!-- Right-aligned CTA Button -->
-        <button class="btn btn-success rounded-pill px-4">
-          Book Consultation
-        </button>
+        <div class="d-lg-flex">
+          <button class="btn btn-success rounded-pill px-4">
+            Book Consultation
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -69,10 +73,16 @@ import SmoothLink from '~/components/SmoothLink.vue'
 </script>
 
 <style scoped>
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .navbar-brand {
   font-size: 1.25rem;
   letter-spacing: 0.5px;
-  font-weight: normal;
 }
 
 .nav-link {
@@ -85,37 +95,25 @@ import SmoothLink from '~/components/SmoothLink.vue'
   transform: translateY(-2px);
   color: var(--text-deep-green) !important;
 }
-.navbar {
-  position: sticky;
-  top: 0;
-  background-color: rgba(42, 77, 63, 1);
-  color: #fff;
-  padding: 1rem 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
-}
+
 .btn-success {
   background-color: var(--text-deep-green);
   border: none;
-  margin: 0;
 }
-.btn:hover {
+
+.btn-success:hover {
   transform: translateY(-2px);
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(42, 77, 63, 0.3);
 }
 
-.dropdown-menu {
-  min-width: 200px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    margin-top: 1rem;
+  }
+  
+  .btn-success {
+    width: 100%;
+    margin-top: 1rem;
+  }
 }
 </style>

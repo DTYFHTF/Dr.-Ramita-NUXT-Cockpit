@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="course-detail">
     <!-- Loading State -->
-    <div v-if="!course && !error" class="loading-state">
+    <div v-if="!course && !error" class="loading-state text-center py-5">
       <div class="spinner-grow text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
@@ -9,103 +9,122 @@
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="error-state">
-      <div class="alert alert-danger">
+    <div v-else-if="error" class="error-state text-center py-5">
+      <div class="alert alert-danger mx-auto" style="max-width: 500px">
         <LucideIcon icon="mdi:alert-triangle" class="me-2" />
         <strong>Error:</strong> {{ error.message || 'Failed to load course details' }}
       </div>
-      <button class="btn btn-primary" @click="retryFetch">
+      <button class="btn btn-primary mt-3" @click="retryFetch">
         <LucideIcon icon="mdi:refresh" class="me-2" />Try Again
       </button>
     </div>
 
     <!-- Course Content -->
-    <article v-else class="course-article">
+    <article v-else class="course-container">
       <!-- Header Section -->
-      <header class="course-header">
-        <h1 class="course-title">{{ course.title }}</h1>
-        <p class="course-description">{{ course.shortDescription }}</p>
-        <div class="course-meta">
-          <div class="meta-item">
-            <LucideIcon icon="mdi:account" class="me-2" /> Skill level: {{ course.skills.level[0][0] }}
-            
+      <header class="course-header text-center mb-5">
+        <div class="course-badge mb-3">
+          <span class="badge" :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'">
+            {{ course.price === 0 ? 'Free' : `₹${course.price}` }}
+          </span>
+        </div>
+        <h1 class="course-title mb-3">{{ course.title }}</h1>
+        <p class="course-description lead">{{ course.shortDescription }}</p>
+        <div class="course-meta d-flex justify-content-center gap-4 flex-wrap mb-4">
+          <div class="meta-item d-flex align-items-center">
+            <LucideIcon icon="mdi:clock" class="me-2" />
+            <span>{{ course.duration || 'Approx. 20 hours' }}</span>
           </div>
-          <div class="meta-item">
-            <LucideIcon icon="mdi:clock" class="me-2" /> Time to complete: {{ course.duration || 'Approx. 20 hours' }}
-          </div>
-          <div class="meta-item">
+          <div class="meta-item d-flex align-items-center">
             <LucideIcon icon="mdi:certificate" class="me-2" />
-            Certificate: {{ course.certification ? 'Available' : 'Not available' }}
+            <span>{{ course.certification ? 'Certificate Available' : 'No Certificate' }}</span>
           </div>
         </div>
         <img 
           :src="course.imageUrl" 
           :alt="`Cover image for ${course.title}`" 
-          class="course-cover"
+          class="course-cover img-fluid rounded-3 shadow-lg"
           loading="lazy"
         />
       </header>
 
-      <!-- About Section -->
-      <section class="about-section">
-        <h2>About this course</h2>
-        <p v-html="renderMarkdown(course.description)"></p>
-      </section>
+      <!-- Main Content -->
+      <div class="course-content">
+        <!-- About Section -->
+        <section class="course-section mb-5">
+          <h2 class="section-title mb-4">About This Course</h2>
+          <div class="section-content" v-html="renderMarkdown(course.description)"></div>
+        </section>
 
-      <!-- Skills Section -->
-      <section class="common-list-section">
-        <h2>Skills you'll gain</h2>
-        <ul class="common-list">
-          <li v-for="skill in course.skills.skill" :key="skill" class="common-list-item">
-            <LucideIcon icon="mdi:check-circle" class="common-checkmark-icon" />
-            <span class="skill-name">{{ skill }}</span>
-          </li>
-        </ul>
-        
-      </section>
-
-      <!-- What you'll learn Section -->
-      <section class="common-list-section">
-        <h2>What you'll learn</h2>
-        <ul class="common-list">
-          <li v-for="item in course.learningOutcomes" :key="item" class="common-list-item">
-            <LucideIcon icon="mdi:check-circle" class="common-checkmark-icon" />
-            <span class="learning-text">{{ item }}</span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Instructor Card -->
-      <h2 class="instructor-heading">Course Instructor</h2> 
-      <div class="instructor-card" v-if="course.instructor">
-        
-        <img 
-          :src="course.instructorImageUrl"
-          :alt="`Instructor ${course.instructor.name}`" 
-          class="instructor-avatar"
-          loading="lazy"
-        />
-        <div class="instructor-details">
-          <h3 class="instructor-name">{{ course.instructor.name }}</h3>
-          <p class="instructor-title text-muted">
-            <LucideIcon icon="mdi:account" class="me-2" />{{ course.instructor.position }}
-          </p>
+        <!-- Skills & Learning Sections -->
+        <div class="row g-4">
+          <div class="col-md-6">
+            <section class="course-section">
+              <h2 class="section-title mb-4">Skills You'll Gain</h2>
+              <ul class="course-list">
+                <li v-for="skill in course.skills.skill" :key="skill" class="course-list-item">
+                  <LucideIcon icon="mdi:check-circle" class="text-success me-2" />
+                  {{ skill }}
+                </li>
+              </ul>
+            </section>
+          </div>
+          
+          <div class="col-md-6">
+            <section class="course-section">
+              <h2 class="section-title mb-4">What You'll Learn</h2>
+              <ul class="course-list">
+                <li v-for="item in course.learningOutcomes" :key="item" class="course-list-item">
+                  <LucideIcon icon="mdi:check-circle" class="text-success me-2" />
+                  {{ item }}
+                </li>
+              </ul>
+            </section>
+          </div>
         </div>
+
+        <!-- Instructor Section -->
+        <section class="course-section mt-5">
+          <h2 class="section-title mb-4">Course Instructor</h2>
+          <div class="instructor-card card border-0 shadow-sm" v-if="course.instructor">
+            <div class="card-body d-flex align-items-center gap-4">
+              <img 
+                :src="course.instructorImageUrl"
+                :alt="`Instructor ${course.instructor.name}`" 
+                class="instructor-avatar rounded-circle"
+                width="100"
+                height="100"
+                loading="lazy"
+              />
+              <div>
+                <h3 class="instructor-name mb-1">{{ course.instructor.name }}</h3>
+                <p class="instructor-title text-muted mb-0">
+                  <LucideIcon icon="mdi:account" class="me-2" />
+                  {{ course.instructor.position }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Section -->
+        <footer class="cta-section mt-5 pt-4 border-top">
+          <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
+            <a 
+              :href="course.external_link" 
+              class="btn btn-lg btn-primary"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ course.price === 0 ? 'Enroll for Free' : `Enroll Now - ₹${course.price}` }}
+            </a>
+            <p class="text-muted text-center small mt-2">
+              <LucideIcon icon="mdi:lock" class="me-1" />
+              Secure payment processing
+            </p>
+          </div>
+        </footer>
       </div>
-
-      <!-- Call to Action -->
-      <footer class="cta-footer">
-        <div class="cta-card">
-          <a 
-            :href="course.external_link" 
-            class="btn btn-primary btn-lg enroll-btn"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ course.price === 0 ? 'Get instant access for Free' : `Get Instant access for ₹${course.price}` }}
-          </a>
-        </div>
-      </footer>
     </article>
   </div>
 </template>
@@ -158,145 +177,117 @@ const lastSkillLevel = computed(() => {
 });
 </script>
 
-<style scoped>
-/* General container styling */
-.container {
-  max-width: 800px;
+<style lang="scss" scoped>
+@import '@/assets/scss/variables';
+
+.course-detail {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem 1rem;
-}
 
-/* Loading state styling */
-.loading-state {
-  min-height: 50vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
+  .course-header {
+    .course-badge {
+      .badge {
+        font-size: 1.1rem;
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+      }
+    }
 
-/* Course header styling */
-.course-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
+    .course-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-deep-green;
+      line-height: 1.2;
+    }
 
-.course-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--text-deep-green);
-}
+    .course-description {
+      font-size: 1.25rem;
+      color: $text-medium-gray;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-.course-description {
-  font-size: 1.125rem;
-  color: var(--text-medium-gray);
-  margin-bottom: 1.5rem;
-}
+    .course-cover {
+      max-height: 500px;
+      object-fit: cover;
+      margin-top: 2rem;
+    }
+  }
 
-.course-meta {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
+  .course-section {
+    padding: 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: $card-shadow;
 
-.meta-item {
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  color: var(--text-medium-gray);
-}
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $text-deep-green;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $accent-soft-green;
+    }
 
-.course-cover {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-top: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+    .course-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
 
-/* Instructor card styling */
-.instructor-card {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  background: var(--background-very-light-gray);
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-top: 0.5rem;
-}
+      &-item {
+        padding: 0.75rem 0;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid $border-color;
 
-.instructor-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
 
-.instructor-name {
-  font-size: 1.25rem;
-  margin-bottom: 0.25rem;
-}
+  .instructor-card {
+    .instructor-avatar {
+      object-fit: cover;
+      border: 3px solid $accent-soft-green;
+    }
 
-/* CTA footer styling */
-.cta-footer {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--background-muted-green-gray);
-  text-align: center;
-}
+    .instructor-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $text-deep-green;
+    }
+  }
 
-.cta-card {
-  display: inline-block;
-  background: var(--primary-blue);
-  border-radius: 50px;
-  padding: 0.75rem 1.5rem;
-  color: white;
-  font-size: 1.125rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
+  .cta-section {
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
 
-.enroll-btn {
-  display: inline-block;
-  color: var(--text-deep-green);
-  text-decoration: none;
-  background-color: white;
-  border: 2px solid var(--text-deep-green);
-  border-radius: 50px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $btn-hover-shadow;
+      }
+    }
+  }
 
-.enroll-btn:hover {
-  background-color: var(--accent-soft-green);
-  transform: translateY(-2px);
-}
+  @media (max-width: 768px) {
+    .course-header {
+      .course-title {
+        font-size: 2rem;
+      }
 
-/* Common list section styling */
-.common-list-section {
-  margin-top: 2rem;
-}
+      .course-description {
+        font-size: 1.1rem;
+      }
+    }
 
-.common-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.common-list-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.common-checkmark-icon {
-  color: var(--accent-soft-green);
+    .course-section {
+      padding: 1.5rem;
+    }
+  }
 }
 </style>

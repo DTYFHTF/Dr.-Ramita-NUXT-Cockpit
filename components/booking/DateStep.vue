@@ -1,50 +1,69 @@
 <template>
   <div class="date-step">
-    <div class="step-header mb-4">
+    <div class="step-header mb-5">
       <h2 class="step-title">Select Consultation Date</h2>
       <p class="current-month">{{ currentMonth }}</p>
     </div>
 
-    <div v-if="doctorStore.loading" class="loading-state text-center">
+    <div v-if="doctorStore.loading" class="loading-state text-center py-4">
       <div class="spinner-border text-primary"></div>
+      <p class="text-muted mt-2">Loading availability...</p>
     </div>
 
-    <div v-else-if="doctorStore.error" class="alert alert-danger">
+    <div v-else-if="doctorStore.error" class="alert alert-danger mx-3">
       {{ doctorStore.error }}
     </div>
 
     <div v-else class="calendar-container">
       <div class="calendar-grid">
         <div class="calendar-header">
-          <div v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" 
-               :key="day" 
-               class="day-header">
+          <div 
+            v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" 
+            :key="day" 
+            class="day-header"
+          >
             {{ day }}
           </div>
         </div>
 
         <div class="calendar-body">
-          <div v-for="(date, index) in visibleDates" 
-               :key="index"
-               class="calendar-day"
-               :class="{
-                 'available': isDateAvailable(date),
-                 'selected': isDateSelected(date),
-                 'disabled': !isDateAvailable(date)
-               }"
-               @click="selectDate(date)">
+          <div 
+            v-for="(date, index) in visibleDates" 
+            :key="index"
+            class="calendar-day"
+            :class="{
+              'available': isDateAvailable(date),
+              'selected': isDateSelected(date),
+              'disabled': !isDateAvailable(date),
+              'current-month': date.date
+            }"
+            @click="selectDate(date)"
+            role="button"
+            :aria-disabled="!isDateAvailable(date)"
+          >
             <div class="day-number">{{ date.day }}</div>
-            <div v-if="isDateAvailable(date)" class="availability-dot"></div>
+            <div v-if="isDateAvailable(date)" class="availability-indicator">
+              <div class="availability-bar"></div>
+              <div v-if="isDateSelected(date)" class="selected-check">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                  <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="navigation-actions">
-      <button class="btn btn-outline-secondary" @click="$emit('prev')">Back</button>
-      <button class="btn btn-primary" 
-              @click="$emit('next')" 
-              :disabled="!bookingStore.formData.date">
+      <button class="btn btn-outline-secondary" @click="$emit('prev')">
+        Back
+      </button>
+      <button 
+        class="btn btn-primary" 
+        @click="$emit('next')" 
+        :disabled="!bookingStore.formData.date"
+      >
         Continue
       </button>
     </div>
@@ -61,10 +80,6 @@ import { storeToRefs } from 'pinia'
 const bookingStore = useBookingStore()
 const doctorStore = useDoctorStore()
 const { doctors } = storeToRefs(doctorStore)
-
-onMounted(() => {
-  doctorStore.fetchDoctors()
-})
 
 const currentDate = ref(new Date(2025, 4, 1)) // May 2025
 const currentMonth = computed(() => format(currentDate.value, 'MMMM yyyy'))
@@ -87,7 +102,7 @@ const visibleDates = computed(() => {
     dates.push({
       date: date.toISOString(),
       day: format(date, 'd'),
-      weekday: format(date, 'EEE') // Match API's "Mon" format
+      weekday: format(date, 'EEE')
     })
   })
 
@@ -108,57 +123,53 @@ const selectDate = (date) => {
     bookingStore.formData.date = date.date
   }
 }
+
+onMounted(() => {
+  doctorStore.fetchDoctors()
+})
 </script>
 
-<style scoped>
-/* Keep your existing styles, remove debug styles */
-.calendar-day.disabled {
-  background-color: #f8fafc;
-  cursor: not-allowed;
-  opacity: 0.5;
+<style scoped>:root {
+  --text-deep-green: #2a4d3a; /* Your deep green color */
+  --calendar-primary: var(--text-deep-green);
+  --calendar-text: var(--text-deep-green); /* Date number color */
+  --calendar-text-secondary: #4a5568; /* Month and weekday color */
+  --calendar-success: #48bb78; /* Availability indicator */
 }
 
-.availability-dot {
-  width: 6px;
-  height: 6px;
-  background-color: #48bb78;
-  border-radius: 50%;
-  margin-top: 4px;
-}
-
-/* Other existing styles remain unchanged */
 .date-step {
   max-width: 800px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem 1rem;
 }
 
 .step-header {
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 .step-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2d3748;
+  font-size: 1.75rem;
+  color: var(--calendar-text);
+  margin-bottom: 0.5rem;
 }
 
 .current-month {
-  color: #4a5568;
-  margin-top: 0.5rem;
+  color: var(--calendar-text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .calendar-container {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--calendar-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 0 1rem;
 }
 
 .calendar-grid {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
 .calendar-header {
@@ -169,9 +180,10 @@ const selectDate = (date) => {
 
 .day-header {
   text-align: center;
-  font-size: 0.875rem;
-  color: #4a5568;
-  padding: 0.5rem;
+  color: var(--calendar-text-secondary);
+  font-weight: 500;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.9rem;
 }
 
 .calendar-body {
@@ -181,48 +193,108 @@ const selectDate = (date) => {
 }
 
 .calendar-day {
-  /* aspect-ratio: 1; */
+  position: relative;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 40px;
-  position: relative;
+  font-weight: 600;
+  color: var(--calendar-text);
+  background-color: transparent;
+  border: 2px solid transparent;
+
+  &:hover:not(.disabled) {
+    transform: scale(1.05);
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &.current-month:not(.disabled) {
+    background-color: #f7fafc;
+  }
+
+  &.available:not(.selected):hover {
+    border-color: var(--calendar-primary);
+  }
 }
 
-.calendar-day.available {
-  background-color: #f0fff4;
-  border: 1px solid #c6f6d5;
+.availability-indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.availability-bar {
+  width: 70%;
+  height: 100%;
+  background-color: var(--calendar-success);
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.selected-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: var(--calendar-success);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: popIn 0.2s ease;
+}
+
+.selected-check svg path {
+  fill: var(--text-deep-green);
 }
 
 .calendar-day.selected {
-  background-color: #2c7a7b;
+  background-color: var(--calendar-success);
   color: white;
+  border-color: var(--calendar-success-dark);
+  
+  .availability-bar {
+    display: none;
+  }
+}
+/* Current month dates */
+.calendar-day.current-month:not(.disabled) {
+  background-color: rgba(245, 250, 245, 0.5); /* Light green background */
 }
 
-.debug-info {
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.6rem;
-  color: #e53e3e;
-  text-align: center;
-  line-height: 1.2;
+.disabled {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@keyframes popIn {
+  0% { transform: translate(-50%, -50%) scale(0); }
+  90% { transform: translate(-50%, -50%) scale(1.1); }
+  100% { transform: translate(-50%, -50%) scale(1); }
 }
 
 .navigation-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   padding: 0 1rem;
 }
 
 .loading-state {
   padding: 2rem;
+  text-align: center;
 }
-
 </style>
-
