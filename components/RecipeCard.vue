@@ -1,7 +1,7 @@
 <template>
   <div class="recipe-card">
     <div class="card-header">
-      <span class="category-tag">{{ category }}</span>
+      <span class="category-tag">{{ category || 'Uncategorized' }}</span>
       <img 
         :src="image || '/placeholder-recipe.jpg'" 
         :alt="title"
@@ -12,33 +12,37 @@
     <div class="card-content">
       <div class="text-content">
         <h3 class="title">{{ title }}</h3>
-        <p class="description">{{ description }}</p>
+        <p class="description">{{ description || 'No description available' }}</p>
         
         <div class="meta-info">
           <div class="meta-item">
             <ClockIcon class="icon" />
-            <span>{{ preparationTime }}</span>
+            <span>{{ preparationTime || 'N/A' }}</span>
           </div>
           <div class="meta-item">
             <UserGroupIcon class="icon" />
-            <span>{{ servings }} servings</span>
+            <span>{{ servings || 0 }} servings</span>
           </div>
         </div>
       </div>
 
       <NuxtLink 
-        :to="`/recipes/${slug}`"
+        v-if="slug"
+        :to="`/recipe/${slug}`"
         class="view-recipe-btn"
       >
         Explore Recipe
         <ArrowRightIcon class="btn-icon" />
       </NuxtLink>
+      <div v-else class="view-recipe-btn view-recipe-btn-disabled">
+        Recipe Link Unavailable
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   id: String,
   title: String,
   slug: String,
@@ -51,12 +55,17 @@ defineProps({
 </script>
 
 <style scoped>
+/* @import '@/assets/scss/variables.scss'; */
+
 .recipe-card {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: $card-shadow;
   transition: transform 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .recipe-card:hover {
@@ -73,12 +82,13 @@ defineProps({
   position: absolute;
   top: 15px;
   left: 15px;
-  background: rgba(255,255,255,0.9);
+  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(245,240,235,0.9) 100%);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
   color: #7a6a5c;
   z-index: 2;
+  backdrop-filter: blur(2px);
 }
 
 .recipe-image {
@@ -86,14 +96,26 @@ defineProps({
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transition: transform 0.4s ease;
+}
+
+.card-header:hover .recipe-image {
+  transform: scale(1.03);
 }
 
 .card-content {
   padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.text-content {
+  flex: 1;
 }
 
 .title {
-  color: #4a3f35;
+  color: $text-deep-green;
   font-size: 1.4rem;
   margin-bottom: 12px;
   font-weight: 500;
@@ -104,6 +126,10 @@ defineProps({
   line-height: 1.5;
   margin-bottom: 20px;
   min-height: 60px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .meta-info {
@@ -132,33 +158,30 @@ defineProps({
   gap: 8px;
   width: 100%;
   padding: 12px;
-  background: #fff3e0;
-  color: #7a6a5c;
+  background-color: #e7f2ed;
+  color: $text-deep-green;
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.3s ease;
-  border: 1px solid #eee4d8;
+  border: 1px solid $accent-soft-green;
+  margin-top: auto;
 }
 
 .view-recipe-btn:hover {
-  background: #f5e6d1;
-  color: #6b5d4f;
+  background-color: $accent-soft-green;
+  color: white;
   transform: translateY(-2px);
+  box-shadow: $btn-hover-shadow;
+}
+
+.view-recipe-btn-disabled {
+  background: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
 }
 
 .btn-icon {
   width: 16px;
   height: 16px;
-}
-.recipe-image {
-  transition: transform 0.4s ease;
-}
-
-.card-header:hover .recipe-image {
-  transform: scale(1.03);
-}
-.category-tag {
-  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(245,240,235,0.9) 100%);
-  backdrop-filter: blur(2px);
 }
 </style>

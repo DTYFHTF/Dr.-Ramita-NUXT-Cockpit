@@ -122,7 +122,7 @@ const addImageUrl = (item) => ({
 
 const goToCoursesPage = () => navigateTo('/course')
 const goToYoganMeditationPage = () => navigateTo('/yoganmeditation')
-const goToRecipesPage = () => navigateTo('/recipes')
+const goToRecipesPage = () => navigateTo('/recipe')
 </script>
 
 <style scoped>

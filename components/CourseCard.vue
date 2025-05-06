@@ -30,7 +30,7 @@
 
       <div class="button-container">
         <NuxtLink 
-          :to="`/courses/${id}`"
+          :to="`/course/${id}`"
           class="enroll-btn"
         >
           Learn More

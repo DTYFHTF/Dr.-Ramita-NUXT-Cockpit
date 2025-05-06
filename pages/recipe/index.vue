@@ -1,80 +1,79 @@
-<template>Hello World!</template>
-<!-- <template>
-    <main class="container mx-auto px-4 py-12">
-      <section class="text-center mb-16">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Ayurvedic Recipes</h1>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-          Nourish your body with traditional healing recipes
-        </p>
-      </section>
-  
-      <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="n in 3" :key="n" class="recipe-card-skeleton h-96 bg-gray-100 rounded-lg"></div>
+<template>
+  <div class="container">
+    <h1 class="text-center my-4">Ayurvedic Recipes</h1>
+    <p class="text-center text-muted mb-4">Nourish your body with traditional healing recipes</p>
+    
+    <div v-if="loading" class="text-center py-5">
+      <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-  
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <p class="mt-3 text-muted">Loading recipes...</p>
+    </div>
+    
+    <div v-else-if="error" class="text-center py-5">
+      <div class="alert alert-danger mx-auto" style="max-width: 500px">
+        <strong>Error:</strong> {{ error.message || 'Failed to load recipes' }}
+      </div>
+    </div>
+    
+    <div v-else-if="recipesWithImages.length === 0" class="text-center text-muted">
+      <p>No recipes available at the moment. Please check back later!</p>
+    </div>
+    
+    <div v-else class="row">
+      <div 
+        class="col-md-4 mb-4" 
+        v-for="recipe in recipesWithImages" 
+        :key="recipe._id">
         <RecipeCard 
-          v-for="recipe in recipes" 
-          :key="recipe._id" 
-          :recipe="recipe"
+          :id="recipe._id" 
+          :title="recipe.title" 
+          :slug="recipe.slug" 
+          :description="recipe.description"
+          :image="recipe.image" 
+          :category="recipe.category"
+          :preparation-time="recipe.preparationTime"
+          :servings="recipe.servings"
         />
       </div>
-  
-      <section v-if="!pending && recipes.length === 0" class="text-center py-16">
-        <p class="text-gray-500">No recipes found. Please check back later.</p>
-      </section>
-    </main>
-  </template>
-  
-  
+    </div>
+  </div>
+</template>
 
-  <script setup>
-// Import necessary modules and components
-import LucideIcon from '@/components/LucideIcon.vue';
-import { ref, computed, watchEffect } from 'vue';
-import { marked } from 'marked';
-import { useRoute } from 'vue-router';
+<script setup>
+import RecipeCard from '@/components/RecipeCard.vue';
 import { useApi } from '@/composables/useApi';
+import { computed } from 'vue';
 
-// Initialize route and reactive variables
-const route = useRoute();
-const course = ref(null);
-const error = ref(null);
+// Fetch recipes data using the useApi composable
+const { data: recipes, error, loading } = useApi('items/recipies');
 
-// Fetch course data using useApi composable
-const { data, error: apiError, refetch } = useApi(`item/recipies/${route.params.id}`);
-
-// Markdown rendering utility
-const renderMarkdown = (content) => (content ? marked.parse(content) : '');
-
-// Retry fetch logic
-const retryFetch = async () => {
-  error.value = null;
-  await refetch();
-};
-
-// Watch for data changes and update course details
-watchEffect(() => {
-  if (data.value) {
-    course.value = {
-      ...data.value,
-      imageUrl: data.value.image?._id
-        ? `http://localhost:9000/assets/link/${data.value.image._id}`
-        : '/placeholder-recipies.jpg',
-    };
+// Add image URLs to recipes
+const recipesWithImages = computed(() => {
+  if (!recipes.value) {
+    return [];
   }
-  error.value = apiError.value;
+  
+  try {
+    return recipes.value.map(recipe => {
+      if (!recipe) {
+        return null;
+      }
+      
+      const imageId = recipe.image?._id;
+      const fullImageUrl = imageId ? `http://localhost:9000/assets/link/${imageId}` : '';
+      return { ...recipe, image: fullImageUrl };
+    }).filter(recipe => recipe !== null) || [];
+  } catch (e) {
+    return [];
+  }
 });
-
 </script>
-  
-  <style>
-  .recipe-card-skeleton {
-    animation: pulse 2s infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-  </style> -->
+
+<style scoped>
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+</style>
