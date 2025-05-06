@@ -1,15 +1,15 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
     <div class="container">
       <!-- Brand/Doctor's Name -->
-      <a class="navbar-brand text-success" href="/">
+      <a class="navbar-brand" href="/">
         <img
           src="/favicon.ico"
           alt="Ayurvedic Icon"
           class="me-2"
           style="width: 24px; height: 24px"
         />
-        Dr. Ramita Maharjan
+        <span class="brand-text">Dr. Ramita Maharjan</span>
       </a>
 
       <!-- Mobile Toggle -->
@@ -32,7 +32,7 @@
             <SmoothLink
               to="courses"
               fallbackRoute="/course"
-              class="nav-link text-dark"
+              class="nav-link"
             >
               Courses
             </SmoothLink>
@@ -41,19 +41,25 @@
             <SmoothLink
               to="ynm"
               fallbackRoute="/yoganmeditation"
-              class="nav-link text-dark"
+              class="nav-link"
             >
               Yoga & Meditation
             </SmoothLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="#">Recipes</a>
+            <SmoothLink
+              to="recipes"
+              fallbackRoute="/recipe"
+              class="nav-link"
+            >
+              Recipes
+            </SmoothLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="#">Home Remedies</a>
+            <a class="nav-link" href="#">Home Remedies</a>
           </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="#">Herbal Treatment</a>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Herbal Treatment</a>
           </li>
         </ul>
 
@@ -81,26 +87,74 @@ import SmoothLink from '~/components/SmoothLink.vue'
 }
 
 .navbar-brand {
-  font-size: 1.25rem;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.brand-text {
+  font-size: 1.3rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
+  color: var(--text-deep-green);
+}
+
+.nav-item {
+  position: relative;
+  margin: 0 0.25rem;
 }
 
 .nav-link {
-  font-weight: 400;
-  margin: 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #333;
+  padding: 0.6rem 0.8rem;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--text-deep-green);
   transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
-.nav-link:hover {
-  transform: translateY(-2px);
-  color: var(--text-deep-green) !important;
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 70%;
 }
 
-/* Removed custom btn-success styling to use global btn-smooth-success styling instead */
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-deep-green);
+}
+
+/* Right-aligned button styles */
+.d-lg-flex .btn {
+  font-size: 1rem;
+  padding: 0.5rem 1.2rem;
+}
 
 @media (max-width: 991.98px) {
   .navbar-collapse {
     margin-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .nav-link {
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 30%;
   }
   
   .btn-smooth-success {

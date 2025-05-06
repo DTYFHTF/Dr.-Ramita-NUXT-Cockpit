@@ -15,7 +15,15 @@
             :key="course._id"
             class="col-md-4 mb-4"
           >
-            <CourseCard v-bind="course" />
+            <CourseCard
+              :id="course._id"
+              :title="course.title"
+              :description="course.description"
+              :duration="course.duration"
+              :link="course.link"
+              :image="course.image"
+              :price="course.price"
+            />
           </div>
         </div>
         <div class="text-center mt-4">
@@ -87,42 +95,39 @@
       </div>
     </section> -->
     <BookingWizard />
-
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useApi } from '@/composables/useApi'
-import { useBookingStore } from '~/stores/booking'
+import { computed } from "vue";
+import { useApi } from "@/composables/useApi";
+import { useBookingStore } from "~/stores/booking";
 
-const store = useBookingStore()
+const store = useBookingStore();
 
-const { data: courses } = useApi("items/courses")
-const { data: yoganmeditation } = useApi("items/yoganmeditation")
-const { data: recipe } = useApi("items/recipies")
+const { data: courses } = useApi("items/courses");
+const { data: yoganmeditation } = useApi("items/yoganmeditation");
+const { data: recipe } = useApi("items/recipies");
 
-const recipesWithImages = computed(() => 
-  recipe.value?.map(addImageUrl) || []
-)
+const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
 
-const coursesWithImages = computed(() => 
-  courses.value?.map(addImageUrl) || []
-)
+const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
 
-const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3))
-const yoganmeditationLimited = computed(() => yoganmeditation.value?.slice(0, 3) || [])
+const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
+const yoganmeditationLimited = computed(
+  () => yoganmeditation.value?.slice(0, 3) || []
+);
 
 const addImageUrl = (item) => ({
   ...item,
-  image: item.image?._id 
+  image: item.image?._id
     ? `http://localhost:9000/assets/link/${item.image._id}`
-    : ''
-})
+    : "",
+});
 
-const goToCoursesPage = () => navigateTo('/course')
-const goToYoganMeditationPage = () => navigateTo('/yoganmeditation')
-const goToRecipesPage = () => navigateTo('/recipe')
+const goToCoursesPage = () => navigateTo("/course");
+const goToYoganMeditationPage = () => navigateTo("/yoganmeditation");
+const goToRecipesPage = () => navigateTo("/recipe");
 </script>
 
 <style lang="scss" scoped>
@@ -142,6 +147,17 @@ const goToRecipesPage = () => navigateTo('/recipe')
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+section {
+  padding: 5rem 0; /* Increased padding for better spacing between content */
+  margin-bottom: 2rem; /* Added margin between sections */
+}
+
+h2.font-serif {
+  font-size: 2.5rem; /* Larger heading size */
+  margin-bottom: 1.5rem; /* More space below heading */
+  text-align: center;
 }
 
 .sub-heading {
@@ -165,7 +181,7 @@ const goToRecipesPage = () => navigateTo('/recipe')
   border: none; /* Added border style */
   border-radius: 5px; /* Added border radius */
 }
-.btn:hover{
+.btn:hover {
   transform: translateY(-2px);
 }
 
@@ -179,9 +195,9 @@ const goToRecipesPage = () => navigateTo('/recipe')
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -191,16 +207,16 @@ const goToRecipesPage = () => navigateTo('/recipe')
     transform: translateX(-100%);
     transition: transform 0.4s ease;
   }
-  
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    
+
     &::before {
       transform: translateX(0);
     }
   }
-  
+
   &:active {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);

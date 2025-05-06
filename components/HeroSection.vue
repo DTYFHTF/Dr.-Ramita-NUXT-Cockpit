@@ -19,10 +19,12 @@
         ancient wisdom with modern wellness through Ayurveda, Yoga, and holistic healing.
       </p>
       
-      <a href="#" class="btn btn-smooth-success text-white py-3 px-8 rounded-full flex items-center justify-center text-lg font-semibold">
-        Book Consultation
-        <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon ms-2"/>
-      </a>
+      <div class="button-wrapper">
+        <a href="#" class="btn btn-smooth-success text-white py-3 px-8 rounded-full flex items-center justify-center text-lg font-semibold">
+          Book Consultation
+          <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon ms-2"/>
+        </a>
+      </div>
     </div>
   </section>
 </template>
@@ -71,6 +73,14 @@ p,a{
   font-size:1.15em;
 }
 
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+}
 
+.button-wrapper a {
+  max-width: 250px;
+  width: 100%;
+}
 
 </style>

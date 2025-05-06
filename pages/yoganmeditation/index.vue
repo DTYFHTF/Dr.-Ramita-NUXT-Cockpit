@@ -24,11 +24,12 @@
 <script setup>
 import { useApi } from '@/composables/useApi';
 import YogaMeditationCard from "~/components/YogaMeditationCard.vue";
+import { computed } from 'vue';
 
 const { data: yoganmeditation } = useApi("items/yoganmeditation");
 
-const yogaandmeditation =  yoganmeditation.value;
-
+// Use computed to maintain reactivity
+const yogaandmeditation = computed(() => yoganmeditation.value || []);
 </script>
 <style scoped>
 section{

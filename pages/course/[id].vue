@@ -178,7 +178,7 @@ const lastSkillLevel = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables';
+// @import '@/assets/scss/variables';
 
 .course-detail {
   max-width: 1200px;
