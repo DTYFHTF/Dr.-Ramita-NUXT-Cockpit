@@ -45,11 +45,11 @@
         ></textarea>
       </div>
 
-      <div class="navigation-actions">
-        <button type="button" class="btn btn-outline-secondary" @click="$emit('prev')">
-          ← Back
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+          Back
         </button>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary btn-smooth-primary">
           Continue
         </button>
       </div>
@@ -126,5 +126,12 @@ const handleSubmit = () => {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem; /* Add gap between buttons */
 }
 </style>

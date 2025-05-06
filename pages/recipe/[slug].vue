@@ -167,7 +167,7 @@ function mapRecipeData(data) {
 </script>
 
 <style lang="scss" scoped>
-// @import '@/assets/scss/variables.scss';
+/* No need to import variables.scss here, it's imported globally */
 
 .recipe-detail {
   max-width: 1100px;
@@ -390,8 +390,8 @@ function mapRecipeData(data) {
       align-items: center;
       gap: 0.5rem;
       padding: 0.8rem 1.5rem;
-      background-color: $text-deep-green;
-      color: $text-button;
+      background-color: #f9f9f9;
+      color: $text-deep-green;
       border-radius: 30px;
       text-decoration: none;
       font-weight: 500;
@@ -401,13 +401,19 @@ function mapRecipeData(data) {
       svg {
         width: 1.1rem;
         height: 1.1rem;
+        color: $text-deep-green; // Ensuring the icon has the same color as the text
+        stroke-width: 2px; // Making the icon stroke thicker for better visibility
       }
       
       &:hover {
-        background-color: $text-button-hover-bg;
-        color: darken($text-deep-green, 5%);
+        background-color: #f4f9f6;
+        color: $accent-soft-green;
         transform: translateY(-2px);
         box-shadow: $btn-hover-shadow;
+        
+        svg {
+          color: $accent-soft-green; // Icon changes color on hover to match text
+        }
       }
     }
   }

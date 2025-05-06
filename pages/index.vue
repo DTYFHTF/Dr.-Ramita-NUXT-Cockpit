@@ -125,7 +125,7 @@ const goToYoganMeditationPage = () => navigateTo('/yoganmeditation')
 const goToRecipesPage = () => navigateTo('/recipe')
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .booking-process {
   padding: 4rem 0;
   background-color: var(--background-white);
@@ -161,5 +161,49 @@ const goToRecipesPage = () => navigateTo('/recipe')
 
 .btn {
   margin: 0 0 2rem 0;
+  background-color: $button-bg;
+  border: none; /* Added border style */
+  border-radius: 5px; /* Added border radius */
+}
+.btn:hover{
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: $button-bg;
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    &::before {
+      transform: translateX(0);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
 }
 </style>

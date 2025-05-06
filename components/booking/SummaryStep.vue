@@ -20,11 +20,11 @@
       </div>
     </div>
 
-    <div class="navigation-actions mt-5">
-      <button class="btn btn-outline-secondary" @click="$emit('prev')">
-        ← Back
+    <div class="step-navigation mt-5">
+      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+        Back
       </button>
-      <button class="btn btn-primary" @click="confirmBooking">
+      <button class="btn btn-success btn-smooth-success" @click="confirmBooking">
         Confirm Booking
       </button>
     </div>
@@ -106,5 +106,12 @@ const confirmBooking = () => {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem; /* Add gap between buttons */
 }
 </style>

@@ -22,7 +22,7 @@
       <a href="#" class="btn btn-primary bg-green-700 text-white py-3 px-8 rounded-full hover:bg-green-800 flex items-center justify-center text-lg font-semibold">
         Book Consultation
         <LucideIcon icon="mdi:arrow-right" class=" custom2 me-2"/>
-      </a>
+  </a>
     </div>
   </section>
 </template>

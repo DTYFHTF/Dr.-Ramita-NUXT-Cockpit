@@ -22,7 +22,7 @@
         <h4>Newsletter</h4>
         <p>Subscribe to our newsletter for updates.</p>
         <input type="email" placeholder="Enter your email" />
-        <button>Subscribe</button>
+        <button class="btn-smooth-accent">Subscribe</button>
       </div>
     </div>
     <div class="footer-bottom">
@@ -105,5 +105,39 @@ import SmoothLink from '~/components/SmoothLink.vue'
   text-align: center;
   margin-top: 2rem;
   font-size: 0.875rem;
+}
+
+/* Smooth accent button styling for footer */
+.btn-smooth-accent {
+  position: relative;
+  background-color: #E85A3B; /* Brighter orange-red for better contrast */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+
+.btn-smooth-accent:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(232, 90, 59, 0.4);
+}
+
+.btn-smooth-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+}
+
+.btn-smooth-accent:hover::before {
+  transform: translateX(100%);
+  transition: transform 0.9s ease;
 }
 </style>

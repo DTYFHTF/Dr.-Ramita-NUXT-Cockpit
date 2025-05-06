@@ -29,7 +29,7 @@
       <NuxtLink 
         v-if="slug"
         :to="`/recipe/${slug}`"
-        class="view-recipe-btn"
+        class="view-recipe-btn btn-smooth-success"
       >
         Explore Recipe
         <LucideIcon icon="mdi:arrow-right" class="btn-icon" />
@@ -56,22 +56,23 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
-/* @import '@/assets/scss/variables.scss'; */
+<style lang="scss" scoped>
 
 .recipe-card {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: $card-shadow;
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: 100%;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(0,0,0,0.03);
 }
 
 .recipe-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 .card-header {
@@ -160,18 +161,19 @@ const props = defineProps({
   gap: 8px;
   width: 100%;
   padding: 12px;
-  background-color: #e7f2ed;
-  color: $text-deep-green;
+  background-color: $text-deep-green;
+  color: $text-button;
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.3s ease;
-  border: 1px solid $accent-soft-green;
+  border: none;
+  font-weight: 500;
   margin-top: auto;
 }
 
 .view-recipe-btn:hover {
-  background-color: $accent-soft-green;
-  color: white;
+  background-color: darken($text-deep-green, 5%);
+  color: $text-button;
   transform: translateY(-2px);
   box-shadow: $btn-hover-shadow;
 }

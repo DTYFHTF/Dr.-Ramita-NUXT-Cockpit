@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
-    // "@/assets/scss/main.scss" // Add this if you have main SCSS file
+    "@/assets/scss/main.scss" // Adding our global SCSS file
   ],
   plugins: [
     { src: '~/plugins/bootstrap.client.ts', mode: 'client' }

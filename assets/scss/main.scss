@@ -1,0 +1,26 @@
+/* 
+  Global buttons and interactive elements 
+  This file contains global styles that can be used across the application
+*/
+
+// Import variables
+@import './variables.scss';
+
+// Global button classes that can be applied directly in components
+.btn-smooth {
+  @include button-base;
+}
+
+.btn-smooth-primary {
+  @include primary-button;
+}
+
+.btn-smooth-success {
+  @include success-button;
+}
+
+.btn-smooth-outline {
+  @include outline-button;
+}
+
+// Additional global interactive elements can be added here

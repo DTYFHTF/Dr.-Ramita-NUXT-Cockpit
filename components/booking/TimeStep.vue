@@ -26,11 +26,11 @@
       </div>
     </div>
 
-    <div class="navigation-actions mt-5">
-      <button class="btn btn-outline-secondary" @click="$emit('prev')">
+    <div class="step-navigation mt-5">
+      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
-      <button class="btn btn-primary" @click="$emit('next')" :disabled="!selectedTime">
+      <button class="btn btn-primary btn-smooth-primary" @click="$emit('next')" :disabled="!selectedTime">
         Continue
       </button>
     </div>
@@ -144,5 +144,12 @@ const selectTime = (slot) => {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem; /* Add gap between buttons */
 }
 </style>

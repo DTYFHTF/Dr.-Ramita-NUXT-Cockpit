@@ -5,7 +5,87 @@ $accent-soft-green: #87c5a4;
 $border-color: #e9ecef;
 $text-button: #ffffff;
 $text-button-hover-bg: #f4f9f6;
+$button-bg: #2D7B7B;
 
 // shadows
 $card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
+
+// Button Mixins - Global button styling
+@mixin button-base {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  border: none;
+  font-weight: 500;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    z-index: -1;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    &::before {
+      transform: translateX(0);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+}
+
+@mixin primary-button {
+  @include button-base;
+  background-color: $button-bg;
+  color: $text-button;
+}
+
+@mixin success-button {
+  @include button-base;
+  background-color: $text-deep-green;
+  color: $text-button;
+}
+
+@mixin outline-button {
+  @include button-base;
+  background-color: transparent;
+  color: $text-deep-green;
+  border: 1px solid $text-deep-green;
+  
+  &:hover {
+    background-color: $text-button-hover-bg;
+    color: darken($text-deep-green, 10%);
+  }
+}
+
+// Global button classes
+.btn-smooth {
+  @include button-base;
+}
+
+.btn-smooth-primary {
+  @include primary-button;
+}
+
+.btn-smooth-success {
+  @include success-button;
+}
+
+.btn-smooth-outline {
+  @include outline-button;
+}

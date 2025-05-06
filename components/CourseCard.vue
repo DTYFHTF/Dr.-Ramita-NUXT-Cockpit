@@ -31,10 +31,10 @@
       <div class="button-container">
         <NuxtLink 
           :to="`/course/${id}`"
-          class="enroll-btn"
+          class="enroll-btn btn-smooth-primary"
         >
           Learn More
-          <LucideIcon icon="mdi:arrow-right-circle" class="btn-icon" />
+          <LucideIcon icon="mdi:arrow-right-circle" color="white" class="btn-icon" />
         </NuxtLink>
       </div>
     </div>
@@ -55,7 +55,7 @@ defineProps({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .course-card {
   background: #fff;
   border-radius: 12px;
@@ -174,8 +174,8 @@ defineProps({
   justify-content: center;
   gap: 10px;
   width: 100%;
-  background: #f8f9fa;
-  color: #7a6a5c;
+  background: $button-bg;
+  color: $text-button;
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -186,8 +186,6 @@ defineProps({
 }
 
 .enroll-btn:hover {
-  background: #f1f3f5;
-  color: #6b5d4f;
   transform: translateY(-2px);
 }
 
@@ -195,6 +193,7 @@ defineProps({
   width: 16px;
   height: 16px;
   transition: transform 0.3s ease;
+
 }
 
 .enroll-btn:hover .btn-icon {
