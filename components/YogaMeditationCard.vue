@@ -12,7 +12,7 @@
       
       <ul class="benefits-list">
         <li v-for="(point, index) in points" :key="index" class="benefit-item">
-          <CheckCircleIcon class="benefit-icon" />
+          <LucideIcon icon="mdi:check-circle" class="benefit-icon" />
           {{ point }}
         </li>
       </ul>
@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+import LucideIcon from '@/components/LucideIcon.vue';
+
 defineProps({
   title: String,
   shortDescription: String,

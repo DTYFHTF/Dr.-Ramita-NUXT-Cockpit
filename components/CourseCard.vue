@@ -18,11 +18,11 @@
         
         <div class="meta-info">
           <div class="meta-item">
-            <BookOpenIcon class="icon" />
+            <LucideIcon icon="mdi:book-open" class="icon" />
             <span>{{ duration }}</span>
           </div>
           <div class="meta-item">
-            <CalendarIcon class="icon" />
+            <LucideIcon icon="mdi:calendar" class="icon" />
             <span>{{ lessons }} lessons</span>
           </div>
         </div>
@@ -34,7 +34,7 @@
           class="enroll-btn"
         >
           Learn More
-          <ArrowRightCircleIcon class="btn-icon" />
+          <LucideIcon icon="mdi:arrow-right-circle" class="btn-icon" />
         </NuxtLink>
       </div>
     </div>
@@ -42,6 +42,8 @@
 </template>
 
 <script setup>
+import LucideIcon from '@/components/LucideIcon.vue';
+
 defineProps({
   id: String,
   title: String,

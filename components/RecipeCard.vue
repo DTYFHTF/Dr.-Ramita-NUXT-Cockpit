@@ -16,11 +16,11 @@
         
         <div class="meta-info">
           <div class="meta-item">
-            <ClockIcon class="icon" />
+            <LucideIcon icon="mdi:clock-outline" class="icon" />
             <span>{{ preparationTime || 'N/A' }}</span>
           </div>
           <div class="meta-item">
-            <UserGroupIcon class="icon" />
+            <LucideIcon icon="mdi:account-group-outline" class="icon" />
             <span>{{ servings || 0 }} servings</span>
           </div>
         </div>
@@ -32,7 +32,7 @@
         class="view-recipe-btn"
       >
         Explore Recipe
-        <ArrowRightIcon class="btn-icon" />
+        <LucideIcon icon="mdi:arrow-right" class="btn-icon" />
       </NuxtLink>
       <div v-else class="view-recipe-btn view-recipe-btn-disabled">
         Recipe Link Unavailable
@@ -42,6 +42,8 @@
 </template>
 
 <script setup>
+import LucideIcon from '@/components/LucideIcon.vue';
+
 const props = defineProps({
   id: String,
   title: String,

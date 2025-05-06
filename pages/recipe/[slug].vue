@@ -11,11 +11,11 @@
     <!-- Error State -->
     <div v-else-if="error && !recipe" class="error-state text-center py-5">
       <div class="alert alert-danger mx-auto" style="max-width: 500px">
-        <LucideIcon icon="alert-triangle" class="me-2" />
+        <LucideIcon icon="mdi:alert-triangle" class="me-2" />
         <strong>Error:</strong> {{ error.message || 'Failed to load recipe details' }}
       </div>
       <button class="btn btn-primary mt-3" @click="retryFetch">
-        <LucideIcon icon="refresh" class="me-2" />Try Again
+        <LucideIcon icon="mdi:refresh" class="me-2" />Try Again
       </button>
     </div>
 
@@ -30,11 +30,11 @@
             
             <div class="recipe-meta">
               <div class="meta-item">
-                <LucideIcon icon="clock" />
+                <LucideIcon icon="mdi:clock" />
                 <span>{{ recipe.preparationTime || 'N/A' }}</span>
               </div>
               <div class="meta-item">
-                <LucideIcon icon="users" />
+                <LucideIcon icon="mdi:users" />
                 <span>{{ recipe.servings || 0 }} servings</span>
               </div>
             </div>
@@ -92,7 +92,7 @@
       <!-- Navigation - Clear Call to Action -->
       <div class="navigation-actions">
         <NuxtLink to="/recipe" class="back-button">
-          <LucideIcon icon="arrow-left" />
+          <LucideIcon icon="mdi:arrow-left" />
           Back to Recipes
         </NuxtLink>
       </div>
@@ -390,8 +390,8 @@ function mapRecipeData(data) {
       align-items: center;
       gap: 0.5rem;
       padding: 0.8rem 1.5rem;
-      background-color: #f9f9f9;
-      color: $text-deep-green;
+      background-color: $text-deep-green;
+      color: $text-button;
       border-radius: 30px;
       text-decoration: none;
       font-weight: 500;
@@ -404,8 +404,8 @@ function mapRecipeData(data) {
       }
       
       &:hover {
-        background-color: #f4f9f6;
-        color: darken($accent-soft-green, 5%);
+        background-color: $text-button-hover-bg;
+        color: darken($text-deep-green, 5%);
         transform: translateY(-2px);
         box-shadow: $btn-hover-shadow;
       }
