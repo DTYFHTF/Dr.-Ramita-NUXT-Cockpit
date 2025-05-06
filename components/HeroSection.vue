@@ -10,7 +10,7 @@
           <span class="icon-text text-xl">+91-8279374364 | +91-8449421678</span>
         </p>
         <p class="flex  items-center justify-center">
-          <LucideIcon icon="mdi:email-edit-outline" class="me-2 custom-color" />
+          <LucideIcon icon="mdi:email-edit-outline" color="var(--text-deep-green)" class="me-2 custom-color" />
           <span class="text-xl">directorrwi@gmail.com</span>
         </p>
       </div>
@@ -19,10 +19,10 @@
         ancient wisdom with modern wellness through Ayurveda, Yoga, and holistic healing.
       </p>
       
-      <a href="#" class="btn btn-primary bg-green-700 text-white py-3 px-8 rounded-full hover:bg-green-800 flex items-center justify-center text-lg font-semibold">
+      <a href="#" class="btn btn-smooth-success text-white py-3 px-8 rounded-full flex items-center justify-center text-lg font-semibold">
         Book Consultation
-        <LucideIcon icon="mdi:arrow-right" class=" custom2 me-2"/>
-  </a>
+        <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon ms-2"/>
+      </a>
     </div>
   </section>
 </template>
@@ -59,9 +59,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
   transition: background-color 0.3s ease;
   margin-top:2rem;
 }
-.custom-color ::v-deep(svg) {
-  color: var(--text-deep-green);
-}
+
 .head-color{
   color:var(--text-deep-green);
   font-weight: 700;
@@ -73,8 +71,6 @@ p,a{
   font-size:1.15em;
 }
 
-.custom2 ::v-deep(svg) {
-  color: var(--background-very-light-gray);
-}
+
 
 </style>

@@ -52,14 +52,14 @@
           <li class="nav-item">
             <a class="nav-link text-dark" href="#">Home Remedies</a>
           </li>
-          <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link text-dark" href="#">Herbal Treatment</a>
           </li>
         </ul>
 
         <!-- Right-aligned CTA Button -->
         <div class="d-lg-flex">
-          <button class="btn btn-success rounded-pill px-4">
+          <button class="btn btn-smooth-success rounded-pill px-4">
             Book Consultation
           </button>
         </div>
@@ -96,49 +96,14 @@ import SmoothLink from '~/components/SmoothLink.vue'
   color: var(--text-deep-green) !important;
 }
 
-.btn-success {
-  background-color: var(--text-deep-green);
-  border: none;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
-
-.btn-success::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(-100%);
-  transition: transform 0.4s ease;
-  z-index: -1;
-}
-
-.btn-success:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(42, 77, 63, 0.3);
-}
-
-.btn-success:hover::before {
-  transform: translateX(0);
-}
-
-.btn-success:active {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 10px rgba(42, 77, 63, 0.2);
-}
+/* Removed custom btn-success styling to use global btn-smooth-success styling instead */
 
 @media (max-width: 991.98px) {
   .navbar-collapse {
     margin-top: 1rem;
   }
   
-  .btn-success {
+  .btn-smooth-success {
     width: 100%;
     margin-top: 1rem;
   }

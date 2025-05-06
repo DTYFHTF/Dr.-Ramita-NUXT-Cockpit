@@ -32,7 +32,7 @@
           :description="recipe.description"
           :image="recipe.image" 
           :category="recipe.category"
-          :preparation-time="recipe.preparationTime"
+          :preparation_time="recipe.preparation_time"
           :servings="recipe.servings"
         />
       </div>
@@ -62,7 +62,11 @@ const recipesWithImages = computed(() => {
       
       const imageId = recipe.image?._id;
       const fullImageUrl = imageId ? `http://localhost:9000/assets/link/${imageId}` : '';
-      return { ...recipe, image: fullImageUrl };
+      
+      return { 
+        ...recipe, 
+        image: fullImageUrl
+      };
     }).filter(recipe => recipe !== null) || [];
   } catch (e) {
     return [];

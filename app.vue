@@ -43,7 +43,6 @@ import Footer from '@/components/Footer.vue';
   --border-color: #e2e8f0;
   --primary-light: #e6fffa;
   --primary-color-rgb: 44, 122, 123;
-
 }
 html{
   scroll-behavior: smooth;

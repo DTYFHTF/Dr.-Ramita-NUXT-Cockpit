@@ -91,9 +91,9 @@
 
       <!-- Navigation - Clear Call to Action -->
       <div class="navigation-actions">
-        <NuxtLink to="/recipe" class="back-button">
-          <LucideIcon icon="mdi:arrow-left" />
-          Back to Recipes
+        <NuxtLink to="/recipe" class="btn btn-smooth-success back-button">
+          <LucideIcon icon="mdi:arrow-left" color="white"/>
+          Back to All Recipes
         </NuxtLink>
       </div>
     </article>
@@ -389,31 +389,10 @@ function mapRecipeData(data) {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.8rem 1.5rem;
-      background-color: #f9f9f9;
-      color: $text-deep-green;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      border: 1px solid #eee;
       
       svg {
         width: 1.1rem;
         height: 1.1rem;
-        color: $text-deep-green; // Ensuring the icon has the same color as the text
-        stroke-width: 2px; // Making the icon stroke thicker for better visibility
-      }
-      
-      &:hover {
-        background-color: #f4f9f6;
-        color: $accent-soft-green;
-        transform: translateY(-2px);
-        box-shadow: $btn-hover-shadow;
-        
-        svg {
-          color: $accent-soft-green; // Icon changes color on hover to match text
-        }
       }
     }
   }

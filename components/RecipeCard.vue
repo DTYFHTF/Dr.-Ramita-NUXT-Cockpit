@@ -17,7 +17,7 @@
         <div class="meta-info">
           <div class="meta-item">
             <LucideIcon icon="mdi:clock-outline" class="icon" />
-            <span>{{ preparationTime || 'N/A' }}</span>
+            <span>{{ preparation_time || 'N/A' }}</span>
           </div>
           <div class="meta-item">
             <LucideIcon icon="mdi:account-group-outline" class="icon" />
@@ -29,12 +29,12 @@
       <NuxtLink 
         v-if="slug"
         :to="`/recipe/${slug}`"
-        class="view-recipe-btn btn-smooth-success"
+        class="btn-smooth-success mt-auto w-100"
       >
         Explore Recipe
-        <LucideIcon icon="mdi:arrow-right" class="btn-icon" />
+        <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon" />
       </NuxtLink>
-      <div v-else class="view-recipe-btn view-recipe-btn-disabled">
+      <div v-else class="btn-smooth disabled mt-auto w-100">
         Recipe Link Unavailable
       </div>
     </div>
@@ -51,7 +51,7 @@ const props = defineProps({
   image: String,
   category: String,
   description: String,
-  preparationTime: String,
+  preparation_time: String,
   servings: Number,
 });
 </script>
@@ -154,31 +154,7 @@ const props = defineProps({
   color: #c5b5a7;
 }
 
-.view-recipe-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 12px;
-  background-color: $text-deep-green;
-  color: $text-button;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: none;
-  font-weight: 500;
-  margin-top: auto;
-}
-
-.view-recipe-btn:hover {
-  background-color: darken($text-deep-green, 5%);
-  color: $text-button;
-  transform: translateY(-2px);
-  box-shadow: $btn-hover-shadow;
-}
-
-.view-recipe-btn-disabled {
+.disabled {
   background: #f0f0f0;
   color: #999;
   cursor: not-allowed;

@@ -13,6 +13,6 @@
       <label for="message" class="block text-sm font-bold mb-2">Message</label>
       <textarea id="message" class="w-full border rounded p-2"></textarea>
     </div>
-    <button type="submit" class="bg-green-700 text-white rounded px-4 py-2 shadow">Send</button>
+    <button type="submit" class="btn-smooth-success">Send</button>
   </form>
 </template>
