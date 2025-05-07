@@ -35,7 +35,7 @@
 import { computed } from 'vue'
 import { parseISO, format } from 'date-fns'
 import { useBookingStore } from '~/stores/booking'
-import { useApi } from '~/composables/useApi'
+import { postContentItem } from '~/composables/useApi'
 
 const store = useBookingStore()
 
@@ -62,8 +62,29 @@ const formatTime = (time) => {
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`
 }
 
+const postBookingInfo = () => {
+  const bookingData = {
+    date: store.formData.date,
+    duration: '45 mins', // Assuming time contains start and end
+    patient_name: store.formData.name,
+    patient_email: store.formData.email,
+    patient_phone: store.formData.phone,
+    notes: store.formData.notes,
+    status: 'pending', // Default status
+  };
+
+  postContentItem('consultations', bookingData)
+    .then(() => {
+      console.log('Booking information posted successfully');
+    })
+    .catch((error) => {
+      console.error('Error posting booking information:', error);
+    });
+};
+
 const confirmBooking = () => {
-  store.nextStep()
+  postBookingInfo();
+  store.nextStep();
 }
 </script>
 

@@ -62,9 +62,9 @@ const formatTime = (time) => {
 }
 
 const resetBooking = () => {
-  store.resetForm()
-  store.currentStep = 1
-}
+  store.resetForm();
+  store.currentStep = 1;
+};
 </script>
 
 <style lang="scss" scoped>
