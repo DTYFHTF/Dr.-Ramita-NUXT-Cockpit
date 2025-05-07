@@ -19,3 +19,23 @@ export function useApi(endpoint) {
     loading: pending
   }
 }
+
+export function postContentItem(collection, data) {
+  const config = useRuntimeConfig();
+  const baseUrl = `${config.public.cockpitUrl}/api/content/item/${collection}`;
+  const headers = {
+    Authorization: config.cockpitToken,
+  };
+
+  return useFetch(baseUrl, {
+    method: 'POST',
+    headers,
+    body: {
+      data,
+      token: config.cockpitToken,
+    },
+    async onResponseError({ response }) {
+      console.error('API Error:', response.status, response._data);
+    },
+  });
+}
