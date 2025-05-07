@@ -10,7 +10,7 @@
         v-for="course in coursesWithImages" 
         :key="course.id">
         <CourseCard 
-          :id="course._id" 
+          :slug="course.slug" 
           :title="course.title" 
           :description="course.description" 
           :duration="course.duration"

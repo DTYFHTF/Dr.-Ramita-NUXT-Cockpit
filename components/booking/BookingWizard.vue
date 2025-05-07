@@ -1,5 +1,5 @@
 <template>
-  <section class="booking-wizard">
+  <section class="booking-wizard" id="book-consultation">
     <div class="wizard-container">
       <h1 class="wizard-title">Book Your Consultation</h1>
       

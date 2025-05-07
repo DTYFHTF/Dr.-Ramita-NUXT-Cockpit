@@ -1,7 +1,7 @@
 <template>
   <div class="course-detail">
     <!-- Loading State -->
-    <div v-if="!course && !error" class="loading-state text-center py-5">
+    <div v-if="isLoading" class="loading-state text-center py-5">
       <div class="spinner-grow text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
@@ -62,7 +62,7 @@
             <section class="course-section">
               <h2 class="section-title mb-4">Skills You'll Gain</h2>
               <ul class="course-list">
-                <li v-for="skill in course.skills.skill" :key="skill" class="course-list-item">
+                <li v-for="skill in (course.skills?.skill || [])" :key="skill" class="course-list-item">
                   <LucideIcon icon="mdi:check-circle" class="text-success me-2" />
                   {{ skill }}
                 </li>
@@ -141,33 +141,68 @@ import { useApi } from '@/composables/useApi';
 const route = useRoute();
 const course = ref(null);
 const error = ref(null);
+const isLoading = ref(true); // Add loading state
 
 // Fetch course data using useApi composable
-const { data, error: apiError, refetch } = useApi(`item/courses/${route.params.id}`);
+const { data, error: apiError, refetch } = useApi(`items/courses?filter={"slug":"${route.params.slug}"}`);
 
 // Markdown rendering utility
 const renderMarkdown = (content) => (content ? marked.parse(content) : '');
 
+// Helper function to map API response property names to component property names
+function mapCourseData(data) {
+  if (!data) return null;
+
+  return {
+    ...data,
+    // Map snake_case properties to camelCase
+    duration: data.duration || 'Approx. 20 hours',
+    skills: data.skills || { skill: [] },
+    learningOutcomes: data.learningOutcomes || [],
+    certification: data.certification || false,
+    // Add imageUrl for displaying images
+    imageUrl: data.image?._id
+      ? `http://localhost:9000/assets/link/${data.image._id}`
+      : '/placeholder-course.jpg',
+    instructorImageUrl: data.instructor?.image?._id
+      ? `http://localhost:9000/assets/link/${data.instructor.image._id}`
+      : '/placeholder-course.jpg'
+  };
+}
+
 // Retry fetch logic
 const retryFetch = async () => {
   error.value = null;
+  isLoading.value = true; // Set loading state
   await refetch();
+  isLoading.value = false; // Clear loading state
 };
 
 // Watch for data changes and update course details
 watchEffect(() => {
-  if (data.value) {
-    course.value = {
-      ...data.value,
-      imageUrl: data.value.image?._id
-        ? `http://localhost:9000/assets/link/${data.value.image._id}`
-        : '/placeholder-course.jpg',
-      instructorImageUrl: data.value.instructor?.image?._id
-        ? `http://localhost:9000/assets/link/${data.value.instructor.image._id}`
-        : '/placeholder-course.jpg',
-    };
+  try {
+    isLoading.value = true; // Set loading state
+    if (data.value && Array.isArray(data.value) && data.value.length > 0) {
+      // Using the first item if the API returns an array of matching courses
+      const courseData = data.value[0];
+      course.value = mapCourseData(courseData);
+      error.value = null; // Clear error since we have data
+    } else if (data.value && typeof data.value === 'object' && data.value._id) {
+      // Handle if API returns a single object instead of an array
+      course.value = mapCourseData(data.value);
+      error.value = null; // Clear error since we have data
+    } else if (data.value === null || data.value === undefined) {
+      error.value = new Error('No course found with this slug');
+    }
+
+    if (apiError.value) {
+      error.value = apiError.value;
+    }
+  } catch (e) {
+    error.value = e;
+  } finally {
+    isLoading.value = false; // Clear loading state
   }
-  error.value = apiError.value;
 });
 
 // Compute the last skill level for display

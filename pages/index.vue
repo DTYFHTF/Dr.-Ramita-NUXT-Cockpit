@@ -16,7 +16,7 @@
             class="col-md-4 mb-4"
           >
             <CourseCard
-              :id="course._id"
+              :slug="course.slug"
               :title="course.title"
               :description="course.description"
               :duration="course.duration"

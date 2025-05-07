@@ -65,7 +65,7 @@
 
         <!-- Right-aligned CTA Button -->
         <div class="d-lg-flex">
-          <button class="btn btn-smooth-success rounded-pill px-4">
+          <button class="btn btn-smooth-success rounded-pill px-4" @click="$scrollTo('#book-consultation')">
             Book Consultation
           </button>
         </div>

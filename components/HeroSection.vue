@@ -20,10 +20,10 @@
       </p>
       
       <div class="button-wrapper">
-        <a href="#" class="btn btn-smooth-success text-white py-3 px-8 rounded-full flex items-center justify-center text-lg font-semibold">
+        <button class="btn btn-smooth-success text-white py-3 px-8 rounded-full flex items-center justify-center text-lg font-semibold" @click="$scrollTo('#book-consultation')">
           Book Consultation
           <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon ms-2"/>
-        </a>
+        </button>
       </div>
     </div>
   </section>

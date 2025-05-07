@@ -30,7 +30,7 @@
 
       <div class="button-container">
         <NuxtLink 
-          :to="`/course/${id}`"
+          :to="`/course/${slug}`"
           class="enroll-btn btn-smooth-primary"
         >
           Learn More
@@ -45,6 +45,7 @@
 import LucideIcon from '@/components/LucideIcon.vue';
 
 defineProps({
+  slug: String,
   id: String,
   title: String,
   description: String,
