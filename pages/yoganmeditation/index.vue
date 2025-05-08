@@ -8,11 +8,12 @@
             :key="ynm.id"
           >
             <YogaMeditationCard
-              :id="ynm._id"
+            :id="ynm._id"
               :title="ynm.title"
               :shortDescription="ynm.shortDescription"
-              :icon="ynm.icon"
-              :points="ynm.points"
+              :coverImage="ynm.coverImage"
+              :slug="ynm.slug"
+              :tags="ynm.tags"
             />
           </div>
         </div>
@@ -29,8 +30,18 @@ import { computed } from 'vue';
 const { data: yoganmeditation } = useApi("items/yoganmeditation");
 
 // Use computed to maintain reactivity
-const yogaandmeditation = computed(() => yoganmeditation.value || []);
+const yogaandmeditation = computed(() => {
+  return (yoganmeditation.value || []).map(item => ({
+    ...item,
+    coverImage: item.coverImage?._id
+      ? `http://localhost:9000/assets/link/${item.coverImage._id}`
+      : '/placeholder-yoga.jpg',
+  }));
+});
+
+console.log("yoganmeditation", yoganmeditation.value);
 </script>
+
 <style scoped>
 section{
   max-width: 1200px;

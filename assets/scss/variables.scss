@@ -9,6 +9,7 @@ $text-button: #ffffff;
 $text-button-hover-bg: #f4f9f6;
 $button-bg: #2D7B7B;
 $button-success-bg: #2D7B7B; // Using the same teal color for success buttons
+$bg-soft-green: color.adjust($accent-soft-green, $lightness: 45%);
 
 // shadows
 $card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);

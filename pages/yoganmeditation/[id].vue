@@ -1,1 +1,0 @@
-<template>This is id view.</template>

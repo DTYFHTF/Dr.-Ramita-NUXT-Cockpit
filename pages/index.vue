@@ -47,7 +47,14 @@
             :key="ynm._id"
             class="col-md-4 mb-4"
           >
-            <YogaMeditationCard v-bind="ynm" />
+            <YogaMeditationCard
+            :id="ynm._id"
+              :title="ynm.title"
+              :shortDescription="ynm.shortDescription"
+              :coverImage="ynm.coverImageUrl"
+              :slug="ynm.slug"
+              :tags="ynm.tags"
+            />
           </div>
         </div>
         <div class="text-center mt-4">
@@ -82,18 +89,6 @@
       </div>
     </section>
 
-    <!-- Booking Process -->
-    <!-- <section class="booking-process">
-      <div class="container">
-        <h1 class="booking-header">Booking Process</h1>
-        <BookingStepper v-show="store.currentStep === 1" />
-        <BookingDateStep v-show="store.currentStep === 2" />
-        <BookingTimeStep v-show="store.currentStep === 3" />
-        <BookingSummaryStep v-show="store.currentStep === 4" />
-        <BookingDetailsStep v-show="store.currentStep === 5" />
-        <BookingSuccessStep v-show="store.currentStep === 6" />
-      </div>
-    </section> -->
     <BookingWizard />
   </div>
 </template>
@@ -114,9 +109,14 @@ const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
 const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
 
 const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
-const yoganmeditationLimited = computed(
-  () => yoganmeditation.value?.slice(0, 3) || []
-);
+const yoganmeditationLimited = computed(() => {
+  return (yoganmeditation.value?.slice(0, 3) || []).map(item => ({
+    ...item,
+    coverImageUrl: item.coverImage?._id
+      ? `http://localhost:9000/assets/link/${item.coverImage._id}`
+      : '/placeholder-yoga.jpg',
+  }));
+});
 
 const addImageUrl = (item) => ({
   ...item,

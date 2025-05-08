@@ -350,4 +350,7 @@ onMounted(() => {
   padding: 2rem;
   text-align: center;
 }
+.day-number{
+  color:#000;
+}
 </style>
