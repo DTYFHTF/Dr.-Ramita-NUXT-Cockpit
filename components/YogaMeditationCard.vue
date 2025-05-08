@@ -1,7 +1,7 @@
 <template>
   <div class="yoga-card" role="article" aria-labelledby="yoga-title" tabindex="0">
     <div class="card-header">
-      <span class="category-tag">{{ tags?.[0] ?? 'Uncategorized' }}</span>
+      <span class="category-tag">{{ tags ?? 'Uncategorized' }}</span>
 
       <img 
         :src="coverImage || '/placeholder-yoga.jpg'" 
