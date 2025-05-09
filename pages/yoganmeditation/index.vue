@@ -1,9 +1,9 @@
 <template>
     <section>
         <h1 class="text-center my-4">Yoga and Meditation</h1>
-        <div class="row">
+        <div class="row ">
           <div
-            class="col-md-4 mb-4"
+            class="col-md-4 mb-4 "
             v-for="ynm in yogaandmeditation"
             :key="ynm.id"
           >
@@ -50,5 +50,8 @@ section{
 }
 h2{
     padding: 3vh 0 3vh 0;
+}
+.yoga-meditation-card {
+  margin-bottom: 1.5rem; /* Add vertical spacing between cards */
 }
 </style>
