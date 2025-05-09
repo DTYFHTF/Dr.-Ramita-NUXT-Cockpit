@@ -89,6 +89,30 @@
       </div>
     </section>
 
+    <!-- Home Remedies Section -->
+    <section class="bg-herbal-light" id="home-remedies">
+      <div class="container">
+        <h2 class="font-serif text-xl font-bold">Home Remedies</h2>
+        <p class="sub-heading">
+          Explore natural remedies for holistic health
+        </p>
+        <div class="row">
+          <div
+            v-for="remedy in homeRemedies"
+            :key="remedy._id"
+            class="col-md-4 mb-4"
+          >
+            <HomeRemedyCard v-bind="remedy" />
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <button class="btn btn-primary" @click="goToHomeRemediesPage">
+            View More
+          </button>
+        </div>
+      </div>
+    </section>
+
     <BookingWizard />
   </div>
 </template>
@@ -97,16 +121,23 @@
 import { computed } from "vue";
 import { useApi } from "@/composables/useApi";
 import { useBookingStore } from "~/stores/booking";
+import HomeRemedyCard from '@/components/HomeRemedyCard.vue';
 
 const store = useBookingStore();
 
 const { data: courses } = useApi("items/courses");
 const { data: yoganmeditation } = useApi("items/yoganmeditation");
 const { data: recipe } = useApi("items/recipies");
+const { data: homeRemediesData } = useApi("items/homeRemedies");
 
 const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
 
 const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
+
+const homeRemedies = computed(() => {
+  console.log('Home Remedies Data:', homeRemediesData.value);
+  return homeRemediesData.value?.map(addImageUrl) || [];
+});
 
 const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
 const yoganmeditationLimited = computed(() => {
@@ -118,16 +149,18 @@ const yoganmeditationLimited = computed(() => {
   }));
 });
 
+
 const addImageUrl = (item) => ({
   ...item,
   image: item.image?._id
     ? `http://localhost:9000/assets/link/${item.image._id}`
-    : "",
+    : "/placeholder-remedy.jpg",
 });
 
 const goToCoursesPage = () => navigateTo("/course");
 const goToYoganMeditationPage = () => navigateTo("/yoganmeditation");
 const goToRecipesPage = () => navigateTo("/recipe");
+const goToHomeRemediesPage = () => navigateTo("/homeremedies");
 </script>
 
 <style lang="scss" scoped>

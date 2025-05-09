@@ -81,19 +81,6 @@ const props = defineProps({
   background: #f5f0eb;
 }
 
-.category-tag {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(245,240,235,0.9) 100%);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  color: #7a6a5c;
-  z-index: 2;
-  backdrop-filter: blur(2px);
-}
-
 .recipe-image {
   width: 100%;
   height: 100%;
@@ -131,6 +118,7 @@ const props = defineProps({
   min-height: 60px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3; /* Standard property */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
