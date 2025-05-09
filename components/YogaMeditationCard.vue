@@ -14,12 +14,17 @@
       <h3 id="yoga-title" class="title">{{ title }}</h3>
       <p class="description">{{ shortDescription }}</p>
 
-      <ul class="benefits-list" aria-label="Benefits">
-        <li v-for="(point, index) in points" :key="index" class="benefit-item">
-          <LucideIcon icon="mdi:check-circle" class="benefit-icon" aria-hidden="true" />
-          <span>{{ point }}</span>
-        </li>
-      </ul>
+      
+      <div class="meta-info">
+          <div class="meta-item">
+            <LucideIcon icon="mdi:clock-outline" class="icon" />
+            <span>{{ duration || 'N/A' }}</span>
+          </div>
+          <div class="meta-item">
+            <LucideIcon icon="mdi:tag-outline" class="me-2" />
+            <span>{{ tags || 'N/A' }} </span>
+          </div>
+        </div>
 
       <div class="button-container">
         <NuxtLink 
@@ -43,6 +48,8 @@ defineProps({
   coverImage: String,
   slug: String,
   tags: Array,
+  duration: String,
+  tags: String
 });
 </script>
 
@@ -108,14 +115,14 @@ defineProps({
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  text-align: center;
+  text-align: legt;
 }
 
 .description {
   color: #7a6a5c;
   line-height: 1.5;
   margin-bottom: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 .benefits-list {
@@ -153,4 +160,15 @@ defineProps({
   width: 1.2rem;
   height: 1.2rem;
 }
+.meta-info {
+  display: flex;
+  gap: 25px;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9c8e7e;
+}
+
 </style>

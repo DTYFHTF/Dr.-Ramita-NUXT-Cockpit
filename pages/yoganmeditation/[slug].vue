@@ -49,7 +49,7 @@
                 />
                 <span class="text-muted">{{ yoga.duration }}</span>
               <div class=" px-5 tags"><LucideIcon icon="mdi:tag-outline" class="me-2" />{{ tag }}
-              <span class="category-tag">{{
+              <span class="tag">{{
                 yoga.tags ?? "Uncategorized"
               }}</span></div>
             

@@ -54,6 +54,7 @@
               :coverImage="ynm.coverImageUrl"
               :slug="ynm.slug"
               :tags="ynm.tags"
+              :duration="ynm.duration"
             />
           </div>
         </div>
