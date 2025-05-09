@@ -65,9 +65,13 @@
 
         <!-- Right-aligned CTA Button -->
         <div class="d-lg-flex">
-          <button class="btn btn-smooth-success rounded-pill px-4" @click="$scrollTo('#book-consultation')">
+          <SmoothLink
+            to="book-consultation"
+            fallbackRoute="/#book-consultation"
+            class="btn btn-smooth-success rounded-pill px-4"
+          >
             Book Consultation
-          </button>
+          </SmoothLink>
         </div>
       </div>
     </div>

@@ -302,9 +302,13 @@ const scrollToSimilarReads = () => {
 
 .cover-image img {
   width: 100%;
-  height: 475px; // Set a fixed height for consistency
-  object-fit: cover; // Ensure the image covers the area without distortion
-  border-radius: 1rem; // Maintain rounded corners
+  height: 475px; // Default height for larger screens
+  object-fit: cover;
+  border-radius: 1rem;
+
+  @media (max-width: 768px) {
+    height: 300px; // Adjust height for smaller screens
+  }
 }
 
 .section-header {
