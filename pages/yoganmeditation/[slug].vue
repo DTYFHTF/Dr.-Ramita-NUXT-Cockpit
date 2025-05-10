@@ -234,10 +234,10 @@ function mapYogaData(data) {
     subTitle: data.subTitle || "",
     shortDescription: data.shortDescription || "",
     duration: data.duration || "N/A",
-    tags: data.tags || [],
+    tags: data.tags || "N/A",
     benefits: data.benefits || "",
     conclusion: data.conclusion || "",
-    coverImageUrl: data.coverImage?._id
+    coverImageUrl: data.image?._id
       ? `http://localhost:9000/assets/link/${data.coverImage._id}`
       : "/placeholder-yoga.jpg",
     poses: (data.poses || []).map((pose) => ({

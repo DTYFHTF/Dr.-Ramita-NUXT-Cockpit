@@ -35,17 +35,13 @@
         </p>
         <div class="row">
           <div
-            v-for="ynm in yoganmeditationLimited"
+            v-for="ynm in limitedYoganmeditation"
             :key="ynm._id"
             class="col-md-4 mb-4"
           >
-            <YogaMeditationCard :id="ynm._id"
-:title="ynm.title"
-:shortDescription="ynm.shortDescription"
-:coverImage="ynm.coverImageUrl"
-:slug="ynm.slug"
-:tags="Array.isArray(ynm.tags) ? ynm.tags : []"
-:duration="ynm.duration" />
+            <YogaMeditationCard
+            v-bind="ynm"
+            />
           </div>
         </div>
         <div class="text-center mt-4">
@@ -65,7 +61,7 @@
         </p>
         <div class="row">
           <div
-            v-for="recipe in recipesWithImages"
+            v-for="recipe in limitedRecipies"
             :key="recipe._id"
             class="col-md-4 mb-4"
           >
@@ -87,7 +83,7 @@
         <p class="sub-heading">Explore natural remedies for holistic health</p>
         <div class="row">
           <div
-            v-for="remedy in homeRemedies"
+            v-for="remedy in limitedHomeRemedy"
             :key="remedy._id"
             class="col-md-4 mb-4"
           >
@@ -121,21 +117,15 @@ const { data: homeRemediesData } = useApi("items/homeRemedies");
 
 const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
 const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
+const yoganmeditationWithImages = computed(() => yoganmeditation.value?.map(addImageUrl) || []);
+const homeRemediesWithImages = computed(() => homeRemediesData.value?.map(addImageUrl) || []);
 
-const homeRemedies = computed(() => {
-  console.log("Home Remedies Data:", homeRemediesData.value);
-  return homeRemediesData.value?.map(addImageUrl) || [];
-});
 
 const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
-const yoganmeditationLimited = computed(() => {
-  return (yoganmeditation.value?.slice(0, 3) || []).map((item) => ({
-    ...item,
-    coverImageUrl: item.coverImage?._id
-      ? `http://localhost:9000/assets/link/${item.coverImage._id}`
-      : "/placeholder-yoga.jpg",
-  }));
-});
+const limitedYoganmeditation = computed(() => yoganmeditationWithImages.value.slice(0, 3));
+const limitedRecipies = computed(() => recipesWithImages.value.slice(0, 3));
+const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3));
+
 
 const addImageUrl = (item) => ({
   ...item,

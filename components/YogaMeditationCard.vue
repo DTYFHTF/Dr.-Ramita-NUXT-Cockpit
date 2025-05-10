@@ -2,9 +2,9 @@
   <Card
     :title="title"
     :description="shortDescription"
-    :image="coverImage || '/placeholder-yoga.jpg'"
+    :image="image || '/placeholder-yoga.jpg'"
     :imageAlt="title"
-    :badge="tags?.join(', ') || 'Uncategorized'"
+    :badge="tags || 'Uncategorized'"
     :link="`/yoganmeditation/${slug}`"
     customClass="yoga-card"
   >
@@ -15,7 +15,7 @@
       </div>
       <div class="meta-item">
         <LucideIcon icon="mdi:tag-outline" class="me-2" />
-        <span>{{ tags?.join(', ') || 'N/A' }}</span>
+        <span>{{ tags || 'N/A' }}</span>
       </div>
     </template>
     <template #button>
@@ -41,9 +41,9 @@ import LucideIcon from '@/components/LucideIcon.vue';
 defineProps({
   title: String,
   shortDescription: String,
-  coverImage: String,
+  image: String,
   slug: String,
-  tags: Array,
+  tags: String,
   duration: String,
 });
 </script>

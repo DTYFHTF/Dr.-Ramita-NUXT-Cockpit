@@ -25,14 +25,14 @@ import { computed } from 'vue';
 const { data: yoganmeditation } = useApi("items/yoganmeditation");
 
 // Use computed to maintain reactivity
-const yogaandmeditation = computed(() => {
-  return (yoganmeditation.value || []).map(item => ({
-    ...item,
-    coverImage: item.coverImage?._id
-      ? `http://localhost:9000/assets/link/${item.coverImage._id}`
-      : '/placeholder-yoga.jpg',
-    tags: item.tags || 'Uncategorized',
-  }));
+
+const yogaandmeditation = computed(() => yoganmeditation.value?.map(addImageUrl) || []);
+
+const addImageUrl = (item) => ({
+  ...item,
+  image: item.image?._id
+    ? `http://localhost:9000/assets/link/${item.image._id}`
+    : "/placeholder-remedy.jpg",
 });
 
 console.log("yoganmeditation", yoganmeditation.value);
