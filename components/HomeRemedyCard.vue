@@ -1,20 +1,14 @@
 <template>
-  <div class="home-remedy-card">
-    <div class="card-header">
-      <span class="category-tag">{{ associatedDosha || 'Uncategorized' }}</span>
-      <img 
-        :src="image || '/placeholder-remedy.jpg'" 
-        :alt="diseaseName"
-        class="remedy-image"
-      />
-    </div>
-
-    <div class="card-content">
-      <div class="text-content">
-        <h3 class="title">{{ diseaseName }}</h3>
-        <p class="description">{{ truncatedDescription }}</p>
-      </div>
-
+  <Card
+    :title="diseaseName"
+    :description="truncatedDescription"
+    :image="image || '/placeholder-remedy.jpg'"
+    :imageAlt="diseaseName"
+    :badge="associatedDosha || 'Uncategorized'"
+    :link="slug ? `/homeremedy/${slug}` : null"
+    customClass="home-remedy-card"
+  >
+    <template #button>
       <NuxtLink 
         v-if="slug"
         :to="`/homeremedy/${slug}`"
@@ -26,11 +20,12 @@
       <div v-else class="btn-smooth disabled mt-auto w-100">
         Remedy Link Unavailable
       </div>
-    </div>
-  </div>
+    </template>
+  </Card>
 </template>
 
 <script setup>
+import Card from './Card.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { computed } from 'vue';
 
@@ -62,51 +57,6 @@ const truncatedDescription = computed(() => {
 
 <style scoped>
 .home-remedy-card {
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.home-remedy-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-}
-
-.card-header {
-  position: relative;
-}
-
-.remedy-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  background-color: #f0f0f0; /* Add a fallback background color */
-}
-
-.card-content {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.description {
-  font-size: 1rem;
-  color: var(--text-medium-gray);
-  margin-bottom: 1rem;
-}
-
-.btn-smooth-success {
-  margin-top: auto;
+  margin-bottom: 1.5rem; /* Example spacing */
 }
 </style>

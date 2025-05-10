@@ -5,7 +5,7 @@ import { onMounted, ref } from 'vue';
 const props = defineProps({
   to: { type: String, required: true },
   fallbackRoute: { type: String, required: true },
-  offset: { type: Number, default: 100 },
+  offset: { type: Number, default: 75 },
 });
 
 const route = useRoute();

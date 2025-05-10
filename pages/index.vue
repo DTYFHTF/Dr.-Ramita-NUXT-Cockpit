@@ -15,15 +15,7 @@
             :key="course._id"
             class="col-md-4 mb-4"
           >
-            <CourseCard
-              :slug="course.slug"
-              :title="course.title"
-              :description="course.description"
-              :duration="course.duration"
-              :link="course.link"
-              :image="course.image"
-              :price="course.price"
-            />
+            <CourseCard v-bind="course" />
           </div>
         </div>
         <div class="text-center mt-4">
@@ -47,15 +39,13 @@
             :key="ynm._id"
             class="col-md-4 mb-4"
           >
-            <YogaMeditationCard
-            :id="ynm._id"
-              :title="ynm.title"
-              :shortDescription="ynm.shortDescription"
-              :coverImage="ynm.coverImageUrl"
-              :slug="ynm.slug"
-              :tags="ynm.tags"
-              :duration="ynm.duration"
-            />
+            <YogaMeditationCard :id="ynm._id"
+:title="ynm.title"
+:shortDescription="ynm.shortDescription"
+:coverImage="ynm.coverImageUrl"
+:slug="ynm.slug"
+:tags="Array.isArray(ynm.tags) ? ynm.tags : []"
+:duration="ynm.duration" />
           </div>
         </div>
         <div class="text-center mt-4">
@@ -94,9 +84,7 @@
     <section class="bg-herbal-light" id="home-remedies">
       <div class="container">
         <h2 class="font-serif text-xl font-bold">Home Remedies</h2>
-        <p class="sub-heading">
-          Explore natural remedies for holistic health
-        </p>
+        <p class="sub-heading">Explore natural remedies for holistic health</p>
         <div class="row">
           <div
             v-for="remedy in homeRemedies"
@@ -122,7 +110,7 @@
 import { computed } from "vue";
 import { useApi } from "@/composables/useApi";
 import { useBookingStore } from "~/stores/booking";
-import HomeRemedyCard from '@/components/HomeRemedyCard.vue';
+import HomeRemedyCard from "@/components/HomeRemedyCard.vue";
 
 const store = useBookingStore();
 
@@ -132,24 +120,22 @@ const { data: recipe } = useApi("items/recipies");
 const { data: homeRemediesData } = useApi("items/homeRemedies");
 
 const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
-
 const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
 
 const homeRemedies = computed(() => {
-  console.log('Home Remedies Data:', homeRemediesData.value);
+  console.log("Home Remedies Data:", homeRemediesData.value);
   return homeRemediesData.value?.map(addImageUrl) || [];
 });
 
 const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
 const yoganmeditationLimited = computed(() => {
-  return (yoganmeditation.value?.slice(0, 3) || []).map(item => ({
+  return (yoganmeditation.value?.slice(0, 3) || []).map((item) => ({
     ...item,
     coverImageUrl: item.coverImage?._id
       ? `http://localhost:9000/assets/link/${item.coverImage._id}`
-      : '/placeholder-yoga.jpg',
+      : "/placeholder-yoga.jpg",
   }));
 });
-
 
 const addImageUrl = (item) => ({
   ...item,
@@ -161,7 +147,8 @@ const addImageUrl = (item) => ({
 const goToCoursesPage = () => navigateTo("/course");
 const goToYoganMeditationPage = () => navigateTo("/yoganmeditation");
 const goToRecipesPage = () => navigateTo("/recipe");
-const goToHomeRemediesPage = () => navigateTo("/homeremedies");
+const goToHomeRemediesPage = () => navigateTo("/homeremedy");
+
 </script>
 
 <style lang="scss" scoped>

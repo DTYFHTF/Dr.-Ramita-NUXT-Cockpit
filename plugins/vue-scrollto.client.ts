@@ -5,6 +5,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(VueScrollTo, {
     duration: 500,
     easing: 'ease',
-    offset: -100, // Adjust offset to ensure the title is fully visible
+    offset: -50, // Adjust offset to ensure the title is fully visible
   });
 });

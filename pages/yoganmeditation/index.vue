@@ -8,12 +8,7 @@
             :key="ynm.id"
           >
             <YogaMeditationCard
-            :id="ynm._id"
-              :title="ynm.title"
-              :shortDescription="ynm.shortDescription"
-              :coverImage="ynm.coverImage"
-              :slug="ynm.slug"
-              :tags="ynm.tags"
+            v-bind="ynm"
             />
           </div>
         </div>
@@ -36,6 +31,7 @@ const yogaandmeditation = computed(() => {
     coverImage: item.coverImage?._id
       ? `http://localhost:9000/assets/link/${item.coverImage._id}`
       : '/placeholder-yoga.jpg',
+    tags: item.tags || 'Uncategorized',
   }));
 });
 
