@@ -1,7 +1,7 @@
 <template>
   <Card
     :title="diseaseName"
-    :description="truncatedDescription"
+    :description="stripHtmlTags(truncatedDescription)"
     :image="image || '/placeholder-remedy.jpg'"
     :imageAlt="diseaseName"
     :badge="associatedDosha || 'Uncategorized'"
@@ -28,15 +28,7 @@
 import Card from './Card.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { computed } from 'vue';
-
-function stripHtmlTags(html) {
-  if (typeof window !== 'undefined') {
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div.textContent || div.innerText || '';
-  }
-  return html; // Return the original string if executed on the server
-}
+import { stripHtmlTags } from '@/composables/sanitizeUtils'; 
 
 const props = defineProps({
   diseaseName: String,
@@ -46,9 +38,11 @@ const props = defineProps({
   associatedDosha: String,
 });
 
+
+
 const truncatedDescription = computed(() => {
   const maxLength = 100; // Set a fixed length for the description
-  const plainText = stripHtmlTags(props.diseaseDescription || '');
+  const plainText = props.diseaseDescription || '';
   return plainText.length > maxLength
     ? plainText.slice(0, maxLength) + '...'
     : plainText;

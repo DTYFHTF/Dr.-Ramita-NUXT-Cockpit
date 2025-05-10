@@ -179,6 +179,7 @@
                 class="conclusion-content text-muted fs-5 lh-lg"
                 v-html="yoga.conclusion"
               ></div>
+              
               <button
                 class="btn btn-smooth-primary mt-5 px-6 py-3 fs-5"
                 @click="$scrollTo('#similar-reads', 500, { offset: -200 })"
@@ -198,6 +199,8 @@ import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "@/composables/useApi";
 import vueScrollTo from 'vue-scrollto';
+import { stripHtmlTags } from '@/composables/sanitizeUtils'; 
+
 
 const route = useRoute();
 const yoga = ref(null);
