@@ -67,8 +67,8 @@ const props = defineProps({
 
 .badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   background: linear-gradient(145deg, rgba(255, 245, 230, 0.9) 0%, rgba(255, 250, 240, 0.9) 100%);
   color: #7a6a5c;
   padding: 4px 8px;

@@ -56,7 +56,13 @@
             </SmoothLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Home Remedies</a>
+            <SmoothLink
+              to="home-remedies"
+              fallbackRoute="/homeremedy"
+              class="nav-link"
+            >
+              Home Remedies
+            </SmoothLink>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Herbal Treatment</a>
