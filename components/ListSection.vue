@@ -1,6 +1,6 @@
 <!-- components/ReusableListSection.vue -->
 <template>
-  <section v-if="items.length" class="kriyas mb-7">
+  <section v-if="items.length" class="mb-7">
     <div class="section-header mb-6">
       <h2 class="section-title">{{ title }}</h2>
       <p v-if="subtitle" class="section-subtitle text-muted fs-5">

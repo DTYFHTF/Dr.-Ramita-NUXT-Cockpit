@@ -25,7 +25,7 @@
       <header class="course-header text-center mb-5">
         <div class="course-badge mb-3">
           <span class="badge" :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'">
-            {{ course.price === 0 ? 'Free' : `₹${course.price}` }}
+            {{ course.price === 0 ? 'Free' : `${course.price}` }}
           </span>
         </div>
         <h1 class="course-title mb-3">{{ course.title }}</h1>

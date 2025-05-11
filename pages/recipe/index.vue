@@ -1,43 +1,18 @@
 <template>
-  <div class="container">
-    <h1 class="text-center my-4">Ayurvedic Recipes</h1>
-    <p class="text-center text-muted mb-4">Nourish your body with traditional healing recipes</p>
-    
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-grow text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p class="mt-3 text-muted">Loading recipes...</p>
-    </div>
-    
-    <div v-else-if="error" class="text-center py-5">
-      <div class="alert alert-danger mx-auto" style="max-width: 500px">
-        <strong>Error:</strong> {{ error.message || 'Failed to load recipes' }}
-      </div>
-    </div>
-    
-    <div v-else-if="recipesWithImages.length === 0" class="text-center text-muted">
-      <p>No recipes available at the moment. Please check back later!</p>
-    </div>
-    
-    <div v-else class="row">
-      <div 
-        class="col-md-4 mb-4" 
-        v-for="recipe in recipesWithImages" 
-        :key="recipe._id">
-        <RecipeCard 
-          :id="recipe._id" 
-          :title="recipe.title" 
-          :slug="recipe.slug" 
-          :description="recipe.description"
-          :image="recipe.image" 
-          :category="recipe.category"
-          :preparation_time="recipe.preparation_time"
-          :servings="recipe.servings"
-        />
-      </div>
-    </div>
-  </div>
+  <IndexSection
+    section-id="recipes"
+    bg-class="bg-herbal-light"
+    title="Ayurvedic Recipes"
+    subtitle="Nourish your body with traditional healing recipes"
+    :items="recipesWithImages"
+    :card-component="RecipeCard"
+    :loading="recipesLoading"
+    :error="recipesError"
+    loading-text="Loading recipes..."
+    error-text="Failed to load recipes"
+    empty-text="No recipes available at the moment"
+    :showViewMore="false"
+  />
 </template>
 
 <script setup>
@@ -73,11 +48,3 @@ const recipesWithImages = computed(() => {
   }
 });
 </script>
-
-<style scoped>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-</style>

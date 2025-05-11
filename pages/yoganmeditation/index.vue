@@ -1,20 +1,18 @@
 <template>
-    <section>
-        <h1 class="text-center my-4">Yoga and Meditation</h1>
-        <div class="row ">
-          <div
-            class="col-md-4 mb-4 "
-            v-for="ynm in yogaandmeditation"
-            :key="ynm.id"
-          >
-            <YogaMeditationCard
-            v-bind="ynm"
-            />
-          </div>
-        </div>
-        <div class="text-center mt-4">
-        </div>
-      </section>
+  <IndexSection
+    section-id="yoga-meditation"
+    bg-class="bg-herbal-light"
+    title="Yoga and Meditation"
+    subtitle="Transform your mind and body through ancient practices"
+    :items="yogaandmeditation"
+    :card-component="YogaMeditationCard"
+    :loading="loading"
+    :error="error"
+    loading-text="Loading practices..."
+    error-text="Failed to load yoga content"
+    empty-text="No yoga content available"
+    :showViewMore="false"
+  />
 </template>
 
 <script setup>
@@ -22,32 +20,28 @@ import { useApi } from '@/composables/useApi';
 import YogaMeditationCard from "~/components/YogaMeditationCard.vue";
 import { computed } from 'vue';
 
-const { data: yoganmeditation } = useApi("items/yoganmeditation");
+// Destructure loading and error from useApi
+const { data: yoganmeditation, error, loading } = useApi("items/yoganmeditation");
 
-// Use computed to maintain reactivity
+// Enhanced computed property with error handling
+const yogaandmeditation = computed(() => {
+  try {
+    return yoganmeditation.value?.map(item => {
+      if (!item) return null;
+      
+      return {
+        ...item,
+        image: item.image?._id 
+          ? `http://localhost:9000/assets/link/${item.image._id}`
+          : "/placeholder-remedy.jpg"
+      };
+    }).filter(item => item !== null) || [];
+  } catch (e) {
+    console.error("Error processing yoga data:", e);
+    return [];
+  }
+}); 
 
-const yogaandmeditation = computed(() => yoganmeditation.value?.map(addImageUrl) || []);
 
-const addImageUrl = (item) => ({
-  ...item,
-  image: item.image?._id
-    ? `http://localhost:9000/assets/link/${item.image._id}`
-    : "/placeholder-remedy.jpg",
-});
-
-console.log("yoganmeditation", yoganmeditation.value);
 </script>
 
-<style scoped>
-section{
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-h2{
-    padding: 3vh 0 3vh 0;
-}
-.yoga-meditation-card {
-  margin-bottom: 1.5rem; /* Add vertical spacing between cards */
-}
-</style>

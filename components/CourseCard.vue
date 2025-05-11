@@ -4,7 +4,7 @@
     :description="description"
     :image="image || '/placeholder-course.jpg'"
     :imageAlt="title"
-    :badge="price === 0 ? 'Free' : `$${price}`"
+    :badge="price === 0 ? 'Free' : `₹ ${price}`"
     :link="`/course/${slug}`"
     customClass="course-card"
   >
