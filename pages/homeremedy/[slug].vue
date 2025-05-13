@@ -48,50 +48,25 @@
       <!-- Enhanced Cover Image -->
       <div v-if="remedy.image" class="remedy-image mb-7">
         <div class="container px-xxl-12">
-          <img
-            :src="remedy.imageUrl"
-            :alt="remedy.diseaseName"
-            class="img-fluid rounded-4 shadow-lg"
-            loading="lazy"
-            style="max-height: 600px; object-fit: cover"
-          />
+          <div class="row">
+            <!-- Cover Image Column -->
+            <div class="col-lg-8">
+              <img
+                :src="remedy.imageUrl"
+                :alt="remedy.diseaseName"
+                class="img-fluid rounded-4 shadow-lg"
+                loading="lazy"
+                style="max-height: 600px; object-fit: cover"
+              />
+            </div>
+
+            <!-- Similar Reads Column -->
+            <div class="col-lg-4">
+              <SimilarReads :posts="latestPosts" />
+            </div>
+          </div>
         </div>
       </div>
-      <!-- Similar Reads Section -->
-      <section
-        v-if="remedy.similarReads.length"
-        id="similarReads"
-        class="similar-reads mb-7"
-      >
-        <div class="section-header mb-6">
-          <h2 class="section-title">Similar Reads</h2>
-          <p class="section-subtitle text-muted fs-5">
-            Explore related remedies and insights
-          </p>
-        </div>
-        <ul class="list-unstyled">
-          <li
-            v-for="(read, index) in remedy.similarReads"
-            :key="index"
-            class="similar-read-item mb-4"
-          >
-            <a
-              :href="`/homeremedy/${read.slug}`"
-              class="d-flex align-items-start text-decoration-none"
-            >
-              <img
-                :src="read.imageUrl || '/placeholder-remedy.jpg'"
-                :alt="read.title"
-                class="img-thumbnail me-3"
-                style="width: 80px; height: 80px; object-fit: cover"
-              />
-              <div>
-                <h4 class="fs-6 fw-bold text-dark mb-0">{{ read.title }}</h4>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </section>
 
       <!-- Main Content -->
       <div class="container">
@@ -318,9 +293,15 @@ function mapRemedyData(data) {
     dhyanaMeditation: data.meditation || "",
     colorTherapy: data.colorTherapy || "",
     generalRemedies: data.generalRemedies || [],
-    similarReads: data.similarReads || [],
   };
 }
+
+// Fetch similar posts
+const { posts: latestPosts } = useSimilarPosts('items/homeRemedies', {
+  count: 4,
+  fallbackImage: '/fallback-remedy.jpg',
+  basePath: '/homeremedy'
+});
 
 
 </script>

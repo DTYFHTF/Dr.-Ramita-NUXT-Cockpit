@@ -60,7 +60,7 @@
       </header>
 
       <!-- Enhanced Cover Image -->
-      <div v-if="yoga.coverImage" class="cover-image mb-7">
+      <div v-if="yoga.image" class="cover-image mb-7">
         <div class="container px-xxl-12">
           <div class="row">
             <div class="col-lg-8">
@@ -69,32 +69,15 @@
                 :alt="yoga.title"
                 class="img-fluid rounded-4 shadow-lg"
                 loading="lazy"
-                style="max-height: 600px; object-fit: cover"
-              />
+                style="max-height: 600px; object-fit: cover" />
             </div>
             <div class="col-lg-4">
-              <section id="similar-reads" class="similar-reads">
-                <h3 class="section-title">Similar Reads</h3>
-                <ul class="list-unstyled">
-                  <li v-for="post in latestPosts" :key="post._id" class="similar-read-item mb-4">
-                    <a :href="`/yoganmeditation/${post.slug}`" class="d-flex align-items-start text-decoration-none">
-                      <img
-                        :src="post.coverImageUrl"
-                        :alt="post.title"
-                        class="img-thumbnail me-3"
-                        style="width: 80px; height: 80px; object-fit: cover;"
-                      />
-                      <div>
-                        <h4 class="fs-6 fw-bold text-dark mb-0">{{ post.title }}</h4>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </section>
+              <SimilarReads :posts="latestPosts" />
             </div>
           </div>
         </div>
       </div>
+      
 
       <!-- Main Content -->
       <div class="container">
@@ -182,7 +165,7 @@
               
               <button
                 class="btn btn-smooth-primary mt-5 px-6 py-3 fs-5"
-                @click="$scrollTo('#similar-reads', 500, { offset: -200 })"
+                @click="$scrollTo('#similar-reads', 500, { offset: -325 })"
               >
                 <LucideIcon icon="mdi:leaf" class="me-2" color="white" />Begin Again
               </button>
@@ -195,6 +178,7 @@
 </template>
 <script setup>
 import LucideIcon from "@/components/LucideIcon.vue";
+import SimilarReads from "@/components/SimilarReads.vue";
 import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "@/composables/useApi";
@@ -240,17 +224,22 @@ function mapYogaData(data) {
     tags: data.tags || "N/A",
     benefits: data.benefits || "",
     conclusion: data.conclusion || "",
-    coverImageUrl: data.image?._id
-      ? `http://localhost:9000/assets/link/${data.coverImage._id}`
+    coverImageUrl: data.image && data.image._id
+      ? `http://localhost:9000/assets/link/${data.image._id}`
       : "/placeholder-yoga.jpg",
-    poses: (data.poses || []).map((pose) => ({
-      ...pose,
-      title: pose.poseName || "",
-      instructions: pose.instructions || "",
-      poseImageUrl: pose.poseImage?._id
-        ? `http://localhost:9000/assets/link/${pose.poseImage._id}`
-        : null,
-    })),
+    poses: (data.poses || []).map((pose) => {
+      if (!pose.poseImage || !pose.poseImage._id) {
+        console.warn("Missing pose image for pose:", pose);
+      }
+      return {
+        ...pose,
+        title: pose.poseName || "",
+        instructions: pose.instructions || "",
+        poseImageUrl: pose.poseImage && pose.poseImage._id
+          ? `http://localhost:9000/assets/link/${pose.poseImage._id}`
+          : null,
+      };
+    }),
   };
 }
 
@@ -269,15 +258,21 @@ watchEffect(() => {
   console.log("Fetching latest posts...");
   if (latestPostsData.value) {
     console.log("Latest posts fetched:", latestPostsData.value);
-    const allPosts = latestPostsData.value.map((post) => ({
-      ...post,
-      coverImageUrl: post.coverImage?._id
-        ? `http://localhost:9000/assets/link/${post.coverImage._id}`
-        : "/placeholder-yoga.jpg",
-    }));
+    const allPosts = latestPostsData.value.map((post) => {
+      if (!post.image || !post.image._id) {
+        console.warn("Missing image for post:", post);
+      }
+      return {
+        ...post,
+        coverImageUrl: post.image && post.image._id
+          ? `http://localhost:9000/assets/link/${post.image._id}`
+          : "/placeholder-yoga.jpg",
+      };
+    });
 
     // Randomly select 4 posts
     latestPosts.value = allPosts.sort(() => 0.5 - Math.random()).slice(0, 4);
+    console.log("Latest posts for SimilarReads:", latestPosts.value); // Debug log
   } else if (latestPostsError.value) {
     console.error("Error fetching latest posts:", latestPostsError.value.response || latestPostsError.value);
   }
