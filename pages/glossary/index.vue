@@ -1,5 +1,5 @@
 <template>
-  <div class="glossary-index">
+  <div id="glossary" class="glossary-index">
     <!-- Header Section -->
     <header class="glossary-header mb-5">
       <h1 class="display-4 mb-4">Yoga & Wellness Glossary</h1>

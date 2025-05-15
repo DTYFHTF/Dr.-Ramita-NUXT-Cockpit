@@ -26,14 +26,22 @@ onMounted(async () => {
   try {
     const processedContent = await autoLinkContent(props.content);
 
-    // Replace <p> tags with a space
-    const strippedContent = processedContent.replace(/<p>|<\/p>/g, ' ');
+    // Preserve <GlossaryTerm> components and replace other tags with spaces
+    const strippedContent = processedContent
+      .replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, (match, tag) => {
+        // Preserve GlossaryTerm components with all attributes
+        if (tag.toLowerCase() === 'glossaryterm') return match;
+        // Replace other tags with space to maintain word boundaries
+        return ' ';
+      })
+      .replace(/\s+/g, ' ') // Collapse multiple spaces
+      .trim();
 
     processedContentComponent.value = defineComponent({
       components: { GlossaryTerm },
       render() {
-        const nodes = strippedContent.split(/(<GlossaryTerm.*?>.*?<\/GlossaryTerm>|<br\s*\/?>)/g).map((segment) => {
-          const match = segment.match(/<GlossaryTerm term=\"(.*?)\">(.*?)<\/GlossaryTerm>/);
+        const nodes = strippedContent.split(/(<GlossaryTerm.*?>.*?<\/GlossaryTerm>|<br\s*\/?>)/gs).map((segment) => {
+          const match = segment.match(/<GlossaryTerm term=\"(.*?)\">([\s\S]*?)<\/GlossaryTerm>/);
           if (match) {
             const [_, slug, text] = match;
             return h(GlossaryTerm, { termSlug: slug }, () => text);
