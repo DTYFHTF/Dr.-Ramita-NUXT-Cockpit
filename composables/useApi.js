@@ -37,5 +37,5 @@ export function postContentItem(collection, data) {
     async onResponseError({ response }) {
       console.error('API Error:', response.status, response._data);
     },
-   });
+    });
 }

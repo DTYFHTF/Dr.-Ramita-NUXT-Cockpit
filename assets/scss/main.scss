@@ -45,6 +45,18 @@
   z-index: 2; /* Ensure it stays above the image */
 }
 
+.badge-category {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #2a4d3a;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
 .card {
   background: #fff;
   border-radius: 12px;

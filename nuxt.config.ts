@@ -1,4 +1,5 @@
-// nuxt.config.ts
+import commonjs from 'vite-plugin-commonjs';
+
 export default defineNuxtConfig({
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
@@ -7,8 +8,14 @@ export default defineNuxtConfig({
   plugins: [
     { src: '~/plugins/bootstrap.client.ts', mode: 'client' }
   ],
-  
+
   vite: {
+    plugins: [commonjs()],
+    resolve: {
+      alias: {
+        'unist-util-visit': require.resolve('unist-util-visit'),
+      },
+    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -17,7 +24,7 @@ export default defineNuxtConfig({
           `
         }
       }
-    }
+    },
   },
   build: {
     transpile: ["bootstrap"],
