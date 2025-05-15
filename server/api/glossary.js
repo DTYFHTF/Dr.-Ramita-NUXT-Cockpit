@@ -1,7 +1,6 @@
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
-  console.log('API hit'); // Test log to confirm endpoint is being hit
 
   const config = useRuntimeConfig();
   const apiUrl = `${config.public.cockpitUrl}/api/content/items/glossary?api-token=${config.cockpitToken}`;

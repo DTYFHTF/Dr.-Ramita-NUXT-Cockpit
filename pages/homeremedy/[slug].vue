@@ -263,7 +263,6 @@ const {
   refetch,
 } = useApi(`items/homeRemedies?filter={"slug":"${route.params.slug}"}`);
 
-console.log("API data for Home Remedies", data.value);
 const retryFetch = async () => {
   error.value = null;
   await refetch();

@@ -26,7 +26,6 @@ export default function useSimilarPosts(apiUrl, options = {}) {
           const coverImageUrl = image && image._id
             ? `http://localhost:9000/assets/link/${image._id}`
             : fallbackImage;
-          console.log('Generated coverImageUrl:', coverImageUrl); // Log coverImageUrl for debugging
           return {
             ...post,
             coverImageUrl,

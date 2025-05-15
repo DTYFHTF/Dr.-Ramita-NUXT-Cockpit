@@ -254,7 +254,6 @@ function mapYogaData(data) {
 const latestPosts = ref([]);
 
 const apiUrl = "items/yoganmeditation"; // Removed query parameters temporarily
-console.log("API URL for latest posts:", apiUrl);
 
 const {
   data: latestPostsData,
@@ -263,9 +262,7 @@ const {
 } = useApi(apiUrl);
 
 watchEffect(() => {
-  console.log("Fetching latest posts...");
   if (latestPostsData.value) {
-    console.log("Latest posts fetched:", latestPostsData.value);
     const allPosts = latestPostsData.value.map((post) => {
       if (!post.image || !post.image._id) {
         console.warn("Missing image for post:", post);
@@ -280,7 +277,6 @@ watchEffect(() => {
 
     // Randomly select 4 posts
     latestPosts.value = allPosts.sort(() => 0.5 - Math.random()).slice(0, 4);
-    console.log("Latest posts for SimilarReads:", latestPosts.value); // Debug log
   } else if (latestPostsError.value) {
     console.error("Error fetching latest posts:", latestPostsError.value.response || latestPostsError.value);
   }
@@ -293,14 +289,11 @@ const scrollToSimilarReads = () => {
 // Watch for changes in the `yoga` data and reapply the directive
 watchEffect(() => {
   if (yoga.value) {
-    console.log('Yoga data loaded:', yoga.value);
     const sloganElement = document.querySelector('.yoga-slogan');
     if (sloganElement) {
-      console.log('Reapplying v-auto-link directive to slogan element');
       const originalContent = sloganElement.innerHTML;
       autoLinkContent(originalContent).then((linkedContent) => {
         sloganElement.innerHTML = linkedContent;
-        console.log('Processed content:', linkedContent);
       });
     }
   }

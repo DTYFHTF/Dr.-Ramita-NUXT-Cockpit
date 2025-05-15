@@ -45,6 +45,5 @@ const coursesWithImages = computed(() => {
 
 // Optional debugging
 watchEffect(() => {
-  console.log("Course data:", rawCourses.value);
 });
 </script>

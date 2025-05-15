@@ -35,7 +35,6 @@ export const useDoctorStore = defineStore('doctor', {
 
         if (Array.isArray(response)) {
           this.doctors = response
-          console.log('✅ Doctors loaded:', this.doctors)
         } else {
           throw new Error('Invalid doctor data format')
         }

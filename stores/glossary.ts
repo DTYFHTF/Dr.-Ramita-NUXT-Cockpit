@@ -35,7 +35,6 @@ export const useGlossaryStore = defineStore('glossary', {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        console.log('API response:', response); // Log the API response
 
         if (!response) {
           throw new Error('Failed to fetch glossary terms');
@@ -44,7 +43,6 @@ export const useGlossaryStore = defineStore('glossary', {
         const baseUrl = useRuntimeConfig().public.cockpitUrl; // Get the base URL
 
         this.terms = response.map((entry: any) => {
-          console.log('Glossary entry:', entry); // Debugging log for each entry
           return {
             title: entry.title,
             slug: entry.slug,
@@ -60,7 +58,6 @@ export const useGlossaryStore = defineStore('glossary', {
           };
         });
 
-        console.log('Populated terms:', this.terms); // Log the populated terms array
       } catch (error) {
         console.error('Glossary store error:', error);
         this.terms = [];
@@ -71,11 +68,8 @@ export const useGlossaryStore = defineStore('glossary', {
 
   getters: {
     getTermBySlug: (state) => (slug: string) => {
-      console.log('Input slug:', slug); // Debugging log
-      console.log('Available slugs:', state.terms.map(term => term.slug)); // Log all slugs
       const normalizedSlug = slug.toLowerCase().trim();
       const term = state.terms.find(term => term.slug.toLowerCase().trim() === normalizedSlug);
-      console.log('Matching term:', term); // Debugging log
       return term;
     }
   }

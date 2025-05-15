@@ -16,6 +16,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+import { useGlossaryStore } from '@/stores/glossary'; // Assuming the glossary store is located here
 
 const props = defineProps({
   termSlug: {
@@ -27,15 +28,22 @@ const props = defineProps({
 const isHovered = ref(false);
 const glossaryTermRef = ref(null);
 const router = useRouter(); // Ensure useRouter is called within setup
+const glossaryStore = useGlossaryStore();
 
 const tooltipContent = computed(() => {
-  return `Read more about this term.`;
+  const term = glossaryStore.getTermBySlug(props.termSlug);
+  if (term) {
+    const relatedTerms = term.relatedTerms.length > 0 ? `<br><br><strong>Related:</strong> ${term.relatedTerms.join(', ')}` : '';
+    return `${term.excerpt}${relatedTerms}`;
+  }
+  return 'Read more about this term.';
 });
 
 onMounted(() => {
   if (glossaryTermRef.value) {
     tippy(glossaryTermRef.value, {
       content: tooltipContent.value,
+      allowHTML: true, // Enable HTML content in the tooltip
       placement: 'top',
       trigger: 'mouseenter',
     });

@@ -9,9 +9,13 @@
     <div class="content-wrapper">
       <div class="main-content">
         <h1>{{ termData?.title || 'Glossary Term' }}</h1>
-        <p style="font-style: italic;" v-if="termData?.excerpt" v-html="termData.excerpt"></p>
+        <p style="font-style: italic;" v-if="termData?.excerpt">
+          <DynamicContent :content="termData.excerpt" />
+        </p>
 
-        <p v-if="termData?.description" v-html="termData.description"></p>
+        <p v-if="termData?.description">
+          <DynamicContent :content="termData.description" />
+        </p>
 
         <div class="details-section">
           <h2>Additional Details</h2>
@@ -36,7 +40,7 @@
                 data-bs-parent="#detailsAccordion"
               >
                 <div class="accordion-body">
-                  <p v-html="detail.description || 'No description available.'"></p>
+                  <DynamicContent :content="detail.description || 'No description available.'" />
                 </div>
               </div>
             </div>
@@ -77,6 +81,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGlossaryStore } from '@/stores/glossary';
+import DynamicContent from '@/components/DynamicContent.vue';
 
 interface GlossaryTerm {
   title: string;
@@ -109,7 +114,6 @@ const toggleAccordion = (index: number) => {
 
 onMounted(async () => {
   const slug = route.params.slug as string;
-  console.log('Slug from route:', slug); // Debugging log
 
   if (slug) {
     if (glossaryStore.terms.length === 0) {
@@ -117,10 +121,8 @@ onMounted(async () => {
     }
 
     const term = glossaryStore.getTermBySlug(slug);
-    console.log('Fetched term:', term); // Debugging log
 
     termData.value = term || null;
-    console.log('Updated termData:', termData.value); // Log termData after update
   }
 });
 </script>
@@ -154,7 +156,7 @@ onMounted(async () => {
   gap: 5rem; /* Increased gap between main content and sidebar */
   align-items: flex-start;
 }
-
+c
 .main-content {
   flex: 3;
 }
