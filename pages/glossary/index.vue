@@ -2,7 +2,7 @@
   <div class="glossary-index">
     <!-- Header Section -->
     <header class="glossary-header mb-5">
-      <h1 class="display-4 text-center mb-4">Yoga & Wellness Glossary</h1>
+      <h1 class="display-4 mb-4">Yoga & Wellness Glossary</h1>
       
       <!-- Search & Filters -->
       <div class="search-filter-container mb-4">
@@ -15,7 +15,7 @@
         >
         
         <div class="d-flex justify-content-between mt-3">
-          <div class="category-filters" >
+          <div class="category-filters">
             <button
               v-for="category in uniqueCategories"
               :key="category"
@@ -27,9 +27,19 @@
             </button>
           </div>
           
-          
+          <div class="alphabet-nav">
+            <a 
+              v-for="letter in alphabet"
+              :key="letter"
+              href="#"
+              class="text-decoration-none mx-1"
+              :class="{ 'text-primary': activeLetter === letter }"
+              @click.prevent="scrollToLetter(letter)"
+            >
+              {{ letter }}
+            </a>
+          </div>
         </div>
-        
       </div>
     </header>
 
@@ -171,7 +181,7 @@ const scrollToLetter = (letter: string) => {
   activeLetter.value = letter;
   const element = document.getElementById(`letter-${letter}`);
   if (element) {
-    const offset = 300; // Increased offset to ensure better alignment
+    const offset = 325; // Increased offset to ensure better alignment
     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
     const offsetPosition = elementPosition - offset;
 
@@ -286,6 +296,18 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+h1.display-4 {
+  color: #2a4d3a; /* Updated title color */
+}
+
+.alphabet-nav a {
+  color: #2a4d3a; /* Updated alphabet color */
+}
+
+.alphabet-nav a.text-primary {
+  color: #2a4d3a !important; /* Ensure active alphabet color matches */
 }
 
 @media (max-width: 768px) {
