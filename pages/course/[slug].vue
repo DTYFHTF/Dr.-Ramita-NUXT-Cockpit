@@ -142,7 +142,7 @@
           <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
             <a
               :href="course.external_link"
-              class="btn btn-lg btn-primary"
+              class="btn-smooth-primary"
               target="_blank"
               rel="noopener"
             >
