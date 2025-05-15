@@ -10,6 +10,13 @@ export async function autoLinkContent(content) {
   await glossaryStore.loadTerms();
 
   const terms = glossaryStore.terms;
+  console.log('Loaded glossary terms:', terms); // Debugging log
+
+  if (!terms || terms.length === 0) {
+    console.warn('No glossary terms available');
+    return content;
+  }
+
   const termMap = new Map();
 
   // Build regex pattern for terms (longest first)
@@ -17,43 +24,45 @@ export async function autoLinkContent(content) {
     .filter((term) => term.linkable)
     .sort((a, b) => b.title.length - a.title.length)
     .flatMap((term) => {
-      termMap.set(term.title.toLowerCase(), term);
-      return [term.title, ...term.relatedTerms];
+      console.log('Processing term:', term.title); // Debugging log
+      return term.title;
     })
-    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     .join('|');
 
-  const termRegex = new RegExp(`\\b(${termRegexPattern})\\b`, 'gi');
+  console.log('Generated regex pattern:', termRegexPattern); // Debugging log
 
-  // Process AST
-  const markdownAst = unified().use(remarkParse).parse(content);
+  if (!termRegexPattern) {
+    console.warn('No valid regex pattern generated');
+    return content;
+  }
 
-  visit(markdownAst, 'text', (node, index, parent) => {
-    if (!parent || parent.type === 'link' || parent.type === 'code') return;
+  const regex = new RegExp(`\\b(${termRegexPattern})\\b`, 'gi');
+  console.log('Regex object:', regex); // Debugging log
 
-    const matches = node.value?.match(termRegex);
-    if (!matches) return;
+  const matches = content.match(regex);
+  console.log('Matches found:', matches); // Debugging log
 
-    let newValue = node.value;
+  if (!matches) {
+    console.warn('No matches found in content');
+    return content;
+  }
 
-    matches.forEach((match) => {
-      const term = termMap.get(match.toLowerCase());
-      if (!term) return;
+  const linkedContent = content.replace(regex, (match) => {
+    const term = terms.find((t) => t.title.toLowerCase() === match.toLowerCase());
+    if (term) {
+      console.log('Matched term:', term); // Debugging log
 
-      const replacement = `[GLOSSARY:${term.slug}]${match}[/GLOSSARY]`;
-      newValue = newValue.replace(new RegExp(`\\b${match}\\b`, 'g'), replacement);
-    });
+      // Safeguard to prevent duplicate replacements
+      if (match.includes('<GlossaryTerm')) {
+        console.warn('Duplicate replacement detected for:', match);
+        return match;
+      }
 
-    node.value = newValue;
+      return `<GlossaryTerm term="${term.slug}">${match}</GlossaryTerm>`;
+    }
+    return match;
   });
 
-  const processedContent = unified()
-    .use(() => (tree) => tree)
-    .use(remarkHtml)
-    .stringify(markdownAst)
-    .replace(/\[GLOSSARY:(.*?)\](.*?)\[\/GLOSSARY\]/g, (_, slug, text) => {
-      return `<GlossaryTerm termSlug="${slug}">${text}</GlossaryTerm>`;
-    });
-
-  return processedContent;
+  console.log('Final linked content:', linkedContent); // Debugging log
+  return linkedContent;
 }

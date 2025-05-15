@@ -39,7 +39,7 @@
               {{ remedy.diseaseName }}
             </h1>
             <p class="remedy-description lead fs-3 text-muted mb-5">
-              {{ stripHtmlTags(remedy.diseaseDescription) }}
+              <DynamicContent :content="remedy.diseaseDescription || ''" />
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@
               :key="index"
               class="fs-5 lh-lg mb-2"
             >
-              {{ item }}
+              <DynamicContent :content="item" />
             </li>
           </ul>
         </section>
@@ -128,7 +128,7 @@
               :key="index"
               class="fs-5 lh-lg mb-2"
             >
-              {{ item }}
+              <DynamicContent :content="item" />
             </li>
           </ul>
         </section>
@@ -147,7 +147,7 @@
               :key="index"
               class="fs-5 lh-lg mb-2"
             >
-              {{ item }}
+              <DynamicContent :content="item" />
             </li>
           </ul>
         </section>
@@ -166,7 +166,7 @@
               :key="index"
               class="fs-5 lh-lg mb-2"
             >
-              {{ item }}
+              <DynamicContent :content="item" />
             </li>
           </ul>
         </section>
@@ -196,7 +196,7 @@
               :key="index"
               class="fs-5 lh-lg mb-2"
             >
-              {{ item }}
+              <DynamicContent :content="item" />
             </li>
           </ul>
         </section>
@@ -209,7 +209,9 @@
               Practices for mental clarity and peace
             </p>
           </div>
-          <p class="text-muted fs-5">{{ remedy.dhyanaMeditation }}</p>
+          <p class="text-muted fs-5">
+            <DynamicContent :content="remedy.dhyanaMeditation " />
+          </p>
         </section>
 
         <!-- Enhanced Color Therapy -->
@@ -220,7 +222,10 @@
               Healing through colors
             </p>
           </div>
-          <p class="text-muted fs-5">{{ remedy.colorTherapy }}</p>
+          <p class="text-muted fs-5">
+                        <DynamicContent :content="remedy.colorTherapy " />
+
+          </p>
         </section>
 
         <!-- Enhanced Notes Section -->
@@ -228,7 +233,9 @@
           <div class="section-header mb-6">
             <h2 class="section-title">Notes</h2>
           </div>
-          <p class="text-muted fs-5">{{ remedy.notes }}</p>
+          <p class="text-muted fs-5">
+            <DynamicContent :content="remedy.notes " />
+          </p>
         </section>
       </div>
     </article>
@@ -241,6 +248,7 @@ import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "@/composables/useApi";
 import { sanitizedDescription } from '@/composables/sanitizeUtils';
+import DynamicContent from "@/components/DynamicContent.vue";
 
 
 

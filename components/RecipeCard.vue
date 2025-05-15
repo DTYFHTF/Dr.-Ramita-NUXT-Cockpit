@@ -11,7 +11,7 @@
     <template #meta>
       <div class="meta-item">
         <LucideIcon icon="mdi:clock-outline" class="icon" />
-        <span>{{ preparation_time || 'N/A' }}</span>
+        <span>{{ preparation_time || "N/A" }}</span>
       </div>
       <div class="meta-item">
         <LucideIcon icon="mdi:account-group-outline" class="icon" />
@@ -19,7 +19,7 @@
       </div>
     </template>
     <template #button>
-      <NuxtLink 
+      <NuxtLink
         v-if="slug"
         :to="`/recipe/${slug}`"
         class="btn-smooth-success mt-auto w-100"
@@ -35,8 +35,8 @@
 </template>
 
 <script setup>
-import Card from './Card.vue';
-import LucideIcon from '@/components/LucideIcon.vue';
+import Card from "./Card.vue";
+import LucideIcon from "@/components/LucideIcon.vue";
 
 const props = defineProps({
   id: String,

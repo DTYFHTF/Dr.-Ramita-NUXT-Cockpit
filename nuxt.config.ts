@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     "@/assets/scss/main.scss" // Adding our global SCSS file
   ],
   plugins: [
-    { src: '~/plugins/bootstrap.client.ts', mode: 'client' }
+    { src: '~/plugins/bootstrap.client.ts', mode: 'client' },
+    { src: '~/plugins/autoLinkDirective.client.ts', mode: 'client' } // Registering the autoLinkDirective plugin
   ],
 
   vite: {

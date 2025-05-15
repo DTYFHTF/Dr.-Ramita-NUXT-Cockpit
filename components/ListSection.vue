@@ -15,10 +15,10 @@
       >
         <template v-if="item.title">
           <h5 class="fw-bold">{{ index + 1 }}. {{ item.title }}</h5>
-          <div class="text-muted mb-0" v-html="sanitizedDescription(item.description)" />
+          <DynamicContent :content="item.description || ''" />
         </template>
         <template v-else>
-          <div class="mb-0" v-html="sanitizedDescription(`${index + 1}. ${item.description}`)" />
+          <DynamicContent :content="`${index + 1}. ${item.description || ''}`" />
         </template>
       </li>
     </ul>
@@ -27,6 +27,7 @@
 
 <script>
 import { sanitizedDescription } from '@/composables/sanitizeUtils';
+import DynamicContent from '@/components/DynamicContent.vue';
 
 export default {
   props: {
@@ -46,6 +47,9 @@ export default {
   },
   methods: {
     sanitizedDescription
+  },
+  components: {
+    DynamicContent
   }
 };
 </script>

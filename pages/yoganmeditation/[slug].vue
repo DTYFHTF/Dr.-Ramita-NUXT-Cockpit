@@ -39,7 +39,7 @@
             <h1 class="yoga-title display-4 fw-bold mb-4">{{ yoga.title }}</h1>
             
             <p class="yoga-slogan lead fs-3 text-muted mb-5">
-              {{ yoga.subTitle }}
+              {{yoga.subTitle}}
             </p>
             <div class="yoga-meta d-flex gap-4">
               <div class="meta-item d-flex align-items-center fs-5">
@@ -84,7 +84,7 @@
         <!-- Enhanced Short Description -->
         <section v-if="yoga.shortDescription" class="short-description mb-7 text-start">
           <div class="lead fs-4 text-muted max-w-700 mx-auto lh-lg">
-            {{ yoga.shortDescription }}
+            <DynamicContent :content="yoga.shortDescription" />
           </div>
         </section>
 
@@ -123,10 +123,9 @@
                     loading="lazy"
                     style="max-height: 300px; width: auto; object-fit: contain; background: #fff;"
                   />
-                  <div
-                    v-html="pose.instructions"
-                    class="pose-instructions text-muted fs-5 lh-lg"
-                  ></div>
+                  <div class="pose-instructions text-muted fs-5 lh-lg">
+                    <DynamicContent :content="pose.instructions" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,15 +133,15 @@
         </section>
 
         <!-- Enhanced Benefits Section -->
-        <section class="yoga-benefits  bg-soft-green rounded-4 text-start">
+        <section class="yoga-benefits bg-soft-green rounded-4 text-start">
           <div class="container">
             <div class="section-header mb-6">
               <h2 class="section-title">Transformative Benefits</h2>
               <p class="section-subtitle text-muted fs-5">Nourish your body and mind</p>
             </div>
-            <ol class="benefits-list bg-white ">
+            <ol class="benefits-list bg-white">
               <li v-for="(benefit, idx) in yoga.benefits" :key="idx" class="fs-5 lh-lg mb-2">
-                {{ benefit }}
+                <DynamicContent :content="benefit" />
               </li>
             </ol>
           </div>
@@ -160,8 +159,9 @@
               </div>
               <div
                 class="conclusion-content text-muted fs-5 lh-lg"
-                v-html="yoga.conclusion"
-              ></div>
+              >
+                <DynamicContent :content="yoga.conclusion" />
+              </div>
               
               <button
                 class="btn btn-smooth-primary mt-5 px-6 py-3 fs-5"
@@ -172,6 +172,13 @@
             </div>
           </div>
         </section>
+
+        <!-- Processed Content -->
+        <section v-if="processedContent" class="processed-content mb-7 text-start">
+          <div class="max-w-700 mx-auto lh-lg">
+            <div v-html="processedContent"></div>
+          </div>
+        </section>
       </div>
     </article>
   </div>
@@ -179,12 +186,13 @@
 <script setup>
 import LucideIcon from "@/components/LucideIcon.vue";
 import SimilarReads from "@/components/SimilarReads.vue";
-import { ref, watchEffect } from "vue";
+import DynamicContent from '@/components/DynamicContent.vue';
+import { ref, watchEffect, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "@/composables/useApi";
 import vueScrollTo from 'vue-scrollto';
 import { stripHtmlTags } from '@/composables/sanitizeUtils'; 
-
+import { autoLinkContent } from '@/composables/autoLinkParser';
 
 const route = useRoute();
 const yoga = ref(null);
@@ -281,6 +289,22 @@ watchEffect(() => {
 const scrollToSimilarReads = () => {
   vueScrollTo.scrollTo('#similar-reads', 500, { offset: -200 });
 };
+
+// Watch for changes in the `yoga` data and reapply the directive
+watchEffect(() => {
+  if (yoga.value) {
+    console.log('Yoga data loaded:', yoga.value);
+    const sloganElement = document.querySelector('.yoga-slogan');
+    if (sloganElement) {
+      console.log('Reapplying v-auto-link directive to slogan element');
+      const originalContent = sloganElement.innerHTML;
+      autoLinkContent(originalContent).then((linkedContent) => {
+        sloganElement.innerHTML = linkedContent;
+        console.log('Processed content:', linkedContent);
+      });
+    }
+  }
+});
 </script>
 <style scoped lang="scss">
 @use "sass:color";
