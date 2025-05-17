@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
     <div class="container">
       <!-- Brand/Doctor's Name -->
-      <a class="navbar-brand" href="/">
+      <NuxtLink to="/" class="navbar-brand">
         <img
           src="/favicon.ico"
           alt="Ayurvedic Icon"
@@ -10,7 +10,7 @@
           style="width: 24px; height: 24px"
         />
         <span class="brand-text">Dr. Ramita Maharjan</span>
-      </a>
+      </NuxtLink>
 
       <!-- Mobile Toggle -->
       <button
@@ -71,8 +71,9 @@
 
         <!-- Right-aligned User Section -->
         <div class="d-lg-flex align-items-center gap-3">
-          <template v-if="userStore.user">
-            <span class="user-email">{{ userStore.user.email }}</span>
+          <template v-if="user">
+            <span class="user-email">{{ user.email }}</span>
+            <NuxtLink to="/profile">Profile</NuxtLink>
             <LogoutButton />
           </template>
           <template v-else>
@@ -92,9 +93,16 @@
 <script setup>
 import SmoothLink from '~/components/SmoothLink.vue'
 import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 import LogoutButton from '@/components/LogoutButton.vue'
+import { watchEffect } from 'vue'
 
 const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+
+watchEffect(() => {
+  // If userStore.user changes, this will trigger a re-render
+})
 </script>
 
 <style scoped>

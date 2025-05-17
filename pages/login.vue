@@ -34,7 +34,7 @@ async function login({ email, password }: { email: string, password: string }) {
     if (!loginResponse.token) throw new Error('No token returned from API')
     userStore.setToken(loginResponse.token)
     userStore.setUser(loginResponse.user)
-    router.push('/')
+    router.push('/profile')
   } catch (err: any) {
     if (err?.data?.message) {
       error.value = err.data.message
