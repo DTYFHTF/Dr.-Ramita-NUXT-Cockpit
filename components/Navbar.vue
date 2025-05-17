@@ -69,15 +69,20 @@
           </li>
         </ul>
 
-        <!-- Right-aligned CTA Button -->
-        <div class="d-lg-flex">
-          <SmoothLink
-            to="book-consultation"
-            fallbackRoute="/#book-consultation"
-            class="btn btn-smooth-success rounded-pill px-4"
-          >
-            Book Consultation
-          </SmoothLink>
+        <!-- Right-aligned User Section -->
+        <div class="d-lg-flex align-items-center gap-3">
+          <template v-if="userStore.user">
+            <span class="user-email">{{ userStore.user.email }}</span>
+            <LogoutButton />
+          </template>
+          <template v-else>
+            <NuxtLink to="/login" class="nav-link">
+              Login
+            </NuxtLink>
+            <NuxtLink to="/register" class="btn btn-smooth-success rounded-pill px-4">
+              Register
+            </NuxtLink>
+          </template>
         </div>
       </div>
     </div>
@@ -86,6 +91,10 @@
 
 <script setup>
 import SmoothLink from '~/components/SmoothLink.vue'
+import { useUserStore } from '@/stores/user'
+import LogoutButton from '@/components/LogoutButton.vue'
+
+const userStore = useUserStore()
 </script>
 
 <style scoped>
@@ -149,6 +158,12 @@ import SmoothLink from '~/components/SmoothLink.vue'
 .d-lg-flex .btn {
   font-size: 1rem;
   padding: 0.5rem 1.2rem;
+}
+
+.user-email {
+  margin-right: 1rem;
+  color: #2d8f6f;
+  font-weight: bold;
 }
 
 @media (max-width: 991.98px) {
