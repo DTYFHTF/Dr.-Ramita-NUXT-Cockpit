@@ -8,15 +8,30 @@ export function useProducts() {
   const loading = ref(false)
   const error = ref('')
   const categories = ref<any[]>([])
+  const pagination = ref<any>(null)
 
-  async function fetchProducts() {
+  async function fetchProducts(page = 1, perPage = 15, sort = '', category = '', priceMax = 10000) {
     loading.value = true
     error.value = ''
     try {
-      const response = await $fetch(`${API_BASE}/api/products`, {
+      const params = new URLSearchParams()
+      params.append('page', String(page))
+      params.append('per_page', String(perPage))
+      if (sort) {
+        if (sort === 'price_asc') params.append('sort_by', 'price')
+        if (sort === 'price_desc') { params.append('sort_by', 'price'); params.append('sort_order', 'desc') }
+        if (sort === 'rating_asc') params.append('sort_by', 'rating')
+        if (sort === 'rating_desc') { params.append('sort_by', 'rating'); params.append('sort_order', 'desc') }
+      }
+      if (category) params.append('category', String(category))
+      if (priceMax && priceMax !== 10000) params.append('price_max', String(priceMax))
+      if (priceMax === 10000) params.append('price_min', '2001') // For 'Above ₹2000'
+
+      const response = await $fetch(`${API_BASE}/api/products?${params.toString()}`, {
         headers: { Accept: 'application/json' }
       }) as any
       products.value = Array.isArray(response) ? response : response.data
+      pagination.value = response.meta || null
     } catch (e: any) {
       error.value = e?.data?.message || e?.message || 'Failed to fetch products.'
     } finally {
@@ -55,5 +70,5 @@ export function useProducts() {
     }
   }
 
-  return { products, product, loading, error, fetchProducts, fetchProduct, categories, fetchCategories }
+  return { products, product, loading, error, fetchProducts, fetchProduct, categories, fetchCategories, pagination }
 }
