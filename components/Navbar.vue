@@ -62,7 +62,7 @@
           </li>
         </ul>
         <!-- User Section -->
-        <div class="d-flex flex-column flex-lg-row align-items-center gap-3 w-100 justify-content-center mt-3 mt-lg-0">
+        <div class="d-flex align-items-center ms-auto flex-shrink-0  flex-lg-row justify-content-center  gap-3 mt-3 mt-lg-0">
           <div
             class="dropdown me-0 me-lg-2"
             @mouseenter="isDropdownOpen = true"
@@ -144,6 +144,7 @@
             @mouseenter="isMegaMenuOpen = true"
             @mouseleave="isMegaMenuOpen = false"
           >
+            <!-- On small screens, show a link to /products instead of the MegaMenu -->
             <NuxtLink
               to="/products"
               class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer d-lg-none"
@@ -151,8 +152,9 @@
               <LucideIcon icon="mdi:shop" class="fs-4" />
               <span>Shop</span>
             </NuxtLink>
+            <!-- On large screens, show the MegaMenu -->
             <div
-              class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer d-none d-lg-flex"
+              class="btn btn-link nav-link d-none d-lg-flex flex-column align-items-center p-0 cursor-pointer"
               @mouseenter="isMegaMenuOpen = true"
               @mouseleave="isMegaMenuOpen = false"
             >
@@ -223,6 +225,7 @@ function closeDropdown() {
   padding: 0.6rem 1.5rem;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  text-align: center;
 }
 
 .nav-link:hover {
