@@ -146,4 +146,7 @@ function onStockChange() {
   transform: translateY(-4px) scale(1.02);
   z-index: 2;
 }
+.row.g-4 {
+  row-gap: 1rem; /* Increase vertical spacing between product cards */
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="card h-100 product-card border-0 shadow-sm">
+  <div class="card h-100 product-card border shadow-sm">
     <NuxtLink
       :to="`/products/${product.slug}`"
       class="text-decoration-none text-dark d-flex flex-column h-100"
@@ -51,18 +51,25 @@
         <p class="product-description">
           {{ product.description }}
         </p>
-        <button
-          class="btn btn-smooth-success w-100 mt-auto add-to-cart-btn"
-          :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
-        >
-          <span class="add-to-cart-text">Add to Cart</span>
-          <LucideIcon
-            icon="mdi:cart"
-            color="white"
-            class="add-to-cart-icon"
-          />
-        </button>
-        
+        <div class="d-flex justify-content-between align-items-center w-100 mt-auto">
+          <button class="btn btn-outline-secondary wishlist-btn">
+            <LucideIcon icon="mdi:heart-outline" color="black" />
+          </button>
+          <button
+            class="btn btn-smooth-success add-to-cart-btn"
+            :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+          >
+            <span class="add-to-cart-text">Add to Cart</span>
+            <LucideIcon
+              icon="mdi:cart"
+              color="white"
+              class="add-to-cart-icon"
+            />
+          </button>
+          <button class="btn btn-outline-secondary quick-view-btn">
+            <LucideIcon icon="mdi:eye-outline" color="black" />
+          </button>
+        </div>
       </div>
     </NuxtLink>
   </div>
@@ -90,9 +97,11 @@ defineProps<{
 <style scoped>
 .product-card {
   transition: box-shadow 0.18s, transform 0.18s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 8px; /* Rounded corners */
 }
 .product-card:hover {
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
   transform: translateY(-4px) scale(1.02);
 }
 .image-container {
@@ -128,6 +137,20 @@ defineProps<{
   opacity: 1;
   transform: scale(1); /* Reset zoom for hover image */
 }
+.wishlist-btn,
+.quick-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+.wishlist-btn:hover,
+.quick-view-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
 .add-to-cart-btn {
   position: relative;
   overflow: hidden;
@@ -161,5 +184,9 @@ defineProps<{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+}
+.card-body{
+    background-color: #f9f9f9; /* Subtle background color */
+
 }
 </style>
