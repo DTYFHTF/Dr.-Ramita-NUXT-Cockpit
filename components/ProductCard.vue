@@ -34,14 +34,6 @@
             ${{ product.price }}
           </span>
         </div>
-        <div class="mb-2">
-          <span
-            v-html="starRating(product.avg_rating || product.rating || 0)"
-          ></span>
-          <span class="ms-1 text-muted">
-            ({{ (product.avg_rating || product.rating || 0).toFixed(1) }})
-          </span>
-        </div>
         <span
           class="badge mb-2"
           :class="
@@ -56,6 +48,9 @@
               : 'Out of stock'
           }}
         </span>
+        <p class="product-description">
+          {{ product.description }}
+        </p>
         <button
           class="btn btn-smooth-success w-100 mt-auto add-to-cart-btn"
           :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
@@ -67,6 +62,7 @@
             class="add-to-cart-icon"
           />
         </button>
+        
       </div>
     </NuxtLink>
   </div>
@@ -84,27 +80,11 @@ defineProps<{
     image: string;
     image_2?: string;
     slug: string;
-    avg_rating?: number;
-    rating?: number;
     in_stock?: boolean;
     stock?: number;
+    description?: string; // Added description prop
   };
 }>();
-
-function starRating(rating: number) {
-  const full = Math.floor(rating);
-  const half = rating % 1 >= 0.5 ? 1 : 0;
-  const empty = 5 - full - half;
-  return (
-    '<span class="text-warning">' +
-    '★'.repeat(full) +
-    (half ? '½' : '') +
-    '<span class="text-muted">' +
-    '★'.repeat(empty) +
-    '</span>' +
-    '</span>'
-  );
-}
 </script>
 
 <style scoped>
@@ -172,5 +152,14 @@ function starRating(rating: number) {
 }
 .add-to-cart-btn:hover .add-to-cart-icon {
   opacity: 1;
+}
+.product-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  line-clamp: 3; /* Standard property for compatibility */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 </style>

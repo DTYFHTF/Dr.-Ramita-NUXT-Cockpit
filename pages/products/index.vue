@@ -31,7 +31,14 @@
                 <option :value="500">Under ₹500</option>
                 <option :value="1000">Under ₹1000</option>
                 <option :value="2000">Under ₹2000</option>
-                <option :value="10000">Above ₹2000</option>
+                <option :value="100000">Above ₹2000</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label mb-1">Stock Status:</label>
+              <select v-model="inStock" class="form-select form-select-sm" @change="onStockChange">
+                <option :value="true">In Stock</option>
+                <option :value="false">Out of Stock</option>
               </select>
             </div>
           </div>
@@ -86,17 +93,18 @@ const router = useRouter();
 
 const sort = ref(Array.isArray(route.query.sort) ? route.query.sort[0] || "" : route.query.sort || "");
 const category = ref(Array.isArray(route.query.category) ? route.query.category[0] || "" : route.query.category || "");
-const maxPrice = ref(10000);
+const maxPrice = ref(100000);
 const priceMax = ref(Number(route.query.priceMax) || maxPrice.value);
 const page = ref(Number(route.query.page) || 1);
 const perPage = 30;
+const inStock = ref(true);
 
 onMounted(() => {
-  fetchProducts(page.value, perPage, sort.value, category.value, priceMax.value);
+  fetchProducts(page.value, perPage, sort.value, category.value, priceMax.value, inStock.value);
   fetchCategories();
 });
 
-watch([sort, category, priceMax, page], () => {
+watch([sort, category, priceMax, page, inStock], () => {
   router.replace({
     query: {
       ...route.query,
@@ -104,9 +112,10 @@ watch([sort, category, priceMax, page], () => {
       category: category.value || undefined,
       priceMax: priceMax.value || undefined,
       page: page.value || undefined,
+      inStock: inStock.value || undefined,
     },
   });
-  fetchProducts(page.value, perPage, sort.value, category.value, priceMax.value);
+  fetchProducts(page.value, perPage, sort.value, category.value, priceMax.value, inStock.value);
 });
 
 function goToPage(p: number) {
@@ -121,6 +130,9 @@ function onCategoryChange() {
   page.value = 1;
 }
 function onPriceChange() {
+  page.value = 1;
+}
+function onStockChange() {
   page.value = 1;
 }
 </script>
