@@ -15,7 +15,7 @@ export function useProducts() {
     try {
       const response = await $fetch(`${API_BASE}/api/products`, {
         headers: { Accept: 'application/json' }
-      })
+      }) as any
       products.value = Array.isArray(response) ? response : response.data
     } catch (e: any) {
       error.value = e?.data?.message || e?.message || 'Failed to fetch products.'
@@ -28,7 +28,7 @@ export function useProducts() {
     try {
       const response = await $fetch(`${API_BASE}/api/categories`, {
         headers: { Accept: 'application/json' }
-      })
+      }) as any
       categories.value = Array.isArray(response) ? response : response.data
     } catch (e: any) {
       categories.value = []
