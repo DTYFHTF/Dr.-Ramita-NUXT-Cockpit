@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <HeroSection />
 
     <!-- Courses Section --> 
@@ -59,6 +60,7 @@ import HomeRemedyCard from '@/components/HomeRemedyCard.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import YogaMeditationCard from '@/components/YogaMeditationCard.vue'
 import CourseCard from '@/components/CourseCard.vue'
+import MegaMenu from "@/components/MegaMenu.vue";
 
 
 

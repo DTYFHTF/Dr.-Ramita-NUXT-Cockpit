@@ -7,6 +7,7 @@ export function useProducts() {
   const product = ref<any>(null)
   const loading = ref(false)
   const error = ref('')
+  const categories = ref<any[]>([])
 
   async function fetchProducts() {
     loading.value = true
@@ -15,12 +16,22 @@ export function useProducts() {
       const response = await $fetch(`${API_BASE}/api/products`, {
         headers: { Accept: 'application/json' }
       })
-      // If response is { data: [...] }, extract data
       products.value = Array.isArray(response) ? response : response.data
     } catch (e: any) {
       error.value = e?.data?.message || e?.message || 'Failed to fetch products.'
     } finally {
       loading.value = false
+    }
+  }
+
+  async function fetchCategories() {
+    try {
+      const response = await $fetch(`${API_BASE}/api/categories`, {
+        headers: { Accept: 'application/json' }
+      })
+      categories.value = Array.isArray(response) ? response : response.data
+    } catch (e: any) {
+      categories.value = []
     }
   }
 
@@ -44,5 +55,5 @@ export function useProducts() {
     }
   }
 
-  return { products, product, loading, error, fetchProducts, fetchProduct }
+  return { products, product, loading, error, fetchProducts, fetchProduct, categories, fetchCategories }
 }

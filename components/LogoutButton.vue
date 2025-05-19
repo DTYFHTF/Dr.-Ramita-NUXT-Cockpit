@@ -1,5 +1,5 @@
 <template>
-  <button @click="logout" :disabled="loading" class="logout-btn">
+  <button @click="logout" :disabled="loading" :class="['logout-btn', $attrs.class]">
     <slot>Logout</slot>
   </button>
 </template>
@@ -41,17 +41,3 @@ async function logout() {
 }
 </script>
 
-<style scoped>
-.logout-btn {
-  background: #c00;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-.logout-btn:disabled {
-  background: #aaa;
-}
-</style>

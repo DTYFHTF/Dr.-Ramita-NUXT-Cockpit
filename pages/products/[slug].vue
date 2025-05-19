@@ -10,44 +10,80 @@
             <NuxtLink to="/products">Shop</NuxtLink>
           </li>
           <li v-if="product.category" class="breadcrumb-item">
-            <NuxtLink :to="`/products?category=${product.category}`">{{ product.category }}</NuxtLink>
+            <NuxtLink :to="`/products?category=${product.category}`">{{
+              product.category
+            }}</NuxtLink>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ product.name }}
+          </li>
         </ol>
       </nav>
       <div class="row g-4 align-items-start">
         <!-- Images column -->
         <div class="col-12 col-md-6">
-          <ProductImages :image="product.image" :image2="product.image_2" :image3="product.image_3" :name="product.name" />
+          <ProductImages
+            :image="product.image"
+            :image2="product.image_2"
+            :image3="product.image_3"
+            :name="product.name"
+          />
         </div>
         <!-- Content column -->
         <div class="col-12 col-md-6">
           <h1 class="mb-2">{{ product.name }}</h1>
           <div class="mb-2 text-muted" v-if="product.category">
-            Category: <NuxtLink :to="`/products?category=${product.category}`">{{ product.category }}</NuxtLink>
+            Category:
+            <NuxtLink :to="`/products?category=${product.category}`">{{
+              product.category
+            }}</NuxtLink>
           </div>
           <div class="mb-2 d-flex align-items-center gap-3">
-            <span v-if="product.sale_price && product.sale_price < product.price">
-              <span class="text-decoration-line-through text-muted">${{ product.price }}</span>
-              <span class="ms-2 text-danger fw-bold">${{ product.sale_price }}</span>
+            <span
+              v-if="product.sale_price && product.sale_price < product.price"
+            >
+              <span class="text-decoration-line-through text-muted"
+                >${{ product.price }}</span
+              >
+              <span class="ms-2 text-danger fw-bold"
+                >${{ product.sale_price }}</span
+              >
             </span>
             <span v-else class="product-price">${{ product.price }}</span>
-            <span class="badge" :class="product.in_stock ? 'bg-success' : 'bg-danger'">
-              {{ product.in_stock ? 'In stock' : 'Out of stock' }}
+            <span
+              class="badge"
+              :class="product.in_stock ? 'bg-success' : 'bg-danger'"
+            >
+              {{ product.in_stock ? "In stock" : "Out of stock" }}
             </span>
           </div>
           <div class="mb-3">
             <span class="star-rating">
               <span v-for="(star, index) in starArray" :key="index">
-                <i class="bi" :class="star === 'full' ? 'bi-star-fill' : (star === 'half' ? 'bi-star-half' : 'bi-star')"></i>
+                <i
+                  class="bi"
+                  :class="
+                    star === 'full'
+                      ? 'bi-star-fill'
+                      : star === 'half'
+                      ? 'bi-star-half'
+                      : 'bi-star'
+                  "
+                ></i>
               </span>
-              <span class="ms-2">{{ product.rating ? product.rating.toFixed(1) : '0.0' }}/5</span>
+              <span class="ms-2"
+                >{{
+                  product.rating ? product.rating.toFixed(1) : "0.0"
+                }}/5</span
+              >
             </span>
           </div>
           <div class="product-description mb-4">
-            {{ product.description || 'No description available.' }}
+            {{ product.description || "No description available." }}
           </div>
-          <button class="btn btn-primary" :disabled="!inStock">Add to cart</button>
+          <button class="btn btn-primary" :disabled="!inStock">
+            Add to cart
+          </button>
         </div>
       </div>
     </div>
@@ -58,64 +94,73 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useProducts } from '@/composables/useProducts'
-import { onMounted, watch, computed } from 'vue'
+import { useRoute } from "vue-router";
+import { useProducts } from "@/composables/useProducts";
+import { onMounted, watch, computed } from "vue";
 
-const route = useRoute()
-const { product, loading, error, fetchProduct } = useProducts()
+const route = useRoute();
+const { product, loading, error, fetchProduct } = useProducts();
 
-let lastSlug = ''
+let lastSlug = "";
 
 // Helper for image fallback
 function imageUrl(img: string) {
-  if (!img) return '/fallback.jpg'
-  if (img.startsWith('http')) return img
-  return `http://ayurveda-marketplace.test/storage/${img}`
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `http://ayurveda-marketplace.test/storage/${img}`;
 }
 
 // Helper for star rating (rounded to 1 decimal, up to 5 stars)
 const starArray = computed(() => {
-  const rating = product.value?.rating || 0
-  const rounded = Math.round(rating * 2) / 2
+  const rating = product.value?.rating || 0;
+  const rounded = Math.round(rating * 2) / 2;
   return Array.from({ length: 5 }, (_, i) => {
-    if (i + 1 <= rounded) return 'full'
-    if (i + 0.5 === rounded) return 'half'
-    return 'empty'
-  })
-})
+    if (i + 1 <= rounded) return "full";
+    if (i + 0.5 === rounded) return "half";
+    return "empty";
+  });
+});
 
 // Helper for price display
-const isOnSale = computed(() => product.value?.sale_price && product.value.sale_price < product.value.price)
+const isOnSale = computed(
+  () =>
+    product.value?.sale_price && product.value.sale_price < product.value.price
+);
 
 // Helper for stock
-const inStock = computed(() => product.value?.in_stock ?? product.value?.stock > 0)
+const inStock = computed(
+  () => product.value?.in_stock ?? product.value?.stock > 0
+);
 
 async function loadProduct(slug: string) {
-  if (slug === lastSlug && error.value) return // Prevent repeated fetches on error
-  lastSlug = slug
+  if (slug === lastSlug && error.value) return; // Prevent repeated fetches on error
+  lastSlug = slug;
   try {
-    await fetchProduct(slug)
+    await fetchProduct(slug);
     // If product.value is wrapped in { data: ... }, unwrap it
     if (product.value && product.value.data) {
-      product.value = product.value.data
+      product.value = product.value.data;
     }
   } catch (e: any) {
     if (e?.status === 404) {
-      error.value = 'Product not found.'
+      error.value = "Product not found.";
     } else {
-      error.value = e?.data?.message || e?.message || 'Failed to fetch product.'
+      error.value =
+        e?.data?.message || e?.message || "Failed to fetch product.";
     }
   }
 }
 
 onMounted(() => {
-  loadProduct(route.params.slug as string)
-})
+  loadProduct(route.params.slug as string);
+});
 
-watch(() => route.params.slug, (slug) => {
-  if (slug) loadProduct(slug as string)
-})
+watch(
+  () => route.params.slug,
+  (slug) => {
+    if (slug) loadProduct(slug as string);
+  }
+);
 </script>
 
 <style scoped>

@@ -1,89 +1,163 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
     <div class="container">
-      <!-- Brand/Doctor's Name -->
-      <NuxtLink to="/" class="navbar-brand">
-        <img
-          src="/favicon.ico"
-          alt="Ayurvedic Icon"
-          class="me-2"
-          style="width: 24px; height: 24px"
-        />
-        <span class="brand-text">Dr. Ramita Maharjan</span>
-      </NuxtLink>
-
-      <!-- Mobile Toggle -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Navigation Items -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <SmoothLink
-              to="courses"
-              fallbackRoute="/course"
-              class="nav-link"
+      <div class="row w-100 align-items-center flex-nowrap gx-0">
+        <!-- Brand/Doctor's Name -->
+        <div class="col-4 col-md-3">
+          <NuxtLink to="/" class="navbar-brand">
+            <img
+              src="/favicon.ico"
+              alt="Ayurvedic Icon"
+              class="me-2"
+              style="width: 24px; height: 24px"
+            />
+            <span class="brand-text">Dr. Ramita Maharjan</span>
+          </NuxtLink>
+        </div>
+        <!-- Navigation Items -->
+        <div class="col-4 col-md-6">
+          <div
+            class="collapse navbar-collapse justify-content-center"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav mb-2 mb-lg-0 justify-content-center w-100">
+              <li class="nav-item">
+                <SmoothLink
+                  to="courses"
+                  fallbackRoute="/course"
+                  class="nav-link"
+                  >Courses</SmoothLink
+                >
+              </li>
+              <li class="nav-item">
+                <SmoothLink
+                  to="ynm"
+                  fallbackRoute="/yoganmeditation"
+                  class="nav-link"
+                >
+                  Yoga & Meditation
+                </SmoothLink>
+              </li>
+              <li class="nav-item">
+                <SmoothLink
+                  to="recipes"
+                  fallbackRoute="/recipe"
+                  class="nav-link"
+                  >Recipes</SmoothLink
+                >
+              </li>
+              <li class="nav-item">
+                <SmoothLink
+                  to="home-remedies"
+                  fallbackRoute="/homeremedy"
+                  class="nav-link"
+                >
+                  Home Remedies
+                </SmoothLink>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Herbal Treatment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- User Section -->
+        <div
+          class="col-4 col-md-3 d-flex justify-content-center align-items-center"
+        >
+          <div
+            class="dropdown"
+            @mouseenter="isDropdownOpen = true"
+            @mouseleave="isDropdownOpen = false"
+          >
+            <button
+              v-if="user"
+              class="btn btn-link dropdown-item d-flex flex-column align-items-center p-0"
+              type="button"
+              id="userDropdown"
+              aria-expanded="false"
+              tabindex="0"
+              @click="isDropdownOpen = !isDropdownOpen"
             >
-              Courses
-            </SmoothLink>
-          </li>
-          <li class="nav-item">
-            <SmoothLink
-              to="ynm"
-              fallbackRoute="/yoganmeditation"
-              class="nav-link"
+              <LucideIcon :icon="'mdi:account-circle'" class="fs-4" />
+              <span>Hi, {{ user.name }}</span>
+            </button>
+            <NuxtLink
+              v-else
+              to="/login"
+              class="btn btn-link dropdown-item d-flex flex-column align-items-center p-0"
+              id="userDropdown"
+              tabindex="0"
             >
-              Yoga & Meditation
-            </SmoothLink>
-          </li>
-          <li class="nav-item">
-            <SmoothLink
-              to="recipes"
-              fallbackRoute="/recipe"
-              class="nav-link"
-            >
-              Recipes
-            </SmoothLink>
-          </li>
-          <li class="nav-item">
-            <SmoothLink
-              to="home-remedies"
-              fallbackRoute="/homeremedy"
-              class="nav-link"
-            >
-              Home Remedies
-            </SmoothLink>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Herbal Treatment</a>
-          </li>
-        </ul>
-
-        <!-- Right-aligned User Section -->
-        <div class="d-lg-flex align-items-center gap-3">
-          <template v-if="user">
-            <span class="user-email">{{ user.email }}</span>
-            <NuxtLink to="/profile">Profile</NuxtLink>
-            <LogoutButton />
-          </template>
-          <template v-else>
-            <NuxtLink to="/login" class="nav-link">
-              Login
+              <LucideIcon icon="mdi:login" class="fs-4" />
+              <span>Sign In</span>
             </NuxtLink>
-            <NuxtLink to="/register" class="btn btn-smooth-success rounded-pill px-4">
-              Register
-            </NuxtLink>
-          </template>
+            <transition name="fade">
+              <ul
+                v-show="isDropdownOpen"
+                class="dropdown-menu dropdown-menu-end shadow-sm show me-3"
+                :class="{ 'd-block': isDropdownOpen }"
+                aria-labelledby="userDropdown"
+                @mouseover="isDropdownOpen = true"
+                @mouseleave="closeDropdown"
+              >
+                <template v-if="!user">
+                  <li class="py-2 text-center px-4">
+                    <NuxtLink to="/register" class="btn btn-smooth-primary btn-sm w-100"
+                      >Join Now</NuxtLink
+                    >
+                  </li>
+                  <li class="small text-muted text-center mb-2">
+                    New to the site?
+                  </li>
+                </template>
+                
+                <li v-if="user">
+                  <button class="dropdown-item d-flex align-items-center" >
+                    <LucideIcon icon="mdi:user" class="me-2" />
+                    Profile
+                  </button>
+                </li>
+                <li v-if="user">
+                  <button class="dropdown-item d-flex align-items-center" >
+                    <LucideIcon icon="mdi:history" class="me-2" />
+                    Order History
+                  </button>
+                </li>
+                <li v-if="user">
+                  <button class="dropdown-item d-flex align-items-center" >
+                    <LucideIcon icon="mdi:heart" class="me-2" />
+                    Wishlist
+                  </button>
+                </li>
+                <DropDownItems />
+                <li v-if="user">
+                  <LogoutButton
+                    class="dropdown-item btn-smooth-primary text-center fw-semibold mt-3"
+                  />
+                </li>
+              </ul>
+            </transition>
+          </div>
+          <div
+            class="megamenu-container ms-3 position-relative d-inline-block"
+            @mouseenter="isMegaMenuOpen = true"
+            @mouseleave="isMegaMenuOpen = false"
+          >
+            <div class="btn btn-link dropdown-item d-flex flex-column align-items-center p-0 nav-link cursor-pointer">
+              <LucideIcon icon="mdi:shop" class="fs-4" />
+              <span>Shop</span>
+            </div>
+            <transition name="fade">
+              <div
+                v-if="isMegaMenuOpen"
+                class="megamenu-popover position-absolute"
+                style="z-index: 2000; min-width: 400px;"
+              >
+                <MegaMenu :categories="categories" :products="products" :open="true" />
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -91,18 +165,30 @@
 </template>
 
 <script setup>
-import SmoothLink from '~/components/SmoothLink.vue'
-import { useUserStore } from '@/stores/user'
-import { storeToRefs } from 'pinia'
-import LogoutButton from '@/components/LogoutButton.vue'
-import { watchEffect } from 'vue'
+import SmoothLink from "~/components/SmoothLink.vue";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
+import LogoutButton from "@/components/LogoutButton.vue";
+import DropDownItems from "@/components/DropDownItems.vue";
+import { ref, onMounted } from "vue";
+import MegaMenu from "@/components/MegaMenu.vue";
+import { useProducts } from '@/composables/useProducts';
 
-const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+const { user } = storeToRefs(useUserStore());
+const isDropdownOpen = ref(false);
+const isMegaMenuOpen = ref(false);
+const { categories, products, fetchProducts, fetchCategories } = useProducts();
 
-watchEffect(() => {
-  // If userStore.user changes, this will trigger a re-render
-})
+onMounted(() => {
+  fetchProducts();
+  fetchCategories();
+});
+
+function closeDropdown() {
+  setTimeout(() => {
+    isDropdownOpen.value = false;
+  }, 120);
+}
 </script>
 
 <style scoped>
@@ -113,22 +199,10 @@ watchEffect(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-brand {
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-}
-
 .brand-text {
   font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
   color: var(--text-deep-green);
-}
-
-.nav-item {
-  position: relative;
-  margin: 0 0.25rem;
 }
 
 .nav-link {
@@ -136,12 +210,13 @@ watchEffect(() => {
   font-weight: 500;
   color: #333;
   padding: 0.6rem 0.8rem;
-  transition: all 0.25s ease;
   position: relative;
 }
 
+
+
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -152,47 +227,38 @@ watchEffect(() => {
   transform: translateX(-50%);
 }
 
-.nav-link:hover::after,
-.nav-link.active::after {
+.nav-link:hover::after {
   width: 70%;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: var(--text-deep-green);
+.dropdown-menu {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
 }
 
-/* Right-aligned button styles */
-.d-lg-flex .btn {
-  font-size: 1rem;
-  padding: 0.5rem 1.2rem;
+.megamenu-container {
+  position: relative;
 }
 
-.user-email {
-  margin-right: 1rem;
-  color: #2d8f6f;
-  font-weight: bold;
+.megamenu-popover {
+  right: 0 !important;
+  left: auto !important;
+  top: 100%;
+  
+  min-width: 400px;
+  padding: 0.25rem;
 }
 
-@media (max-width: 991.98px) {
-  .navbar-collapse {
-    margin-top: 1rem;
-    padding-bottom: 1rem;
-  }
-  
-  .nav-link {
-    padding: 0.6rem 0.5rem;
-    border-bottom: 1px solid #f1f1f1;
-  }
-  
-  .nav-link:hover::after,
-  .nav-link.active::after {
-    width: 30%;
-  }
-  
-  .btn-smooth-success {
-    width: 100%;
-    margin-top: 1rem;
-  }
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
