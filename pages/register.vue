@@ -1,9 +1,18 @@
 <template>
-  <RegisterForm
-    :error="error"
-    :loading="loading"
-    @submit="register"
-  />
+  <div class="register-page d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="w-100" style="max-width: 420px;">
+      <h2 class="mb-3 text-center fw-bold">Create your account</h2>
+      <RegisterForm
+        :error="error"
+        :loading="loading"
+        @submit="register"
+      />
+      <div class="text-center mt-3">
+        <span class="text-muted">Already have an account?</span>
+        <NuxtLink to="/login" class="ms-1 fw-semibold text-primary">Login</NuxtLink>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -47,5 +56,7 @@ async function register({ name, email, password, password_confirmation }: { name
 </script>
 
 <style scoped>
-/* Add any page-specific styles here */
+.register-page {
+  background: #f8fafc;
+}
 </style>

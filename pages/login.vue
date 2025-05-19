@@ -1,11 +1,18 @@
 <template>
-  <div class="login-page">
-    <AuthForm
-      :submit-label="'Login'"
-      :error="error"
-      :loading="loading"
-      @submit="login"
-    />
+  <div class="login-page d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="w-100" style="max-width: 420px;">
+      <h2 class="mb-3 text-center fw-bold">Sign in to your account</h2>
+      <AuthForm
+        :submit-label="'Login'"
+        :error="error"
+        :loading="loading"
+        @submit="login"
+      />
+      <div class="text-center mt-3">
+        <span class="text-muted">Don't have an account yet?</span>
+        <NuxtLink to="/register" class="ms-1 fw-semibold text-primary">Sign up</NuxtLink>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -51,11 +58,6 @@ async function login({ email, password }: { email: string, password: string }) {
 
 <style scoped>
 .login-page {
-  max-width: 400px;
-  margin: 60px auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  background: #f8fafc;
 }
 </style>

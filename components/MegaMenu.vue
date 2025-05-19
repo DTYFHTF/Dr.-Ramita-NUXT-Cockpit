@@ -136,7 +136,7 @@ watch(
   display: flex;
   width: 100%;
   overflow: hidden;
-  margin:2rem;
+  margin:2rem 0;
 }
 .product-grid {
   display: grid;
@@ -167,5 +167,13 @@ watch(
   font-weight: 500;
   color: #333;
   text-align: center;
+  display: block;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-height: 2.4em;
+  line-height: 1.2em;
+  max-height: 2.6em;
+  overflow: hidden;
 }
 </style>
