@@ -26,6 +26,9 @@ export default defineNuxtConfig({
         }
       }
     },
+    server: {
+      allowedHosts: ["74b8-152-58-194-75.ngrok-free.app"],
+    },
   },
   build: {
     transpile: ["bootstrap"],

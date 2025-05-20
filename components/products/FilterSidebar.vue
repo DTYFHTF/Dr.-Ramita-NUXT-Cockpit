@@ -20,6 +20,8 @@
         </div>
       </slot>
 
+      <hr>
+
       <!-- Price Ranges -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Price:</label>
@@ -36,7 +38,7 @@
           </li>
         </ul>
       </div>
-
+<hr>
       <!-- Categories -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Category:</label>
@@ -60,7 +62,7 @@
           {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
         </button>
       </div>
-
+<hr>
       <!-- Stock Status -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Stock Status:</label>

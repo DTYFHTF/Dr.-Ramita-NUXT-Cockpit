@@ -182,4 +182,9 @@ const sortArrow = (type: string) => {
   color: $text-deep-green;
     font-weight: 500;
 }
+
+.offcanvas-body {
+  max-height: calc(100vh - 100px); /* Ensures the content fits within the viewport */
+  overflow-y: auto; /* Enables scrolling within the offcanvas */
+}
 </style>
