@@ -15,7 +15,7 @@ export function useProducts() {
     perPage = 15,
     sort = "",
     category = "",
-    priceMin: number | null = 0,
+    priceMin: number | null = null,
     priceMax: number | null = null,
     inStock = true,
     onSale = false
@@ -39,8 +39,8 @@ export function useProducts() {
         }
       }
       if (category) params.append("category", String(category));
-      if (priceMin !== null && typeof priceMin !== "undefined") params.append("price_min", String(priceMin));
-      // if (priceMax !== null && typeof priceMax !== "undefined") params.append("price_max", String(priceMax));
+      if (priceMin !== null && priceMin > 0) params.append("price_min", String(priceMin));
+      if (priceMax !== null) params.append("price_max", String(priceMax));
       params.append("in_stock", String(inStock));
       if (onSale) params.append("on_sale", "true");
 
