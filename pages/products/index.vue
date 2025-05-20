@@ -8,19 +8,18 @@
             <h5 class="card-title mb-3 fw-bold">Filter & Sort</h5>
             <div class="mb-3">
               <div v-if="activeFilters.length" class="mb-3 d-flex align-items-center flex-wrap">
-  <span
-    v-for="(filter, idx) in activeFilters"
-    :key="idx"
-    class="btn border me-2 mb-2"
-    style="font-size: 1rem; cursor: pointer;"
-    @click="filter.remove"
-  >
-    {{ filter.label }} <span style="margin-left: 0.5em;">&times;</span>
-  </span>
-  <button class="btn btn-link ms-2 mb-2" @click="clearAllFilters">Clear All</button>
-</div>
+                <span
+                  v-for="(filter, idx) in activeFilters"
+                  :key="idx"
+                  class="btn border me-2 mb-2"
+                  style="font-size: 1rem; cursor: pointer;"
+                  @click="filter.remove"
+                >
+                  {{ filter.label }} <span style="margin-left: 0.5em;">&times;</span>
+                </span>
+                <button class="btn btn-link ms-2 mb-2" @click="clearAllFilters">Clear All</button>
+              </div>
             </div>
-
             <div class="mb-3">
               <label class="form-label mb-1 fw-bold">Price:</label>
               <ul class="list-unstyled">
@@ -64,7 +63,6 @@
         <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilters" aria-controls="offcanvasFilters">
           Filter & Sort
         </button>
-
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasFiltersLabel">Filter & Sort</h5>
@@ -75,19 +73,18 @@
               <div class="card-body">
                 <div class="mb-3">
                   <div v-if="activeFilters.length" class="mb-3 d-flex align-items-center flex-wrap">
-  <span
-    v-for="(filter, idx) in activeFilters"
-    :key="idx"
-    class="btn border me-2 mb-2"
-    style="font-size: 1rem; cursor: pointer;"
-    @click="filter.remove"
-  >
-    {{ filter.label }} <span style="margin-left: 0.5em;">&times;</span>
-  </span>
-  <button class="btn btn-link ms-2 mb-2" @click="clearAllFilters">Clear All</button>
-</div>
+                    <span
+                      v-for="(filter, idx) in activeFilters"
+                      :key="idx"
+                      class="btn border me-2 mb-2"
+                      style="font-size: 1rem; cursor: pointer;"
+                      @click="filter.remove"
+                    >
+                      {{ filter.label }} <span style="margin-left: 0.5em;">&times;</span>
+                    </span>
+                    <button class="btn btn-link ms-2 mb-2" @click="clearAllFilters">Clear All</button>
+                  </div>
                 </div>
-
                 <div class="mb-3">
                   <label class="form-label mb-1 fw-bold">Price:</label>
                   <ul class="list-unstyled">
@@ -143,6 +140,10 @@
             </div>
           </div>
         </div>
+        <!-- Show products found count -->
+        <div class="mb-2" v-if="pagination && pagination.total">
+          {{ pagination.total }} products found
+        </div>
         <div v-if="loading" class="text-center py-5" :hidden="!loading">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -177,6 +178,7 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { useProducts } from "@/composables/useProducts";
 import { onMounted, ref, watch, computed } from "vue";
@@ -193,7 +195,7 @@ const maxPrice = ref(100000);
 const priceMin = ref(0);
 const priceMax = ref<number>(Number(route.query.priceMax) || maxPrice.value);
 const page = ref(Number(route.query.page) || 1);
-const perPage = 30;
+const perPage = 10;
 const inStock = ref<boolean>(true); // Default to true instead of null
 const showMore = ref(false);
 const onSale = ref(false);
@@ -268,7 +270,7 @@ function selectCategory(catId: string) {
 }
 function onPriceRangeChange(range: { min: number | null; max: number | null; onSale: boolean }) {
   priceMin.value = range.min !== null ? range.min : 0;
-  priceMax.value = range.max !== null ? range.max : maxPrice.value; // Use maxPrice.value instead of null
+  priceMax.value = range.max !== null ? range.max : null;
   onSale.value = !!range.onSale;
   page.value = 1;
 }
@@ -276,11 +278,11 @@ function onPriceRangeChange(range: { min: number | null; max: number | null; onS
 const activeFilters = computed(() => {
   const filters = [];
   // Price
-  if (priceMin.value !== 0 || priceMax.value !== maxPrice.value) {
+  if (priceMin.value !== 0 || (priceMax.value !== 100000 && priceMax.value !== null)) {
     let label = "";
     if (onSale.value) {
       label = "On Sale";
-    } else if (priceMax.value === maxPrice.value) {
+    } else if (priceMax.value === null) {
       label = `₹${priceMin.value}+`;
     } else {
       label = `₹${priceMin.value} - ₹${priceMax.value}`;
@@ -289,7 +291,7 @@ const activeFilters = computed(() => {
       label,
       remove: () => {
         priceMin.value = 0;
-        priceMax.value = maxPrice.value; // Reset to maxPrice.value
+        priceMax.value = maxPrice.value; // Reset to maxPrice instead of null
         onSale.value = false;
       }
     });
@@ -312,10 +314,10 @@ const activeFilters = computed(() => {
     }
   }
   // In Stock
-  if (inStock.value) {
+  if (inStock.value !== null && inStock.value !== undefined) {
     filters.push({
-      label: "In Stock",
-      remove: () => { inStock.value = true; } // Reset to true
+      label: inStock.value ? "In Stock" : "Out of Stock",
+      remove: () => { inStock.value = true; }
     });
   }
   return filters;
