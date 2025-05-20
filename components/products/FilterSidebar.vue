@@ -15,7 +15,7 @@
             >
               {{ filter.label }} <span class="ms-1">&times;</span>
             </span>
-            <button class="btn btn-link ms-2 mb-2" @click="clearAllFilters">Clear All</button>
+            <button class="btn filter-item border-success-subtle p-1  ms-2 mb-2" @click="clearAllFilters" style="font-weight: 500;">Clear All</button>
           </div>
         </div>
       </slot>
@@ -55,7 +55,7 @@
         <button
           v-if="showMoreButton"
           @click="$emit('toggle-show-more')"
-          class="btn btn-link show-more-btn"
+          class="btn btn-link filter-item border-success-subtle p-1" style="font-weight: 500;"
         >
           {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
         </button>
@@ -133,26 +133,23 @@ const clearAllFilters = () => {
 }
 
 .filter-item {
-  color: var(--bs-gray-700);
+  color: $text-deep-green;
   padding: 0.25rem 0;
   text-decoration: none;
   display: block;
   transition: all 0.2s ease;
 
   &:hover {
-    color: var(--bs-primary);
+    color: $accent-soft-green;
     transform: translateX(3px);
   }
 
   &.active {
-    color: var(--bs-primary);
+    color: $text-deep-green;
     font-weight: 500;
     text-decoration: underline;
   }
 }
 
-.show-more-btn {
-  font-size: 0.9rem;
-  padding: 0;
-}
+
 </style>

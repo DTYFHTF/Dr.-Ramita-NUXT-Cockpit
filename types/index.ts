@@ -5,6 +5,11 @@ export interface Product {
   rating: number;
   stock: number;
   on_sale: boolean;
+  image: string;
+  image_2:string;
+  image_3:string;
+  slug: string;
+  description?: string;
   // Add other product fields
 }
 

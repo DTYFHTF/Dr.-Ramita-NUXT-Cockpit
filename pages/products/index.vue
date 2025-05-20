@@ -152,8 +152,8 @@ const inStock = ref<boolean>(true);
 }
 
 const sortArrow = (type: string) => {
-  if (sort.value === `${type}_asc`) return '↑';
-  if (sort.value === `${type}_desc`) return '↓';
+  if (sort.value === `${type}_asc`) return '↓';
+  if (sort.value === `${type}_desc`) return '↑';
   return '↓';
 };
 </script>
@@ -177,5 +177,9 @@ const sortArrow = (type: string) => {
 
 .offcanvas {
   max-width: 300px;
+}
+.btn-link{
+  color: $text-deep-green;
+    font-weight: 500;
 }
 </style>
