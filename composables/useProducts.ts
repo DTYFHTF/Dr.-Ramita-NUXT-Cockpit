@@ -15,8 +15,10 @@ export function useProducts() {
     perPage = 15,
     sort = "",
     category = "",
-    priceMax = 100000,
-    inStock = true // Default to in-stock products
+    priceMin: number | null = 0,
+    priceMax: number | null = null,
+    inStock = true,
+    onSale = false
   ) {
     loading.value = true;
     error.value = "";
@@ -37,9 +39,10 @@ export function useProducts() {
         }
       }
       if (category) params.append("category", String(category));
-
-      // Add in_stock filter
+      if (priceMin !== null && typeof priceMin !== "undefined") params.append("price_min", String(priceMin));
+      if (priceMax !== null && typeof priceMax !== "undefined") params.append("price_max", String(priceMax));
       params.append("in_stock", String(inStock));
+      if (onSale) params.append("on_sale", "true");
 
       const response = (await $fetch(
         `${API_BASE}/api/products?${params.toString()}`,
