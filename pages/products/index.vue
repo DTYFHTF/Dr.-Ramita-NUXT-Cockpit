@@ -11,12 +11,12 @@
           :show-more="showMoreCategories"
           :show-more-button="categories.length > 5"
           :remaining-categories="remainingCategories"
-          :price-min="priceMin"
-          :price-max="priceMax"
+          :price-min="priceMin ?? undefined"
+          :price-max="priceMax ?? undefined"
           :in-stock="inStock"
           @price-range-change="handlePriceRangeChange"
           @category-change="selectCategory"
-          @stock-change="inStock = $event"
+          @stock-change="handleStockChange"
           @toggle-show-more="toggleShowMoreCategories"
           @clear-all-filters="clearAllFilters"
         />
@@ -51,12 +51,12 @@
               :show-more="showMoreCategories"
               :show-more-button="categories.length > 5"
               :remaining-categories="remainingCategories"
-              :price-min="priceMin"
-              :price-max="priceMax"
+              :price-min="priceMin ?? undefined"
+              :price-max="priceMax ?? undefined"
               :in-stock="inStock"
               @price-range-change="handlePriceRangeChange"
               @category-change="selectCategory"
-              @stock-change="inStock = $event"
+              @stock-change="handleStockChange"
               @toggle-show-more="toggleShowMoreCategories"
               @clear-all-filters="clearAllFilters"
             />
@@ -144,6 +144,12 @@ const {
   handlePriceRangeChange,
   clearAllFilters
 } = useProductFilters();
+
+import { ref } from 'vue';
+
+function handleStockChange(val: boolean) {
+const inStock = ref<boolean>(true);
+}
 
 const sortArrow = (type: string) => {
   if (sort.value === `${type}_asc`) return '↑';

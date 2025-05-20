@@ -80,6 +80,12 @@
 <script setup lang="ts">
 import type { PriceRange, Category } from '@/types';
 
+// Define Filter type if not already imported
+type Filter = {
+  label: string;
+  remove: () => void;
+};
+
 // Props
 const props = defineProps({
   activeFilters: Array as () => Filter[],
