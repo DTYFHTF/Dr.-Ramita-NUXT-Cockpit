@@ -6,16 +6,7 @@
         <div class="card shadow-sm border-0">
           <div class="card-body">
             <h5 class="card-title mb-3">Filter & Sort</h5>
-            <div class="mb-3">
-              <label class="form-label mb-1">Sort by:</label>
-              <select v-model="sort" class="form-select form-select-sm" @change="onSortChange">
-                <option value="">Default</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="rating_desc">Rating: High to Low</option>
-                <option value="rating_asc">Rating: Low to High</option>
-              </select>
-            </div>
+            
             <div class="mb-3">
               <label class="form-label mb-1">Category:</label>
               <select v-model="category" class="form-select form-select-sm" @change="onCategoryChange">
@@ -46,8 +37,20 @@
       </aside>
       <!-- Main content -->
       <div class="col-12 col-md-9">
-        <h1 class="mb-4">Products</h1>
-        <div v-if="loading" class="text-center py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1>Products</h1>
+          <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
+              <span class="me-3" :class="{ active: sort === 'price_asc' || sort === 'price_desc' }" @click="togglePriceSort" style="cursor: pointer;">
+                Price <span class="sort-arrow" v-if="sort === 'price_asc'">↑</span><span class="sort-arrow" v-else-if="sort === 'price_desc'">↓</span><span class="sort-arrow" v-else>↓</span>
+              </span>
+              <span :class="{ active: sort === 'rating_asc' || sort === 'rating_desc' }" @click="toggleRatingSort" style="cursor: pointer;">
+                Rating <span class="sort-arrow" v-if="sort === 'rating_asc'">↑</span><span class="sort-arrow" v-else-if="sort === 'rating_desc'">↓</span><span class="sort-arrow" v-else>↓</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-if="loading" class="text-center py-5" :hidden="!loading">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
@@ -112,7 +115,7 @@ watch([sort, category, priceMax, page, inStock], () => {
       category: category.value || undefined,
       priceMax: priceMax.value || undefined,
       page: page.value || undefined,
-      inStock: inStock.value || undefined,
+      inStock: inStock.value ? 'true' : 'false',
     },
   });
   fetchProducts(page.value, perPage, sort.value, category.value, priceMax.value, inStock.value);
@@ -121,6 +124,16 @@ watch([sort, category, priceMax, page, inStock], () => {
 function goToPage(p: number) {
   if (!pagination.value || p < 1 || p > pagination.value.last_page) return;
   page.value = p;
+}
+
+function togglePriceSort() {
+  sort.value = sort.value === 'price_asc' ? 'price_desc' : 'price_asc';
+  page.value = 1;
+}
+
+function toggleRatingSort() {
+  sort.value = sort.value === 'rating_asc' ? 'rating_desc' : 'rating_asc';
+  page.value = 1;
 }
 
 function onSortChange() {
@@ -148,5 +161,17 @@ function onStockChange() {
 }
 .row.g-4 {
   row-gap: 1rem; /* Increase vertical spacing between product cards */
+}
+.text-center.py-5 {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+.text-center.py-5[hidden] {
+  opacity: 0;
+  pointer-events: none;
+}
+.sort-arrow {
+  font-size: 1.2rem; /* Increase the size of the arrows */
+  margin-left: 0.2rem; /* Add some spacing between text and arrow */
 }
 </style>
