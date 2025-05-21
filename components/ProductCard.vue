@@ -58,6 +58,7 @@
           <button
             class="btn btn-smooth-success add-to-cart-btn"
             :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+            @click.stop="addToCart(product)"
           >
             <span class="add-to-cart-text">Add to Cart</span>
             <LucideIcon
@@ -78,6 +79,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import LucideIcon from './LucideIcon.vue';
+import { useCart } from '@/composables/useCart';
+
+const { addToCart } = useCart();
 
 defineProps<{
   product: {
@@ -89,19 +93,20 @@ defineProps<{
     slug: string;
     in_stock?: boolean;
     stock?: number;
-    description?: string; // Added description prop
+    description?: string;
   };
 }>();
 </script>
 
 <style scoped>
+/* Your existing styles remain unchanged */
 .product-card {
   transition: box-shadow 0.18s, transform 0.18s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 .product-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-4px) scale(1.02);
 }
 .image-container {
@@ -127,15 +132,15 @@ defineProps<{
 .hover-image {
   opacity: 0;
   z-index: 2;
-  transform: scale(1.1); /* Zoom-in effect */
+  transform: scale(1.1);
 }
 .image-container:hover .main-image {
   opacity: 0;
-  transform: scale(1.1); /* Zoom-in effect */
+  transform: scale(1.1);
 }
 .image-container:hover .hover-image {
   opacity: 1;
-  transform: scale(1); /* Reset zoom for hover image */
+  transform: scale(1);
 }
 .wishlist-btn,
 .quick-view-btn {
@@ -178,15 +183,14 @@ defineProps<{
 }
 .product-description {
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
-  line-clamp: 3; /* Standard property for compatibility */
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
 }
-.card-body{
-    background-color: #f9f9f9; /* Subtle background color */
-
+.card-body {
+  background-color: #f9f9f9;
 }
 </style>

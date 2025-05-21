@@ -169,11 +169,18 @@
                   <MegaMenu :categories="categories" :products="products" :open="true" />
                 </div>
               </transition>
+              
             </div>
+            
           </div>
         </div>
+        
       </div>
+      <div class="d-flex align-items-center gap-3">
+    <CartIndicator />
+  </div>
     </div>
+    
   </nav>
 </template>
 

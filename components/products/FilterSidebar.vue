@@ -54,13 +54,15 @@
             </a>
           </li>
         </ul>
+        <div class="pb-2">
         <button
           v-if="showMoreButton"
           @click="$emit('toggle-show-more')"
-          class="btn btn-link filter-item border-success-subtle p-1" style="font-weight: 500;"
+          class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
         >
           {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
         </button>
+        </div>
       </div>
 <hr>
       <!-- Stock Status -->
