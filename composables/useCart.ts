@@ -26,12 +26,18 @@ export function useCart() {
 
   // Add to cart
   const addToCart = (product: Product, quantity: number = 1) => {
+    
+
+    const priceToUse = product.sale_price && product.sale_price < product.price
+      ? product.sale_price
+      : product.price;
+
     const existing = cart.value.find(item => item.slug === product.slug);
     
     if (existing) {
       existing.quantity += quantity;
     } else {
-      cart.value.push({ ...product, quantity });
+      cart.value.push({ ...product, price: priceToUse, quantity });
     }
     
     saveCart();

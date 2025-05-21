@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  sale_price?: number; // Added sale_price as an optional property
   rating: number;
   stock: number;
   on_sale: boolean;

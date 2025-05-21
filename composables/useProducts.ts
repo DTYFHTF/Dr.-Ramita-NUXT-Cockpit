@@ -44,15 +44,12 @@ export function useProducts() {
       params.append("in_stock", String(inStock));
       if (onSale) params.append("on_sale", "true");
 
-      console.log("API Request Params:", params.toString());
       const response = (await $fetch(
         `${API_BASE}/api/products?${params.toString()}`,
         {
           headers: { Accept: "application/json" },
         }
       )) as any;
-      console.log("API Response:", response);
-      console.log('Pagination Info:', response.meta);
       products.value = Array.isArray(response) ? response : response.data;
       pagination.value = response.meta || null;
     } catch (e: any) {

@@ -60,7 +60,7 @@
       <button
         class="btn btn-smooth-success add-to-cart-btn"
         :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
-        @click.stop="handleAddToCart"
+        @click.stop="handleAddToCart(product)"
       >
         <span class="add-to-cart-text">Add to Cart</span>
         <LucideIcon
@@ -81,12 +81,13 @@
 import { defineProps, ref } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import { useCart } from '@/composables/useCart';
+import type { Product } from '@/types';
 
 const { addToCart } = useCart();
 
 const showNotification = ref(false);
 
-const handleAddToCart = (product) => {
+const handleAddToCart = (product: Product) => {
   addToCart(product);
   showNotification.value = true;
   setTimeout(() => {
