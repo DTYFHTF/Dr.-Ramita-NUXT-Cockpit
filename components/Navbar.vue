@@ -26,10 +26,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
           <li class="nav-item">
-            <SmoothLink
-              to="courses"
-              fallbackRoute="/course"
-              class="nav-link"
+            <SmoothLink to="courses" fallbackRoute="/course" class="nav-link"
               >Courses</SmoothLink
             >
           </li>
@@ -42,10 +39,7 @@
             >
           </li>
           <li class="nav-item">
-            <SmoothLink
-              to="recipes"
-              fallbackRoute="/recipe"
-              class="nav-link"
+            <SmoothLink to="recipes" fallbackRoute="/recipe" class="nav-link"
               >Recipes</SmoothLink
             >
           </li>
@@ -62,7 +56,9 @@
           </li>
         </ul>
         <!-- User Section -->
-        <div class="d-flex align-items-center ms-auto flex-shrink-0  flex-lg-row justify-content-center  gap-3 mt-3 mt-lg-0">
+        <div
+          class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-3 mt-3 mt-lg-0"
+        >
           <div
             class="dropdown me-0 me-lg-2"
             @mouseenter="isDropdownOpen = true"
@@ -101,7 +97,9 @@
               >
                 <template v-if="!user">
                   <li class="py-2 text-center px-4">
-                    <NuxtLink to="/register" class="btn btn-smooth-primary btn-sm w-100"
+                    <NuxtLink
+                      to="/register"
+                      class="btn btn-smooth-primary btn-sm w-100"
                       >Join Now</NuxtLink
                     >
                   </li>
@@ -109,21 +107,30 @@
                     New to the site?
                   </li>
                 </template>
-                
+
                 <li v-if="user">
-                  <NuxtLink to="/profile" class="dropdown-item d-flex align-items-center gap-2">
+                  <NuxtLink
+                    to="/profile"
+                    class="dropdown-item d-flex align-items-center gap-2"
+                  >
                     <LucideIcon icon="mdi:user" class="me-2" />
                     Profile
                   </NuxtLink>
                 </li>
                 <li v-if="user">
-                  <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+                  <NuxtLink
+                    to="/"
+                    class="dropdown-item d-flex align-items-center gap-2"
+                  >
                     <LucideIcon icon="mdi:history" class="me-2" />
                     Order History
                   </NuxtLink>
                 </li>
                 <li v-if="user">
-                  <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+                  <NuxtLink
+                    to="/"
+                    class="dropdown-item d-flex align-items-center gap-2"
+                  >
                     <LucideIcon icon="mdi:heart" class="me-2" />
                     Wishlist
                   </NuxtLink>
@@ -132,7 +139,7 @@
                 <li v-if="user">
                   <div class="d-flex justify-content-center">
                     <LogoutButton
-                      class=" btn-smooth-primary text-center fw-semibold mt-3 px-4"
+                      class="btn-smooth-primary text-center fw-semibold mt-3 px-4"
                     />
                   </div>
                 </li>
@@ -153,34 +160,41 @@
               <span>Shop</span>
             </NuxtLink>
             <!-- On large screens, show the MegaMenu -->
-            <div
-              class="btn btn-link nav-link d-none d-lg-flex flex-column align-items-center p-0 cursor-pointer"
-              @mouseenter="isMegaMenuOpen = true"
-              @mouseleave="isMegaMenuOpen = false"
+            <NuxtLink
+              to="/products"
+              class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer"
             >
-              <LucideIcon icon="mdi:shop" class="fs-4" />
-              <span>Shop</span>
-              <transition name="fade">
-                <div
-                  v-if="isMegaMenuOpen"
-                  class="megamenu-popover position-absolute"
-                  style="z-index: 2000; min-width: 400px;"
-                >
-                  <MegaMenu :categories="categories" :products="products" :open="true" />
-                </div>
-              </transition>
-              
-            </div>
-            
+              <div
+                class="btn btn-link nav-link d-none d-lg-flex flex-column align-items-center p-0 cursor-pointer"
+                @mouseenter="isMegaMenuOpen = true"
+                @mouseleave="isMegaMenuOpen = false"
+              >
+                <LucideIcon icon="mdi:shop" class="fs-4" />
+                <span>Shop</span>
+                <transition name="fade">
+                  <div
+                    v-if="isMegaMenuOpen"
+                    class="megamenu-popover position-absolute"
+                    style="z-index: 2000; min-width: 400px"
+                  >
+                    <MegaMenu
+                      :categories="categories"
+                      :products="products"
+                      :open="true"
+                    />
+                  </div>
+                </transition>
+              </div>
+            </NuxtLink>
+          </div>
+          <div
+            class="btn btn-link nav-link d-flex flex-column align-items-center p-0"
+          >
+            <CartIndicator />
           </div>
         </div>
-        
       </div>
-      <div class="d-flex align-items-center gap-3">
-    <CartIndicator />
-  </div>
     </div>
-    
   </nav>
 </template>
 
@@ -192,7 +206,7 @@ import LogoutButton from "@/components/LogoutButton.vue";
 import DropDownItems from "@/components/DropDownItems.vue";
 import { ref, onMounted } from "vue";
 import MegaMenu from "@/components/MegaMenu.vue";
-import { useProducts } from '@/composables/useProducts';
+import { useProducts } from "@/composables/useProducts";
 
 const { user } = storeToRefs(useUserStore());
 const isDropdownOpen = ref(false);
@@ -231,7 +245,7 @@ function closeDropdown() {
   color: #333;
   padding: 0.6rem 1.5rem;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
 }
 

@@ -98,7 +98,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
     router.replace({ query });
     fetchProducts(
       page.value,
-      10,
+      15,
       sort.value,
       category.value,
       priceMin.value,

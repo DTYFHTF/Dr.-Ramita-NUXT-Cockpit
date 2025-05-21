@@ -48,40 +48,51 @@
               : 'Out of stock'
           }}
         </span>
-        <p class="product-description">
+        <p class="product-description mb-0">
           {{ product.description }}
         </p>
-        <div class="d-flex justify-content-between align-items-center w-100 mt-auto">
-          <button class="btn btn-outline-secondary wishlist-btn">
-            <LucideIcon icon="mdi:heart-outline" color="black" />
-          </button>
-          <button
-            class="btn btn-smooth-success add-to-cart-btn"
-            :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
-            @click.stop="addToCart(product)"
-          >
-            <span class="add-to-cart-text">Add to Cart</span>
-            <LucideIcon
-              icon="mdi:cart"
-              color="white"
-              class="add-to-cart-icon"
-            />
-          </button>
-          <button class="btn btn-outline-secondary quick-view-btn">
-            <LucideIcon icon="mdi:eye-outline" color="black" />
-          </button>
-        </div>
       </div>
     </NuxtLink>
+    <div class="d-flex justify-content-between align-items-center w-100 px-3 pb-3">
+      <button class="btn btn-outline-secondary wishlist-btn">
+        <LucideIcon icon="mdi:heart-outline" color="black" />
+      </button>
+      <button
+        class="btn btn-smooth-success add-to-cart-btn"
+        :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+        @click.stop="handleAddToCart"
+      >
+        <span class="add-to-cart-text">Add to Cart</span>
+        <LucideIcon
+          icon="mdi:cart"
+          color="white"
+          class="add-to-cart-icon"
+        />
+      </button>
+      <button class="btn btn-outline-secondary quick-view-btn">
+        <LucideIcon icon="mdi:eye-outline" color="black" />
+      </button>
+    </div>
   </div>
+  <div v-if="showNotification" class="toast-message">Product added to cart!</div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import { useCart } from '@/composables/useCart';
 
 const { addToCart } = useCart();
+
+const showNotification = ref(false);
+
+const handleAddToCart = (product) => {
+  addToCart(product);
+  showNotification.value = true;
+  setTimeout(() => {
+    showNotification.value = false;
+  }, 2000); // Hide notification after 2 seconds
+};
 
 defineProps<{
   product: {
@@ -98,8 +109,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
-/* Your existing styles remain unchanged */
+<style scoped lang="scss">
 .product-card {
   transition: box-shadow 0.18s, transform 0.18s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -190,7 +200,27 @@ defineProps<{
   text-overflow: ellipsis;
   white-space: normal;
 }
-.card-body {
-  background-color: #f9f9f9;
+.toast-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: $accent-soft-green;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
