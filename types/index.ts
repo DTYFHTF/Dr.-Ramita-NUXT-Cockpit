@@ -11,6 +11,7 @@ export interface Product {
   image_3:string;
   slug: string;
   description?: string;
+  in_stock?: boolean; // Optional property to indicate stock availability
   // Add other product fields
 }
 

@@ -78,16 +78,24 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import { useCart } from '@/composables/useCart';
+import { useUserStore } from '@/stores/user';
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
+const userStore = useUserStore();
 
 const showNotification = ref(false);
 
+const isAuthenticated = computed(() => !!userStore.token);
+
 const handleAddToCart = (product: Product) => {
+  if (!isAuthenticated.value) {
+    alert('You need to be logged in to add products to the cart.');
+    return;
+  }
   addToCart(product);
   showNotification.value = true;
   setTimeout(() => {
@@ -96,17 +104,7 @@ const handleAddToCart = (product: Product) => {
 };
 
 defineProps<{
-  product: {
-    name: string;
-    price: number;
-    sale_price?: number;
-    image: string;
-    image_2?: string;
-    slug: string;
-    in_stock?: boolean;
-    stock?: number;
-    description?: string;
-  };
+  product: Product;
 }>();
 </script>
 

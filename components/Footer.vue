@@ -45,6 +45,8 @@ import SmoothLink from '~/components/SmoothLink.vue'
   background-color: #2A4D3F;
   color: #fff;
   padding: 2rem 0;
+  position: relative;
+  margin-top: auto;
 }
 
 .container {
