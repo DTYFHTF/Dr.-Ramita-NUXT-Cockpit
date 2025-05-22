@@ -146,47 +146,22 @@
               </ul>
             </transition>
           </div>
-          <div
-            class="megamenu-container position-relative d-inline-block"
-            @mouseenter="isMegaMenuOpen = true"
-            @mouseleave="isMegaMenuOpen = false"
-          >
-            <!-- On small screens, show a link to /products instead of the MegaMenu -->
-            <NuxtLink
-              to="/products"
-              class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer d-lg-none"
-            >
-              <LucideIcon icon="mdi:shop" class="fs-4" />
-              <span>Shop</span>
-            </NuxtLink>
-            <!-- On large screens, show the MegaMenu -->
-            <NuxtLink
-              to="/products"
-              class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer"
-            >
-              <div
-                class="btn btn-link nav-link d-none d-lg-flex flex-column align-items-center p-0 cursor-pointer"
-                @mouseenter="isMegaMenuOpen = true"
-                @mouseleave="isMegaMenuOpen = false"
-              >
-                <LucideIcon icon="mdi:shop" class="fs-4" />
-                <span>Shop</span>
-                <transition name="fade">
-                  <div
-                    v-if="isMegaMenuOpen"
-                    class="megamenu-popover position-absolute"
-                    style="z-index: 2000; min-width: 400px"
-                  >
-                    <MegaMenu
-                      :categories="categories"
-                      :products="products"
-                      :open="true"
-                    />
-                  </div>
-                </transition>
-              </div>
-            </NuxtLink>
-          </div>
+          
+          
+          
+          <div class="nav-item position-relative" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+    <NuxtLink
+      to="/products"
+      class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer"
+    >
+      <LucideIcon icon="mdi:shop" class="fs-4" />
+      <span>Shop</span>
+    </NuxtLink>
+    <MegaMenu 
+      v-if="showMegaMenu"
+      class="mega-menu-wrapper"
+    />
+  </div>
           <div
             class="btn btn-link nav-link d-flex flex-column align-items-center p-0"
           >
@@ -204,25 +179,36 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import LogoutButton from "@/components/LogoutButton.vue";
 import DropDownItems from "@/components/DropDownItems.vue";
-import { ref, onMounted } from "vue";
-import MegaMenu from "@/components/MegaMenu.vue";
-import { useProducts } from "@/composables/useProducts";
+import { ref } from "vue";
+import MegaMenu from "./MegaMenu.vue";
 
 const { user } = storeToRefs(useUserStore());
 const isDropdownOpen = ref(false);
-const isMegaMenuOpen = ref(false);
-const { categories, products, fetchProducts, fetchCategories } = useProducts();
-
-onMounted(() => {
-  fetchProducts();
-  fetchCategories();
-});
 
 function closeDropdown() {
   setTimeout(() => {
     isDropdownOpen.value = false;
   }, 120);
 }
+
+let closeTimeout = null;
+
+const showMegaMenu = ref(false);
+
+const handleMouseLeave = () => {
+  closeTimeout = setTimeout(() => {
+    showMegaMenu.value = false;
+  }, 200); // Small delay to allow cursor to move to menu
+};
+
+const cancelClose = () => {
+  clearTimeout(closeTimeout);
+};
+
+const handleMouseEnter = () => {
+  clearTimeout(closeTimeout); // Ensure any pending close is cancelled
+  showMegaMenu.value = true;
+};
 </script>
 
 <style scoped>
@@ -259,24 +245,26 @@ function closeDropdown() {
   padding: 0.5rem;
 }
 
-.megamenu-container {
-  position: relative;
-}
-
-.megamenu-popover {
-  right: 0 !important;
-  left: auto !important;
+.mega-menu-wrapper {
+  position: absolute;
   top: 100%;
-  min-width: 400px;
-  padding: 0.25rem;
+  right: 0;
+  left: auto;
+  /* Remove transform: translateX(-50%) */
+  min-width: 320px;
+  max-width: 90vw;
+  width: 600px;
+  z-index: 1050;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem 2rem;
+  margin-top: 0.5rem;
+  overflow: auto;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+.nav-item.position-relative {
+  /* Ensure stacking context for absolute children */
+  position: relative;
 }
 </style>

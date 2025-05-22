@@ -1,179 +1,197 @@
 <template>
-  <div
-    class="mega-menu shadow-lg bg-white border rounded-3 px-3 pb-3 position-absolute mega-menu-wide"
-    @mouseenter="open = true"
-    @mouseleave="open = false"
-    v-show="open"
-    :style="{ right: '0', left: 'auto', top: '100%' }"
-  >
-    <div class="mega-menu-content d-flex w-100" >
-      
+  <div class="mega-menu-container">
+
+    <div class="mega-menu-content">
       <!-- Product Grid -->
-      <div class="product-grid flex-grow-1 ps-4" style="min-width: 0; " >
-        <div v-if="activeProducts.length === 0" class="text-muted small py-4 px-2" >
-          No products found for this category.
+      <div class="product-grid">
+        <div v-if="activeProducts.length === 0" class="empty-state">
+          Select a category to view products
         </div>
-        <div v-else class="d-flex flex-wrap g-3">
-          <div
-            v-for="product in activeProducts.slice(0, 8)"
+        <div v-else class="product-scroller">
+          <NuxtLink
+            v-for="product in activeProducts.slice(0, 10)"
             :key="product.id"
-            class="megamenu-product-item d-flex flex-column align-items-center mb-3 " 
-            style="width: 110px; "
+            :to="`/products/${product.slug}`"
+            class="product-card"
           >
-            <NuxtLink :to="`/products/${product.slug}`" class="text-decoration-none text-dark w-100 text-center">
-              <img
-                :src="product.image || '/fallback.jpg'"
-                :alt="product.name"
-                class="megamenu-product-img mb-2"
-              />
-              <div class="megamenu-product-name text-truncate small">{{ product.name }}</div>
-            </NuxtLink>
-          </div>
+            <img
+              :src="product.image || '/fallback.jpg'"
+              :alt="product.name"
+              class="product-image"
+            />
+            <div class="product-title">{{ product.name }}</div>
+          </NuxtLink>
         </div>
       </div>
       <!-- Category List -->
-      <div class="category-list border-start ps-0">
-        <ul class="list-group list-group-flush">
+      <div class="category-list">
+        <ul>
           <li
             v-for="(cat, idx) in categories"
             :key="cat.id || cat.slug || idx"
-            class="list-group-item list-group-item-action py-2 px-3 cursor-pointer"
-            :class="{ active: idx === activeIndex }"
-            @mouseenter="setActive(idx)"
+            @mouseenter="filterByCategory(cat.id)"
+            :class="{ 'active-category': activeCategory === cat.id }"
           >
             <LucideIcon :icon="cat.icon || 'mdi:tag'" class="me-2" />
-            {{ cat.name }}
+            <span class="category-name">{{ cat.name }}</span>
           </li>
         </ul>
       </div>
+
     </div>
   </div>
 </template>
 
+
 <script setup>
-import { ref, computed, watch, toRefs } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useProducts } from '@/composables/useProducts';
 import LucideIcon from '@/components/LucideIcon.vue';
-import ProductCard from '@/components/ProductCard.vue';
+import { NuxtLink } from '#components';
 
-const props = defineProps({
-  categories: { type: Array, required: true },
-  products: { type: Array, required: true },
-  open: { type: Boolean, default: false },
-});
-const emit = defineEmits(['update:open']);
+const { categories, fetchCategories, fetchProducts, products } = useProducts();
 
-const { categories, products } = toRefs(props);
-const activeIndex = ref(0);
+const activeProducts = ref([]);
+const activeCategory = ref(null);
 
-const setActive = (idx) => {
-  activeIndex.value = idx;
-};
-
-const activeCategory = computed(() => categories.value[activeIndex.value]);
-const activeProducts = computed(() => {
-  if (!activeCategory.value) return [];
-  // Try to match by id, slug, or name for flexibility
-  return products.value.filter(
-    (p) =>
-      p.category_id === activeCategory.value.id ||
-      p.category === activeCategory.value.slug ||
-      p.category === activeCategory.value.name ||
-      p.category_id === String(activeCategory.value.id)
-  );
+onMounted(async () => {
+  await fetchCategories();
+  if (categories.value && categories.value.length > 0) {
+    activeCategory.value = categories.value[0].id;
+    filterByCategory(activeCategory.value);
+  }
 });
 
 watch(
-  () => props.open,
-  (val) => {
-    if (!val) activeIndex.value = 0;
+  () => categories.value,
+  (newCategories) => {
+    if (newCategories && newCategories.length > 0 && !activeCategory.value) {
+      activeCategory.value = newCategories[0].id;
+      filterByCategory(activeCategory.value);
+    }
   }
 );
+
+function filterByCategory(categoryId) {
+  activeCategory.value = categoryId;
+  fetchProducts(1, 30, '', categoryId).then(() => {
+    activeProducts.value = products.value;
+  });
+}
 </script>
 
+
 <style scoped>
-.mega-menu {
-  min-height: 300px;
-  z-index: 1050;
+.mega-menu-container {
+  position: absolute;
+  top: calc(100% + 8px);
   left: 0;
-  right: 0;
-  top: 100%;
-  animation: fadeIn 0.18s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.list-group-item.active {
-  background: var(--bs-primary-bg-subtle, #e6f0ea);
-  color: var(--text-deep-green, #1a5c3d);
-  font-weight: 600;
-}
-.cursor-pointer {
-  cursor: pointer;
-}
-.mini-product-card {
-  transition: transform 0.2s;
-}
-.mini-product-card:hover {
-  transform: translateY(-2px);
-}
-.mega-menu-wide {
-  width: 900px;
-  max-width: 98vw;
-  min-width: 700px;
-  overflow-x: hidden;
+  width: 100%;
+  max-width: 780px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  max-height: 400px;
   display: flex;
-}
-.category-list {
-  min-width: 180px;
-  max-width: 220px;
   overflow: hidden;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.flex-grow-1 {
-  overflow-x: auto;
-}
+
 .mega-menu-content {
   display: flex;
   width: 100%;
+  min-height: 300px;
+}
+
+.category-list {
+  width: 170px;
+  background: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.category-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.category-list li:hover {
+  background: #e9ecef;
+}
+
+.category-list li.active-category {
+  background: white;
+  font-weight: 500;
+}
+
+.category-name {
+  white-space: nowrap;
   overflow: hidden;
-  margin:2rem 0;
+  text-overflow: ellipsis;
 }
+
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 0.75rem;
-  overflow-x: visible;
-  
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
 }
-.megamenu-product-item img,
-.megamenu-product-img {
-  width: 70px;
-  height: 70px;
+
+.product-scroller {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 4px;
+}
+
+.product-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+}
+
+.product-image {
+  width: 100%;
+  height: 120px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid #eee;
-  background: #f8f8f8;
+  margin-bottom: 8px;
 }
-.megamenu-product-item {
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.megamenu-product-name {
-  margin-top: 0.25rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #333;
+
+.product-title {
+  font-size: 0.8rem;
+  line-height: 1.3;
   text-align: center;
-  display: block;
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  min-height: 2.4em;
-  line-height: 1.2em;
-  max-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.empty-state {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
 </style>
+
