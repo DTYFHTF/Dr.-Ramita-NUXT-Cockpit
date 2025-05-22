@@ -1,12 +1,20 @@
 <template>
   <form @submit.prevent="onSubmit" class="auth-form">
     <div class="form-group">
-      <label for="name">Name</label>
-      <input v-model="name" id="name" type="text" required />
+      <label for="first_name">First Name</label>
+      <input v-model="firstName" id="first_name" type="text" required />
+    </div>
+    <div class="form-group">
+      <label for="last_name">Last Name</label>
+      <input v-model="lastName" id="last_name" type="text" required />
     </div>
     <div class="form-group">
       <label for="email">Email</label>
       <input v-model="email" id="email" type="email" required />
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input v-model="phone" id="phone" type="tel" required />
     </div>
     <div class="form-group">
       <label for="password">Password</label>
@@ -31,15 +39,19 @@ const props = defineProps({
 })
 const emit = defineEmits(['submit'])
 
-const name = ref('')
+const firstName = ref('')
+const lastName = ref('')
 const email = ref('')
+const phone = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 
 function onSubmit() {
   emit('submit', {
-    name: name.value,
+    first_name: firstName.value,
+    last_name: lastName.value,
     email: email.value,
+    phone: phone.value,
     password: password.value,
     password_confirmation: passwordConfirmation.value
   })

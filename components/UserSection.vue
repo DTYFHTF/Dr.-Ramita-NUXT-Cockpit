@@ -10,7 +10,7 @@
       @click="isDropdownOpen = !isDropdownOpen"
     >
       <LucideIcon :icon="'mdi:account-circle'" class="fs-4" />
-      <span>Hi, {{ user.name }}</span>
+      <span>Hi, {{ user.first_name }}</span>
     </button>
     <transition name="fade">
       <ul
@@ -51,16 +51,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import LogoutButton from '@/components/LogoutButton.vue';
 import DropDownItems from '@/components/DropDownItems.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { NuxtLink } from '#components';
+import { useRouter } from 'vue-router';
 
 const { user } = storeToRefs(useUserStore());
 const isDropdownOpen = ref(false);
+const router = useRouter();
+
+onMounted(async () => {
+  // Always fetch latest user info when dropdown is opened
+  if (user.value && user.value.id) {
+    try {
+      const API_BASE = 'http://ayurveda-marketplace.test';
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        const fetchedUser = await $fetch(`${API_BASE}/api/user`, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        });
+        user.value = fetchedUser;
+      }
+    } catch (e) {
+      // Optionally handle error
+    }
+  }
+});
 </script>
 
 <style scoped>

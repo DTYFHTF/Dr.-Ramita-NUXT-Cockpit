@@ -2,8 +2,14 @@
   <div class="profile-page">
     <h2>User Profile</h2>
     <div v-if="user">
-      <p><strong>Name:</strong> {{ user.name }}</p>
+      <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
+      <div v-if="user.email_verified_at" class="alert alert-success py-2 px-3 my-2">
+        <strong>Email verified!</strong>
+      </div>
+      <div v-else class="alert alert-warning py-2 px-3 my-2">
+        <strong>Email not verified.</strong> Please check your inbox or <NuxtLink to="/email/verify/resend">resend verification email</NuxtLink>.
+      </div>
       <!-- Add more user fields as needed -->
     </div>
     <div v-else>
