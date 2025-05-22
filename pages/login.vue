@@ -41,6 +41,7 @@ async function login({ email, password }: { email: string, password: string }) {
     if (!loginResponse.token) throw new Error('No token returned from API')
     userStore.setToken(loginResponse.token)
     userStore.setUser(loginResponse.user)
+    userStore.hydrateFromLocalStorage()
     router.push('/profile')
   } catch (err: any) {
     if (err?.data?.message) {
@@ -48,7 +49,7 @@ async function login({ email, password }: { email: string, password: string }) {
     } else if (err?.message) {
       error.value = err.message
     } else {
-      error.value = 'Login failed. Please try again.'
+      error.value = 'An error occurred during login.'
     }
   } finally {
     loading.value = false

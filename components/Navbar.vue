@@ -59,35 +59,39 @@
         <div
           class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-3 mt-3 mt-lg-0"
         >
-          <UserSection class="nav-link" />
-          <NuxtLink
-            v-if="!user"
-            to="/login"
-            class="btn btn-link nav-link d-flex flex-column align-items-center p-0"
-            id="userDropdown"
-            tabindex="0"
-          >
-            <LucideIcon icon="mdi:login" class="fs-4" />
-            <span>Sign In</span>
-          </NuxtLink>
-          <div
-            class="nav-item position-relative"
-            @mouseenter="handleMouseEnter"
-            @mouseleave="handleMouseLeave"
-          >
+          <template v-if="!hydrated">
+            <span class="nav-link"></span>
+          </template>
+          <template v-else>
+            <UserSection class="nav-link" />
             <NuxtLink
-              to="/products"
-              class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer"
+              v-if="!user"
+              to="/login"
+              class="btn btn-link nav-link d-flex flex-column align-items-center p-0"
+              id="userDropdown"
+              tabindex="0"
             >
-              <LucideIcon icon="mdi:shop" class="fs-4" />
-              <span>Shop</span>
+              <LucideIcon icon="mdi:login" class="fs-4" />
+              <span>Sign In</span>
             </NuxtLink>
-            <MegaMenu v-if="showMegaMenu" class="mega-menu-wrapper" />
-          </div>
-          <div v-if="user" class="nav-link">
-            <CartIndicator />
-            
-          </div>
+            <div
+              class="nav-item position-relative"
+              @mouseenter="handleMouseEnter"
+              @mouseleave="handleMouseLeave"
+            >
+              <NuxtLink
+                to="/products"
+                class="btn btn-link nav-link d-flex flex-column align-items-center p-0 cursor-pointer"
+              >
+                <LucideIcon icon="mdi:shop" class="fs-4" />
+                <span>Shop</span>
+              </NuxtLink>
+              <MegaMenu v-if="showMegaMenu" class="mega-menu-wrapper" />
+            </div>
+            <div v-if="user" class="nav-link">
+              <CartIndicator />
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -103,7 +107,8 @@ import UserSection from '@/components/UserSection.vue';
 import { ref } from "vue";
 import LucideIcon from '@/components/LucideIcon.vue';
 
-const { user } = storeToRefs(useUserStore());
+const userStore = useUserStore();
+const { user, hydrated } = storeToRefs(userStore);
 
 let closeTimeout = null;
 const showMegaMenu = ref(false);
