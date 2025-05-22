@@ -86,8 +86,9 @@ function filterByCategory(categoryId) {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  width: 100%;
-  max-width: 780px;
+  width: 1000px !important;
+  max-width: 1000px !important;
+  min-width: 900px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
@@ -110,6 +111,7 @@ function filterByCategory(categoryId) {
   background: #f8f9fa;
   border-right: 1px solid #e9ecef;
   overflow-y: auto;
+  max-height: 368px; /* Adjust as needed to fit inside the menu */
   padding: 12px 0;
 }
 
@@ -146,7 +148,7 @@ function filterByCategory(categoryId) {
 .product-grid {
   flex: 1;
   padding: 16px;
-  overflow-y: auto;
+  /* Remove overflow-y: auto; so product grid does not scroll */
 }
 
 .product-scroller {
