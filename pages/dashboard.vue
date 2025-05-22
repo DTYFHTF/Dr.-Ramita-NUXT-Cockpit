@@ -6,7 +6,17 @@
       <p><strong>Last Name:</strong> {{ user.last_name }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Phone:</strong> {{ user.phone || 'N/A' }}</p>
-      <p><strong>Email Verified:</strong> {{ user.email_verified_at ? 'Yes' : 'No' }}</p>
+      <p><strong>Email Verified:</strong> 
+        <span v-if="user.email_verified_at">Yes</span>
+        <span v-else>No
+          <button class="btn btn-link p-0 ms-2" @click="sendVerification" :disabled="sending">
+            <span v-if="sending">Sending...</span>
+            <span v-else>Send verification email</span>
+          </button>
+          <span v-if="sentMsg" class="text-success ms-2">{{ sentMsg }}</span>
+          <span v-if="sendError" class="text-danger ms-2">{{ sendError }}</span>
+        </span>
+      </p>
     </div>
   </div>
   <div v-else>
@@ -18,9 +28,33 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+const sending = ref(false)
+const sentMsg = ref('')
+const sendError = ref('')
+const API_BASE = 'http://ayurveda-marketplace.test'
+
+async function sendVerification() {
+  sending.value = true
+  sentMsg.value = ''
+  sendError.value = ''
+  try {
+    const token = localStorage.getItem('auth_token')
+    await $fetch(`${API_BASE}/api/email/verification-notification`, {
+      method: 'POST',
+      headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+    })
+    sentMsg.value = 'Verification email sent! Please check your inbox.'
+  } catch (e) {
+    sendError.value = 'Failed to send verification email.'
+  } finally {
+    sending.value = false
+  }
+}
 </script>
 
 <style scoped>
