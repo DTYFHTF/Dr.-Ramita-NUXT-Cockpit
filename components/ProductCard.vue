@@ -91,16 +91,24 @@ const showNotification = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
 
-const handleAddToCart = (product: Product) => {
+const handleAddToCart = async (product: Product) => {
+  if (!userStore.hydrated) {
+    alert('Please wait, authentication state is loading.');
+    return;
+  }
   if (!isAuthenticated.value) {
     alert('You need to be logged in to add products to the cart.');
     return;
   }
-  addToCart(product);
-  showNotification.value = true;
-  setTimeout(() => {
-    showNotification.value = false;
-  }, 2000); // Hide notification after 2 seconds
+  try {
+    await addToCart(product);
+    showNotification.value = true;
+    setTimeout(() => {
+      showNotification.value = false;
+    }, 2000); // Hide notification after 2 seconds
+  } catch (err: any) {
+    alert('Error adding to cart: ' + (err?.message || err));
+  }
 };
 
 defineProps<{

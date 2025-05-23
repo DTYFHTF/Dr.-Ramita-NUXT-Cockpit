@@ -29,13 +29,18 @@ async function logout() {
         Authorization: `Bearer ${token}`
       }
     })
-    userStore.setUser(null)
-    localStorage.removeItem('auth_token')
-    router.push('/')
   } catch (err: any) {
-    error.value = err?.data?.message || err?.message || 'Logout failed.'
-    alert(error.value)
+    // Ignore unauthenticated errors, still proceed to clear user/token
+    if (err?.data?.message && err.data.message !== 'Unauthenticated.') {
+      error.value = err.data.message
+      alert(error.value)
+    }
   } finally {
+    userStore.setUser(null)
+    userStore.setToken(null)
+    localStorage.removeItem('auth_token')
+    localStorage.removeItem('user')
+    router.push('/')
     loading.value = false
   }
 }
