@@ -68,14 +68,28 @@
       <!-- Stock Status -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Stock Status:</label>
-        <select
-          class="form-select form-select-sm"
-          :value="inStock"
-          @change="$emit('stock-change', ($event.target as HTMLSelectElement).value === 'true')"
-        >
-          <option :value="true">In Stock</option>
-          <option :value="false">Out of Stock</option>
-        </select>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              href="#"
+              class="filter-item"
+              @click.prevent="$emit('stock-change', true)"
+              :class="{ active: inStock === true }"
+            >
+              In Stock
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="filter-item"
+              @click.prevent="$emit('stock-change', false)"
+              :class="{ active: inStock === false }"
+            >
+              Out of Stock
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

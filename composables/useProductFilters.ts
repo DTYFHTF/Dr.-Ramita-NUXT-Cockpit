@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProducts } from './useProducts';
 import type { PriceRange, Category, Product, Pagination } from '@/types';
@@ -14,7 +14,7 @@ export function useProductFilters() {
   const priceMin = ref<number | null>(route.query.priceMin ? Number(route.query.priceMin) : null);
 const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.priceMax) : null);
   const page = ref(Number(route.query.page) || 1);
-  const inStock = ref(route.query.inStock?.toString() === 'true' || true);
+  const inStock = ref(route.query.inStock?.toString() === 'false' ? false : true);
   const showMoreCategories = ref(false);
   const onSale = ref(route.query.onSale?.toString() === 'true');
 
@@ -86,15 +86,13 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
   // Methods
   const updateRouteAndFetch = () => {
     const query: Record<string, string> = {};
-
     if (sort.value) query.sort = sort.value;
     if (category.value) query.category = category.value;
     if (priceMin.value !== null) query.priceMin = priceMin.value.toString();
     if (priceMax.value !== null) query.priceMax = priceMax.value.toString();
     if (page.value > 1) query.page = page.value.toString();
-    if (!inStock.value) query.inStock = 'false';
+    query.inStock = String(inStock.value); // Always include as string
     if (onSale.value) query.onSale = 'true';
-
     router.replace({ query });
     fetchProducts(
       page.value,

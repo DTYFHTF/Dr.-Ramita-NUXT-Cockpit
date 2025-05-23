@@ -148,7 +148,8 @@ const {
 import { ref } from 'vue';
 
 function handleStockChange(val: boolean) {
-const inStock = ref<boolean>(true);
+  inStock.value = val;
+  page.value = 1;
 }
 
 const sortArrow = (type: string) => {
