@@ -7,7 +7,7 @@
       </div>
       <div v-else-if="success" class="alert alert-success text-center">
         Your email has been verified! <br>
-        <NuxtLink to="/profile" class="btn btn-success mt-3">Go to Profile</NuxtLink>
+        <NuxtLink to="/dashboard" class="btn btn-success mt-3">Go to Profile</NuxtLink>
       </div>
       <div v-else class="alert alert-danger text-center">
         {{ errorMsg }}

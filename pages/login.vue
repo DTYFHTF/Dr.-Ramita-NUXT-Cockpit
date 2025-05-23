@@ -17,15 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '@/stores/user'
 import AuthForm from '@/components/AuthForm.vue'
 
 const error = ref('')
 const loading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
+console.log('[LOGIN] userStore before login:', JSON.stringify(userStore.user), userStore.token)
 
 const API_BASE = 'http://ayurveda-marketplace.test'
 
@@ -38,11 +39,14 @@ async function login({ email, password }: { email: string, password: string }) {
       body: { email, password },
       headers: { Accept: 'application/json' }
     }) as { token: string, user: any }
+    console.log('[LOGIN] loginResponse:', JSON.stringify(loginResponse))
     if (!loginResponse.token) throw new Error('No token returned from API')
     userStore.setToken(loginResponse.token)
     userStore.setUser(loginResponse.user)
-    userStore.hydrateFromLocalStorage()
-    router.push('/profile')
+    console.log('[LOGIN] userStore after setUser/setToken:', JSON.stringify(userStore.user), userStore.token)
+    await nextTick()
+    console.log('[LOGIN] userStore after nextTick:', JSON.stringify(userStore.user), userStore.token)
+    router.push('/dashboard')
   } catch (err: any) {
     if (err?.data?.message) {
       error.value = err.data.message
