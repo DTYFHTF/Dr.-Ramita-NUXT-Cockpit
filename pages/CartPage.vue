@@ -20,7 +20,7 @@
                     <div class="input-group" style="max-width: 120px;">
                       <button 
                         class="btn btn-outline-secondary" 
-                        @click="updateQuantity(item.slug, item.quantity - 1)"
+                        @click="updateQuantity(Number(item.id), item.quantity - 1)"
                         :disabled="item.quantity <= 1"
                       >
                         -
@@ -30,11 +30,11 @@
                         class="form-control text-center" 
                         v-model.number="item.quantity"
                         min="1"
-                        @change="updateQuantity(item.slug, item.quantity)"
+                        @change="updateQuantity(Number(item.id), item.quantity)"
                       >
                       <button 
                         class="btn btn-outline-secondary" 
-                        @click="updateQuantity(item.slug, item.quantity + 1)"
+                        @click="updateQuantity(Number(item.id), item.quantity + 1)"
                         :disabled="item.quantity >= item.stock"
                       >
                         +
@@ -42,7 +42,7 @@
                     </div>
                     <button 
                       class="btn btn-link text-danger"
-                      @click="removeFromCart(item.slug)"
+                      @click="removeFromCart(Number(item.id))"
                     >
                       Remove
                     </button>
