@@ -54,7 +54,7 @@
       </div>
     </NuxtLink>
     <div class="d-flex justify-content-between align-items-center w-100 px-3 pb-3">
-      <button class="btn btn-outline-secondary wishlist-btn">
+      <button class="btn btn-outline-secondary wishlist-btn" title="Add to Wishlist">
         <LucideIcon icon="mdi:heart-outline" color="black" />
       </button>
       <button
@@ -69,10 +69,11 @@
           class="add-to-cart-icon"
         />
       </button>
-      <button class="btn btn-outline-secondary quick-view-btn">
+      <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
         <LucideIcon icon="mdi:eye-outline" color="black" />
       </button>
     </div>
+    <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" />
   </div>
   <div v-if="showNotification" class="toast-message">Product added to cart!</div>
 </template>
@@ -80,6 +81,7 @@
 <script setup lang="ts">
 import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
+import ProductQuickView from './ProductQuickView.vue';
 import { useCart } from '@/composables/useCart';
 import { useUserStore } from '@/stores/user';
 import type { Product } from '@/types';
@@ -88,6 +90,7 @@ const { addToCart } = useCart();
 const userStore = useUserStore();
 
 const showNotification = ref(false);
+const showQuickView = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
 
@@ -109,6 +112,13 @@ const handleAddToCart = async (product: Product) => {
   } catch (err: any) {
     alert('Error adding to cart: ' + (err?.message || err));
   }
+};
+
+const openQuickView = () => {
+  showQuickView.value = true;
+};
+const closeQuickView = () => {
+  showQuickView.value = false;
 };
 
 defineProps<{
@@ -220,14 +230,5 @@ defineProps<{
   animation: fadeInOut 2s ease-in-out;
 }
 
-@keyframes fadeInOut {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  10%, 90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+
 </style>

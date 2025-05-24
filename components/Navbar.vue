@@ -1,15 +1,16 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
     <div class="container">
-      <!-- Brand/Doctor's Name -->
+      <!-- Brand/Logo -->
       <NuxtLink to="/" class="navbar-brand d-flex align-items-center">
         <img
-          src="/favicon.ico"
-          alt="Ayurvedic Icon"
+          src="/rishipath-logo.png"
+          alt="Rishipath Logo"
           class="me-2"
-          style="width: 24px; height: 24px"
+          style="width:20rem; height: 36px; object-fit: contain;"
         />
-        <span class="brand-text">Dr. Ramita Maharjan</span>
+        <!-- Remove brand text or comment out if you want only the logo -->
+        <!-- <span class="brand-text">Dr. Ramita Maharjan</span> -->
       </NuxtLink>
       <!-- Hamburger Toggle -->
       <button

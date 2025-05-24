@@ -97,6 +97,7 @@
 import { useRoute } from "vue-router";
 import { useProducts } from "@/composables/useProducts";
 import { onMounted, watch, computed } from "vue";
+import { useHead } from 'nuxt/app';
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
@@ -160,6 +161,35 @@ watch(
   (slug) => {
     if (slug) loadProduct(slug as string);
   }
+);
+
+// --- SEO META TAGS ---
+watch(
+  () => product.value,
+  (p) => {
+    if (!p) return;
+    const url = `https://ayurveda-marketplace.test/products/${p.slug || route.params.slug}`;
+    useHead({
+      title: p.name,
+      meta: [
+        { name: 'description', content: p.description || 'Shop Ayurvedic products.' },
+        { property: 'og:title', content: p.name },
+        { property: 'og:description', content: p.description || 'Shop Ayurvedic products.' },
+        { property: 'og:image', content: imageUrl(p.image) },
+        { property: 'og:url', content: url },
+        { property: 'og:type', content: 'product' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: p.name },
+        { name: 'twitter:description', content: p.description || 'Shop Ayurvedic products.' },
+        { name: 'twitter:image', content: imageUrl(p.image) },
+        { name: 'twitter:url', content: url },
+      ],
+      link: [
+        { rel: 'canonical', href: url },
+      ],
+    });
+  },
+  { immediate: true }
 );
 </script>
 
