@@ -1,9 +1,9 @@
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, ref, watch, onMounted, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProducts } from './useProducts';
 import type { PriceRange, Category, Product, Pagination } from '@/types';
 
-export function useProductFilters() {
+export function useProductFilters(searchQuery?: Ref<string>) {
   const router = useRouter();
   const route = useRoute();
   const { products, loading, error, fetchProducts, categories, fetchCategories, pagination } = useProducts();
@@ -93,6 +93,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
     if (page.value > 1) query.page = page.value.toString();
     query.inStock = String(inStock.value); // Always include as string
     if (onSale.value) query.onSale = 'true';
+    if (searchQuery && searchQuery.value) query.search = searchQuery.value;
     router.replace({ query });
     fetchProducts(
       page.value,
@@ -102,14 +103,18 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
       priceMin.value,
       priceMax.value,
       inStock.value,
-      onSale.value
+      onSale.value,
+      searchQuery ? searchQuery.value : undefined
     );
   };
 
   // Watchers
   watch(
-    [sort, category, priceMin, priceMax, page, inStock, onSale],
-    updateRouteAndFetch
+    [sort, category, priceMin, priceMax, page, inStock, onSale, searchQuery ?? ref('')],
+    () => {
+      if (searchQuery) page.value = 1; // Reset page on new search
+      updateRouteAndFetch();
+    }
   );
 
   const toggleSort = (type: 'price' | 'rating') => {

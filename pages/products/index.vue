@@ -24,20 +24,24 @@
 
       <!-- Mobile Filters -->
       <div class="d-md-none">
-        <button 
-          class="btn btn-primary mb-3" 
-          type="button" 
-          data-bs-toggle="offcanvas" 
+        <button
+          class="btn btn-primary mb-3"
+          type="button"
+          data-bs-toggle="offcanvas"
           data-bs-target="#filterOffcanvas"
         >
           Filter & Sort
         </button>
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="filterOffcanvas">
+        <div
+          class="offcanvas offcanvas-start"
+          tabindex="-1"
+          id="filterOffcanvas"
+        >
           <div class="offcanvas-header">
             <h5 class="offcanvas-title">Filter & Sort</h5>
-            <button 
-              type="button" 
-              class="btn-close" 
+            <button
+              type="button"
+              class="btn-close"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
@@ -68,20 +72,29 @@
       <main class="col-12 col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h1 class="h3 mb-0">Products</h1>
+
+          <!-- Product Search Bar -->
+
           <div class="d-flex gap-3 sort-controls">
+            <ProductSearch
+              v-model:query="searchQuery"
+              :all-products="products"
+              @search="handleSearch"
+              class="mx-4"
+            />
             <button
               class="btn btn-link p-0"
               :class="{ 'text-primary': sort.includes('price') }"
               @click="toggleSort('price')"
             >
-              Price {{ sortArrow('price') }}
+              Price {{ sortArrow("price") }}
             </button>
             <button
               class="btn btn-link p-0"
               :class="{ 'text-primary': sort.includes('rating') }"
               @click="toggleSort('rating')"
             >
-              Rating {{ sortArrow('rating') }}
+              Rating {{ sortArrow("rating") }}
             </button>
           </div>
         </div>
@@ -106,19 +119,24 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, computed } from 'vue';
-import { useProductFilters } from '@/composables/useProductFilters';
+import { defineAsyncComponent, computed } from "vue";
+import { useProductFilters } from "@/composables/useProductFilters";
 
 // Dynamic imports
-const FilterSidebar = defineAsyncComponent(() => 
-  import('@/components/products/FilterSidebar.vue')
+const FilterSidebar = defineAsyncComponent(
+  () => import("@/components/products/FilterSidebar.vue")
 );
-const ProductList = defineAsyncComponent(() => 
-  import('@/components/products/ProductList.vue')
+const ProductList = defineAsyncComponent(
+  () => import("@/components/products/ProductList.vue")
 );
-const Pagination = defineAsyncComponent(() => 
-  import('@/components/products/Pagination.vue')
+const Pagination = defineAsyncComponent(
+  () => import("@/components/products/Pagination.vue")
 );
+const ProductSearch = defineAsyncComponent(
+  () => import("@/components/products/ProductSearch.vue")
+);
+
+const searchQuery = ref("");
 
 const {
   products,
@@ -142,10 +160,15 @@ const {
   toggleShowMoreCategories,
   selectCategory,
   handlePriceRangeChange,
-  clearAllFilters
-} = useProductFilters();
+  clearAllFilters,
+} = useProductFilters(searchQuery); // <-- Pass searchQuery to composable
 
-import { ref } from 'vue';
+import { ref } from "vue";
+
+function handleSearch(query: string) {
+  searchQuery.value = query;
+  page.value = 1;
+}
 
 function handleStockChange(val: boolean) {
   inStock.value = val;
@@ -153,9 +176,9 @@ function handleStockChange(val: boolean) {
 }
 
 const sortArrow = (type: string) => {
-  if (sort.value === `${type}_asc`) return '↓';
-  if (sort.value === `${type}_desc`) return '↑';
-  return '↓';
+  if (sort.value === `${type}_asc`) return "↓";
+  if (sort.value === `${type}_desc`) return "↑";
+  return "↓";
 };
 </script>
 
@@ -164,12 +187,12 @@ const sortArrow = (type: string) => {
   button {
     font-size: 1rem;
     transition: all 0.2s ease;
-    
+
     &:hover {
       opacity: 0.8;
       transform: translateY(-1px);
     }
-    
+
     &.text-primary {
       font-weight: 500;
     }
@@ -179,13 +202,15 @@ const sortArrow = (type: string) => {
 .offcanvas {
   max-width: 300px;
 }
-.btn-link{
+.btn-link {
   color: $text-deep-green;
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .offcanvas-body {
-  max-height: calc(100vh - 100px); /* Ensures the content fits within the viewport */
+  max-height: calc(
+    100vh - 100px
+  ); /* Ensures the content fits within the viewport */
   overflow-y: auto; /* Enables scrolling within the offcanvas */
 }
 </style>

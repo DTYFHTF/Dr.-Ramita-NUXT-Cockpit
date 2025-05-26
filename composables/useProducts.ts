@@ -18,7 +18,8 @@ export function useProducts() {
     priceMin: number | null = null,
     priceMax: number | null = null,
     inStock = true,
-    onSale = false
+    onSale = false,
+    searchQuery?: string // <-- add searchQuery param
   ) {
     loading.value = true;
     error.value = "";
@@ -39,10 +40,12 @@ export function useProducts() {
         }
       }
       if (category) params.append("category", String(category));
-      if (priceMin !== null && priceMin > 0) params.append("price_min", String(priceMin));
+      if (priceMin !== null && priceMin > 0)
+        params.append("price_min", String(priceMin));
       if (priceMax !== null) params.append("price_max", String(priceMax));
       params.append("in_stock", String(inStock));
       if (onSale) params.append("on_sale", "true");
+      if (searchQuery) params.append("search", searchQuery); // <-- add search param
 
       const response = (await $fetch(
         `${API_BASE}/api/products?${params.toString()}`,

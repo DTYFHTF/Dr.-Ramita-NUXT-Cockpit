@@ -300,7 +300,6 @@ watchEffect(() => {
 });
 </script>
 <style scoped lang="scss">
-@use "sass:color";
 
 .yoga-header {
   background-color: color.adjust($accent-soft-green, $lightness: 46%);
