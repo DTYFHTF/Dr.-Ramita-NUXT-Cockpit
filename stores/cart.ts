@@ -131,8 +131,9 @@ export const useCartStore = defineStore('cart', () => {
     const cartKey = `${product_id}:${variation_id}`;
     const existing = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
     if (existing) {
-      existing.quantity += payload.quantity;
+      existing.quantity += Math.max(1, Number(quantity)); // Increment if exists
     } else {
+      payload.quantity = Math.max(1, Number(quantity));
       cart.value.push(payload);
     }
     if (userStore.token) {
@@ -151,8 +152,12 @@ export const useCartStore = defineStore('cart', () => {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${userStore.token}` }
         });
+        // Immediately sync the updated cart to the backend after removal
+        await syncCartToServer();
         await fetchCart();
-      } catch {}
+      } catch (e) {
+        console.error('[removeFromCart] Error:', e);
+      }
     } else {
       saveCart();
     }

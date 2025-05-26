@@ -5,6 +5,7 @@ export interface ProductVariation {
   stock?: number;
   sale_price?: number;
   sku?: string;
+  quantity?: number; // Optional quantity property
 }
 
 export interface Product {
@@ -22,6 +23,7 @@ export interface Product {
   description?: string;
   in_stock?: boolean; // Optional property to indicate stock availability
   variations?: ProductVariation[];
+  quantity?: number; // Optional quantity property
   // Add other product fields
 }
 

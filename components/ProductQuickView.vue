@@ -282,14 +282,15 @@ function decrement() {
 }
 function addToCartHandler() {
   if (props.product.variations?.length && selectedVariation.value) {
-    // Emit the selected variation as a product-like object
+    // Emit the selected variation as a product-like object, including quantity
     emit("add-to-cart", {
       ...props.product,
       ...selectedVariation.value,
       variation_id: selectedVariation.value.id,
+      quantity: quantity.value
     });
   } else {
-    emit("add-to-cart", props.product);
+    emit("add-to-cart", { ...props.product, quantity: quantity.value });
   }
 }
 

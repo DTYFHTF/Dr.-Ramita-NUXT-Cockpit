@@ -128,8 +128,9 @@ const handleAddToCart = async (product: Product) => {
 };
 
 // Listen for an event from ProductQuickView when a variation is selected and added
-function onQuickViewAddToCart(variationProduct: Product) {
-  addToCart(variationProduct);
+function onQuickViewAddToCart(variationProduct: Product & { quantity?: number }) {
+  // Pass the correct quantity from the quick view
+  addToCart(variationProduct, variationProduct.quantity ?? 1);
   showNotification.value = true;
   setTimeout(() => {
     showNotification.value = false;

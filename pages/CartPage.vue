@@ -88,13 +88,7 @@ import { useCart } from '@/composables/useCart';
 
 const cartStore = useCart();
 const { cart, totalItems, totalPrice } = storeToRefs(cartStore);
-
-function updateQuantity(productId, variationId, newQuantity) {
-  cartStore.updateQuantity(productId, variationId, newQuantity);
-}
-function removeFromCart(productId, variationId) {
-  cartStore.removeFromCart(productId, variationId);
-}
+const { updateQuantity, removeFromCart } = cartStore;
 
 console.log('[CartPage] cart:', cart);
 </script>
