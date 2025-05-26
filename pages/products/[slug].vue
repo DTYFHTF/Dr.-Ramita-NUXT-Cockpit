@@ -38,7 +38,59 @@
               product.category
             }}</NuxtLink>
           </div>
-          <div class="mb-2 d-flex align-items-center gap-3">
+          <!-- Variations UI -->
+          <div
+            v-if="product.variations && product.variations.length"
+            class="mb-3"
+          >
+            <label class="fw-semibold mb-1">Choose a variation:</label>
+            <select v-model="selectedVariationId" class="form-select mb-2">
+              <option
+                v-for="variation in product.variations"
+                :key="variation.id"
+                :value="variation.id"
+              >
+                {{ variation.name }}
+                ({{ variation.stock ?? "Out of stock" }})
+              </option>
+            </select>
+            <div v-if="selectedVariation">
+              <span
+                v-if="
+                  selectedVariation.sale_price &&
+                  selectedVariation.sale_price < selectedVariation.price
+                "
+              >
+                <span class="text-decoration-line-through text-muted">
+                  ${{ selectedVariation.price }}
+                </span>
+                <span class="ms-2 text-danger fw-bold">
+                  ${{ selectedVariation.sale_price }}
+                </span>
+              </span>
+              <span v-else class="product-price">
+                ${{ selectedVariation.price }}
+              </span>
+              <span
+                class="badge ms-2"
+                :class="
+                  selectedVariation.stock > 0
+                    ? 'bg-success'
+                    : 'bg-danger'
+                "
+              >
+                {{ selectedVariation.stock > 0 ? "In stock" : "Out of stock" }}
+              </span>
+              <div
+                v-if="selectedVariation.sku"
+                class="mt-1 text-muted small"
+              >
+                SKU: {{ selectedVariation.sku }}
+              </div>
+            </div>
+          </div>
+          <!-- ...existing price/stock UI, fallback if no variations... -->
+          <div v-else class="mb-2 d-flex align-items-center gap-3">
             <span
               v-if="product.sale_price && product.sale_price < product.price"
             >
@@ -81,7 +133,7 @@
           <div class="product-description mb-4">
             {{ product.description || "No description available." }}
           </div>
-          <button class="btn btn-primary" :disabled="!inStock">
+          <button class="btn btn-primary" :disabled="!canAddToCart" @click="handleAddToCart">
             Add to cart
           </button>
         </div>
@@ -96,11 +148,13 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useProducts } from "@/composables/useProducts";
-import { onMounted, watch, computed } from "vue";
+import { onMounted, watch, computed, ref } from "vue";
 import { useHead } from 'nuxt/app';
+import { useCart } from '@/composables/useCart';
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
+const { addToCart } = useCart();
 
 let lastSlug = "";
 
@@ -133,6 +187,19 @@ const inStock = computed(
   () => product.value?.in_stock ?? product.value?.stock > 0
 );
 
+const selectedVariationId = ref<string | null>(null);
+const selectedVariation = computed(() => {
+  if (!product.value?.variations) return null;
+  return product.value.variations.find((v: any) => v.id === selectedVariationId.value) || product.value.variations[0];
+});
+
+const canAddToCart = computed(() => {
+  if (product.value?.variations?.length) {
+    return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
+  }
+  return inStock.value;
+});
+
 async function loadProduct(slug: string) {
   if (slug === lastSlug && error.value) return; // Prevent repeated fetches on error
   lastSlug = slug;
@@ -163,6 +230,16 @@ watch(
   }
 );
 
+watch(
+  () => product.value?.variations,
+  (vars) => {
+    if (vars && vars.length) {
+      selectedVariationId.value = vars[0].id;
+    }
+  },
+  { immediate: true }
+);
+
 // --- SEO META TAGS ---
 watch(
   () => product.value,
@@ -191,6 +268,15 @@ watch(
   },
   { immediate: true }
 );
+
+function handleAddToCart() {
+  if (product.value?.variations?.length && selectedVariation.value) {
+    // Pass the selected variation as a separate object
+    addToCart({ ...product.value, ...selectedVariation.value, variation_id: selectedVariation.value.id }, 1);
+  } else if (product.value) {
+    addToCart(product.value, 1);
+  }
+}
 </script>
 
 <style scoped>

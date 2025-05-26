@@ -77,9 +77,65 @@
             </NuxtLink>
           </div>
           <div class="col-md-6 p-4">
-              <h2 class="product-title my-3">{{ product.name }}</h2>
-            
-            <div class="product-price mb-3">
+            <h2 class="product-title my-3">{{ product.name }}</h2>
+
+            <!-- Variations Dropdown -->
+            <div
+              v-if="product.variations && product.variations.length"
+              class="mb-3"
+            >
+              <label class="fw-semibold mb-1">Choose a variation:</label>
+              <select
+                v-model="selectedVariationId"
+                class="form-select mb-2"
+                @change="updateSelectedVariation"
+              >
+                <option
+                  v-for="variation in product.variations"
+                  :key="variation.id"
+                  :value="variation.id"
+                >
+                  {{ variation.name }}
+                  ({{ variation.stock ?? "Out of stock" }})
+                </option>
+              </select>
+              <div v-if="selectedVariation">
+                <span
+                  v-if="
+                    selectedVariation.sale_price &&
+                    selectedVariation.sale_price < selectedVariation.price
+                  "
+                >
+                  <span class="text-decoration-line-through text-muted"
+                    >₹{{ selectedVariation.price }}</span
+                  >
+                  <span class="ms-2 text-success fw-bold"
+                    >₹{{ selectedVariation.sale_price }}</span
+                  >
+                </span>
+                <span v-else class="fw-bold text-success"
+                  >₹{{ selectedVariation.price }}</span
+                >
+                <span
+                  class="badge ms-2"
+                  :class="
+                    (selectedVariation.stock ?? 0) > 0
+                      ? 'bg-success'
+                      : 'bg-danger'
+                  "
+                >
+                  {{ (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock" }}
+                </span>
+                <div
+                  v-if="selectedVariation.sku"
+                  class="mt-1 text-muted small"
+                >
+                  SKU: {{ selectedVariation.sku }}
+                </div>
+              </div>
+            </div>
+            <!-- Fallback if no variations -->
+            <div v-else class="product-price mb-3">
               <span
                 v-if="product.sale_price && product.sale_price < product.price"
               >
@@ -117,15 +173,15 @@
               </button>
               <button
                 class="btn btn-smooth-success ms-3"
-                :disabled="!inStock"
+                :disabled="!canAddToCart"
                 @click="addToCartHandler"
               >
                 Add to cart
               </button>
             </div>
             <div class="mb-2">
-              <span class="badge" :class="inStock ? 'bg-success' : 'bg-danger'">
-                {{ inStock ? "In stock" : "Out of stock" }}
+              <span class="badge" :class="canAddToCart ? 'bg-success' : 'bg-danger'">
+                {{ canAddToCart ? 'In stock' : 'Out of stock' }}
               </span>
             </div>
             <div class="share-section mt-3">
@@ -167,16 +223,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
 import { useCart } from "@/composables/useCart";
 import type { Product } from "@/types";
 
 const props = defineProps<{ product: Product }>();
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "add-to-cart"]);
 
 const { addToCart } = useCart();
 const quantity = ref(1);
+const selectedVariationId = ref<string | null>(null);
 
 const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
@@ -193,6 +250,30 @@ const images = computed(() => {
   return Array.from(new Set(imgs));
 });
 
+const selectedVariation = computed(() => {
+  if (!props.product.variations) return null;
+  return (
+    props.product.variations.find((v: any) => v.id === selectedVariationId.value) ||
+    props.product.variations[0]
+  );
+});
+const canAddToCart = computed(() => {
+  if (props.product.variations?.length) {
+    return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
+  }
+  return inStock.value;
+});
+
+watch(
+  () => props.product.variations,
+  (vars) => {
+    if (vars && vars.length) {
+      selectedVariationId.value = vars[0].id;
+    }
+  },
+  { immediate: true }
+);
+
 function increment() {
   quantity.value++;
 }
@@ -200,7 +281,25 @@ function decrement() {
   if (quantity.value > 1) quantity.value--;
 }
 function addToCartHandler() {
-  addToCart(props.product, quantity.value);
+  if (props.product.variations?.length && selectedVariation.value) {
+    // Emit the selected variation as a product-like object
+    emit("add-to-cart", {
+      ...props.product,
+      ...selectedVariation.value,
+      variation_id: selectedVariation.value.id,
+    });
+  } else {
+    emit("add-to-cart", props.product);
+  }
+}
+
+function updateSelectedVariation() {
+  const variation = props.product.variations?.find(
+    (v) => v.id === selectedVariationId.value
+  );
+  if (variation) {
+    quantity.value = 1; // Reset quantity to 1 when changing variation
+  }
 }
 
 function shareUrl(platform: string) {

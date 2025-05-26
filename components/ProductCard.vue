@@ -20,19 +20,27 @@
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         <div class="mb-2 d-flex align-items-center gap-2">
-          <span
-            v-if="product.sale_price && product.sale_price < product.price"
-          >
-            <span class="text-decoration-line-through text-muted">
+          <template v-if="product.variations && product.variations.length">
+            <span v-if="minVariationPrice !== maxVariationPrice">
+              From ${{ minVariationPrice }}
+            </span>
+            <span v-else>
+              ${{ minVariationPrice }}
+            </span>
+          </template>
+          <template v-else>
+            <span v-if="product.sale_price && product.sale_price < product.price">
+              <span class="text-decoration-line-through text-muted">
+                ${{ product.price }}
+              </span>
+              <span class="ms-1 text-danger fw-bold">
+                ${{ product.sale_price }}
+              </span>
+            </span>
+            <span v-else class="product-price fw-bold text-success">
               ${{ product.price }}
             </span>
-            <span class="ms-1 text-danger fw-bold">
-              ${{ product.sale_price }}
-            </span>
-          </span>
-          <span v-else class="product-price fw-bold text-success">
-            ${{ product.price }}
-          </span>
+          </template>
         </div>
         <span
           class="badge mb-2"
@@ -73,7 +81,7 @@
         <LucideIcon icon="mdi:eye-outline" color="black" />
       </button>
     </div>
-    <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" />
+    <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
   <div v-if="showNotification" class="toast-message">Product added to cart!</div>
 </template>
@@ -104,6 +112,11 @@ const handleAddToCart = async (product: Product) => {
     return;
   }
   try {
+    // If product has variations, open quick view for selection
+    if (product.variations && product.variations.length) {
+      openQuickView();
+      return;
+    }
     await addToCart(product);
     showNotification.value = true;
     setTimeout(() => {
@@ -114,6 +127,16 @@ const handleAddToCart = async (product: Product) => {
   }
 };
 
+// Listen for an event from ProductQuickView when a variation is selected and added
+function onQuickViewAddToCart(variationProduct: Product) {
+  addToCart(variationProduct);
+  showNotification.value = true;
+  setTimeout(() => {
+    showNotification.value = false;
+  }, 2000);
+  closeQuickView();
+}
+
 const openQuickView = () => {
   showQuickView.value = true;
 };
@@ -121,9 +144,21 @@ const closeQuickView = () => {
   showQuickView.value = false;
 };
 
-defineProps<{
-  product: Product;
-}>();
+const props = defineProps<{ product: Product }>();
+
+const minVariationPrice = computed(() => {
+  if (props.product.variations && props.product.variations.length) {
+    return Math.min(...props.product.variations.map(v => v.sale_price ?? v.price));
+  }
+  return props.product.sale_price ?? props.product.price;
+});
+const maxVariationPrice = computed(() => {
+  if (props.product.variations && props.product.variations.length) {
+    return Math.max(...props.product.variations.map(v => v.sale_price ?? v.price));
+  }
+  return props.product.sale_price ?? props.product.price;
+});
+
 </script>
 
 <style scoped lang="scss">

@@ -1,3 +1,12 @@
+export interface ProductVariation {
+  id: string;
+  name: string;
+  price: number;
+  stock?: number;
+  sale_price?: number;
+  sku?: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -12,6 +21,7 @@ export interface Product {
   slug: string;
   description?: string;
   in_stock?: boolean; // Optional property to indicate stock availability
+  variations?: ProductVariation[];
   // Add other product fields
 }
 
