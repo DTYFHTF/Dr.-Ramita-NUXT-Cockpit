@@ -11,6 +11,7 @@
         </button>
         <ProductQuickViewContent
           :product="product"
+          :show-view-details="true"
           @add-to-cart="$emit('add-to-cart', $event)"
         />
       </div>

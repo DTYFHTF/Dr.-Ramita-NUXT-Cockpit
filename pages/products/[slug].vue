@@ -157,7 +157,6 @@ function handleAddToCartProxy(payload: any) {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background: #f9f9f9;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -187,7 +186,6 @@ function handleAddToCartProxy(payload: any) {
   margin: 0 auto;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
   display: flex;
   flex-direction: column;
   justify-content: center;

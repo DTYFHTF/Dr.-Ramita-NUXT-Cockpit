@@ -56,11 +56,11 @@
           :alt="product.name"
           class="quick-view-image"
         />
-        <!-- View Details button fixed to bottom -->
+        <!-- View Details button fixed to bottom, full width, only on hover -->
         <NuxtLink
           v-if="showViewDetails !== false"
           :to="`/products/${product.slug}`"
-          class="btn btn-smooth-primary view-details-btn"
+          class="btn btn-smooth-primary view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
         >
           View Details
         </NuxtLink>
@@ -317,5 +317,37 @@ function shareUrl(platform: string) {
   overflow-y: auto;
   position: relative;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+.quick-view-image {
+  min-width: 260px;
+  min-height: 340px;
+  max-width: 260px;
+  max-height: 340px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.image-col {
+  position: relative;
+  &:hover .view-details-btn,
+  &:focus-within .view-details-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+.view-details-btn {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  border-radius: 0 0 8px 8px;
+  /* Prevent parent transform/translate from affecting this button */
+  transform: none !important;
 }
 </style>
