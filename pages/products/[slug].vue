@@ -1,17 +1,23 @@
 <template>
   <div class="product-detail-page">
-    <div v-if="loading">Loading product...</div>
+    <div v-if="loading" class="d-flex justify-content-center align-items-center min-vh-100">
+      <div class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else-if="product">
+      
       <div class="product-detail-flex">
         <!-- Content column -->
         <div class="product-detail-content-col">
           <ProductQuickViewContent :product="product" @add-to-cart="handleAddToCartProxy" :show-view-details="false" />
         </div>
       </div>
+      
     </div>
     <div v-else>
-      <p>Product not found.</p>
+      <p class="visually-hidden">Product not found.</p>
     </div>
   </div>
 </template>
@@ -181,11 +187,12 @@ function handleAddToCartProxy(payload: any) {
 }
 .quick-view-content {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   min-height: 500px;
-  margin: 0 auto;
+  padding:0px !important;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   justify-content: center;

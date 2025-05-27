@@ -1,6 +1,13 @@
 <template>
   <div class="quick-view-content">
     <div class="row g-0">
+      <div class="col-12">
+        <NuxtLink to="/products" class=" d-inline-flex align-items-center mb-3 back-to-products-btn" title="Back to Products">
+          <LucideIcon icon="mdi:view-grid" />
+        </NuxtLink>
+      </div>
+    </div>
+    <div class="row g-0">
       <div
         class="col-md-6 d-flex align-items-center justify-content-center flex-column position-relative image-col"
       >
@@ -308,14 +315,23 @@ function shareUrl(platform: string) {
 </script>
 
 <style scoped lang="scss">
+.back-to-products-btn {
+  position: absolute;
+  top: 9px;
+  right: 27px;
+  left: auto;
+  z-index: 10;
+  font-size: 1rem;
+  background:transparent;
+}
 .quick-view-content {
+  position: relative;
   background: #fff;
   border-radius: 10px;
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  position: relative;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 .quick-view-image {
@@ -349,5 +365,39 @@ function shareUrl(platform: string) {
   border-radius: 0 0 8px 8px;
   /* Prevent parent transform/translate from affecting this button */
   transform: none !important;
+}
+.share-section a {
+  margin-right: 16px;
+  font-size: 1.5rem;
+  vertical-align: middle;
+  display: inline-flex;
+}
+
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: none !important;
+  background-color: transparent !important;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 1;
+  box-shadow: none;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+.carousel-control-prev-icon {
+  background-image: none !important;
+  /* Use SVG for left arrow */
+  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  background-color: #226144 !important;
+}
+.carousel-control-next-icon {
+  background-image: none !important;
+  /* Use SVG for right arrow */
+  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  background-color: #226144 !important;
 }
 </style>
