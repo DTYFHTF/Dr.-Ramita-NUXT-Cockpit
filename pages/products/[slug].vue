@@ -1,141 +1,12 @@
 <template>
-  <div class="product-detail-page container">
+  <div class="product-detail-page">
     <div v-if="loading">Loading product...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else-if="product">
-      <!-- Breadcrumbs -->
-      <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <NuxtLink to="/products">Shop</NuxtLink>
-          </li>
-          <li v-if="product.category" class="breadcrumb-item">
-            <NuxtLink :to="`/products?category=${product.category}`">{{
-              product.category
-            }}</NuxtLink>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            {{ product.name }}
-          </li>
-        </ol>
-      </nav>
-      <div class="row g-4 align-items-start">
-        <!-- Images column -->
-        <div class="col-12 col-md-6">
-          <ProductImages
-            :image="product.image"
-            :image2="product.image_2"
-            :image3="product.image_3"
-            :name="product.name"
-          />
-        </div>
+      <div class="product-detail-flex">
         <!-- Content column -->
-        <div class="col-12 col-md-6">
-          <h1 class="mb-2">{{ product.name }}</h1>
-          <div class="mb-2 text-muted" v-if="product.category">
-            Category:
-            <NuxtLink :to="`/products?category=${product.category}`">{{
-              product.category
-            }}</NuxtLink>
-          </div>
-          <!-- Variations UI -->
-          <div
-            v-if="product.variations && product.variations.length"
-            class="mb-3"
-          >
-            <label class="fw-semibold mb-1">Choose a variation:</label>
-            <select v-model="selectedVariationId" class="form-select mb-2">
-              <option
-                v-for="variation in product.variations"
-                :key="variation.id"
-                :value="variation.id"
-              >
-                {{ variation.name }}
-                ({{ variation.stock ?? "Out of stock" }})
-              </option>
-            </select>
-            <div v-if="selectedVariation">
-              <span
-                v-if="
-                  selectedVariation.sale_price &&
-                  selectedVariation.sale_price < selectedVariation.price
-                "
-              >
-                <span class="text-decoration-line-through text-muted">
-                  ${{ selectedVariation.price }}
-                </span>
-                <span class="ms-2 text-danger fw-bold">
-                  ${{ selectedVariation.sale_price }}
-                </span>
-              </span>
-              <span v-else class="product-price">
-                ${{ selectedVariation.price }}
-              </span>
-              <span
-                class="badge ms-2"
-                :class="
-                  selectedVariation.stock > 0
-                    ? 'bg-success'
-                    : 'bg-danger'
-                "
-              >
-                {{ selectedVariation.stock > 0 ? "In stock" : "Out of stock" }}
-              </span>
-              <div
-                v-if="selectedVariation.sku"
-                class="mt-1 text-muted small"
-              >
-                SKU: {{ selectedVariation.sku }}
-              </div>
-            </div>
-          </div>
-          <!-- ...existing price/stock UI, fallback if no variations... -->
-          <div v-else class="mb-2 d-flex align-items-center gap-3">
-            <span
-              v-if="product.sale_price && product.sale_price < product.price"
-            >
-              <span class="text-decoration-line-through text-muted"
-                >${{ product.price }}</span
-              >
-              <span class="ms-2 text-danger fw-bold"
-                >${{ product.sale_price }}</span
-              >
-            </span>
-            <span v-else class="product-price">${{ product.price }}</span>
-            <span
-              class="badge"
-              :class="product.in_stock ? 'bg-success' : 'bg-danger'"
-            >
-              {{ product.in_stock ? "In stock" : "Out of stock" }}
-            </span>
-          </div>
-          <div class="mb-3">
-            <span class="star-rating">
-              <span v-for="(star, index) in starArray" :key="index">
-                <i
-                  class="bi"
-                  :class="
-                    star === 'full'
-                      ? 'bi-star-fill'
-                      : star === 'half'
-                      ? 'bi-star-half'
-                      : 'bi-star'
-                  "
-                ></i>
-              </span>
-              <span class="ms-2"
-                >{{
-                  product.rating ? product.rating.toFixed(1) : "0.0"
-                }}/5</span
-              >
-            </span>
-          </div>
-          <div class="product-description mb-4">
-            {{ product.description || "No description available." }}
-          </div>
-          <button class="btn btn-primary" :disabled="!canAddToCart" @click="handleAddToCart">
-            Add to cart
-          </button>
+        <div class="product-detail-content-col">
+          <ProductQuickViewContent :product="product" @add-to-cart="handleAddToCartProxy" :show-view-details="false" />
         </div>
       </div>
     </div>
@@ -151,6 +22,7 @@ import { useProducts } from "@/composables/useProducts";
 import { onMounted, watch, computed, ref } from "vue";
 import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
+import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
@@ -269,74 +141,78 @@ watch(
   { immediate: true }
 );
 
-function handleAddToCart() {
-  if (product.value?.variations?.length && selectedVariation.value) {
-    // Pass the selected variation as a separate object
-    addToCart({ ...product.value, ...selectedVariation.value, variation_id: selectedVariation.value.id }, 1);
-  } else if (product.value) {
-    addToCart(product.value, 1);
+function handleAddToCartProxy(payload: any) {
+  // Accepts the payload from ProductQuickViewContent and calls addToCart
+  if (payload.variation_id) {
+    addToCart(payload, payload.quantity || 1);
+  } else {
+    addToCart(payload, payload.quantity || 1);
   }
 }
 </script>
 
 <style scoped>
 .product-detail-page {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 2rem;
-  background: #fff;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
-.product-detail-image {
+.product-detail-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  max-width: 350px;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  background: #f8f8f8;
+  max-width: 1200px;
+  margin: 48px auto 0 auto;
+  gap: 0;
 }
-.product-thumb {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #eee;
-  margin-bottom: 8px;
-  background: #f8f8f8;
+.product-detail-content-col {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
 }
-.product-price {
-  color: #2d8f6f;
-  font-weight: bold;
-  font-size: 1.3rem;
-  margin: 1rem 0;
+.quick-view-content {
+  width: 100%;
+  max-width: 900px;
+  min-height: 500px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
 }
-.product-description {
-  font-size: 1.1rem;
-  color: #444;
+@media (max-width: 1100px) {
+  .product-detail-flex {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .product-detail-content-col {
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+    justify-content: center;
+  }
+  .quick-view-content {
+    padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+    min-height: 0;
+  }
 }
 .error {
   color: #c00;
   text-align: center;
   margin: 2rem 0;
-}
-.star-rating i {
-  color: #f7b500;
-  font-size: 1.2rem;
-}
-.breadcrumb {
-  background: none;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-@media (max-width: 767px) {
-  .product-detail-image {
-    margin-bottom: 1rem;
-    max-width: 100%;
-    height: 220px;
-  }
-  .product-thumb {
-    width: 50px;
-    height: 50px;
-  }
 }
 </style>
