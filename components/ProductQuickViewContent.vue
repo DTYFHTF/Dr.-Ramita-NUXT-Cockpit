@@ -59,7 +59,7 @@
         <!-- Fallback to single image if only one -->
         <img
           v-else
-          :src="product.image"
+          :src="images[0]"
           :alt="product.name"
           class="quick-view-image"
         />
@@ -231,12 +231,19 @@ const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
 });
 
+// Helper for image fallback
+function imageUrl(img: string) {
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `http://ayurveda-marketplace.test/storage/${img}`;
+}
+
 const images = computed(() => {
   const imgs = [
     props.product.image,
     props.product.image_2,
     props.product.image_3,
-  ].filter(Boolean);
+  ].filter(Boolean).map(imageUrl);
   return Array.from(new Set(imgs));
 });
 

@@ -6,13 +6,13 @@
     >
       <div class="image-container">
         <img
-          :src="product.image"
+          :src="imageUrl(product.image)"
           :alt="product.name"
           class="card-img-top main-image"
         />
         <img
           v-if="product.image_2"
-          :src="product.image_2"
+          :src="imageUrl(product.image_2)"
           :alt="`${product.name} - alternate view`"
           class="card-img-top hover-image"
         />
@@ -159,6 +159,13 @@ const maxVariationPrice = computed(() => {
   }
   return props.product.sale_price ?? props.product.price;
 });
+
+// Helper for image fallback
+function imageUrl(img: string) {
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `http://ayurveda-marketplace.test/storage/${img}`;
+}
 
 </script>
 
