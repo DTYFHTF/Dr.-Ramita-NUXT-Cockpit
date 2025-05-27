@@ -2,7 +2,7 @@
   <div class="quick-view-content">
     <div class="row g-0">
       <div class="col-12">
-        <NuxtLink to="/products" class=" d-inline-flex align-items-center mb-3 back-to-products-btn" title="Back to Products">
+        <NuxtLink v-if="!showViewDetails" to="/products" class="d-inline-flex align-items-center mb-3 back-to-products-btn" title="Back to Products">
           <LucideIcon icon="mdi:view-grid" />
         </NuxtLink>
       </div>
@@ -74,6 +74,9 @@
       </div>
       <div class="col-md-6 p-4">
         <h2 class="product-title my-3">{{ product.name }}</h2>
+        <div class="product-description mb-3">
+          <span class="clamp-4-lines">{{ product.description }}</span>
+        </div>
         <!-- Variations Dropdown -->
         <div
           v-if="product.variations && product.variations.length"
@@ -145,9 +148,7 @@
             >₹{{ product.price }}</span
           >
         </div>
-        <div class="product-description mb-3">
-          <span class="clamp-4-lines">{{ product.description }}</span>
-        </div>
+        
         <div class="d-flex align-items-center mb-3">
           <button
             class="btn btn-outline-secondary"
