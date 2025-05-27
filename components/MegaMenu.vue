@@ -15,7 +15,7 @@
             class="product-card"
           >
             <img
-              :src="product.image || '/fallback.jpg'"
+              :src="imageUrl(product.image)"
               :alt="product.name"
               class="product-image"
             />
@@ -77,6 +77,13 @@ function filterByCategory(categoryId) {
   fetchProducts(1, 30, '', categoryId).then(() => {
     activeProducts.value = products.value;
   });
+}
+
+// Helper for image fallback
+function imageUrl(img) {
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `http://ayurveda-marketplace.test/storage/${img}`;
 }
 </script>
 

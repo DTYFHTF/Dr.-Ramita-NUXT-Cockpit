@@ -12,7 +12,7 @@
           <div class="card">
             <div class="card-body">
               <div v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="cart-item d-flex gap-3 mb-4 pb-4 border-bottom">
-                <img :src="item.image" alt="" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                <img :src="imageUrl(item.image)" alt="" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
                 <div class="flex-grow-1">
                   <h5 class="mb-2">
                     {{ item.name }}
@@ -89,6 +89,13 @@ import { useCart } from '@/composables/useCart';
 const cartStore = useCart();
 const { cart, totalItems, totalPrice } = storeToRefs(cartStore);
 const { updateQuantity, removeFromCart } = cartStore;
+
+// Helper for image fallback
+function imageUrl(img: string) {
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `http://ayurveda-marketplace.test/storage/${img}`;
+}
 
 console.log('[CartPage] cart:', cart);
 </script>

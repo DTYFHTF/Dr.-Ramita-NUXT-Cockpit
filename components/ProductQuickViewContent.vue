@@ -343,10 +343,9 @@ function shareUrl(platform: string) {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 .quick-view-image {
-  min-width: 260px;
+  min-width: 280px;
   min-height: 340px;
-  max-width: 260px;
-  max-height: 340px;
+  max-height: 420px;
   object-fit: contain;
   border-radius: 8px;
   margin: 0 auto;
