@@ -8,6 +8,21 @@ export interface ProductVariation {
   quantity?: number; // Optional quantity property
 }
 
+export interface ReviewUser {
+  id: number;
+  name: string;
+  email: string;
+}
+export interface Review {
+  id: number;
+  user: ReviewUser;
+  rating: number;
+  comment: string;
+  reply?: string;
+  replied_by?: ReviewUser;
+  created_at: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -24,6 +39,9 @@ export interface Product {
   in_stock?: boolean; // Optional property to indicate stock availability
   variations?: ProductVariation[];
   quantity?: number; // Optional quantity property
+  review_count?: number;
+  average_rating?: number;
+  latest_reviews?: Review[];
   // Add other product fields
 }
 

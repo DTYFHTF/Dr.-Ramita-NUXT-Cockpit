@@ -79,9 +79,11 @@ export function useProducts() {
     error.value = "";
     product.value = null;
     try {
-      product.value = await $fetch(`${API_BASE}/api/products/${slug}`, {
+      const response = await $fetch(`${API_BASE}/api/products/${slug}`, {
         headers: { Accept: "application/json" },
-      });
+      }) as any;
+      // If the API response is wrapped in { data: ... }, unwrap it
+      product.value = response.data ? response.data : response;
     } catch (e: any) {
       if (e?.status === 404) {
         error.value = "Product not found.";

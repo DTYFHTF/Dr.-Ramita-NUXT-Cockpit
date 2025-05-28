@@ -212,6 +212,7 @@
           /></a>
         </div>
       </div>
+      <!-- Product Reviews Section removed from Quick View -->
     </div>
   </div>
 </template>
@@ -221,7 +222,8 @@ import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
 import type { Product } from "@/types";
 
-const props = defineProps<{ product: Product, showViewDetails?: boolean }>();
+// --- Props ---
+const props = defineProps<{ product: Product; showViewDetails?: boolean }>();
 const emit = defineEmits(["add-to-cart"]);
 
 const quantity = ref(1);
@@ -406,5 +408,23 @@ function shareUrl(platform: string) {
   mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
   -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
   background-color: #226144 !important;
+}
+.product-reviews {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+}
+.review-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  transition: transform 0.2s;
+}
+.review-card:hover {
+  transform: translateY(-2px);
+}
+.admin-reply {
+  background: #e2f7e2;
+  border-left: 4px solid #28a745;
 }
 </style>

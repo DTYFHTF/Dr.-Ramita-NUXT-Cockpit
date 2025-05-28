@@ -14,6 +14,40 @@
           <ProductQuickViewContent :product="product" @add-to-cart="handleAddToCartProxy" :show-view-details="false" />
         </div>
       </div>
+
+      <!-- Product Reviews Section -->
+      <div class="product-reviews mt-5">
+        <h4 class="mb-2">Customer Reviews</h4>
+        <div v-if="(product.review_count ?? 0) > 0" class="mb-2">
+          <span class="fs-5 fw-bold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
+          <span class="text-warning ms-1">
+            <ProductStarIcon v-for="i in 5" :key="i" :filled="i <= Math.round(product.average_rating || 0)" />
+          </span>
+          <span class="text-muted ms-2">({{ product.review_count ?? 0 }} reviews)</span>
+        </div>
+        <div v-else class="text-muted mb-2">No reviews yet.</div>
+
+        <!-- Latest 3 Reviews -->
+        <div v-if="product.latest_reviews && product.latest_reviews.length">
+          <div v-for="review in product.latest_reviews.slice(0, 3)" :key="review.id" class="review-card mb-3 p-3 border rounded">
+            <div class="d-flex align-items-center mb-1">
+              <span class="fw-semibold me-2">{{ review.user?.name || 'Anonymous' }}</span>
+              <span class="text-muted small">{{ review.user?.email }}</span>
+              <span class="ms-auto text-warning">
+                <ProductStarIcon v-for="i in 5" :key="i" :filled="i <= review.rating" />
+                <span class="ms-1 small">({{ review.rating }})</span>
+              </span>
+            </div>
+            <div class="review-comment mb-1">{{ review.comment }}</div>
+            <div v-if="review.reply" class="admin-reply bg-light p-2 rounded small mt-2">
+              <span class="fw-bold text-success">Admin reply:</span>
+              <span>{{ review.reply }}</span>
+              <span v-if="review.replied_by" class="text-muted ms-2">- {{ review.replied_by?.name }}</span>
+            </div>
+            <div class="text-muted small mt-1">{{ new Date(review.created_at).toLocaleString() }}</div>
+          </div>
+        </div>
+      </div>
       
     </div>
     <div v-else>
@@ -29,6 +63,7 @@ import { onMounted, watch, computed, ref } from "vue";
 import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
 import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
+import ProductStarIcon from '@/components/ProductStarIcon.vue';
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
@@ -197,6 +232,21 @@ function handleAddToCartProxy(payload: any) {
   flex-direction: column;
   justify-content: center;
   padding: 2.5rem 2.5rem 2rem 2.5rem;
+}
+.product-reviews {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+.review-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  transition: transform 0.2s;
+}
+.review-card:hover {
+  transform: translateY(-2px);
 }
 @media (max-width: 1100px) {
   .product-detail-flex {
