@@ -15,7 +15,7 @@
             class="product-card"
           >
             <img
-              :src="imageUrl(product.image)"
+              :src="firstAvailableImage(product)"
               :alt="product.name"
               class="product-image"
             />
@@ -84,6 +84,11 @@ function imageUrl(img) {
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
   return `http://ayurveda-marketplace.test/storage/${img}`;
+}
+
+function firstAvailableImage(product) {
+  const imgs = [product.image, product.image_2, product.image_3].filter(Boolean);
+  return imageUrl(imgs[0]);
 }
 </script>
 

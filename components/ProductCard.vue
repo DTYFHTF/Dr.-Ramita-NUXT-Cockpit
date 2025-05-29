@@ -6,13 +6,14 @@
     >
       <div class="image-container">
         <img
-          :src="imageUrl(product.image)"
+          v-if="images[0]"
+          :src="images[0]"
           :alt="product.name"
           class="card-img-top main-image"
         />
         <img
-          v-if="product.image_2"
-          :src="imageUrl(product.image_2)"
+          v-if="images[1]"
+          :src="images[1]"
           :alt="`${product.name} - alternate view`"
           class="card-img-top hover-image"
         />
@@ -147,6 +148,12 @@ const closeQuickView = () => {
 
 const props = defineProps<{ product: Product }>();
 
+const images = computed(() => {
+  // Only use image and image_2 for the product card
+  const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
+  return Array.from(new Set(imgs));
+});
+
 const minVariationPrice = computed(() => {
   if (props.product.variations && props.product.variations.length) {
     return Math.min(...props.product.variations.map(v => v.sale_price ?? v.price));
@@ -193,6 +200,7 @@ function imageUrl(img: string) {
   position: absolute;
   top: 0;
   left: 0;
+  opacity: 0;
 }
 .main-image {
   opacity: 1;
@@ -200,7 +208,6 @@ function imageUrl(img: string) {
   transform: scale(1);
 }
 .hover-image {
-  opacity: 0;
   z-index: 2;
   transform: scale(1.1);
 }

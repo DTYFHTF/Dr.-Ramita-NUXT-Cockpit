@@ -72,7 +72,7 @@ export function useProducts() {
     } catch (e: any) {
       categories.value = [];
     }
-  }
+  } 
 
   async function fetchProduct(slug: string) {
     loading.value = true;

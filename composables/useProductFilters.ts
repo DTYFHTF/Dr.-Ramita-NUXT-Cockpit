@@ -90,7 +90,8 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
     if (category.value) query.category = category.value;
     if (priceMin.value !== null) query.priceMin = priceMin.value.toString();
     if (priceMax.value !== null) query.priceMax = priceMax.value.toString();
-    if (page.value > 1) query.page = page.value.toString();
+    // Always include page, even if 1, for consistency and to allow navigation
+    query.page = page.value.toString();
     query.inStock = String(inStock.value); // Always include as string
     if (onSale.value) query.onSale = 'true';
     if (searchQuery && searchQuery.value) query.search = searchQuery.value;
@@ -111,8 +112,11 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
   // Watchers
   watch(
     [sort, category, priceMin, priceMax, page, inStock, onSale, searchQuery ?? ref('')],
-    () => {
-      if (searchQuery) page.value = 1; // Reset page on new search
+    ([_sort, _category, _priceMin, _priceMax, _page, _inStock, _onSale, _search], oldValues) => {
+      // Only reset page to 1 if searchQuery changes (not for every change)
+      if (searchQuery && _search !== oldValues?.[7]) {
+        page.value = 1;
+      }
       updateRouteAndFetch();
     }
   );
