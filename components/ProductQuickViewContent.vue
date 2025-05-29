@@ -2,7 +2,12 @@
   <div class="quick-view-content">
     <div class="row g-0">
       <div class="col-12">
-        <NuxtLink v-if="!showViewDetails" to="/products" class="d-inline-flex align-items-center mb-3 back-to-products-btn" title="Back to Products">
+        <NuxtLink
+          v-if="!showViewDetails"
+          to="/products"
+          class="d-inline-flex align-items-center mb-3 back-to-products-btn"
+          title="Back to Products"
+        >
           <LucideIcon icon="mdi:view-grid" />
         </NuxtLink>
       </div>
@@ -73,7 +78,53 @@
         </NuxtLink>
       </div>
       <div class="col-md-6 p-4">
-        <h2 class="product-title my-3">{{ product.name }}</h2>
+          <div class="product-meta d-flex align-items-center mb-2 gap-2">
+            <span
+              v-if="product.average_rating"
+              class="rating-badge d-inline-flex align-items-center px-2 py-1 rounded bg-success text-white fw-bold me-2"
+            >
+              <LucideIcon
+                icon="mdi:star"
+                size="16"
+                color="white"
+                class="me-1"
+              />
+              {{ product.average_rating.toFixed(1) }}
+            </span>
+            <h2 class="product-title ">{{ product.name }}</h2>
+          </div>
+          <div v-if="selectedVariation">
+            <span
+              v-if="
+                selectedVariation.sale_price &&
+                selectedVariation.sale_price < selectedVariation.price
+              "
+              class="d-flex "
+            >
+              <h4 class="text-decoration-line-through text-muted me-3">
+                ₹{{ selectedVariation.price }}
+              </h4>
+              <h4 class="text-success fw-bold">
+                ₹{{ selectedVariation.sale_price }}
+              </h4>
+            </span>
+            <h4 v-else class="fw-bold text-success">
+              ₹{{ selectedVariation.price }}
+            </h4>
+            <span
+              class="badge ms-2"
+              :class="
+                (selectedVariation.stock ?? 0) > 0 ? 'bg-success' : 'bg-danger'
+              "
+            >
+              {{
+                (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock"
+              }}
+            </span>
+            <div v-if="selectedVariation.sku" class="my-1 text-muted small">
+              SKU: {{ selectedVariation.sku }}
+            </div>
+          </div>
         <div class="product-description mb-3">
           <span class="clamp-4-lines">{{ product.description }}</span>
         </div>
@@ -82,61 +133,31 @@
           v-if="product.variations && product.variations.length"
           class="mb-3"
         >
-          <label class="fw-semibold mb-1">Choose a variation:</label>
-          <select
-            v-model="selectedVariationId"
-            class="form-select mb-2"
-            @change="updateSelectedVariation"
-          >
-            <option
+          <label class="fw-semibold mb-3">Quantity:</label>
+          <div class="variation-buttons mb-2 d-flex flex-wrap gap-2">
+            <button
               v-for="variation in product.variations"
               :key="variation.id"
-              :value="variation.id"
+              type="button"
+              class="btn btn-smooth-outline btn-sm variation-btn"
+              :class="{
+                active: selectedVariationId === variation.id,
+                'out-of-stock': (variation.stock ?? 0) <= 0,
+              }"
+              :disabled="(variation.stock ?? 0) <= 0"
+              @click="
+                selectedVariationId = variation.id;
+                updateSelectedVariation();
+              "
             >
               {{ variation.name }}
-              ({{ variation.stock ?? "Out of stock" }})
-            </option>
-          </select>
-          <div v-if="selectedVariation">
-            <span
-              v-if="
-                selectedVariation.sale_price &&
-                selectedVariation.sale_price < selectedVariation.price
-              "
-            >
-              <span class="text-decoration-line-through text-muted"
-                >₹{{ selectedVariation.price }}</span
-              >
-              <span class="ms-2 text-success fw-bold"
-                >₹{{ selectedVariation.sale_price }}</span
-              >
-            </span>
-            <span v-else class="fw-bold text-success"
-              >₹{{ selectedVariation.price }}</span
-            >
-            <span
-              class="badge ms-2"
-              :class="
-                (selectedVariation.stock ?? 0) > 0
-                  ? 'bg-success'
-                  : 'bg-danger'
-              "
-            >
-              {{ (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock" }}
-            </span>
-            <div
-              v-if="selectedVariation.sku"
-              class="mt-1 text-muted small"
-            >
-              SKU: {{ selectedVariation.sku }}
-            </div>
+            </button>
           </div>
+          
         </div>
         <!-- Fallback if no variations -->
         <div v-else class="product-price mb-3">
-          <span
-            v-if="product.sale_price && product.sale_price < product.price"
-          >
+          <span v-if="product.sale_price && product.sale_price < product.price">
             <span class="text-decoration-line-through text-muted"
               >₹{{ product.price }}</span
             >
@@ -144,11 +165,9 @@
               >₹{{ product.sale_price }}</span
             >
           </span>
-          <span v-else class="fw-bold text-success"
-            >₹{{ product.price }}</span
-          >
+          <span v-else class="fw-bold text-success">₹{{ product.price }}</span>
         </div>
-        
+
         <div class="d-flex align-items-center mb-3">
           <button
             class="btn btn-outline-secondary"
@@ -176,8 +195,11 @@
           </button>
         </div>
         <div class="mb-2">
-          <span class="badge" :class="canAddToCart ? 'bg-success' : 'bg-danger'">
-            {{ canAddToCart ? 'In stock' : 'Out of stock' }}
+          <span
+            class="badge"
+            :class="canAddToCart ? 'bg-success' : 'bg-danger'"
+          >
+            {{ canAddToCart ? "In stock" : "Out of stock" }}
           </span>
         </div>
         <div class="share-section mt-3">
@@ -245,15 +267,18 @@ const images = computed(() => {
     props.product.image,
     props.product.image_2,
     props.product.image_3,
-  ].filter(Boolean).map(imageUrl);
+  ]
+    .filter(Boolean)
+    .map(imageUrl);
   return Array.from(new Set(imgs));
 });
 
 const selectedVariation = computed(() => {
   if (!props.product.variations) return null;
   return (
-    props.product.variations.find((v: any) => v.id === selectedVariationId.value) ||
-    props.product.variations[0]
+    props.product.variations.find(
+      (v: any) => v.id === selectedVariationId.value
+    ) || props.product.variations[0]
   );
 });
 const canAddToCart = computed(() => {
@@ -285,7 +310,7 @@ function addToCartHandler() {
       ...props.product,
       ...selectedVariation.value,
       variation_id: selectedVariation.value.id,
-      quantity: quantity.value
+      quantity: quantity.value,
     });
   } else {
     emit("add-to-cart", { ...props.product, quantity: quantity.value });
@@ -332,7 +357,7 @@ function shareUrl(platform: string) {
   left: auto;
   z-index: 10;
   font-size: 1rem;
-  background:transparent;
+  background: transparent;
 }
 .quick-view-content {
   position: relative;
@@ -382,7 +407,6 @@ function shareUrl(platform: string) {
   display: inline-flex;
 }
 
-
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: none !important;
@@ -398,15 +422,19 @@ function shareUrl(platform: string) {
 .carousel-control-prev-icon {
   background-image: none !important;
   /* Use SVG for left arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    center/1.5rem 1.5rem no-repeat !important;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    center/1.5rem 1.5rem no-repeat !important;
   background-color: #226144 !important;
 }
 .carousel-control-next-icon {
   background-image: none !important;
   /* Use SVG for right arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
+  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    center/1.5rem 1.5rem no-repeat !important;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    center/1.5rem 1.5rem no-repeat !important;
   background-color: #226144 !important;
 }
 .product-reviews {
@@ -426,5 +454,10 @@ function shareUrl(platform: string) {
 .admin-reply {
   background: #e2f7e2;
   border-left: 4px solid #28a745;
+}
+.btn-smooth-outline.active {
+  background-color: #226144 !important; // Replace with your actual green if needed
+  color: #fff !important;
+  border-color: #226144 !important;
 }
 </style>

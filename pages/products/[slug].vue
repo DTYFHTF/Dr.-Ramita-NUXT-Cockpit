@@ -27,6 +27,9 @@
     <div v-else>
       <p class="visually-hidden">Product not found.</p>
     </div>
+
+    <!-- Toast Notification -->
+    <div v-if="showNotification" class="toast-message">Product added to cart!</div>
   </div>
 </template>
 
@@ -147,6 +150,8 @@ watch(
   { immediate: true }
 );
 
+const showNotification = ref(false);
+
 function handleAddToCartProxy(payload: any) {
   // Accepts the payload from ProductQuickViewContent and calls addToCart
   if (payload.variation_id) {
@@ -154,6 +159,10 @@ function handleAddToCartProxy(payload: any) {
   } else {
     addToCart(payload, payload.quantity || 1);
   }
+  showNotification.value = true;
+  setTimeout(() => {
+    showNotification.value = false;
+  }, 2000);
 }
 </script>
 
@@ -234,5 +243,15 @@ function handleAddToCartProxy(payload: any) {
   color: #c00;
   text-align: center;
   margin: 2rem 0;
+}
+.discount-badge {
+  background: #388e3c !important;
+  color: #fff !important;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.35rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
 }
 </style>

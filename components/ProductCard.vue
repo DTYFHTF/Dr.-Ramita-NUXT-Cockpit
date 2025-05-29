@@ -271,18 +271,7 @@ function imageUrl(img: string) {
   text-overflow: ellipsis;
   white-space: normal;
 }
-.toast-message {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: $accent-soft-green;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  animation: fadeInOut 2s ease-in-out;
-}
+
 
 
 </style>
