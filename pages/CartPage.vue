@@ -15,8 +15,7 @@
                 <img :src="imageUrl(item.image)" alt="" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
                 <div class="flex-grow-1">
                   <h5 class="mb-2">
-                    {{ item.name }}
-                    <span v-if="item.variation_name" class="text-muted small">({{ item.variation_name }})</span>
+                    {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name }}</span>
                   </h5>
                   <p class="text-muted mb-2">₹{{ item.price }} each</p>
                   <div class="d-flex align-items-center gap-3">

@@ -4,7 +4,6 @@ import type { Product } from '@/types';
 import { useUserStore } from '@/stores/user';
 
 export type CartItem = {
-  id?: number;
   product_id: number;
   variation_id: number | null;
   name: string;
@@ -22,56 +21,13 @@ export const useCartStore = defineStore('cart', () => {
   const userStore = useUserStore();
   const isInitialized = ref(false);
 
-  // Save/load cart from localStorage
-  const saveCart = () => {
-    if (!userStore.token && typeof window !== 'undefined') {
-      localStorage.setItem('cart', JSON.stringify(cart.value));
-    }
-  };
-
-  const loadCart = () => {
-    if (!userStore.token && typeof window !== 'undefined') {
-      const initialCart = localStorage.getItem('cart');
-      cart.value = initialCart ? JSON.parse(initialCart) : [];
-    }
-  };
-
-  // Merge carts
-  const mergeCarts = (local: CartItem[], server: CartItem[]): CartItem[] => {
-    const merged: Record<string, CartItem> = {};
-    server.forEach(item => {
-      const key = `${item.product_id}:${item.variation_id}`;
-      merged[key] = {
-        ...item,
-        quantity: Number(item.quantity),
-        price: Number(item.price),
-        stock: Number(item.stock)
-      };
-    });
-    local.forEach(item => {
-      const key = `${item.product_id}:${item.variation_id}`;
-      if (merged[key]) {
-        merged[key].quantity += Number(item.quantity);
-      } else {
-        merged[key] = {
-          ...item,
-          quantity: Number(item.quantity),
-          price: Number(item.price),
-          stock: Number(item.stock)
-        };
-      }
-    });
-    return Object.values(merged);
-  };
-
   // API helpers
   const fetchCart = async () => {
+    if (!userStore.token) return;
     try {
-      if (!userStore.token) return;
       const response = await $fetch<{ cart: any[] }>(`${API_BASE}/api/cart`, {
         headers: { Authorization: `Bearer ${userStore.token}` }
       });
-      console.log('[fetchCart] Response from backend:', response);
       cart.value = (response.cart || []).map(item => ({
         product_id: item.product_id,
         variation_id: item.variation_id,
@@ -82,98 +38,62 @@ export const useCartStore = defineStore('cart', () => {
         stock: item.stock,
         quantity: item.quantity
       }));
-      console.log('[fetchCart] Cart after mapping:', cart.value);
     } catch (e) {
-      console.error('[fetchCart] Error:', e);
       cart.value = [];
     }
   };
 
-  const syncCartToServer = async () => {
-    try {
-      if (!userStore.token) return;
-      const payload = {
-        items: cart.value.map(item => ({
-          product_id: item.product_id,
-          variation_id: item.variation_id,
-          quantity: item.quantity
-        }))
-      };
-      console.log('[syncCartToServer] Sending payload:', payload);
-      await $fetch(`${API_BASE}/api/cart`, {
-        method: 'POST',
-        body: payload,
-        headers: { Authorization: `Bearer ${userStore.token}` }
-      });
-    } catch (e) {
-      console.error('[syncCartToServer] Error:', e);
-    }
-  };
-
-  // Cart operations
   const addToCart = async (product: Product, quantity: number = 1) => {
+    if (!userStore.token) return;
     const product_id = product.id;
-    const variation_id = (product as any).variation_id ?? null;
-    const variation_name = (product as any).variation_name ?? (product as any).name !== product.name ? (product as any).name : null;
-    const price = (product as any).sale_price && (product as any).sale_price < (product as any).price ? (product as any).sale_price : (product as any).price;
-    const image = product.image;
-    const stock = (product as any).stock ?? product.stock;
-    const payload: CartItem = {
+    let variation_id: number | null = null;
+    if (typeof (product as any).variation_id !== 'undefined' && (product as any).variation_id !== null) {
+      variation_id = Number((product as any).variation_id);
+      if (isNaN(variation_id)) variation_id = null;
+    }
+    const payload = {
       product_id,
       variation_id,
-      name: product.name,
-      variation_name,
-      price,
-      image,
-      stock,
       quantity: Math.max(1, Number(quantity))
     };
-    const cartKey = `${product_id}:${variation_id}`;
-    const existing = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
-    if (existing) {
-      existing.quantity += Math.max(1, Number(quantity)); // Increment if exists
-    } else {
-      payload.quantity = Math.max(1, Number(quantity));
-      cart.value.push(payload);
-    }
-    if (userStore.token) {
-      await syncCartToServer();
-    } else {
-      saveCart();
-    }
+    await $fetch(`${API_BASE}/api/cart`, {
+      method: 'POST',
+      body: payload,
+      headers: { Authorization: `Bearer ${userStore.token}` }
+    });
+    await fetchCart();
   };
 
   const removeFromCart = async (productId: number, variationId: number | null) => {
+    if (!userStore.token) return;
     const cartKey = `${productId}:${variationId}`;
     cart.value = cart.value.filter(item => `${item.product_id}:${item.variation_id}` !== cartKey);
-    if (userStore.token) {
-      try {
-        await $fetch(`${API_BASE}/api/cart/${productId}:${variationId}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${userStore.token}` }
-        });
-        // Immediately sync the updated cart to the backend after removal
-        await syncCartToServer();
-        await fetchCart();
-      } catch (e) {
-        console.error('[removeFromCart] Error:', e);
-      }
-    } else {
-      saveCart();
-    }
+    try {
+      await $fetch(`${API_BASE}/api/cart/${cartKey}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${userStore.token}` }
+      });
+      await fetchCart();
+    } catch {}
   };
 
   const updateQuantity = async (productId: number, variationId: number | null, newQuantity: number) => {
+    if (!userStore.token) return;
     const cartKey = `${productId}:${variationId}`;
     const numericQuantity = Math.max(1, Number(newQuantity));
     const item = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
     if (item) {
       item.quantity = numericQuantity;
-      if (userStore.token) {
-        await syncCartToServer();
-      } else {
-        saveCart();
-      }
+      await $fetch(`${API_BASE}/api/cart`, {
+        method: 'POST',
+        body: {
+          product_id: productId,
+          variation_id: variationId,
+          quantity: numericQuantity
+        },
+        headers: { Authorization: `Bearer ${userStore.token}` }
+      });
+      await fetchCart();
     }
   };
 
@@ -185,28 +105,19 @@ export const useCartStore = defineStore('cart', () => {
           method: 'POST',
           headers: { Authorization: `Bearer ${userStore.token}` }
         });
+        await fetchCart();
       } catch {}
     }
-    saveCart();
   };
 
-  // Auth state watcher
+  // Auth state watcher: just clear cart on logout, fetch on login
   watch(
     () => userStore.token,
     async (newToken, oldToken) => {
       if (newToken) {
-        try {
-          await fetchCart();
-          const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-          if (localCart.length) {
-            cart.value = mergeCarts(localCart, cart.value);
-            await syncCartToServer();
-            localStorage.removeItem('cart');
-          }
-        } catch {}
+        await fetchCart();
       } else {
         cart.value = [];
-        saveCart();
       }
     },
     { immediate: true }
@@ -217,7 +128,7 @@ export const useCartStore = defineStore('cart', () => {
     if (userStore.token) {
       fetchCart();
     } else {
-      loadCart();
+      cart.value = [];
     }
     isInitialized.value = true;
   }
