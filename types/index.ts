@@ -64,3 +64,13 @@ export interface PriceRange {
   max: number | null;
   onSale: boolean;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+  role?: string;
+  // Add other user fields as needed
+}

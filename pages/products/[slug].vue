@@ -39,14 +39,51 @@
               </span>
             </div>
             <div class="review-comment mb-1">{{ review.comment }}</div>
+            <!-- Edit/Delete for review owner -->
+            <div v-if="user && review.user?.id === user.id" class="mb-2">
+              <button class="btn btn-link p-0 me-2" @click="startEditReview(review)">Edit</button>
+              <button class="btn btn-link text-danger p-0" @click="deleteReview(review)">Delete</button>
+            </div>
+            <!-- Admin reply -->
             <div v-if="review.reply" class="admin-reply bg-light p-2 rounded small mt-2">
               <span class="fw-bold text-success">Admin reply:</span>
               <span>{{ review.reply }}</span>
               <span v-if="review.replied_by" class="text-muted ms-2">- {{ review.replied_by?.name }}</span>
+              <div v-if="isAdmin" class="mt-1">
+                <button class="btn btn-link p-0 me-2" @click="startEditReply(review)">Edit Reply</button>
+                <button class="btn btn-link text-danger p-0" @click="deleteReply(review)">Delete Reply</button>
+              </div>
+            </div>
+            <div v-else-if="isAdmin" class="admin-reply-form mt-2">
+              <form @submit.prevent="submitReply(review)">
+                <input v-model="replyInputs[review.id]" class="form-control form-control-sm mb-1" placeholder="Write admin reply..." />
+                <button class="btn btn-sm btn-success" type="submit">Reply</button>
+              </form>
             </div>
             <div class="text-muted small mt-1">{{ new Date(review.created_at).toLocaleString() }}</div>
           </div>
         </div>
+
+        <!-- Add/Edit Review Form -->
+        <div v-if="user" class="review-form mt-4">
+          <h5 v-if="!editingReview">Add Your Review</h5>
+          <h5 v-else>Edit Your Review</h5>
+          <form @submit.prevent="submitReview">
+            <div class="mb-2">
+              <label class="form-label">Rating:</label>
+              <span>
+                <ProductStarIcon v-for="i in 5" :key="i" :filled="i <= reviewForm.rating" @click="reviewForm.rating = i" style="cursor:pointer;" />
+              </span>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Comment:</label>
+              <textarea v-model="reviewForm.comment" class="form-control" rows="2" required></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">{{ editingReview ? 'Update Review' : 'Submit Review' }}</button>
+            <button v-if="editingReview" class="btn btn-link ms-2" type="button" @click="cancelEditReview">Cancel</button>
+          </form>
+        </div>
+        <div v-else class="text-muted mt-4">Please log in to write a review.</div>
       </div>
       
     </div>
@@ -64,12 +101,20 @@ import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
 import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
 import ProductStarIcon from '@/components/ProductStarIcon.vue';
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
+import type { User } from '@/types';
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
 const { addToCart } = useCart();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore) as { user: Ref<User | null> };
 
 let lastSlug = "";
+
+// Admin check (customize as needed)
+const isAdmin = computed(() => user.value && user.value.role === 'admin');
 
 // Helper for image fallback
 function imageUrl(img: string) {
@@ -188,6 +233,113 @@ function handleAddToCartProxy(payload: any) {
     addToCart(payload, payload.quantity || 1);
   } else {
     addToCart(payload, payload.quantity || 1);
+  }
+}
+
+// Review form state
+const reviewForm = ref({ rating: 0, comment: '' });
+const editingReview = ref(false);
+const editingReviewId = ref<number|null>(null);
+
+// Admin reply form state
+const replyInputs = ref<Record<number, string>>({});
+const editingReplyId = ref<number|null>(null);
+
+function startEditReview(review: any) {
+  reviewForm.value.rating = review.rating;
+  reviewForm.value.comment = review.comment;
+  editingReview.value = true;
+  editingReviewId.value = review.id;
+}
+function cancelEditReview() {
+  editingReview.value = false;
+  editingReviewId.value = null;
+  reviewForm.value = { rating: 0, comment: '' };
+}
+function startEditReply(review: any) {
+  replyInputs.value[review.id] = review.reply;
+  editingReplyId.value = review.id;
+}
+// Placeholder submit/delete handlers (to be implemented with API)
+const API_BASE_URL = 'http://ayurveda-marketplace.test/api';
+
+async function submitReview() {
+  if (!user.value || !product.value) return;
+  const productSlug = product.value.slug;
+  const token = localStorage.getItem('auth_token');
+  try {
+    if (!editingReview.value) {
+      // Add Review
+      await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews`, {
+        method: 'POST',
+        body: { rating: reviewForm.value.rating, comment: reviewForm.value.comment },
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    } else {
+      // Edit Review
+      await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews/${editingReviewId.value}`, {
+        method: 'PUT',
+        body: { rating: reviewForm.value.rating, comment: reviewForm.value.comment },
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    }
+    reviewForm.value = { rating: 0, comment: '' };
+    editingReview.value = false;
+    editingReviewId.value = null;
+    await fetchProduct(route.params.slug as string);
+  } catch (e: any) {
+    alert(e?.data?.message || e?.message || 'Failed to submit review.');
+  }
+}
+
+async function deleteReview(review: any) {
+  if (!user.value || !product.value) return;
+  const productSlug = product.value.slug;
+  const token = localStorage.getItem('auth_token');
+  try {
+    await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews/${review.id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    await fetchProduct(route.params.slug as string);
+  } catch (e: any) {
+    alert(e?.data?.message || e?.message || 'Failed to delete review.');
+  }
+}
+
+async function submitReply(review: any) {
+  if (!user.value || !product.value) return;
+  const productSlug = product.value.slug;
+  const token = localStorage.getItem('auth_token');
+  try {
+    await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews/${review.id}/reply`, {
+      method: 'POST',
+      body: { reply: replyInputs.value[review.id] },
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    replyInputs.value[review.id] = '';
+    editingReplyId.value = null;
+    await fetchProduct(route.params.slug as string);
+  } catch (e: any) {
+    alert(e?.data?.message || e?.message || 'Failed to submit reply.');
+  }
+}
+
+async function deleteReply(review: any) {
+  if (!user.value || !product.value) return;
+  const productSlug = product.value.slug;
+  const token = localStorage.getItem('auth_token');
+  try {
+    await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews/${review.id}/reply`, {
+      method: 'POST',
+      body: { reply: '' },
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    replyInputs.value[review.id] = '';
+    editingReplyId.value = null;
+    await fetchProduct(route.params.slug as string);
+  } catch (e: any) {
+    alert(e?.data?.message || e?.message || 'Failed to delete reply.');
   }
 }
 </script>
