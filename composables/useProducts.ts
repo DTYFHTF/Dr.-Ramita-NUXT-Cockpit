@@ -19,7 +19,8 @@ export function useProducts() {
     priceMax: number | null = null,
     inStock = true,
     onSale = false,
-    searchQuery?: string // <-- add searchQuery param
+    searchQuery?: string, // <-- add searchQuery param
+    rating?: number // <-- add rating param
   ) {
     loading.value = true;
     error.value = "";
@@ -33,9 +34,9 @@ export function useProducts() {
           params.append("sort_by", "price");
           params.append("sort_order", "desc");
         }
-        if (sort === "rating_asc") params.append("sort_by", "rating");
+        if (sort === "rating_asc") params.append("sort_by", "average_rating");
         if (sort === "rating_desc") {
-          params.append("sort_by", "rating");
+          params.append("sort_by", "average_rating");
           params.append("sort_order", "desc");
         }
       }
@@ -46,6 +47,7 @@ export function useProducts() {
       params.append("in_stock", String(inStock));
       if (onSale) params.append("on_sale", "true");
       if (searchQuery) params.append("search", searchQuery); // <-- add search param
+      if (rating !== undefined && rating !== null) params.append("rating", String(rating));
 
       const response = (await $fetch(
         `${API_BASE}/api/products?${params.toString()}`,

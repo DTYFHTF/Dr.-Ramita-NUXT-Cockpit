@@ -17,6 +17,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
   const inStock = ref(route.query.inStock?.toString() === 'false' ? false : true);
   const showMoreCategories = ref(false);
   const onSale = ref(route.query.onSale?.toString() === 'true');
+  const rating = ref(route.query.rating ? Number(route.query.rating) : null);
 
   // Price ranges configuration
   const priceRanges: PriceRange[] = [
@@ -95,6 +96,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
     query.inStock = String(inStock.value); // Always include as string
     if (onSale.value) query.onSale = 'true';
     if (searchQuery && searchQuery.value) query.search = searchQuery.value;
+    if (rating.value !== null) query.rating = rating.value.toString();
     router.replace({ query });
     fetchProducts(
       page.value,
@@ -105,7 +107,8 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
       priceMax.value,
       inStock.value,
       onSale.value,
-      searchQuery ? searchQuery.value : undefined
+      searchQuery ? searchQuery.value : undefined,
+      rating.value === null ? undefined : rating.value
     );
   };
 
@@ -164,6 +167,7 @@ onMounted(async () => {
     inStock,
     onSale,
     showMoreCategories,
+    rating,
 
     // Computed
     visibleCategories,

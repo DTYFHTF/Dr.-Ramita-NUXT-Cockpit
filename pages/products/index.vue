@@ -94,7 +94,7 @@
               :class="{ 'text-primary': sort.includes('rating') }"
               @click="toggleSort('rating')"
             >
-              Rating {{ sortArrow("rating") }}
+              Rating {{ sortArrow('rating') }}
             </button>
           </div>
         </div>

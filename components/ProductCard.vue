@@ -42,6 +42,10 @@
               ${{ product.price }}
             </span>
           </template>
+          <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
+            <LucideIcon icon="mdi:star" color="#ffc107" size="18" class="me-1" />
+            <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
+          </span>
         </div>
         <span
           class="badge mb-2"

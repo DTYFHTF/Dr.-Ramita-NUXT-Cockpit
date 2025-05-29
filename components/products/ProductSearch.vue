@@ -80,7 +80,7 @@ const onBlur = () => {
 
 <style scoped>
 .product-search {
-  z-index: 1050;
+  z-index: 1;
 }
 .suggestions-list {
   border-top: none;
