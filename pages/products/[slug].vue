@@ -153,12 +153,8 @@ watch(
 const showNotification = ref(false);
 
 function handleAddToCartProxy(payload: any) {
-  // Accepts the payload from ProductQuickViewContent and calls addToCart
-  if (payload.variation_id) {
-    addToCart(payload, payload.quantity || 1);
-  } else {
-    addToCart(payload, payload.quantity || 1);
-  }
+  // Always pass parent product, and set variation_id explicitly
+  addToCart({ ...product.value, variation_id: payload.variation_id }, payload.quantity || 1);
   showNotification.value = true;
   setTimeout(() => {
     showNotification.value = false;

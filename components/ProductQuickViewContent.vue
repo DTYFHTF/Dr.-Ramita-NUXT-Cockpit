@@ -306,9 +306,9 @@ function decrement() {
 }
 function addToCartHandler() {
   if (props.product.variations?.length && selectedVariation.value) {
+    // Only pass parent product info, and set variation_id explicitly
     emit("add-to-cart", {
       ...props.product,
-      ...selectedVariation.value,
       variation_id: selectedVariation.value.id,
       quantity: quantity.value,
     });

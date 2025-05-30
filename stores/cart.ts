@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import type { Product } from '@/types';
+import type { Product, CartItem } from '@/types';
 import { useUserStore } from '@/stores/user';
-
-export type CartItem = {
-  product_id: number;
-  variation_id: number | null;
-  name: string;
-  variation_name: string | null;
-  price: number;
-  image: string;
-  stock: number;
-  quantity: number;
-};
 
 const API_BASE = 'http://ayurveda-marketplace.test';
 
@@ -20,6 +9,11 @@ export const useCartStore = defineStore('cart', () => {
   const cart = ref<CartItem[]>([]);
   const userStore = useUserStore();
   const isInitialized = ref(false);
+
+  // Helper to build cart key
+  function cartKey(productId: number, variationId: number | null) {
+    return `${productId}:${variationId === null ? 'null' : variationId}`;
+  }
 
   // API helpers
   const fetchCart = async () => {
@@ -30,7 +24,7 @@ export const useCartStore = defineStore('cart', () => {
       });
       cart.value = (response.cart || []).map(item => ({
         product_id: item.product_id,
-        variation_id: item.variation_id,
+        variation_id: item.variation_id === null ? null : Number(item.variation_id),
         name: item.name,
         variation_name: item.variation_name ?? null,
         price: item.price,
@@ -45,12 +39,18 @@ export const useCartStore = defineStore('cart', () => {
 
   const addToCart = async (product: Product, quantity: number = 1) => {
     if (!userStore.token) return;
-    const product_id = product.id;
+    // Debug log to trace what is being sent
+    // eslint-disable-next-line no-console
+    console.log('[addToCart] product:', product);
+    // Always use the parent product's id
+    const product_id = (product as any).parent_id ? (product as any).parent_id : product.id;
     let variation_id: number | null = null;
-    if (typeof (product as any).variation_id !== 'undefined' && (product as any).variation_id !== null) {
-      variation_id = Number((product as any).variation_id);
+    if ('variation_id' in product && product.variation_id !== undefined && product.variation_id !== null) {
+      variation_id = Number(product.variation_id);
       if (isNaN(variation_id)) variation_id = null;
     }
+    // eslint-disable-next-line no-console
+    console.log('[addToCart] Sending payload:', { product_id, variation_id, quantity: Math.max(1, Number(quantity)) });
     const payload = {
       product_id,
       variation_id,
@@ -66,10 +66,9 @@ export const useCartStore = defineStore('cart', () => {
 
   const removeFromCart = async (productId: number, variationId: number | null) => {
     if (!userStore.token) return;
-    const cartKey = `${productId}:${variationId}`;
-    cart.value = cart.value.filter(item => `${item.product_id}:${item.variation_id}` !== cartKey);
+    const key = cartKey(productId, variationId);
     try {
-      await $fetch(`${API_BASE}/api/cart/${cartKey}`, {
+      await $fetch(`${API_BASE}/api/cart/${key}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${userStore.token}` }
       });
@@ -79,22 +78,18 @@ export const useCartStore = defineStore('cart', () => {
 
   const updateQuantity = async (productId: number, variationId: number | null, newQuantity: number) => {
     if (!userStore.token) return;
-    const cartKey = `${productId}:${variationId}`;
     const numericQuantity = Math.max(1, Number(newQuantity));
-    const item = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
-    if (item) {
-      item.quantity = numericQuantity;
-      await $fetch(`${API_BASE}/api/cart`, {
-        method: 'POST',
-        body: {
-          product_id: productId,
-          variation_id: variationId,
-          quantity: numericQuantity
-        },
-        headers: { Authorization: `Bearer ${userStore.token}` }
-      });
-      await fetchCart();
-    }
+    await $fetch(`${API_BASE}/api/cart`, {
+      method: 'POST',
+      body: {
+        product_id: productId,
+        variation_id: variationId,
+        quantity: numericQuantity,
+        replace: true // Ensure backend sets the quantity, not increments
+      },
+      headers: { Authorization: `Bearer ${userStore.token}` }
+    });
+    await fetchCart();
   };
 
   const clearCart = async () => {

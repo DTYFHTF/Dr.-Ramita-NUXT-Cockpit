@@ -111,3 +111,14 @@ export interface Order {
   payment_method: PaymentMethod;
   special_instructions?: string;
 }
+
+export interface CartItem {
+  product_id: number;
+  variation_id: number | null;
+  name: string;
+  variation_name: string | null;
+  price: number;
+  image: string;
+  stock: number;
+  quantity: number;
+}

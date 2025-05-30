@@ -70,7 +70,7 @@
                 <dt class="col-6">Total Price:</dt>
                 <dd class="col-6 text-end h5 text-primary">₹{{ totalPrice.toFixed(2) }}</dd>
               </dl>
-              <router-link to="/checkout" class="btn btn-primary w-100">
+              <router-link to="/checkout" class="btn btn-smooth-success w-100">
                 Proceed to Checkout
               </router-link>
             </div>
@@ -96,5 +96,4 @@ function imageUrl(img: string) {
   return `http://ayurveda-marketplace.test/storage/${img}`;
 }
 
-console.log('[CartPage] cart:', cart);
 </script>
