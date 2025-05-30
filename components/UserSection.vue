@@ -28,7 +28,7 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+          <NuxtLink to="/orders" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:history" class="me-2" />
             Order History
           </NuxtLink>

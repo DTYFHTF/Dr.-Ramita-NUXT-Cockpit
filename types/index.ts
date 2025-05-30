@@ -74,3 +74,40 @@ export interface User {
   role?: string;
   // Add other user fields as needed
 }
+
+// --- Order/Checkout Types ---
+
+export interface OrderItem {
+  product_id: number;
+  variation_id?: number | null;
+  name: string;
+  variation_name?: string;
+  price: number;
+  quantity: number;
+}
+
+export interface ShippingInfo {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
+export type PaymentMethod = 'cod' | 'card' | 'upi' | 'paypal';
+
+export interface Order {
+  id: number | string;
+  status: string;
+  created_at: string;
+  cart: OrderItem[];
+  shipping_cost: number;
+  estimated_delivery: string;
+  total: number;
+  shipping: ShippingInfo;
+  payment_method: PaymentMethod;
+  special_instructions?: string;
+}

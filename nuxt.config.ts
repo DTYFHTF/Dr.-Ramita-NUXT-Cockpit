@@ -53,6 +53,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       cockpitUrl: process.env.NUXT_COCKPIT_URL,
+      apiBase: 'http://ayurveda-marketplace.test/api',
     },
     cockpitToken: process.env.NUXT_COCKPIT_TOKEN
   }
