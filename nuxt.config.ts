@@ -55,7 +55,7 @@ export default defineNuxtConfig({
       cockpitUrl: process.env.NUXT_COCKPIT_URL,
       apiBase: process.env.NUXT_LARAVEL_API_URL,
       baseUrl: process.env.NUXT_LARAVEL_BASE_URL,
-    },
-    cockpitToken: process.env.NUXT_COCKPIT_TOKEN
+      cockpitToken: process.env.NUXT_COCKPIT_TOKEN
+    }
   }
 });

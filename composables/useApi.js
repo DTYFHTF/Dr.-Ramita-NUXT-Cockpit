@@ -1,12 +1,12 @@
 // composables/useApi.js
 export function useApi(endpoint) {
   const config = useRuntimeConfig()
-  const baseUrl = `${config.public.cockpitUrl}/api/content`
+  const baseUrl1 = `${config.public.cockpitUrl}/api/content`
   const headers = {
-    Authorization: config.cockpitToken,
+    Authorization: config.public.cockpitToken,
   }
 
-  const { data, error, pending } = useFetch(`${baseUrl}/${endpoint}`, { 
+  const { data, error, pending } = useFetch(`${baseUrl1}/${endpoint}`, { 
     headers,
     async onResponseError({ response }) {
       console.error('API Error:', response.status, response._data)
@@ -22,17 +22,17 @@ export function useApi(endpoint) {
 
 export function postContentItem(collection, data) {
   const config = useRuntimeConfig();
-  const baseUrl = `${config.public.cockpitUrl}/api/content/item/${collection}`;
+  const baseUrl1 = `${config.public.cockpitUrl}/api/content/item/${collection}`;
   const headers = {
-    Authorization: config.cockpitToken,
+    Authorization: config.public.cockpitToken,
   };
 
-  return useFetch(baseUrl, {
+  return useFetch(baseUrl1, {
     method: 'POST',
     headers,
     body: {
       data,
-      token: config.cockpitToken,
+      token: config.public.cockpitToken,
     },
     async onResponseError({ response }) {
       console.error('API Error:', response.status, response._data);

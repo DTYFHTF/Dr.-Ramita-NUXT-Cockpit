@@ -40,8 +40,6 @@ export const useGlossaryStore = defineStore('glossary', {
           throw new Error('Failed to fetch glossary terms');
         }
 
-        const baseUrl = useRuntimeConfig().public.cockpitUrl; // Get the base URL
-
         this.terms = response.map((entry: any) => {
           return {
             title: entry.title,

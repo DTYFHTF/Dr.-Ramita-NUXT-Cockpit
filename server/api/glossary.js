@@ -3,7 +3,7 @@ import { useRuntimeConfig } from '#imports';
 export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig();
-  const apiUrl = `${config.public.cockpitUrl}/api/content/items/glossary?api-token=${config.cockpitToken}`;
+  const apiUrl = `${config.public.cockpitUrl}/api/content/items/glossary?api-token=${config.public.cockpitToken}`;
 
   try {
     const response = await $fetch(apiUrl, {

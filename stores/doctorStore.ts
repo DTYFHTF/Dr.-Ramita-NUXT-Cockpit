@@ -28,7 +28,7 @@ export const useDoctorStore = defineStore('doctor', {
           `${config.public.cockpitUrl}/api/content/items/doctor`,
           {
             headers: {
-              Authorization: config.cockpitToken
+              Authorization: String(config.public.cockpitToken)
             }
           }
         )
