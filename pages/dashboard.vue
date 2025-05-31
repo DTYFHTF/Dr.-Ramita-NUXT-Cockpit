@@ -36,7 +36,7 @@ const { user } = storeToRefs(userStore)
 const sending = ref(false)
 const sentMsg = ref('')
 const sendError = ref('')
-const API_BASE = 'http://ayurveda-marketplace.test'
+const API_BASE = useRuntimeConfig().public.apiBase
 
 async function sendVerification() {
   sending.value = true
@@ -44,7 +44,7 @@ async function sendVerification() {
   sendError.value = ''
   try {
     const token = localStorage.getItem('auth_token')
-    await $fetch(`${API_BASE}/api/email/verification-notification`, {
+    await $fetch(`${API_BASE}/email/verification-notification`, {
       method: 'POST',
       headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
     })

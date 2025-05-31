@@ -68,10 +68,11 @@ onMounted(async () => {
   // Always fetch latest user info when dropdown is opened
   if (user.value && user.value.id) {
     try {
-      const API_BASE = 'http://ayurveda-marketplace.test';
+      const config = useRuntimeConfig();
+      const API_BASE = config.public.apiBase;
       const token = localStorage.getItem('auth_token');
       if (token) {
-        const fetchedUser = await $fetch(`${API_BASE}/api/user`, {
+        const fetchedUser = await $fetch(`${API_BASE}/user`, {
           method: 'GET',
           headers: {
             Accept: 'application/json',

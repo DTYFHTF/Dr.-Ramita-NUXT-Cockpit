@@ -258,9 +258,10 @@ const inStock = computed(() => {
 
 // Helper for image fallback
 function imageUrl(img: string) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
 
 const images = computed(() => {
@@ -328,16 +329,15 @@ function updateSelectedVariation() {
 }
 
 function shareUrl(platform: string) {
-  const url = `https://ayurveda-marketplace.test/products/${props.product.slug}`;
+  const config = useRuntimeConfig();
+  const url = `${config.public.baseUrl}/products/${props.product.slug}`;
   const title = props.product.name;
   const desc = props.product.description || "";
   const message = `${title}\n${desc}\n\n${url}`;
   const encodedMessage = encodeURIComponent(message);
   switch (platform) {
     case "facebook":
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
-      )}`;
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     case "twitter":
       return `https://twitter.com/intent/tweet?text=${encodedMessage}`;
     case "whatsapp":

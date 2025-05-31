@@ -35,15 +35,16 @@ const resending = ref(false)
 const resendMsg = ref('')
 const router = useRouter()
 const userStore = useUserStore()
+const config = useRuntimeConfig()
 
-const API_BASE = 'http://ayurveda-marketplace.test'
+const API_BASE = config.public.apiBase
 
 async function register({ first_name, last_name, email, phone, password, password_confirmation }: { first_name: string, last_name: string, email: string, phone: string, password: string, password_confirmation: string }) {
   error.value = ''
   loading.value = true
   showVerifyMsg.value = false
   try {
-    const response = await $fetch(`${API_BASE}/api/register`, {
+    const response = await $fetch(`${API_BASE}/register`, {
       method: 'POST',
       body: { first_name, last_name, email, phone, password, password_confirmation },
       headers: { Accept: 'application/json' }
@@ -73,7 +74,7 @@ async function resendVerification() {
   resending.value = true
   resendMsg.value = ''
   try {
-    await $fetch(`${API_BASE}/api/email/resend`, {
+    await $fetch(`${API_BASE}/email/resend`, {
       method: 'POST',
       body: {},
       headers: { Accept: 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }

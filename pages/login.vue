@@ -28,13 +28,13 @@ const router = useRouter()
 const userStore = useUserStore()
 console.log('[LOGIN] userStore before login:', JSON.stringify(userStore.user), userStore.token)
 
-const API_BASE = 'http://ayurveda-marketplace.test'
+const API_BASE = useRuntimeConfig().public.apiBase
 
 async function login({ email, password }: { email: string, password: string }) {
   error.value = ''
   loading.value = true
   try {
-    const loginResponse = await $fetch(`${API_BASE}/api/login`, {
+    const loginResponse = await $fetch(`${API_BASE}/login`, {
       method: 'POST',
       body: { email, password },
       headers: { Accept: 'application/json' }

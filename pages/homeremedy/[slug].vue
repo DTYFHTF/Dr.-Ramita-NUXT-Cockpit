@@ -317,7 +317,7 @@ const { posts: latestPosts } = useSimilarPosts('items/homeRemedies', {
 @use "sass:color";
 
 .remedy-header {
-  background-color: color.adjust($accent-soft-green, $lightness: 46%);
+  background-color: $accent-soft-green;
   margin-top: 2rem;
 
   @media (max-width: 768px) {

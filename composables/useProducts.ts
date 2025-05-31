@@ -1,8 +1,10 @@
 import { ref } from "vue";
 
-const API_BASE = "http://ayurveda-marketplace.test";
-
 export function useProducts() {
+  // useRuntimeConfig must be called inside this function
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
   const products = ref<any[]>([]);
   const product = ref<any>(null);
   const loading = ref(false);
@@ -50,7 +52,7 @@ export function useProducts() {
       if (rating !== undefined && rating !== null) params.append("rating", String(rating));
 
       const response = (await $fetch(
-        `${API_BASE}/api/products?${params.toString()}`,
+        `${API_BASE}/products?${params.toString()}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -67,7 +69,7 @@ export function useProducts() {
 
   async function fetchCategories() {
     try {
-      const response = (await $fetch(`${API_BASE}/api/categories`, {
+      const response = (await $fetch(`${API_BASE}/categories`, {
         headers: { Accept: "application/json" },
       })) as any;
       categories.value = Array.isArray(response) ? response : response.data;
@@ -81,7 +83,7 @@ export function useProducts() {
     error.value = "";
     product.value = null;
     try {
-      const response = await $fetch(`${API_BASE}/api/products/${slug}`, {
+      const response = await $fetch(`${API_BASE}/products/${slug}`, {
         headers: { Accept: "application/json" },
       }) as any;
       // If the API response is wrapped in { data: ... }, unwrap it

@@ -204,7 +204,8 @@ function startEditReply(review: Review) {
   editingReplyId.value = review.id;
 }
 
-const API_BASE_URL = "http://ayurveda-marketplace.test/api";
+const config = useRuntimeConfig();
+const API_BASE_URL = config.public.apiBase;
 
 async function submitReview() {
   if (!props.user || !props.product) return;

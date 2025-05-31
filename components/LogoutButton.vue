@@ -13,8 +13,7 @@ const loading = ref(false)
 const error = ref('')
 const router = useRouter()
 const userStore = useUserStore()
-
-const API_BASE = 'http://ayurveda-marketplace.test'
+const config = useRuntimeConfig()
 
 async function logout() {
   error.value = ''
@@ -22,7 +21,7 @@ async function logout() {
   try {
     const token = localStorage.getItem('auth_token')
     if (!token) throw new Error('Not logged in')
-    await $fetch(`${API_BASE}/api/logout`, {
+    await $fetch(`${config.public.apiBase}/logout`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

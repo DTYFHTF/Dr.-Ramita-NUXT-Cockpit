@@ -58,9 +58,10 @@ const isAdmin = computed(() => !!(user.value && user.value.role === 'admin'));
 
 // Helper for image fallback
 function imageUrl(img: string) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
 
 // Helper for stock
@@ -126,7 +127,8 @@ watch(
   () => product.value,
   (p) => {
     if (!p) return;
-    const url = `https://ayurveda-marketplace.test/products/${p.slug || route.params.slug}`;
+    const config = useRuntimeConfig();
+    const url = `${config.public.baseUrl}/products/${p.slug || route.params.slug}`;
     useHead({
       title: p.name,
       meta: [

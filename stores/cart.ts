@@ -3,9 +3,11 @@ import { ref, computed, watch } from 'vue';
 import type { Product, CartItem } from '@/types';
 import { useUserStore } from '@/stores/user';
 
-const API_BASE = 'http://ayurveda-marketplace.test';
 
 export const useCartStore = defineStore('cart', () => {
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
   const cart = ref<CartItem[]>([]);
   const userStore = useUserStore();
   const isInitialized = ref(false);
@@ -19,7 +21,7 @@ export const useCartStore = defineStore('cart', () => {
   const fetchCart = async () => {
     if (!userStore.token) return;
     try {
-      const response = await $fetch<{ cart: any[] }>(`${API_BASE}/api/cart`, {
+      const response = await $fetch<{ cart: any[] }>(`${API_BASE}/cart`, {
         headers: { Authorization: `Bearer ${userStore.token}` }
       });
       cart.value = (response.cart || []).map(item => ({
@@ -51,7 +53,7 @@ export const useCartStore = defineStore('cart', () => {
       variation_id,
       quantity: Math.max(1, Number(quantity))
     };
-    await $fetch(`${API_BASE}/api/cart`, {
+    await $fetch(`${API_BASE}/cart`, {
       method: 'POST',
       body: payload,
       headers: { Authorization: `Bearer ${userStore.token}` }
@@ -63,7 +65,7 @@ export const useCartStore = defineStore('cart', () => {
     if (!userStore.token) return;
     const key = cartKey(productId, variationId);
     try {
-      await $fetch(`${API_BASE}/api/cart/${key}`, {
+      await $fetch(`${API_BASE}/cart/${key}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${userStore.token}` }
       });
@@ -74,7 +76,7 @@ export const useCartStore = defineStore('cart', () => {
   const updateQuantity = async (productId: number, variationId: number | null, newQuantity: number) => {
     if (!userStore.token) return;
     const numericQuantity = Math.max(1, Number(newQuantity));
-    await $fetch(`${API_BASE}/api/cart`, {
+    await $fetch(`${API_BASE}/cart`, {
       method: 'POST',
       body: {
         product_id: productId,
@@ -91,7 +93,7 @@ export const useCartStore = defineStore('cart', () => {
     cart.value = [];
     if (userStore.token) {
       try {
-        await $fetch(`${API_BASE}/api/cart/clear`, {
+        await $fetch(`${API_BASE}/cart/clear`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${userStore.token}` }
         });

@@ -81,9 +81,10 @@ function filterByCategory(categoryId) {
 
 // Helper for image fallback
 function imageUrl(img) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
 
 function firstAvailableImage(product) {

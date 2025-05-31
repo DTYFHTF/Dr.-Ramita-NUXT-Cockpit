@@ -302,7 +302,7 @@ watchEffect(() => {
 <style scoped lang="scss">
 
 .yoga-header {
-  background-color: color.adjust($accent-soft-green, $lightness: 46%);
+  background-color: $accent-soft-green;
   margin-top: 2rem; // Add spacing above the header
 
   @media (max-width: 768px) {

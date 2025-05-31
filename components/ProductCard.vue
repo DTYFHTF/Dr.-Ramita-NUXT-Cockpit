@@ -173,9 +173,10 @@ const maxVariationPrice = computed(() => {
 
 // Helper for image fallback
 function imageUrl(img: string) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
 
 </script>

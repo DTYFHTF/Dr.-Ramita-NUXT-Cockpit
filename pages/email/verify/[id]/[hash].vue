@@ -30,7 +30,7 @@ import { useUserStore } from '@/stores/user';
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const API_BASE = 'http://ayurveda-marketplace.test';
+const API_BASE = useRuntimeConfig().public.apiBase;
 
 const loading = ref(true);
 const success = ref(false);
@@ -48,7 +48,7 @@ onMounted(async () => {
     return;
   }
   try {
-    const url = `${API_BASE}/api/email/verify/${id}/${hash}${route.fullPath.includes('?') ? route.fullPath.substring(route.fullPath.indexOf('?')) : ''}`;
+    const url = `${API_BASE}/email/verify/${id}/${hash}${route.fullPath.includes('?') ? route.fullPath.substring(route.fullPath.indexOf('?')) : ''}`;
     const response = await $fetch(url, {
       method: 'GET',
       headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
@@ -84,7 +84,7 @@ async function resendVerification() {
   resendMsg.value = '';
   try {
     const token = localStorage.getItem('auth_token');
-    await $fetch(`${API_BASE}/api/email/verification-notification`, {
+    await $fetch(`${API_BASE}/email/verification-notification`, {
       method: 'POST',
       headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
