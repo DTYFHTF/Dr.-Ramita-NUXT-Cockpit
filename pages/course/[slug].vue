@@ -170,79 +170,71 @@ import DynamicContent from "@/components/DynamicContent.vue";
 import { ref, computed, watchEffect } from "vue";
 import { marked } from "marked";
 import { useRoute } from "vue-router";
-import { useApi } from "@/composables/useApi";
 
 // Initialize route and reactive variables
 const route = useRoute();
 const course = ref(null);
 const error = ref(null);
-const isLoading = ref(true); // Add loading state
+const isLoading = ref(true);
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
 
-// Fetch course data using useApi composable
-const {
-  data,
-  error: apiError,
-  refetch,
-} = useApi(`items/courses?filter={"slug":"${route.params.slug}"}`);
-
-// Markdown rendering utility
-const renderMarkdown = (content) => (content ? marked.parse(content) : "");
+// Fetch course data from Laravel API
+async function fetchCourse() {
+  isLoading.value = true;
+  error.value = null;
+  try {
+    const res = await fetch(`${apiBase}/courses/${route.params.slug}`);
+    if (!res.ok) throw new Error("Failed to fetch course");
+    const data = await res.json();
+    // Comment out the published check for development or preview
+    // if (!data.published) throw new Error("Course not published");
+    course.value = mapCourseData(data);
+  } catch (e) {
+    error.value = e;
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 // Helper function to map API response property names to component property names
 function mapCourseData(data) {
   if (!data) return null;
-
+  // Support both full URLs and relative paths for image fields
+  const getImageUrl = (img) => {
+    if (!img) return "/placeholder-course.jpg";
+    if (img.startsWith("http")) return img;
+    if (img.startsWith("/")) return img;
+    return `${config.public.baseUrl}/storage/${img}`;
+  };
   return {
     ...data,
-    // Map snake_case properties to camelCase
     duration: data.duration || "Approx. 20 hours",
-    skills: data.skills || { skill: [] },
-    learningOutcomes: data.learningOutcomes || [],
+    skills: data.skills || [],
+    learningOutcomes: data.learning_outcomes || [],
     certification: data.certification || false,
-    // Add imageUrl for displaying images
-    imageUrl: data.image?._id
-      ? `http://localhost:9000/assets/link/${data.image._id}`
-      : "/placeholder-course.jpg",
-    instructorImageUrl: data.instructor?.image?._id
-      ? `http://localhost:9000/assets/link/${data.instructor.image._id}`
-      : "/placeholder-course.jpg",
+    imageUrl: getImageUrl(data.image),
+    instructorImageUrl: getImageUrl(data.instructor?.image),
+    instructor: data.instructor || null,
+    videoType: data.video_type,
+    videoUrl: data.video_url ? getImageUrl(data.video_url) : null,
+    coursePreviewUrl: data.course_preview_url || null,
+    external_link: data.external_link || null,
   };
 }
 
 // Retry fetch logic
 const retryFetch = async () => {
-  error.value = null;
-  isLoading.value = true; // Set loading state
-  await refetch();
-  isLoading.value = false; // Clear loading state
+  await fetchCourse();
 };
 
-// Watch for data changes and update course details
+// Fetch course on mount and when slug changes
 watchEffect(() => {
-  try {
-    isLoading.value = true; // Set loading state
-    if (data.value && Array.isArray(data.value) && data.value.length > 0) {
-      // Using the first item if the API returns an array of matching courses
-      const courseData = data.value[0];
-      course.value = mapCourseData(courseData);
-      error.value = null; // Clear error since we have data
-    } else if (data.value && typeof data.value === "object" && data.value._id) {
-      // Handle if API returns a single object instead of an array
-      course.value = mapCourseData(data.value);
-      error.value = null; // Clear error since we have data
-    } else if (data.value === null || data.value === undefined) {
-      error.value = new Error("No course found with this slug");
-    }
-
-    if (apiError.value) {
-      error.value = apiError.value;
-    }
-  } catch (e) {
-    error.value = e;
-  } finally {
-    isLoading.value = false; // Clear loading state
-  }
+  fetchCourse();
 });
+
+// Markdown rendering utility
+const renderMarkdown = (content) => (content ? marked.parse(content) : "");
 
 // Compute the last skill level for display
 const lastSkillLevel = computed(() => {

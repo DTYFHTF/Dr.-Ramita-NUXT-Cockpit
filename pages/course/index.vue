@@ -16,34 +16,50 @@
 </template>
 
 <script setup>
-import { useApi } from '@/composables/useApi';
 import CourseCard from "~/components/CourseCard.vue";
-import { computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 
-// Destructure loading and error from useApi
-const { data: rawCourses, error, loading } = useApi("items/courses");
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
 
-// Enhanced computed property with error handling
-const coursesWithImages = computed(() => {
+const courses = ref([]);
+const coursesLoading = ref(true);
+const coursesError = ref(null);
+
+async function fetchCourses() {
+  coursesLoading.value = true;
+  coursesError.value = null;
   try {
-    return rawCourses.value?.map(course => {
-      if (!course) return null;
-      
-      return {
-        ...course,
-        image: course.image?._id 
-          ? `http://localhost:9000/assets/link/${course.image._id}`
-          : "/placeholder-course.jpg",
-        price: course.price ? `${course.price}` : 'Free'
-      };
-    }).filter(course => course !== null) || [];
+    const res = await fetch(`${apiBase}/courses`);
+    if (!res.ok) throw new Error('Failed to fetch courses');
+    const data = await res.json();
+    // Support both array and object with data property
+    const courseArray = Array.isArray(data) ? data : data.data;
+    courses.value = (courseArray || []).filter(c => c.published);
   } catch (e) {
-    console.error("Error processing course data:", e);
-    return [];
+    coursesError.value = e;
+  } finally {
+    coursesLoading.value = false;
   }
+}
+
+const coursesWithImages = computed(() => {
+  const getImageUrl = (img) => {
+    if (!img) return '/placeholder-course.jpg';
+    if (img.startsWith('http')) return img;
+    if (img.startsWith('/')) return img;
+    return `/storage/${img}`;
+  };
+  return courses.value.map(course => ({
+    ...course,
+    image: getImageUrl(course.image),
+    price: course.price ? course.price : 0,
+    duration: course.duration || 'Approx. 20 hours',
+    lessons: course.lessons || 0,
+  }));
 });
 
-// Optional debugging
 watchEffect(() => {
+  fetchCourses();
 });
 </script>
