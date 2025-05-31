@@ -82,15 +82,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGlossaryStore } from '@/stores/glossary';
 import DynamicContent from '@/components/DynamicContent.vue';
-
-interface GlossaryTerm {
-  title: string;
-  slug: string;
-  excerpt?: string;
-  description?: string;
-  details?: { title: string; description: string }[];
-  relatedTerms?: string[];
-}
+import type { GlossaryTerm } from '@/types';
 
 const route = useRoute();
 const glossaryStore = useGlossaryStore();
@@ -156,7 +148,7 @@ onMounted(async () => {
   gap: 5rem; /* Increased gap between main content and sidebar */
   align-items: flex-start;
 }
-c
+
 .main-content {
   flex: 3;
 }
@@ -172,6 +164,7 @@ c
   border: 1px solid #ddd;
   border-radius: 8px;
   align-self: flex-start; /* Ensures the sidebar height matches content */
+  width: 250px; /* Fixed width for sidebar */
 }
 
 .sidebar h2 {

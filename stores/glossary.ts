@@ -34,7 +34,8 @@ export const useGlossaryStore = defineStore('glossary', {
             title: entry.title,
             slug: entry.slug,
             excerpt: entry.excerpt || '',
-            category: entry.category || 'No Category', // Added category field
+            // Accept category as a tag (array or string)
+            category: Array.isArray(entry.category) ? entry.category.join(', ') : (entry.category || 'No Category'),
             description: entry.description || '',
             details: entry.details.map((detail: any) => ({
               ...detail,

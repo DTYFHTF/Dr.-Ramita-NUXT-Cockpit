@@ -112,7 +112,6 @@
 import { computed, ref, onMounted } from 'vue';
 import { useGlossaryStore } from '@/stores/glossary';
 import Fuse from 'fuse.js';
-import type { GlossaryTerm } from '@/stores/glossary';
 
 const glossaryStore = useGlossaryStore();
 const searchQuery = ref('');
@@ -135,15 +134,22 @@ const filteredTerms = computed(() => {
     : glossaryStore.terms;
 
   if (activeCategory.value) {
-    results = results.filter(t => t.category === activeCategory.value);
+    results = results.filter(t => {
+      if (Array.isArray(t.category)) {
+        return t.category.includes(activeCategory.value!);
+      }
+      return t.category === activeCategory.value;
+    });
   }
 
   return results;
 });
 
-const uniqueCategories = computed(() => [
-  ...new Set(glossaryStore.terms.map(t => t.category).filter(Boolean))
-]);
+const uniqueCategories = computed(() => {
+  // Flatten all categories, deduplicate, and filter out falsy values
+  const all = glossaryStore.terms.flatMap(t => Array.isArray(t.category) ? t.category : [t.category]);
+  return [...new Set(all)].filter(Boolean);
+});
 
 const filteredGroups = computed(() => {
   const groups: { [key: string]: GlossaryTerm[] } = {};
