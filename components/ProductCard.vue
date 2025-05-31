@@ -22,24 +22,24 @@
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         <div class="mb-2 d-flex align-items-center gap-2">
           <template v-if="product.variations && product.variations.length">
-            <span v-if="minVariationPrice !== maxVariationPrice">
-              From ${{ minVariationPrice }}
+            <span v-if="minVariationPrice !== maxVariationPrice" class="price">
+              From ₹{{ minVariationPrice }}
             </span>
             <span v-else>
-              ${{ minVariationPrice }}
+              ₹{{ minVariationPrice }}
             </span>
           </template>
           <template v-else>
             <span v-if="product.sale_price && product.sale_price < product.price">
-              <span class="text-decoration-line-through text-muted">
-                ${{ product.price }}
+              <span class="text-decoration-line-through  text-muted ">
+                ₹{{ product.price }}
               </span>
-              <span class="ms-1 text-danger fw-bold">
-                ${{ product.sale_price }}
+              <span class="ms-1 price fw-bold">
+                ₹{{ product.sale_price }}
               </span>
             </span>
-            <span v-else class="product-price fw-bold text-success">
-              ${{ product.price }}
+            <span v-else class="price fw-bold">
+              ₹{{ product.price }}
             </span>
           </template>
           <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
@@ -271,7 +271,10 @@ function imageUrl(img: string) {
   text-overflow: ellipsis;
   white-space: normal;
 }
-
+.price{
+  color:#28C092;
+  font-weight: 500;
+}
 
 
 </style>

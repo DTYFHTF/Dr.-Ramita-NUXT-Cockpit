@@ -125,6 +125,18 @@
               SKU: {{ selectedVariation.sku }}
             </div>
           </div>
+          <!-- Fallback if no variations -->
+        <div v-else class="product-price mb-3 ">
+          <span v-if="product.sale_price && product.sale_price < product.price" class="d-flex">
+            <h4 class="text-decoration-line-through text-muted"
+              >₹{{ product.price }}</h4
+            >
+            <h4 class="ms-2 text-success fw-bold"
+              >₹{{ product.sale_price }}</h4
+            >
+          </span>
+          <span v-else class="fw-bold text-success">₹{{ product.price }}</span>
+        </div>
         <div class="product-description mb-3">
           <span class="clamp-4-lines">{{ product.description }}</span>
         </div>
@@ -139,7 +151,7 @@
               v-for="variation in product.variations"
               :key="variation.id"
               type="button"
-              class="btn btn-smooth-outline btn-sm variation-btn"
+              class="btn btn-smooth-outline btn-sm variation-btn py-2"
               :class="{
                 active: selectedVariationId === variation.id,
                 'out-of-stock': (variation.stock ?? 0) <= 0,
@@ -155,20 +167,9 @@
           </div>
           
         </div>
-        <!-- Fallback if no variations -->
-        <div v-else class="product-price mb-3">
-          <span v-if="product.sale_price && product.sale_price < product.price">
-            <span class="text-decoration-line-through text-muted"
-              >₹{{ product.price }}</span
-            >
-            <span class="ms-2 text-success fw-bold"
-              >₹{{ product.sale_price }}</span
-            >
-          </span>
-          <span v-else class="fw-bold text-success">₹{{ product.price }}</span>
-        </div>
+        
 
-        <div class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center">
           <button
             class="btn btn-outline-secondary"
             @click="decrement"
@@ -202,6 +203,7 @@
             {{ canAddToCart ? "In stock" : "Out of stock" }}
           </span>
         </div>
+        
         <div class="share-section mt-3">
           <span class="me-2">Share:</span>
           <a
@@ -209,32 +211,31 @@
             target="_blank"
             rel="noopener"
             title="Share on WhatsApp"
-            ><LucideIcon icon="mdi:whatsapp"
+            ><LucideIcon icon="mdi:whatsapp" color="#01CB37"
           /></a>
           <a
             :href="shareUrl('facebook')"
             target="_blank"
             rel="noopener"
             title="Share on Facebook"
-            ><LucideIcon icon="mdi:facebook"
+            ><LucideIcon icon="mdi:facebook" color="#1877F2"
           /></a>
           <a
             :href="shareUrl('twitter')"
             target="_blank"
             rel="noopener"
             title="Share on Twitter"
-            ><LucideIcon icon="mdi:twitter"
+            ><LucideIcon icon="mdi:twitter" color="#1DA1F2"
           /></a>
           <a
             :href="shareUrl('instagram')"
             target="_blank"
             rel="noopener"
             title="Share on Instagram"
-            ><LucideIcon icon="mdi:instagram"
+            ><LucideIcon icon="mdi:instagram" color="#C13584"
           /></a>
         </div>
       </div>
-      <!-- Product Reviews Section removed from Quick View -->
     </div>
   </div>
 </template>
@@ -437,26 +438,9 @@ function shareUrl(platform: string) {
     center/1.5rem 1.5rem no-repeat !important;
   background-color: #226144 !important;
 }
-.product-reviews {
-  border-top: 1px solid #e9ecef;
-  padding-top: 1.5rem;
-}
-.review-card {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 0.375rem;
-  padding: 1rem;
-  transition: transform 0.2s;
-}
-.review-card:hover {
-  transform: translateY(-2px);
-}
-.admin-reply {
-  background: #e2f7e2;
-  border-left: 4px solid #28a745;
-}
+
 .btn-smooth-outline.active {
-  background-color: #226144 !important; // Replace with your actual green if needed
+  background-color: #226144 !important; 
   color: #fff !important;
   border-color: #226144 !important;
 }

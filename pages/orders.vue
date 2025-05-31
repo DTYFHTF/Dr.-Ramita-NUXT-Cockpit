@@ -23,11 +23,11 @@
             <tr v-for="order in orders" :key="order.id">
               <td class="fw-semibold">{{ order.id }}</td>
               <td>{{ order.created_at ? new Date(order.created_at).toLocaleString() : '' }}</td>
-              <td><span class="badge bg-info">{{ order.status }}</span></td>
+              <td>{{ order.status }}</td>
               <td>₹{{ order.total }}</td>
               <td>{{ order.cart.length }}</td>
               <td>
-                <button class="btn btn-sm btn-outline-primary" @click="selectOrder(order)">
+                <button class="btn btn-sm btn-smooth-outline p-2 " @click="selectOrder(order)">
                   View
                 </button>
               </td>
@@ -43,7 +43,7 @@
               <button type="button" class="btn-close" @click="selectedOrder = null"></button>
             </div>
             <div class="modal-body">
-              <div class="mb-2">Status: <span class="badge bg-info">{{ selectedOrder.status }}</span></div>
+              <div class="mb-2 fw-bold">Status: <span class="">{{ selectedOrder.status }}</span></div>
               <div class="mb-2">Order Date: {{ selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleString() : '' }}</div>
               <div class="mb-2">Shipping: ₹{{ selectedOrder.shipping_cost }}</div>
               <div class="mb-2">Estimated Delivery: {{ selectedOrder.estimated_delivery }}</div>

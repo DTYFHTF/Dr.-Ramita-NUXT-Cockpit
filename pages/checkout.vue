@@ -95,8 +95,8 @@
               <strong>Note:</strong> Payment will be handled via a secure payment gateway after you review your order.
             </div>
             <div class="d-flex gap-3 mt-4 justify-content-end">
-              <router-link to="/cartpage" class="btn btn-outline-secondary px-4 py-2">Back to Cart</router-link>
-              <button type="submit" class="btn btn-primary px-4 py-2" :disabled="isSubmitting">
+              <router-link to="/cartpage" class="btn btn-smooth-outline px-4 py-2">Back to Cart</router-link>
+              <button type="submit" class="btn btn-smooth-success px-4 py-2" :disabled="isSubmitting">
                 <span v-if="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span>Placing Order...</span>
                 <span v-else>Review & Confirm</span>
               </button>

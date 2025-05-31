@@ -39,18 +39,13 @@ export const useCartStore = defineStore('cart', () => {
 
   const addToCart = async (product: Product, quantity: number = 1) => {
     if (!userStore.token) return;
-    // Debug log to trace what is being sent
-    // eslint-disable-next-line no-console
-    console.log('[addToCart] product:', product);
-    // Always use the parent product's id
+    
     const product_id = (product as any).parent_id ? (product as any).parent_id : product.id;
     let variation_id: number | null = null;
     if ('variation_id' in product && product.variation_id !== undefined && product.variation_id !== null) {
       variation_id = Number(product.variation_id);
       if (isNaN(variation_id)) variation_id = null;
     }
-    // eslint-disable-next-line no-console
-    console.log('[addToCart] Sending payload:', { product_id, variation_id, quantity: Math.max(1, Number(quantity)) });
     const payload = {
       product_id,
       variation_id,
