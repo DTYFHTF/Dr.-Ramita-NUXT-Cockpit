@@ -1,18 +1,6 @@
 // ~/stores/glossary.ts
 import { defineStore } from 'pinia';
-import { useApi } from '@/composables/useApi';
-
-export interface GlossaryTerm {
-  title: string;
-  slug: string;
-  excerpt: string;
-  category: string;
-  description: string;
-  details: Array<{ title: string; description: string }>;
-  relatedTerms: string[];
-  linkable: boolean;
-  occurrenceLimit: number;
-}
+import type { GlossaryTerm } from '@/types';
 
 interface GlossaryStoreState {
   terms: GlossaryTerm[];

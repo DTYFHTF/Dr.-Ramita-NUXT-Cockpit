@@ -67,12 +67,12 @@ export interface PriceRange {
 
 export interface User {
   id: number;
-  email: string;
   first_name: string;
   last_name: string;
+  email: string;
   phone?: string;
-  role?: string;
-  // Add other user fields as needed
+  email_verified_at?: string | null;
+  // Add more fields as needed
 }
 
 // --- Order/Checkout Types ---
@@ -122,3 +122,16 @@ export interface CartItem {
   stock: number;
   quantity: number;
 }
+
+export interface GlossaryTerm {
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  description: string;
+  details: Array<{ title: string; description: string }>;
+  relatedTerms: string[];
+  linkable: boolean;
+  occurrenceLimit: number;
+}
+

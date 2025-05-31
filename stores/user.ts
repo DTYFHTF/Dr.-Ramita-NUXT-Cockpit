@@ -1,14 +1,5 @@
 import { defineStore } from 'pinia'
-
-export interface User {
-  id: number
-  first_name: string
-  last_name: string
-  email: string
-  phone?: string
-  email_verified_at?: string | null
-  // Add more fields as needed
-}
+import type { User } from '@/types';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
