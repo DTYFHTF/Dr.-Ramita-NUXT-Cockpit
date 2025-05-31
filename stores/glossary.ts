@@ -28,12 +28,13 @@ export const useGlossaryStore = defineStore('glossary', {
       if (this.terms.length > 0) return;
 
       try {
-        const apiUrl = '/api/glossary'; // Use the server-side API endpoint
+        const config = useRuntimeConfig();
+        const apiUrl = `${config.public.apiBase}/glossary`;
 
         const response = await $fetch(apiUrl, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-        });
+        }) as any[];
 
 
         if (!response) {
