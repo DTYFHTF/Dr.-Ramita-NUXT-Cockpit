@@ -136,8 +136,12 @@ const handleAddToCart = async (product: Product) => {
 
 // Listen for an event from ProductQuickView when a variation is selected and added
 function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_id?: number }) {
-  // Use props.product to ensure the parent product is referenced
-  addToCart({ ...props.product, variation_id: payload.variation_id }, payload.quantity ?? 1);
+  // Only add variation_id if it exists in the payload
+  const productToAdd: Product & { variation_id?: number } = { ...props.product };
+  if (payload.variation_id !== undefined) {
+    productToAdd.variation_id = payload.variation_id;
+  }
+  addToCart(productToAdd, payload.quantity ?? 1);
   showNotification.value = true;
   setTimeout(() => {
     showNotification.value = false;
@@ -156,7 +160,8 @@ const props = defineProps<{ product: Product }>();
 
 const images = computed(() => {
   // Only use image and image_2 for the product card
-  return [getImageUrl(product.image, '/fallback.jpg'), getImageUrl(product.image_2, '/fallback.jpg')].filter(Boolean);
+  const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
+  return Array.from(new Set(imgs));
 });
 
 const minVariationPrice = computed(() => {
@@ -171,6 +176,15 @@ const maxVariationPrice = computed(() => {
   }
   return props.product.sale_price ?? props.product.price;
 });
+
+// Helper for image fallback
+function imageUrl(img: string) {
+  const config = useRuntimeConfig();
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `${config.public.baseUrl}/storage/${img}`;
+}
+
 
 </script>
 

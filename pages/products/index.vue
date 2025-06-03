@@ -184,7 +184,7 @@ const sortArrow = (type: string) => {
   return "↓";
 };
 
-const imageUrl = (img) => getImageUrl(img, '/fallback.jpg');
+const imageUrl = (img:string) => getImageUrl(img, '/fallback.jpg');
 </script>
 
 <style scoped lang="scss">

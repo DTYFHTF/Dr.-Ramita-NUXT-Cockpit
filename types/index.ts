@@ -72,6 +72,7 @@ export interface User {
   email: string;
   phone?: string;
   email_verified_at?: string | null;
+  role:string;
   // Add more fields as needed
 }
 

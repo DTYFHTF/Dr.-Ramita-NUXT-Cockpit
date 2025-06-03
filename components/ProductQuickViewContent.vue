@@ -257,11 +257,25 @@ const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
 });
 
-const { getImageUrl } = useImageUrl();
+function imageUrl(img: string) {
+  const config = useRuntimeConfig();
+  if (!img) return "/fallback.jpg";
+  if (img.startsWith("http")) return img;
+  return `${config.public.baseUrl}/storage/${img}`;
+}
+
 
 // Helper for image fallback
 const images = computed(() => {
-  return (product.images || []).map(img => getImageUrl(img, '/fallback.jpg'));
+  const imgs = [
+    props.product.image,
+    props.product.image_2,
+    props.product.image_3,
+  ]
+    .filter(Boolean)
+    .map(imageUrl);
+  return Array.from(new Set(imgs));
+  
 });
 
 const selectedVariation = computed(() => {
