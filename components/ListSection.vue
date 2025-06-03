@@ -2,7 +2,7 @@
 <template>
   <section v-if="items.length" class="mb-7">
     <div class="section-header mb-6">
-      <h2 class="section-title">{{ title }}</h2>
+      <h3 class="section-title">{{ title }}</h3>
       <p v-if="subtitle" class="section-subtitle text-muted fs-5">
         {{ subtitle }}
       </p>
@@ -14,7 +14,7 @@
         class="fs-5 lh-lg mb-2"
       >
         <template v-if="item.title">
-          <h5 class="fw-bold">{{ index + 1 }}. {{ item.title }}</h5>
+          <p class="fw-bold">{{ index + 1 }}. {{ item.title }}</p>
           <DynamicContent :content="item.description || ''" />
         </template>
         <template v-else>

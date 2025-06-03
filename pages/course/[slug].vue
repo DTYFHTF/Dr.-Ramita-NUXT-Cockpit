@@ -63,6 +63,8 @@
           <h2 class="section-title mb-4">About This Course</h2>
           <div class="section-content">
             <DynamicContent :content="course.description" />
+             <!-- <span>{{ course.description }}</span> -->
+
           </div>
         </section>
 
@@ -83,6 +85,8 @@
                   />
 
                   <DynamicContent :content="skill" />
+                                <!-- <span>{{ skill }}</span> -->
+
                 </li>
               </ul>
             </section>
@@ -102,6 +106,7 @@
                     class="text-success me-2"
                   />
                   <DynamicContent :content="item" />
+                   <!-- <span>{{item}}</span> -->
                 </li>
               </ul>
             </section>
@@ -189,7 +194,7 @@ async function fetchCourse() {
     const data = await res.json();
     // Comment out the published check for development or preview
     // if (!data.published) throw new Error("Course not published");
-    course.value = mapCourseData(data);
+    course.value = mapCourseData(data.data); // <-- Fix: use data.data
   } catch (e) {
     error.value = e;
   } finally {
