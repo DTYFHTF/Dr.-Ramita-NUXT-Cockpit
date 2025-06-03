@@ -121,6 +121,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from "vue";
 import { useProductFilters } from "@/composables/useProductFilters";
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 // Dynamic imports
 const FilterSidebar = defineAsyncComponent(
@@ -163,6 +164,8 @@ const {
   clearAllFilters,
 } = useProductFilters(searchQuery); // <-- Pass searchQuery to composable
 
+const { getImageUrl } = useImageUrl();
+
 import { ref } from "vue";
 
 function handleSearch(query: string) {
@@ -180,6 +183,8 @@ const sortArrow = (type: string) => {
   if (sort.value === `${type}_desc`) return "↑";
   return "↓";
 };
+
+const imageUrl = (img) => getImageUrl(img, '/fallback.jpg');
 </script>
 
 <style scoped lang="scss">

@@ -48,8 +48,10 @@ import { ref, onMounted, watch } from 'vue';
 import { useProducts } from '@/composables/useProducts';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { NuxtLink } from '#components';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const { categories, fetchCategories, fetchProducts, products } = useProducts();
+const { getImageUrl } = useImageUrl();
 
 const activeProducts = ref([]);
 const activeCategory = ref(null);
@@ -80,16 +82,9 @@ function filterByCategory(categoryId) {
 }
 
 // Helper for image fallback
-function imageUrl(img) {
-  const config = useRuntimeConfig();
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `${config.public.baseUrl}/storage/${img}`;
-}
-
 function firstAvailableImage(product) {
   const imgs = [product.image, product.image_2, product.image_3].filter(Boolean);
-  return imageUrl(imgs[0]);
+  return getImageUrl(imgs[0]);
 }
 </script>
 

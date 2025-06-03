@@ -97,10 +97,12 @@ import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
 import { useCart } from '@/composables/useCart';
 import { useUserStore } from '@/stores/user';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
 const userStore = useUserStore();
+const { getImageUrl } = useImageUrl();
 
 const showNotification = ref(false);
 const showQuickView = ref(false);
@@ -154,8 +156,7 @@ const props = defineProps<{ product: Product }>();
 
 const images = computed(() => {
   // Only use image and image_2 for the product card
-  const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
-  return Array.from(new Set(imgs));
+  return [getImageUrl(product.image, '/fallback.jpg'), getImageUrl(product.image_2, '/fallback.jpg')].filter(Boolean);
 });
 
 const minVariationPrice = computed(() => {
@@ -170,14 +171,6 @@ const maxVariationPrice = computed(() => {
   }
   return props.product.sale_price ?? props.product.price;
 });
-
-// Helper for image fallback
-function imageUrl(img: string) {
-  const config = useRuntimeConfig();
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `${config.public.baseUrl}/storage/${img}`;
-}
 
 </script>
 

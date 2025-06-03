@@ -44,6 +44,7 @@ import ProductReviewSection from '@/components/ProductReviewSection.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
@@ -56,12 +57,10 @@ let lastSlug = "";
 // Admin check (customize as needed)
 const isAdmin = computed(() => !!(user.value && user.value.role === 'admin'));
 
-// Helper for image fallback
+const { getImageUrl } = useImageUrl();
+
 function imageUrl(img: string) {
-  const config = useRuntimeConfig();
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `${config.public.baseUrl}/storage/${img}`;
+  return getImageUrl(img, '/fallback.jpg');
 }
 
 // Helper for stock

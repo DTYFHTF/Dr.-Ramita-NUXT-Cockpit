@@ -172,61 +172,25 @@
 // Import necessary modules and components
 import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
-import { ref, computed, watchEffect } from "vue";
-import { marked } from "marked";
-import { useRoute } from "vue-router";
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 // Initialize route and reactive variables
 const route = useRoute();
+const slug = route.params.slug;
+const { data: courseData, error, loading } = useApiLaravel(`courses/${slug}`);
 const course = ref(null);
-const error = ref(null);
-const isLoading = ref(true);
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
+const { getImageUrl } = useImageUrl();
 
-// Fetch course data from Laravel API
-async function fetchCourse() {
-  isLoading.value = true;
-  error.value = null;
-  try {
-    const res = await fetch(`${apiBase}/courses/${route.params.slug}`);
-    if (!res.ok) throw new Error("Failed to fetch course");
-    const data = await res.json();
-    // Comment out the published check for development or preview
-    // if (!data.published) throw new Error("Course not published");
-    course.value = mapCourseData(data.data); // <-- Fix: use data.data
-  } catch (e) {
-    error.value = e;
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-// Helper function to map API response property names to component property names
-function mapCourseData(data) {
-  if (!data) return null;
-  // Support both full URLs and relative paths for image fields
-  const getImageUrl = (img) => {
-    if (!img) return "/placeholder-course.jpg";
-    if (img.startsWith("http")) return img;
-    if (img.startsWith("/")) return img;
-    return `${config.public.baseUrl}/storage/${img}`;
+watch(courseData, (val) => {
+  if (!val || !val.data) return;
+  course.value = {
+    ...val.data,
+    imageUrl: val.data.image ? getImageUrl(val.data.image, '/placeholder-course.jpg') : undefined
   };
-  return {
-    ...data,
-    duration: data.duration || "Approx. 20 hours",
-    skills: data.skills || [],
-    learningOutcomes: data.learning_outcomes || [],
-    certification: data.certification || false,
-    imageUrl: getImageUrl(data.image),
-    instructorImageUrl: getImageUrl(data.instructor?.image),
-    instructor: data.instructor || null,
-    videoType: data.video_type,
-    videoUrl: data.video_url ? getImageUrl(data.video_url) : null,
-    coursePreviewUrl: data.course_preview_url || null,
-    external_link: data.external_link || null,
-  };
-}
+}, { immediate: true });
 
 // Retry fetch logic
 const retryFetch = async () => {
@@ -236,15 +200,6 @@ const retryFetch = async () => {
 // Fetch course on mount and when slug changes
 watchEffect(() => {
   fetchCourse();
-});
-
-// Markdown rendering utility
-const renderMarkdown = (content) => (content ? marked.parse(content) : "");
-
-// Compute the last skill level for display
-const lastSkillLevel = computed(() => {
-  const levels = course.value?.skills?.level?.[0] || [];
-  return levels[levels.length - 1] || null;
 });
 </script>
 

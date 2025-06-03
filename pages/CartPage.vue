@@ -84,17 +84,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useCart } from '@/composables/useCart';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const cartStore = useCart();
 const { cart, totalItems, totalPrice } = storeToRefs(cartStore);
 const { updateQuantity, removeFromCart } = cartStore;
+const { getImageUrl } = useImageUrl();
 
-// Helper for image fallback
 function imageUrl(img: string) {
-  const config = useRuntimeConfig();
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `${config.public.baseUrl}/storage/${img}`;
+  return getImageUrl(img, '/fallback.jpg');
 }
-
 </script>

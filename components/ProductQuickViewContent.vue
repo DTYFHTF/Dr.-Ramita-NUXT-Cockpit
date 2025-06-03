@@ -243,6 +243,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
+import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from "@/types";
 
 // --- Props ---
@@ -256,23 +257,11 @@ const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
 });
 
-// Helper for image fallback
-function imageUrl(img: string) {
-  const config = useRuntimeConfig();
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `${config.public.baseUrl}/storage/${img}`;
-}
+const { getImageUrl } = useImageUrl();
 
+// Helper for image fallback
 const images = computed(() => {
-  const imgs = [
-    props.product.image,
-    props.product.image_2,
-    props.product.image_3,
-  ]
-    .filter(Boolean)
-    .map(imageUrl);
-  return Array.from(new Set(imgs));
+  return (product.images || []).map(img => getImageUrl(img, '/fallback.jpg'));
 });
 
 const selectedVariation = computed(() => {

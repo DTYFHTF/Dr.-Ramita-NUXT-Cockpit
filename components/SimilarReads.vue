@@ -42,12 +42,6 @@ export default {
       type: String,
       default: "/placeholder.jpg"
     }
-  },
-  mounted() {
-    console.log('Posts in SimilarReads:', this.posts); // Log posts array for debugging
-    this.posts.forEach(post => {
-      console.log('Post imageUrl:', post.imageUrl, 'image:', post.image); // Log both possible image fields
-    });
   }
 }
 </script>

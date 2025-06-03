@@ -17,49 +17,23 @@
 
 <script setup>
 import CourseCard from "~/components/CourseCard.vue";
-import { ref, computed, watchEffect } from 'vue';
+import { computed, watch, ref } from 'vue';
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
-
+const { data: coursesData, error, loading } = useApiLaravel('courses');
 const courses = ref([]);
-const coursesLoading = ref(true);
-const coursesError = ref(null);
+const { getImageUrl } = useImageUrl();
 
-async function fetchCourses() {
-  coursesLoading.value = true;
-  coursesError.value = null;
-  try {
-    const res = await fetch(`${apiBase}/courses`);
-    if (!res.ok) throw new Error('Failed to fetch courses');
-    const data = await res.json();
-    // Support both array and object with data property
-    const courseArray = Array.isArray(data) ? data : data.data;
-    courses.value = (courseArray || []).filter(c => c.published);
-  } catch (e) {
-    coursesError.value = e;
-  } finally {
-    coursesLoading.value = false;
-  }
-}
-
-const coursesWithImages = computed(() => {
-  const getImageUrl = (img) => {
-    if (!img) return '/placeholder-course.jpg';
-    if (img.startsWith('http')) return img;
-    if (img.startsWith('/')) return img;
-    return `/storage/${img}`;
-  };
-  return courses.value.map(course => ({
+watch(coursesData, (val) => {
+  if (!val || !val.data) return;
+  courses.value = val.data.map(course => ({
     ...course,
-    image: getImageUrl(course.image),
-    price: course.price ? course.price : 0,
-    duration: course.duration || 'Approx. 20 hours',
-    lessons: course.lessons || 0,
+    imageUrl: course.image ? getImageUrl(course.image, '/placeholder-course.jpg') : undefined
   }));
-});
+}, { immediate: true });
 
-watchEffect(() => {
-  fetchCourses();
-});
+const coursesWithImages = computed(() => courses.value);
+const coursesLoading = loading;
+const coursesError = error;
 </script>

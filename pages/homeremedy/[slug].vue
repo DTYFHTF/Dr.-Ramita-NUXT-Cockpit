@@ -36,10 +36,10 @@
         <div class="container">
           <div class="header-content max-w-800 mx-auto py-6">
             <h3 class="remedy-title display-4 fw-bold mb-4">
-              {{ remedy.diseaseName }} <!-- Mapped from API disease_name -->
+              {{ remedy.disease_name }}
             </h3>
             <p class="remedy-description lead fs-3 text-muted mb-5">
-              <DynamicContent :content="remedy.diseaseDescription || ''" /> <!-- Mapped from API disease_description -->
+              <DynamicContent :content="remedy.disease_description || ''" />
             </p>
           </div>
         </div>
@@ -74,188 +74,107 @@
       <div class="container">
         <!-- Enhanced Everyday Home Remedies Section -->
         <ListSection
-          v-if="remedy.generalRemedies && remedy.generalRemedies.length"
+          v-if="remedy.general_remedies && remedy.general_remedies.length"
           :title="'Everyday Home Remedies'"
           :subtitle="'Nourish your body with natural ingredients'"
-          :items="remedy.generalRemedies"
+          :items="remedy.general_remedies"
         />
 
         <!-- Enhanced Spice & Food Therapy -->
         <ListSection
-          v-if="remedy.spiceAndFoodTherapy && remedy.spiceAndFoodTherapy.length"
+          v-if="remedy.spices_and_food_therapy && remedy.spices_and_food_therapy.length"
           :title="'Spice & Food Therapy'"
           :subtitle="'Nourish your body with natural ingredients'"
-          :items="remedy.spiceAndFoodTherapy"
+          :items="remedy.spices_and_food_therapy"
         />
 
         <!-- Enhanced Associated Dosha Tag -->
-        <section v-if="remedy.associatedDoshaTag" class="associated-dosha mb-7">
+        <section v-if="remedy.dosha && remedy.dosha.length" class="associated-dosha mb-7">
           <div class="section-header mb-6">
             <h3 class="section-title">Associated Dosha</h3>
             <p class="section-subtitle text-muted fs-5">
               Balancing your dosha for harmony
             </p>
           </div>
-          <p class="text-muted fs-5">{{ remedy.associatedDoshaTag }}</p> <!-- Mapped from API dosha (JSON array) -->
+          <p class="text-muted fs-5">{{ remedy.dosha.join(', ') }}</p>
         </section>
 
-        <!-- Enhanced Pranayama Section -->
-        <section v-if="remedy.pranayama && remedy.pranayama.length" class="pranayama mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Pranayama</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Breathing techniques for vitality
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.pranayama"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
+        <!-- Replace repeated section code with TagListSection -->
+        <TagListSection
+          v-if="remedy.pranayama && remedy.pranayama.length"
+          :title="'Pranayama'"
+          :subtitle="'Breathing techniques for vitality'"
+          :items="remedy.pranayama"
+          section-class="pranayama mb-7"
+        />
 
-        <!-- Enhanced Asanas Section -->
-        <section v-if="remedy.asanas && remedy.asanas.length" class="asanas mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Asanas</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Yoga poses for physical and mental balance
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.asanas"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
+        <TagListSection
+          v-if="remedy.yoga_asanas && remedy.yoga_asanas.length"
+          :title="'Asanas'"
+          :subtitle="'Yoga poses for physical and mental balance'"
+          :items="remedy.yoga_asanas"
+          section-class="asanas mb-7"
+        />
 
-        <!-- Enhanced Mudras Section -->
-        <section v-if="remedy.mudras && remedy.mudras.length" class="mudras mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Mudras</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Hand gestures for energy flow
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.mudras"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
+        <TagListSection
+          v-if="remedy.mudra && remedy.mudra.length"
+          :title="'Mudras'"
+          :subtitle="'Hand gestures for energy flow'"
+          :items="remedy.mudra"
+          section-class="mudras mb-7"
+        />
 
-        <!-- Enhanced Bandhas Section -->
-        <section v-if="remedy.bandhas && remedy.bandhas.length" class="bandhas mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Bandhas</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Energy locks for inner strength
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.bandhas"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
+        <TagListSection
+          v-if="remedy.bandha && remedy.bandha.length"
+          :title="'Bandhas'"
+          :subtitle="'Energy locks for inner strength'"
+          :items="remedy.bandha"
+          section-class="bandhas mb-7"
+        />
 
         <!-- Enhanced Kriyas Section -->
         <ListSection
-          v-if="remedy.kriyas && remedy.kriyas.length"
+          v-if="remedy.kriya && remedy.kriya.length"
           :title="'Kriyas'"
           :subtitle="'Cleansing techniques for purification'"
-          :items="remedy.kriyas"
+          :items="remedy.kriya"
         />
         
         <!-- Enhanced Mindful Practices Section -->
-        <section v-if="remedy.mindfulPractices && remedy.mindfulPractices.length" class="mindful-practices mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Mindful Practices</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Techniques for present moment awareness
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.mindfulPractices"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
+        <TagListSection
+          v-if="remedy.mindful_practices && remedy.mindful_practices.length"
+          :title="'Mindful Practices'"
+          :subtitle="'Techniques for present moment awareness'"
+          :items="remedy.mindful_practices"
+          section-class="mindful-practices mb-7"
+        />
 
         <!-- Enhanced Dhyana / Meditation -->
-        <section v-if="remedy.dhyanaMeditation" class="dhyana-meditation mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Dhyana / Meditation</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Practices for mental clarity and peace
-            </p>
-          </div>
-          <p class="text-muted fs-5">
-            <DynamicContent :content="remedy.dhyanaMeditation" />
-          </p>
-        </section>
+        <TagListSection
+          v-if="remedy.meditation && remedy.meditation.length"
+          :title="'Dhyana / Meditation'"
+          :subtitle="'Practices for mental clarity and peace'"
+          :items="[remedy.meditation.join(', ')]"
+          section-class="dhyana-meditation mb-7"
+        />
 
         <!-- Enhanced Color Therapy -->
-        <section v-if="remedy.colorTherapy" class="color-therapy mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Color Therapy</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Healing through colors
-            </p>
-          </div>
-          <p class="text-muted fs-5">
-            <DynamicContent :content="remedy.colorTherapy" />
-          </p>
-        </section>
+        <TagListSection
+          v-if="remedy.color_therapy"
+          :title="'Color Therapy'"
+          :subtitle="'Healing through colors'"
+          :items="[remedy.color_therapy]"
+          section-class="color-therapy mb-7"
+        />
 
         <!-- Enhanced Energy Management System Section -->
-        <section v-if="remedy.energyManagementSystem && remedy.energyManagementSystem.length" class="energy-management-system mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Energy Management System</h3>
-            <p class="section-subtitle text-muted fs-5">
-              Techniques for managing and balancing your energy
-            </p>
-          </div>
-          <ul class="list-unstyled">
-            <li
-              v-for="(item, index) in remedy.energyManagementSystem"
-              :key="index"
-              class="fs-5 lh-lg mb-2"
-            >
-              <DynamicContent :content="item" />
-            </li>
-          </ul>
-        </section>
-
-        <!-- Enhanced Notes Section (Example: if you want to add a 'notes' field from API) -->
-        <!-- <section v-if="remedy.notes" class="notes mb-7">
-          <div class="section-header mb-6">
-            <h3 class="section-title">Notes</h3>
-          </div>
-          <p class="text-muted fs-5">
-            <DynamicContent :content="remedy.notes" />
-          </p>
-        </section> -->
+        <TagListSection
+          v-if="remedy.ems && remedy.ems.length"
+          :title="'Energy Management System'"
+          :subtitle="'Techniques for managing and balancing your energy'"
+          :items="remedy.ems"
+          section-class="energy-management-system mb-7"
+        />
       </div>
     </article>
   </div>
@@ -263,129 +182,33 @@
 
 <script setup>
 import LucideIcon from "@/components/LucideIcon.vue";
-import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-import DynamicContent from "@/components/DynamicContent.vue";
-// ListSection is likely auto-imported by Nuxt 3 or globally registered
+import { useApiLaravel } from '@/composables/useApi.js'
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import useSimilarPosts from '@/composables/useSimilarPosts.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const route = useRoute();
-const config = useRuntimeConfig();
+const slug = route.params.slug;
+const { data: remedyData, error, loading } = useApiLaravel(`home-remedies/${slug}`);
+const { data: allRemediesData } = useApiLaravel('home-remedies');
 const remedy = ref(null);
-const loading = ref(true);
-const error = ref(null);
-const latestPosts = ref([]); // For SimilarReads, temporarily commented out
+const latestPosts = ref([]);
+const { getImageUrl } = useImageUrl();
 
-// Helper function to safely parse JSON
-function safeJsonParse(jsonString, defaultValue = []) {
-  if (!jsonString) return defaultValue;
-  try {
-    const parsed = JSON.parse(jsonString);
-    return Array.isArray(parsed) ? parsed : (typeof parsed === 'object' && parsed !== null ? [parsed] : defaultValue);
-  } catch (e) {
-    console.warn("Failed to parse JSON string:", jsonString, e);
-    return defaultValue;
-  }
-}
-
-// Helper function to split a string into a list, by sentences.
-function splitStringBySentences(str) {
-  if (!str || typeof str !== 'string') return [];
-  // Split by common sentence endings. Filter out empty strings.
-  return str.split(/[.\\!\\?](?=\\s+[A-Z]|$)/g).map(s => s.trim()).filter(s => s.length > 0);
-}
-
-
-function getImageUrl(imgPath) {
-  if (!imgPath) return "/fallback.jpg"; // Ensure you have a fallback.jpg in your public folder
-  if (imgPath.startsWith("http")) return imgPath;
-  // Assuming config.public.baseUrl is your Laravel app's base URL (e.g., http://localhost:8000)
-  // And images are served from Laravel's public/storage directory
-  return `${config.public.baseUrl || config.public.apiBase.replace('/api', '')}/storage/${imgPath}`;
-}
-
-async function fetchRemedyDetails() {
-  loading.value = true;
-  error.value = null;
-  remedy.value = null;
-  const slug = route.params.slug;
-
-  if (!slug) {
-    error.value = { message: "No remedy slug provided." };
-    loading.value = false;
-    return;
-  }
-
-  try {
-    const response = await fetch(`${config.public.apiBase}/home-remedies/${slug}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Remedy not found.');
-      }
-      throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
-    }
-    const apiResponse = await response.json();
-    const rawData = apiResponse.data; // Assuming API returns { data: { ... } }
-
-    if (!rawData) {
-        throw new Error('Remedy data is missing in API response.');
-    }
-
-    // Transform data
-    remedy.value = {
-      id: rawData.id,
-      title: rawData.title,
-      diseaseName: rawData.disease_name,
-      diseaseDescription: rawData.disease_description,
-      imageUrl: getImageUrl(rawData.image),
-      associatedDoshaTag: Array.isArray(rawData.dosha) ? rawData.dosha.join(', ') : '',
-      generalRemedies: Array.isArray(rawData.general_remedies) ? rawData.general_remedies : [],
-      spiceAndFoodTherapy: Array.isArray(rawData.spices_and_food_therapy) ? rawData.spices_and_food_therapy : [],
-      pranayama: Array.isArray(rawData.pranayama) ? rawData.pranayama : [],
-      asanas: Array.isArray(rawData.yoga_asanas) ? rawData.yoga_asanas : [],
-      mudras: Array.isArray(rawData.mudra) ? rawData.mudra : [],
-      bandhas: Array.isArray(rawData.bandha) ? rawData.bandha : [],
-      kriyas: Array.isArray(rawData.kriya) ? rawData.kriya : [],
-      mindfulPractices: Array.isArray(rawData.mindful_practices) ? rawData.mindful_practices : [],
-      dhyanaMeditation: Array.isArray(rawData.meditation) ? rawData.meditation.join(', ') : '',
-      colorTherapy: rawData.color_therapy,
-      energyManagementSystem: Array.isArray(rawData.ems) ? rawData.ems : [],
-    };
-
-    // Fetch all remedies for SimilarReads (latestPosts)
-    const allRemediesRes = await fetch(`${config.public.apiBase}/home-remedies`);
-    if (allRemediesRes.ok) {
-      const allRemediesData = await allRemediesRes.json();
-      // Assuming API returns { data: [ ... ] }
-      if (Array.isArray(allRemediesData.data)) {
-        // Filter out the current remedy and pick the latest 4
-        latestPosts.value = allRemediesData.data
-          .filter(r => r.id !== rawData.id)
-          .slice(0, 4)
-          .map(post => ({
-            ...post,
-            imageUrl: getImageUrl(post.image)
-          }));
-      }
-    }
-
-  } catch (e) {
-    console.error("Failed to fetch or process remedy details:", e);
-    error.value = e;
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  fetchRemedyDetails();
-});
-
-watch(() => route.params.slug, (newSlug, oldSlug) => {
-  if (newSlug && newSlug !== oldSlug) {
-    fetchRemedyDetails();
-  }
-});
-
+watch(remedyData, (val) => {
+  if (!val || !val.data) return;
+  remedy.value = Object.assign({}, val.data, {
+    imageUrl: val.data.image ? getImageUrl(val.data.image, '/fallback.jpg') : undefined
+  });
+  // Use useSimilarPosts after remedy is set
+  const { posts } = useSimilarPosts('home-remedies', {
+    excludeId: val.data.id,
+    basePath: '/homeremedy',
+    count: 4
+  });
+  latestPosts.value = posts.value;
+}, { immediate: true });
 </script>
 
 <style scoped lang="scss">

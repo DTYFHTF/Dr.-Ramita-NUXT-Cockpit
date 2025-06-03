@@ -1,4 +1,7 @@
 // composables/useApi.js
+import { useRuntimeConfig } from '#imports'
+import { useFetch } from '#app'
+
 export function useApi(endpoint) {
   const config = useRuntimeConfig()
   const baseUrl1 = `${config.public.cockpitUrl}/api/content`
@@ -38,4 +41,27 @@ export function postContentItem(collection, data) {
       console.error('API Error:', response.status, response._data);
     },
     });
+}
+
+export function useApiLaravel(endpoint) {
+  const config = useRuntimeConfig()
+  const baseUrl = config.public.apiBase // e.g., http://localhost:8000/api
+
+  const headers = {
+    Accept: 'application/json'
+    // Add Authorization if needed
+  }
+
+  const { data, error, pending } = useFetch(`${baseUrl}/${endpoint}`, {
+    headers,
+    onResponseError({ response }) {
+      console.error('API Error:', response.status, response._data)
+    }
+  })
+
+  return {
+    data,
+    error,
+    loading: pending
+  }
 }

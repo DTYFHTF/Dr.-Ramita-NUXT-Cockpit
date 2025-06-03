@@ -18,53 +18,31 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
 import HomeRemedyCard from '~/components/HomeRemedyCard.vue';
 import IndexSection from '~/components/IndexSection.vue'; // Assuming this is your reusable section component
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import { ref, watch } from 'vue';
 
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase; // Make sure this is configured in your nuxt.config.ts to point to your Laravel backend
+const { data: remediesData, error, loading } = useApiLaravel('home-remedies');
+const remedies = ref([]);
+const { getImageUrl } = useImageUrl();
 
-const homeRemedies = ref([]);
-const loading = ref(true);
-const error = ref(null);
-
-async function fetchHomeRemedies() {
-  loading.value = true;
-  error.value = null;
-  try {
-    // Adjust the endpoint to match your Laravel API structure
-    const response = await fetch(`${apiBase}/home-remedies`); 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    // Assuming Laravel API returns data in a 'data' property for paginated results,
-    // or directly as an array for non-paginated results.
-    homeRemedies.value = Array.isArray(data) ? data : (data.data || []);
-  } catch (e) {
-    console.error("Failed to fetch home remedies:", e);
-    error.value = e.message || 'Failed to fetch home remedies. Please try again later.';
-  } finally {
-    loading.value = false;
-  }
-}
+watch(remediesData, (val) => {
+  if (!val || !val.data) return;
+  remedies.value = val.data.map(remedy => ({
+    ...remedy,
+    imageUrl: remedy.image ? getImageUrl(remedy.image, '/fallback.jpg') : undefined
+  }));
+}, { immediate: true });
 
 const homeRemediesWithImages = computed(() => {
-  return homeRemedies.value.map(remedy => ({
+  return remedies.value.map(remedy => ({
     ...remedy,
-    // Assuming your Laravel API returns a full 'image_url'
-    // If not, you might need to construct it, e.g., `${apiBase}/${remedy.image_path}`
-    // Or, if it's just a placeholder or relative path from public:
     image: remedy.image_url || remedy.image || '/placeholder-remedy.jpg', 
-    // Ensure other properties expected by HomeRemedyCard are present or have defaults
     title: remedy.title || 'Untitled Remedy',
     description: remedy.subtitle || remedy.description || 'No description available.'
   }));
-});
-
-onMounted(() => {
-  fetchHomeRemedies();
 });
 </script>
 
