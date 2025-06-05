@@ -16,35 +16,49 @@
 </template>
 
 <script setup>
-import RecipeCard from '@/components/RecipeCard.vue';
-import { useApi } from '@/composables/useApi';
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import RecipeCard from '~/components/RecipeCard.vue';
 import { computed } from 'vue';
 
-// Fetch recipes data using the useApi composable
-const { data: recipes, error, loading } = useApi('items/recipies');
+const { data: recipesData, error, loading } = useApiLaravel('recipes');
+const { getImageUrl } = useImageUrl();
 
-// Add image URLs to recipes
-const recipesWithImages = computed(() => {
-  if (!recipes.value) {
-    return [];
-  }
-  
+const recipes = computed(() => {
   try {
-    return recipes.value.map(recipe => {
-      if (!recipe) {
-        return null;
-      }
-      
-      const imageId = recipe.image?._id;
-      const fullImageUrl = imageId ? `http://localhost:9000/assets/link/${imageId}` : '';
-      
-      return { 
-        ...recipe, 
-        image: fullImageUrl
+    return recipesData.value?.data?.map(item => {
+      if (!item) return null;
+      return {
+        ...item,
+        image: getImageUrl(item.image, '/placeholder-recipe.jpg'),
+        title: item.title,
+        shortDescription: item.short_description || item.shortDescription || '',
+        tags: item.tags || 'Uncategorized',
+        duration: item.duration || 'N/A',
+        slug: item.slug
       };
-    }).filter(recipe => recipe !== null) || [];
+    }).filter(item => item !== null) || [];
   } catch (e) {
+    console.error('Error processing recipe data:', e);
     return [];
   }
 });
+
+const recipesWithImages = computed(() => {
+  return recipes.value.map(recipe => ({
+    ...recipe,
+    image: recipe.image || '/placeholder-recipe.jpg',
+    title: recipe.title || '',
+    shortDescription: recipe.shortDescription || '',
+    tags: recipe.tags || 'Uncategorized',
+    duration: recipe.duration || 'N/A',
+    slug: recipe.slug || '',
+    // Ensure ingredients and healthBenefits are always arrays
+    ingredients: Array.isArray(recipe.ingredients) ? recipe.ingredients : [],
+    healthBenefits: Array.isArray(recipe.healthBenefits) ? recipe.healthBenefits : [],
+  }));
+});
+
+const recipesLoading = loading;
+const recipesError = error;
 </script>

@@ -115,26 +115,16 @@
 // Import necessary modules and components
 import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
-import { ref, watchEffect } from "vue";
-import { marked } from "marked";
-import { useRoute } from "vue-router";
-import { useApi } from "@/composables/useApi";
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 // Initialize route and reactive variables
 const route = useRoute();
 const recipe = ref(null);
-const error = ref(null);
-
-// Fetch recipe data using useApi composable with slug parameter
-const {
-  data,
-  error: apiError,
-  loading,
-  refetch,
-} = useApi(`items/recipies?filter={"slug":"${route.params.slug}"}`);
-
-// Markdown rendering utility
-const renderMarkdown = (content) => (content ? marked.parse(content) : "");
+const { getImageUrl } = useImageUrl();
+const { data: recipeData, error, loading } = useApiLaravel(`recipes/${route.params.slug}`);
 
 // Retry fetch logic
 const retryFetch = async () => {
@@ -143,28 +133,21 @@ const retryFetch = async () => {
 };
 
 // Watch for data changes and update recipe details
-watchEffect(() => {
-  try {
-    if (data.value && Array.isArray(data.value) && data.value.length > 0) {
-      // Using the first item if the API returns an array of matching recipes
-      const recipeData = data.value[0];
-      recipe.value = mapRecipeData(recipeData);
-    } else if (data.value && typeof data.value === "object" && data.value._id) {
-      // Handle if API returns a single object instead of an array
-      recipe.value = mapRecipeData(data.value);
-    } else if (data.value === null || data.value === undefined) {
-      error.value = new Error("No recipe found with this slug");
-    } else {
-      error.value = null; // Clear error since we have data
-    }
-
-    if (apiError.value) {
-      error.value = apiError.value;
-    }
-  } catch (e) {
-    error.value = e;
-  }
-});
+watch(recipeData, (val) => {
+  if (!val || !val.data) return;
+  recipe.value = {
+    ...val.data,
+    imageUrl: getImageUrl(val.data.image, '/placeholder-recipe.jpg'),
+    preparationTime: val.data.preparation_time || 'N/A',
+    healthBenefits: val.data.health_benefits || [],
+    ingredients: val.data.ingredients || [],
+    instructions: val.data.instructions || '',
+    servings: val.data.servings || 0,
+    category: val.data.category || 'Main Dishes',
+    description: val.data.description || '',
+    title: val.data.title || '',
+  };
+}, { immediate: true });
 
 // Helper function to map API response property names to component property names
 function mapRecipeData(data) {
