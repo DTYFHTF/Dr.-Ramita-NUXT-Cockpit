@@ -39,7 +39,7 @@
             <h1 class="yoga-title display-4 fw-bold mb-4">{{ yoga.title }}</h1>
             
             <p class="yoga-slogan lead fs-3 text-muted mb-5">
-              {{yoga.subTitle}}
+              {{yoga.sub_title}}
             </p>
             <div class="yoga-meta d-flex gap-4">
               <div class="meta-item d-flex align-items-center fs-5">
@@ -82,9 +82,9 @@
       <!-- Main Content -->
       <div class="container">
         <!-- Enhanced Short Description -->
-        <section v-if="yoga.shortDescription" class="short-description mb-7 text-start">
+        <section v-if="yoga.short_description" class="short-description mb-7 text-start">
           <div class="lead fs-4 text-muted max-w-700 mx-auto lh-lg">
-            <DynamicContent :content="yoga.shortDescription" />
+            <DynamicContent :content="yoga.short_description" />
           </div>
         </section>
 
@@ -187,108 +187,53 @@
 import LucideIcon from "@/components/LucideIcon.vue";
 import SimilarReads from "@/components/SimilarReads.vue";
 import DynamicContent from '@/components/DynamicContent.vue';
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { useApi } from "@/composables/useApi";
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import useSimilarPosts from '@/composables/useSimilarPosts.js'
 import vueScrollTo from 'vue-scrollto';
-import { stripHtmlTags } from '@/composables/sanitizeUtils'; 
 import { autoLinkContent } from '@/composables/autoLinkParser';
 
 const route = useRoute();
+const { getImageUrl } = useImageUrl();
+const { data: yogaData, error, loading } = useApiLaravel(`yoga-meditations/${route.params.slug}`);
 const yoga = ref(null);
-const error = ref(null);
 
-const {
-  data,
-  error: apiError,
-  loading,
-  refetch,
-} = useApi(`items/yoganmeditation?filter={"slug":"${route.params.slug}"}`);
+watch(yogaData, (val) => {
+  if (!val || !val.data) return;
+  yoga.value = {
+    ...val.data,
+    coverImageUrl: getImageUrl(val.data.image, '/placeholder-yoga.jpg'),
+    poses: (val.data.poses || []).map((pose) => ({
+      ...pose,
+      poseImageUrl: getImageUrl(pose.pose_image, '/placeholder-yoga.jpg'),
+      title: pose.title || pose.poseName || '',
+      instructions: pose.instructions || '',
+    })),
+    tags: val.data.tags || 'Uncategorized',
+    duration: val.data.duration || 'N/A',
+    shortDescription: val.data.short_description || val.data.shortDescription || '',
+  };
+}, { immediate: true });
+
+// Similar Reads
+const { posts: latestPosts } = useSimilarPosts('yoga-meditations', {
+  excludeId: yoga.value?.id,
+  basePath: '/yoganmeditation',
+  count: 4,
+  imageField: 'image',
+  fallbackImage: '/placeholder-yoga.jpg'
+});
 
 const retryFetch = async () => {
   error.value = null;
   await refetch();
 };
 
-watchEffect(() => {
-  try {
-    if (data.value?.[0]) {
-      yoga.value = mapYogaData(data.value[0]);
-    } else if (data.value === null) {
-      error.value = new Error("Content not found");
-    }
-    error.value = apiError.value;
-  } catch (e) {
-    error.value = e;
-  }
-});
-
-function mapYogaData(data) {
-  return {
-    ...data,
-    subTitle: data.subTitle || "",
-    shortDescription: data.shortDescription || "",
-    duration: data.duration || "N/A",
-    tags: data.tags || "N/A",
-    benefits: data.benefits || "",
-    conclusion: data.conclusion || "",
-    coverImageUrl: data.image && data.image._id
-      ? `http://localhost:9000/assets/link/${data.image._id}`
-      : "/placeholder-yoga.jpg",
-    poses: (data.poses || []).map((pose) => {
-      if (!pose.poseImage || !pose.poseImage._id) {
-        console.warn("Missing pose image for pose:", pose);
-      }
-      return {
-        ...pose,
-        title: pose.poseName || "",
-        instructions: pose.instructions || "",
-        poseImageUrl: pose.poseImage && pose.poseImage._id
-          ? `http://localhost:9000/assets/link/${pose.poseImage._id}`
-          : null,
-      };
-    }),
-  };
-}
-
-const latestPosts = ref([]);
-
-const apiUrl = "items/yoganmeditation"; // Removed query parameters temporarily
-
-const {
-  data: latestPostsData,
-  error: latestPostsError,
-  loading: latestPostsLoading,
-} = useApi(apiUrl);
-
-watchEffect(() => {
-  if (latestPostsData.value) {
-    const allPosts = latestPostsData.value.map((post) => {
-      if (!post.image || !post.image._id) {
-        console.warn("Missing image for post:", post);
-      }
-      return {
-        ...post,
-        coverImageUrl: post.image && post.image._id
-          ? `http://localhost:9000/assets/link/${post.image._id}`
-          : "/placeholder-yoga.jpg",
-      };
-    });
-
-    // Randomly select 4 posts
-    latestPosts.value = allPosts.sort(() => 0.5 - Math.random()).slice(0, 4);
-  } else if (latestPostsError.value) {
-    console.error("Error fetching latest posts:", latestPostsError.value.response || latestPostsError.value);
-  }
-});
-
-const scrollToSimilarReads = () => {
-  vueScrollTo.scrollTo('#similar-reads', 500, { offset: -200 });
-};
-
 // Watch for changes in the `yoga` data and reapply the directive
-watchEffect(() => {
-  if (yoga.value) {
+watch(() => yoga.value, (newVal) => {
+  if (newVal) {
     const sloganElement = document.querySelector('.yoga-slogan');
     if (sloganElement) {
       const originalContent = sloganElement.innerHTML;
@@ -302,7 +247,6 @@ watchEffect(() => {
 <style scoped lang="scss">
 
 .yoga-header {
-  background-color: $accent-soft-green;
   margin-top: 2rem; // Add spacing above the header
 
   @media (max-width: 768px) {

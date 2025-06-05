@@ -16,28 +16,30 @@
 </template>
 
 <script setup>
-import { useApi } from '@/composables/useApi';
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
 import YogaMeditationCard from "~/components/YogaMeditationCard.vue";
 import { computed } from 'vue';
 
-// Destructure loading and error from useApi
-const { data: yoganmeditation, error, loading } = useApi("items/yoganmeditation");
+const { data: yoganMeditationData, error, loading } = useApiLaravel('yoga-meditations');
+const { getImageUrl } = useImageUrl();
 
-// Enhanced computed property with error handling
 const yogaandmeditation = computed(() => {
   try {
-    return yoganmeditation.value?.map(item => {
+    return yoganMeditationData.value?.data?.map(item => {
       if (!item) return null;
-      
       return {
         ...item,
-        image: item.image?._id 
-          ? `http://localhost:9000/assets/link/${item.image._id}`
-          : "/placeholder-remedy.jpg"
+        image: getImageUrl(item.image, '/placeholder-yoga.jpg'),
+        title: item.title,
+        shortDescription: item.short_description || item.shortDescription || '',
+        tags: item.tags || 'Uncategorized',
+        duration: item.duration || 'N/A',
+        slug: item.slug
       };
     }).filter(item => item !== null) || [];
   } catch (e) {
-    console.error("Error processing yoga data:", e);
+    console.error('Error processing yoga data:', e);
     return [];
   }
 }); 
