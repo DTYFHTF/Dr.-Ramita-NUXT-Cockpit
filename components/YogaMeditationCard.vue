@@ -1,7 +1,7 @@
 <template>
   <Card
     :title="title"
-    :description="shortDescription"
+    :description="short_description"
     :image="image || '/placeholder-yoga.jpg'"
     :imageAlt="title"
     :badge="tags || 'Uncategorized'"
@@ -40,7 +40,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 
 defineProps({
   title: String,
-  shortDescription: String,
+  short_description: String,
   image: String,
   slug: String,
   tags: String,

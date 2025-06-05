@@ -53,7 +53,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useApi } from "@/composables/useApi";
+import { useApiLaravel } from '@/composables/useApi.js'
 import { useBookingStore } from "~/stores/booking";
 import ReusableCardSection from '@/components/IndexSection.vue'
 import HomeRemedyCard from '@/components/HomeRemedyCard.vue'
@@ -61,20 +61,29 @@ import RecipeCard from '@/components/RecipeCard.vue'
 import YogaMeditationCard from '@/components/YogaMeditationCard.vue'
 import CourseCard from '@/components/CourseCard.vue'
 import MegaMenu from "@/components/MegaMenu.vue";
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 
 
 const store = useBookingStore();
 
-const { data: courses } = useApi("items/courses");
-const { data: yoganmeditation } = useApi("items/yoganmeditation");
-const { data: recipe } = useApi("items/recipies");
-const { data: homeRemediesData } = useApi("items/homeRemedies");
+const { data: coursesData, error: coursesError, loading: coursesLoading } = useApiLaravel('courses');
+const { data: yoganmeditationData, error: yoganmeditationError, loading: yoganmeditationLoading } = useApiLaravel('yoga-meditations');
+const { data: recipesData, error: recipesError, loading: recipesLoading } = useApiLaravel('recipes');
+const { data: homeRemediesData, error: homeRemediesError, loading: homeRemediesLoading } = useApiLaravel('home-remedies');
 
-const recipesWithImages = computed(() => recipe.value?.map(addImageUrl) || []);
-const coursesWithImages = computed(() => courses.value?.map(addImageUrl) || []);
-const yoganmeditationWithImages = computed(() => yoganmeditation.value?.map(addImageUrl) || []);
-const homeRemediesWithImages = computed(() => homeRemediesData.value?.map(addImageUrl) || []);
+
+const { getImageUrl } = useImageUrl();
+
+const addImageUrl = (item, fallback = '/placeholder-remedy.jpg') => ({
+  ...item,
+  image: getImageUrl(item.image, fallback),
+});
+
+const coursesWithImages = computed(() => coursesData.value?.data?.map(i => addImageUrl(i, '/placeholder-course.jpg')) || []);
+const yoganmeditationWithImages = computed(() => yoganmeditationData.value?.data?.map(i => addImageUrl(i, '/placeholder-yoga.jpg')) || []);
+const recipesWithImages = computed(() => recipesData.value?.data?.map(i => addImageUrl(i, '/placeholder-recipe.jpg')) || []);
+const homeRemediesWithImages = computed(() => homeRemediesData.value?.data?.map(i => addImageUrl(i, '/placeholder-remedy.jpg')) || []);
 
 
 const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
@@ -82,13 +91,6 @@ const limitedYoganmeditation = computed(() => yoganmeditationWithImages.value.sl
 const limitedRecipies = computed(() => recipesWithImages.value.slice(0, 3));
 const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3));
 
-
-const addImageUrl = (item) => ({
-  ...item,
-  image: item.image?._id
-    ? `http://localhost:9000/assets/link/${item.image._id}`
-    : "/placeholder-remedy.jpg",
-});
 
 const goToCoursesPage = () => navigateTo("/course");
 const goToYoganMeditationPage = () => navigateTo("/yoganmeditation");

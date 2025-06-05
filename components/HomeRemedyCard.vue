@@ -1,10 +1,10 @@
 <template>
   <Card
-    :title="diseaseName"
-    :description="stripHtmlTags(truncatedDescription)"
+    :title="disease_name"
+    :description="disease_description"
     :image="image || '/placeholder-remedy.jpg'"
     :imageAlt="diseaseName"
-    :badge="associatedDosha || 'Uncategorized'"
+    :badge="dosha[0] || 'Uncategorized'"
     :link="slug ? `/homeremedy/${slug}` : null"
     customClass="home-remedy-card"
   >
@@ -27,26 +27,24 @@
 <script setup>
 import Card from './Card.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
-import { computed } from 'vue';
-import { stripHtmlTags } from '@/composables/sanitizeUtils'; 
 
 const props = defineProps({
-  diseaseName: String,
-  diseaseDescription: String,
+  disease_name: String,
+  disease_description: String,
   image: String, // Renamed from diseaseImage to image
   slug: String,
-  associatedDosha: String,
+  dosha: String,
 });
 
 
 
-const truncatedDescription = computed(() => {
-  const maxLength = 100; // Set a fixed length for the description
-  const plainText = props.diseaseDescription || '';
-  return plainText.length > maxLength
-    ? plainText.slice(0, maxLength) + '...'
-    : plainText;
-});
+// const truncatedDescription = computed(() => {
+//   const maxLength = 100; // Set a fixed length for the description
+//   const plainText = props.disease_description || '';
+//   return plainText.length > maxLength
+//     ? plainText.slice(0, maxLength) + '...'
+//     : plainText;
+// });
 </script>
 
 <style scoped>
