@@ -60,11 +60,9 @@
       <div class="course-content">
         <!-- About Section -->
         <section class="course-section mb-5">
-          <h2 class="section-title mb-4">About This Course</h2>
+          <h2 class="mb-4">About This Course</h2>
           <div class="section-content">
             <DynamicContent :content="course.description" />
-             <!-- <span>{{ course.description }}</span> -->
-
           </div>
         </section>
 
@@ -72,21 +70,14 @@
         <div class="row g-4">
           <div class="col-md-6">
             <section class="course-section">
-              <h2 class="section-title mb-4">Skills You'll Gain</h2>
+              <h2 class="mb-4">Skills You'll Gain</h2>
               <ul class="course-list">
                 <li
-                  v-for="skill in course.skills?.skill || []"
+                  v-for="skill in course.skills"
                   :key="skill"
-                  class="course-list-item"
+                  class="list-before"
                 >
-                  <LucideIcon
-                    icon="mdi:check-circle"
-                    class="text-success me-2"
-                  />
-
                   <DynamicContent :content="skill" />
-                                <!-- <span>{{ skill }}</span> -->
-
                 </li>
               </ul>
             </section>
@@ -94,19 +85,14 @@
 
           <div class="col-md-6">
             <section class="course-section">
-              <h2 class="section-title mb-4">What You'll Learn</h2>
+              <h2 class="mb-4">What You'll Learn</h2>
               <ul class="course-list">
                 <li
-                  v-for="item in course.learningOutcomes"
+                  v-for="item in course.learning_outcomes"
                   :key="item"
-                  class="course-list-item"
+                  class="list-before"
                 >
-                  <LucideIcon
-                    icon="mdi:check-circle"
-                    class="text-success me-2"
-                  />
                   <DynamicContent :content="item" />
-                   <!-- <span>{{item}}</span> -->
                 </li>
               </ul>
             </section>
@@ -115,7 +101,7 @@
 
         <!-- Instructor Section -->
         <section class="course-section mt-5">
-          <h2 class="section-title mb-4">Course Instructor</h2>
+          <h2 class="mb-4">Course Instructor</h2>
           <div
             class="instructor-card card border-0 shadow-sm"
             v-if="course.instructor"
@@ -174,14 +160,26 @@ import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 // Initialize route and reactive variables
 const route = useRoute();
 const slug = route.params.slug;
 const { data: courseData, error, loading } = useApiLaravel(`courses/${slug}`);
-const course = ref(null);
+const course = ref({
+  title: '',
+  price: 0,
+  duration: '',
+  certification: false,
+  imageUrl: '',
+  description: '',
+  skills: [],
+  learningOutcomes: [],
+  instructor: { name: '', position: '' },
+  instructorImageUrl: '',
+  external_link: ''
+});
 const { getImageUrl } = useImageUrl();
 
 watch(courseData, (val) => {
@@ -198,6 +196,19 @@ const retryFetch = async () => {
 };
 
 // Fetch course on mount and when slug changes
+const fetchCourse = async () => {
+  if (!slug) return;
+  const { data, error } = await useApiLaravel(`courses/${slug}`);
+  if (data?.value?.data) {
+    course.value = {
+      ...data.value.data,
+      imageUrl: data.value.data.image ? getImageUrl(data.value.data.image, '/placeholder-course.jpg') : undefined
+    };
+  } else {
+    console.error('Failed to fetch course:', error);
+  }
+};
+
 watchEffect(() => {
   fetchCourse();
 });
@@ -223,13 +234,13 @@ watchEffect(() => {
     .course-title {
       font-size: 2.5rem;
       font-weight: 700;
-      color: $text-deep-green;
+      color: $color-primary;
       line-height: 1.2;
     }
 
     .course-description {
       font-size: 1.25rem;
-      color: $text-medium-gray;
+      color: $text-secondary;
       max-width: 800px;
       margin: 0 auto;
     }
@@ -246,14 +257,6 @@ watchEffect(() => {
     background: white;
     border-radius: 1rem;
     box-shadow: $card-shadow;
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: $text-deep-green;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid $accent-soft-green;
-    }
 
     .course-list {
       list-style: none;
@@ -282,7 +285,7 @@ watchEffect(() => {
     .instructor-name {
       font-size: 1.25rem;
       font-weight: 600;
-      color: $text-deep-green;
+      color: $color-primary;
     }
   }
 

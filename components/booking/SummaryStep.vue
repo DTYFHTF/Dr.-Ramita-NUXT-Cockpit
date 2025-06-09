@@ -1,7 +1,7 @@
 <template>
   <div class="summary-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Review Your Booking</h2>
+      <h2>Review Your Booking</h2>
       <p class="step-subtitle">Confirm your consultation details</p>
     </div>
 

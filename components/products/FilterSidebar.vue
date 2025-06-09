@@ -151,7 +151,7 @@ const clearAllFilters = () => {
 }
 
 .filter-item {
-  color: $text-deep-green;
+  color: $color-primary;
   padding: 0.25rem 0;
   text-decoration: none;
   display: block;
@@ -163,7 +163,7 @@ const clearAllFilters = () => {
   }
 
   &.active {
-    color: $text-deep-green;
+    color: $color-primary;
     font-weight: 500;
     text-decoration: underline;
   }

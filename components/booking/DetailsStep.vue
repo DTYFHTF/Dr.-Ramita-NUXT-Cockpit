@@ -1,7 +1,7 @@
 <template>
   <div class="details-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Your Information</h2>
+      <h2>Your Information</h2>
       <p class="step-subtitle">Please provide your contact details</p>
     </div>
 
@@ -112,8 +112,8 @@ const handleSubmit = () => {
 
     &:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px $color-primary;
     }
   }
 

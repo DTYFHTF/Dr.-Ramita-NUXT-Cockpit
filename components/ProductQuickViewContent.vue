@@ -91,7 +91,7 @@
               />
               {{ product.average_rating.toFixed(1) }}
             </span>
-            <h2 class="product-title ">{{ product.name }}</h2>
+            <h2>{{ product.name }}</h2>
           </div>
           <div v-if="selectedVariation">
             <span

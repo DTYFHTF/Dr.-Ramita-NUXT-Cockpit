@@ -24,8 +24,7 @@ import Footer from '@/components/Footer.vue';
   --accent-soft-green: #d6e1d8;
   --background-green:#F9FBF8;
   
-  --font-primary: 'Cormorant Garamond', serif;
-  --font-secondary: 'sans-serif';
+  
   font-family: var(--font-primary), var(--font-secondary);
 
   
@@ -35,14 +34,12 @@ import Footer from '@/components/Footer.vue';
   --button-hover: #f5e6d1;
   --spacing-unit: 8px;
 
-  --primary-color: #2c7a7b;
   --success-color: #38a169;
   --background-light: #f7fafc;
   --text-dark: #2d3748;
   --text-muted: #718096;
   --border-color: #e2e8f0;
   --primary-light: #e6fffa;
-  --primary-color-rgb: 44, 122, 123;
 }
 html{
   scroll-behavior: smooth;

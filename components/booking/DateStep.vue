@@ -1,9 +1,7 @@
 <template>
   <div class="date-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Schedule a personalized session with Dr. Ramita 
-
-</h2>
+      <h2>Schedule a personalized session with Dr. Ramita</h2>
       <p class="current-month">{{ currentMonth }}</p>
     </div>
 

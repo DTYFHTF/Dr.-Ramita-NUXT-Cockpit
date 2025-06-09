@@ -5,7 +5,7 @@
     :id="sectionId"
   >
     <div class="container">
-      <h2 class="font-serif text-xl font-bold">{{ title }}</h2>
+      <h2>{{ title }}</h2>
       <p v-if="subtitle" class="sub-heading">{{ subtitle }}</p>
 
       <!-- Loading State -->
@@ -129,30 +129,23 @@ export default {
 }
 
 section {
-  padding: 5rem 0; /* Increased padding for better spacing between content */
-  margin-bottom: 2rem; /* Added margin between sections */
-}
-
-h2.font-serif {
-  font-size: 2.5rem; /* Larger heading size */
-  margin-bottom: 1.5rem; /* More space below heading */
-  text-align: center;
+  padding: 5rem 0;
+  margin-bottom: 2rem; 
 }
 
 .sub-heading {
   font-size: 1.2rem;
-  color: var(--text-muted-teal-gray);
+  color: $text-secondary;
   margin-bottom: 3rem;
   text-align: center;
 }
 
 .bg-sandal-light {
-  background-color: var(--background-green);
+  background-color: $background-light;
   margin: 0px;
 }
 
 .bg-herbal-light {
-  background-color: var(--background-white);
   margin: 0px; 
 }
 
@@ -167,15 +160,15 @@ h2.font-serif {
 }
 
 .alert-danger {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
+  background-color: $background-light;
+  border-color: $border-color;
+  color: $text-error;
   padding: 1rem;
   border-radius: 0.25rem;
 }
 
 .text-muted {
-  color: #6c757d;
+  color: $text-secondary;
 }
 
 .visually-hidden {

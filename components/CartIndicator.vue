@@ -19,7 +19,7 @@ const { totalItems } = useCart();
 .cart-indicator {
   font-size: 1.05rem;
   font-weight: 500;
-  color: #333;
+  color: $color-primary;
   text-decoration: none;
 }
 .icon-badge-wrapper {

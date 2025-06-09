@@ -208,7 +208,7 @@ const imageUrl = (img:string) => getImageUrl(img, '/fallback.jpg');
   max-width: 300px;
 }
 .btn-link {
-  color: $text-deep-green;
+  color: $color-primary;
   font-weight: 500;
 }
 

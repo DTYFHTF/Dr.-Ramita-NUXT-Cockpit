@@ -46,7 +46,7 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -69,16 +69,16 @@ const props = defineProps({
   position: absolute;
   top: 10px;
   left: 10px;
-  background: linear-gradient(145deg, rgba(255, 245, 230, 0.9) 0%, rgba(255, 250, 240, 0.9) 100%);
-  color: #7a6a5c;
+  background: $badge-color;
+  color: $color-primary;
   padding: 4px 8px;
   border-radius: 10px;
   font-size: 0.8rem;
 }
 
 .badge.free {
-  background: linear-gradient(145deg, rgba(144, 238, 144, 0.9) 0%, rgba(152, 251, 152, 0.9) 100%);
-  color: #2d5a2d;
+  background: $badge-free-color;
+  color: $color-primary;
 }
 
 .card-content {

@@ -1,20 +1,36 @@
 
 @use "sass:color";
 
-// colors
-$text-deep-green: #2a4d3a;
-$text-medium-gray: #6c757d;
+//Colors
+$color-primary: #2a4d3a;
+$color-secondary: #6b9c7d;
 $accent-soft-green: #87c5a4;
+$background-light: #f2f7f4;
+//Text
+$text-primary: #101e16;
+$text-secondary: #555555;
+$text-light: #f2f7f4;
+$text-error:#721c24;
+
+//Borders
 $border-color: #e9ecef;
+
+//Buttons
 $text-button: #ffffff;
 $text-button-hover-bg: #f4f9f6;
 $button-bg: #2D7B7B;
-$button-success-bg: #2D7B7B; // Using the same teal color for success buttons
-$bg-soft-green: color.adjust($accent-soft-green, $lightness: 45%);
+$button-success-bg: #2D7B7B;
+
+$badge-color:#fff5e6;
+$badge-free-color:#90ee90;
 
 // shadows
 $card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
+
+//Fonts
+$font-primary: 'Cormorant Garamond', serif;
+$font-secondary: 'sans-serif';
 
 // Button Mixins - Global button styling
 @mixin button-base {
@@ -98,12 +114,12 @@ $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
 @mixin outline-button {
   @include button-base;
   background-color: transparent;
-  color: $text-deep-green;
-  border: 1px solid $text-deep-green;
+  color: $color-primary;
+  border: 1px solid $color-primary;
   
   &:hover {
     background-color: $text-button-hover-bg;
-    color: color.adjust($text-deep-green, $lightness: -10%);
+    color: color.adjust($color-primary, $lightness: -10%);
   }
 }
 

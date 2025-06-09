@@ -3,14 +3,14 @@
     <div class="overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="container mx-auto px-4">
       <h1 class="head-color text-5xl font-extrabold text-green-900 mb-6">Dr. Ramita Maharjan</h1>
-      <h2 class="text-3xl font-semibold text-green-700 mb-8">MD Ayurveda, PGD Panchakarma, PG Yoga (Gold Medalist)</h2>
+      <h2 class="mb-8">MD Ayurveda, PGD Panchakarma, PG Yoga (Gold Medalist)</h2>
       <div class=" contact-info text-gray-600 mb-8">
-        <p class="flex items-center justify-center mb-2 custom-color">
-          <LucideIcon icon="mdi:phone-message-outline" class="me-2" />
+        <p class="flex items-center justify-center mb-2">
+          <LucideIcon icon="mdi:phone-message-outline" color="green" class="me-2" />
           <span class="icon-text text-xl">+91-8279374364 | +91-8449421678</span>
         </p>
         <p class="flex  items-center justify-center">
-          <LucideIcon icon="mdi:email-edit-outline" color="var(--text-deep-green)" class="me-2 custom-color" />
+          <LucideIcon icon="mdi:email-edit-outline" color="green" class="me-2" />
           <span class="text-xl">directorrwi@gmail.com</span>
         </p>
       </div>
@@ -34,7 +34,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .hero-section {
   background-image: url('/hero-section.jpeg');
   background-size: cover;
@@ -44,10 +44,9 @@ import LucideIcon from '@/components/LucideIcon.vue';
   align-items: center;
   justify-content: center;
   position: relative;
-  /* color: var(--text-deep-green); */
 }
 .overlay {
-  background-color: rgba(255, 255, 255, 0.5); /* white with 50% opacity */
+  background-color: rgba($background-light, 0.6);
   z-index: 0;
 }
 .container {
@@ -63,10 +62,10 @@ import LucideIcon from '@/components/LucideIcon.vue';
 }
 
 .head-color{
-  color:var(--text-deep-green);
+  color:$text-primary;
   font-weight: 700;
   font-size: 3.5rem;
-  font-family: var(--font-primary);
+  font-family: $font-primary;
 }
 
 p,a{
@@ -82,5 +81,4 @@ p,a{
   max-width: 250px;
   width: 100%;
 }
-
 </style>

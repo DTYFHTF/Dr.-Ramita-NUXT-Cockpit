@@ -11,7 +11,7 @@
       <input v-model="password" id="password" type="password" required minlength="8" />
     </div>
     <slot name="extra-fields" />
-    <button type="submit" :disabled="loading">{{ submitLabel }}</button>
+    <button type="submit" class="btn-smooth-primary" :disabled="loading">{{ submitLabel }}</button>
   </form>
 </template>
 
@@ -35,14 +35,14 @@ function onSubmit() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .auth-form {
   max-width: 400px;
   margin: 0 auto;
   padding: 2rem;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 16px rgba($color-primary,0.08);
 }
 .form-group {
   margin-bottom: 1rem;
@@ -54,24 +54,17 @@ label {
 input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid $border-color;
   border-radius: 4px;
 }
 button {
   width: 100%;
-  padding: 0.75rem;
-  background: #2d8f6f;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
 }
 button:disabled {
   background: #aaa;
 }
 .error {
-  color: #c00;
+  color: red;
   margin-bottom: 1rem;
   text-align: center;
 }

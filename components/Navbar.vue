@@ -174,7 +174,10 @@ const handleMouseEnter = () => {
   overflow: auto;
 }
 
-.nav-item.position-relative {
+.nav-item {
   position: relative;
+  
 }
+
+
 </style>

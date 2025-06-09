@@ -109,7 +109,7 @@
                 <div class="card-body p-5">
                   <div class="d-flex align-items-center mb-4" style="justify-content: flex-start;">
                     <div
-                      class="step-number bg-soft-green text-deep-green d-inline-flex align-items-center justify-content-center"
+                      class="step-number text-deep-green d-inline-flex align-items-center justify-content-center"
                     >
                       <span class="fs-4 fw-bold">{{ index + 1 }}</span>
                     </div>
@@ -133,7 +133,7 @@
         </section>
 
         <!-- Enhanced Benefits Section -->
-        <section class="yoga-benefits bg-soft-green rounded-4 text-start">
+        <section class="yoga-benefits rounded-4 text-start">
           <div class="container">
             <div class="section-header mb-6">
               <h2 class="section-title">Transformative Benefits</h2>

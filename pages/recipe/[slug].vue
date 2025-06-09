@@ -60,27 +60,27 @@
       </div>
 
       <!-- Content Sections with Better Layout -->
-      <div class="recipe-content-sections">
-        <div class="row">
+      <div class="recipe-content-sections ">
+        <div class="row mb-4">
           <!-- Ingredients Section - Left Side -->
           <div class="col-lg-4">
-            <div class="content-section ingredients-section">
-              <h2 class="section-title">Ingredients</h2>
-              <ul class="ingredients-list">
+            <div class="content-section">
+              <h2>Ingredients</h2>
+              
                 <li
                   v-for="(ingredient, index) in recipe.ingredients || []"
                   :key="index"
+                  class="list-before"
                 >
                   <DynamicContent :content="ingredient || ''" />
                 </li>
-              </ul>
             </div>
           </div>
 
           <!-- Instructions Section - Right Side -->
           <div class="col-lg-8">
-            <div class="content-section instructions-section">
-              <h2 class="section-title">Instructions</h2>
+            <div class="content-section">
+              <h2>Instructions</h2>
               <DynamicContent :content="recipe.instructions || ''" />
             </div>
           </div>
@@ -91,9 +91,9 @@
           v-if="recipe.healthBenefits && recipe.healthBenefits.length"
           class="content-section health-benefits-section"
         >
-          <h2 class="section-title">Health Benefits</h2>
+          <h2>Health Benefits</h2>
           <ul class="health-benefits-list">
-            <li v-for="(benefit, index) in recipe.healthBenefits" :key="index">
+            <li v-for="(benefit, index) in recipe.healthBenefits" :key="index" class="list-before">
               <DynamicContent :content="benefit" />
             </li>
           </ul>
@@ -166,27 +166,22 @@ function mapRecipeData(data) {
 }
 </script>
 
-<style lang="scss" scoped>
-/* No need to import variables.scss here, it's imported globally */
+<style scoped lang="scss" >
 
 .recipe-detail {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  color: #333;
+  color: $text-secondary;
 
   // Recipe Header Styles
   .recipe-header {
     padding-bottom: 2rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid $border-color;
 
     .recipe-title {
-      font-size: 2.2rem;
-      font-weight: 600;
       margin-bottom: 1rem;
-      color: $text-deep-green;
+      color: $color-primary;
       line-height: 1.2;
     }
 
@@ -194,7 +189,7 @@ function mapRecipeData(data) {
       font-size: 1.1rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
-      color: #555;
+      color: $text-secondary;
     }
 
     .recipe-meta {
@@ -208,13 +203,6 @@ function mapRecipeData(data) {
         align-items: center;
         gap: 0.5rem;
         font-size: 1rem;
-        color: #666;
-
-        svg {
-          color: #555;
-          width: 1.2rem;
-          height: 1.2rem;
-        }
       }
     }
 
@@ -222,25 +210,14 @@ function mapRecipeData(data) {
       position: relative;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-
-      .tag-badge {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: rgba(255, 255, 255, 0.9);
-        color: #555;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-        border-radius: 20px;
-        z-index: 5;
-      }
+      box-shadow: 0 6px 16px rgba($color-primary, 0.1);
+      
 
       .recipe-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        aspect-ratio: 4/3;
+        aspect-ratio: 1/1;
         vertical-align: middle;
       }
     }
@@ -251,106 +228,11 @@ function mapRecipeData(data) {
     margin-top: 2rem;
 
     .content-section {
-      background: #fff;
+      background: rgba($background-light,0.5);
       border-radius: 10px;
       padding: 1.8rem;
       margin-bottom: 2rem;
       box-shadow: $card-shadow;
-
-      .section-title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        color: $text-deep-green;
-        position: relative;
-        display: inline-block;
-        padding-bottom: 0.3rem;
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 40px;
-          height: 3px;
-          background: $accent-soft-green;
-        }
-      }
-    }
-
-    // Ingredients styles
-    .ingredients-section {
-      height: 100%;
-
-      .ingredients-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-
-        li {
-          padding: 0.7rem 0;
-          border-bottom: 1px solid #f0f0f0;
-          position: relative;
-          padding-left: 1.5rem;
-
-          &:last-child {
-            border-bottom: none;
-          }
-
-          &::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 1rem;
-            width: 0.5rem;
-            height: 0.5rem;
-            background-color: $accent-soft-green;
-            border-radius: 50%;
-          }
-        }
-      }
-    }
-
-    // Instructions styles
-    .instructions-section {
-      height: 100%;
-
-      .instructions-content {
-        font-size: 1.05rem;
-        line-height: 1.8;
-
-        /* Better handling of instruction content */
-        :deep(pre),
-        :deep(code) {
-          white-space: pre-wrap !important;
-          word-wrap: break-word !important;
-          overflow-wrap: break-word !important;
-          max-width: 100% !important;
-          background-color: transparent !important;
-          padding: 0 !important;
-          border: none !important;
-          display: block !important;
-          margin: 0 !important;
-          color: inherit !important;
-          font-family: inherit !important;
-        }
-
-        /* Remove any unwanted styles from the Markdown renderer */
-        :deep(p) {
-          margin-bottom: 1rem;
-        }
-
-        /* Format numbered steps nicely */
-        :deep(ol),
-        :deep(ul) {
-          padding-left: 1.5rem;
-          margin-bottom: 1rem;
-
-          li {
-            margin-bottom: 0.5rem;
-          }
-        }
-      }
     }
 
     // Health Benefits styles
@@ -363,21 +245,7 @@ function mapRecipeData(data) {
         margin: 0;
         list-style: none;
 
-        li {
-          background-color: #f4f9f6;
-          padding: 0.6rem 1.2rem;
-          border-radius: 25px;
-          font-size: 0.95rem;
-          color: #666;
-          display: inline-flex;
-          align-items: center;
-
-          &::before {
-            content: "•";
-            margin-right: 0.5rem;
-            color: $accent-soft-green;
-          }
-        }
+        
       }
     }
   }
@@ -386,60 +254,7 @@ function mapRecipeData(data) {
   .navigation-actions {
     margin-top: 1.5rem;
     display: flex;
-    justify-content: center;
-
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      svg {
-        width: 1.1rem;
-        height: 1.1rem;
-      }
-    }
-  }
-
-  // Responsive Adjustments
-  @media (max-width: 992px) {
-    .recipe-header {
-      .recipe-title {
-        font-size: 1.8rem;
-      }
-
-      .image-container {
-        margin-top: 1.5rem;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-
-    .recipe-content-sections {
-      .health-benefits-section {
-        .health-benefits-list {
-          flex-direction: column;
-          gap: 0.7rem;
-
-          li {
-            width: 100%;
-          }
-        }
-      }
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 992px) {
-    .recipe-content-sections {
-      .health-benefits-section {
-        .health-benefits-list {
-          li {
-            flex-basis: calc(50% - 0.5rem);
-          }
-        }
-      }
-    }
+    justify-content: center; 
   }
 }
 </style>

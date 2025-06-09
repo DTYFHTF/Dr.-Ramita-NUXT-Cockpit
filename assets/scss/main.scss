@@ -1,12 +1,4 @@
-/* 
-  Global buttons and interactive elements 
-  This file contains global styles that can be used across the application
-*/
 
-// Import variables
-// @import './variables.scss';
-
-// Global button classes that can be applied directly in components
 .btn-smooth {
   @include button-base;
 }
@@ -165,7 +157,7 @@
   background: #EE6678 !important;
 }
 .text-primary{
-  color: $text-deep-green !important;
+  color: $color-primary !important;
 }
 
 .toast-message {
@@ -180,3 +172,33 @@
   z-index: 1000;
   animation: fadeInOut 2s ease-in-out;
 }
+
+h2{
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: $color-primary;
+  position: relative;
+}
+.list-before{
+    padding: 0.6rem 1.2rem;
+    align-items: center;
+    display: block;
+
+    &::before {
+      content: "•";
+      margin-right: 0.5rem;
+      color: $color-secondary;
+    }
+  }
+.tag-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba($badge-color, 0.9);
+        color: $text-primary;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 20px;
+        z-index: 5;
+      }

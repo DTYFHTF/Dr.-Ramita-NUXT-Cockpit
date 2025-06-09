@@ -1,7 +1,7 @@
 <template>
   <div class="time-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Schedule a personalized session with Dr. Ramita 
+      <h2>Schedule a personalized session with Dr. Ramita 
 
 </h2>
       <p class="step-subtitle">Pick a convenient time slot</p>
@@ -116,13 +116,13 @@ const selectTime = (slot) => {
   background: white;
 
   &:hover {
-    border-color: var(--primary-color);
+    border-color: $color-primary;
     transform: translateY(-2px);
   }
 
   &.selected {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
+    background: $color-primary;
+    border-color: $color-primary;
     color: white;
     
     .slot-time, .slot-period {
