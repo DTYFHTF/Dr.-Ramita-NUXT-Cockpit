@@ -26,10 +26,8 @@
       <!-- Empty State -->
       <div v-else-if="!items.length" class="text-center text-muted py-5">
         <p>{{ emptyText }}</p>
-      </div>
-
-      <!-- Content -->
-      <div v-else class="row">
+      </div>      <!-- Content -->
+      <div v-if="!loading && !error && items.length" class="row">
         <div
           v-for="(item, index) in items"
           :key="item._id || index"
@@ -191,4 +189,5 @@ h2.font-serif {
   white-space: nowrap;
   border: 0;
 }
+
 </style>
