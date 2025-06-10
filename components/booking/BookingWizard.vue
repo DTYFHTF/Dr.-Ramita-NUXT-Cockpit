@@ -1,7 +1,7 @@
 <template>
   <section class="booking-wizard" id="book-consultation">
     <div class="wizard-container">
-      <h1 class="wizard-title">Book Your Consultation</h1>
+      <h1 class="text-center mb-4">Book Your Consultation</h1>
       
       <div class="progress-indicator">
         <div 
@@ -54,22 +54,15 @@ const currentStepComponent = computed(() => {
 })
 </script>
 
-<style>
+<style scoped lang="scss">
 .booking-wizard {
   padding: 2rem 1rem;
-  background-color: #f7fafc;
+  background: rgba($background-light,0.1);
 }
 
 .wizard-container {
   max-width: 800px;
   margin: 0 auto;
-}
-
-.wizard-title {
-  text-align: center;
-  font-size: 1.875rem;
-  color: #2d3748;
-  margin-bottom: 2rem;
 }
 
 .progress-indicator {
@@ -91,7 +84,7 @@ const currentStepComponent = computed(() => {
   left: 50%;
   right: -50%;
   height: 2px;
-  background-color: #e2e8f0;
+  background: $background-light;
   z-index: 0;
 }
 
@@ -99,7 +92,7 @@ const currentStepComponent = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e2e8f0;
+  background: $background-light;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,10 +133,6 @@ const currentStepComponent = computed(() => {
   
   .step-indicator:not(:last-child)::after {
     display: none;
-  }
-  
-  .wizard-title {
-    font-size: 1.5rem;
   }
 }
 </style>

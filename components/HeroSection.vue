@@ -2,7 +2,7 @@
   <section class="hero-section bg-cover bg-center text-center py-16" :style="{ backgroundImage: `url('/iamges.jpg')` }">
     <div class="overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="container mx-auto px-4">
-      <h1 class="head-color text-5xl font-extrabold text-green-900 mb-6">Dr. Ramita Maharjan</h1>
+      <h1>Dr. Ramita Maharjan</h1>
       <h2 class="mb-8">MD Ayurveda, PGD Panchakarma, PG Yoga (Gold Medalist)</h2>
       <div class=" contact-info text-gray-600 mb-8">
         <p class="flex items-center justify-center mb-2">
@@ -61,12 +61,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
   margin-top:2rem;
 }
 
-.head-color{
-  color:$text-primary;
-  font-weight: 700;
-  font-size: 3.5rem;
-  font-family: $font-primary;
-}
+
 
 p,a{
   font-size:1.15em;

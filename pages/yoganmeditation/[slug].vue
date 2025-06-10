@@ -36,7 +36,7 @@
         <div class="container">
           <div class="header-content max-w-800 mx-auto py-6">
             
-            <h1 class="yoga-title display-4 fw-bold mb-4">{{ yoga.title }}</h1>
+            <h1 class="fw-bold mb-4">{{ yoga.title }}</h1>
             
             <p class="yoga-slogan lead fs-3 text-muted mb-5">
               {{yoga.sub_title}}
@@ -91,7 +91,7 @@
         <!-- Enhanced Yoga Poses -->
         <section class="yoga-poses mb-7 text-start">
           <div class="section-header mb-6">
-            <h2 class="section-title">Guided Practice Steps</h2>
+            <h2>Guided Practice Steps</h2>
             <p class="section-subtitle text-muted fs-5">
               Move with intention and awareness
             </p>
@@ -136,7 +136,7 @@
         <section class="yoga-benefits rounded-4 text-start">
           <div class="container">
             <div class="section-header mb-6">
-              <h2 class="section-title">Transformative Benefits</h2>
+              <h2>Transformative Benefits</h2>
               <p class="section-subtitle text-muted fs-5">Nourish your body and mind</p>
             </div>
             <ol class="benefits-list bg-white">
@@ -152,7 +152,7 @@
           <div class="container">
             <div class="max-w-700 mx-auto">
               <div class="section-header mb-6">
-                <h2 class="section-title">Mindful Completion</h2>
+                <h2>Mindful Completion</h2>
                 <p class="section-subtitle text-muted fs-5">
                   Carry your practice forward
                 </p>
@@ -173,12 +173,7 @@
           </div>
         </section>
 
-        <!-- Processed Content -->
-        <section v-if="processedContent" class="processed-content mb-7 text-start">
-          <div class="max-w-700 mx-auto lh-lg">
-            <div v-html="processedContent"></div>
-          </div>
-        </section>
+        
       </div>
     </article>
   </div>
@@ -268,25 +263,6 @@ watch(() => yoga.value, (newVal) => {
     height: 300px; // Adjust height for smaller screens
   }
 }
-
-.section-header {
-  margin-bottom: 1.5rem; // Adjust spacing for section headers
-}
-
-.similar-reads {
-  margin-top: 2rem; // Add spacing above the Similar Reads section
-}
-
-.section-header {
-  .section-title {
-    font-size: 2.5rem;
-    &::after {
-      width: 80px;
-      height: 4px;
-    }
-  }
-}
-
 .section-header.text-center {
   text-align: left !important;
 }
@@ -297,7 +273,7 @@ watch(() => yoga.value, (newVal) => {
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    box-shadow: $card-shadow;
   }
 
   .step-number {

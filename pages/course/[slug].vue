@@ -231,20 +231,6 @@ watchEffect(() => {
       }
     }
 
-    .course-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: $color-primary;
-      line-height: 1.2;
-    }
-
-    .course-description {
-      font-size: 1.25rem;
-      color: $text-secondary;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
     .course-cover {
       max-height: 500px;
       object-fit: cover;
@@ -279,7 +265,7 @@ watchEffect(() => {
   .instructor-card {
     .instructor-avatar {
       object-fit: cover;
-      border: 3px solid $accent-soft-green;
+      border: 3px solid $color-secondary;
     }
 
     .instructor-name {
@@ -308,12 +294,7 @@ watchEffect(() => {
       .course-title {
         font-size: 2rem;
       }
-
-      .course-description {
-        font-size: 1.1rem;
-      }
     }
-
     .course-section {
       padding: 1.5rem;
     }

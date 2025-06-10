@@ -26,7 +26,7 @@
       <div class="recipe-header mb-4">
         <div class="row align-items-center">
           <div class="col-lg-7">
-            <h1 class="recipe-title">{{ recipe.title }}</h1>
+            <h1>{{ recipe.title }}</h1>
             <p class="recipe-description">
               <DynamicContent :content="recipe.description || ''" />
             </p>
@@ -34,7 +34,7 @@
             <div class="recipe-meta">
               <div class="meta-item">
                 <LucideIcon icon="mdi:clock" />
-                <span>{{ recipe.preparationTime || "N/A" }}</span>
+                <span>{{ recipe.preparation_time || "N/A" }}</span>
               </div>
               <div class="meta-item">
                 <LucideIcon icon="mdi:users" />
@@ -61,7 +61,7 @@
 
       <!-- Content Sections with Better Layout -->
       <div class="recipe-content-sections ">
-        <div class="row mb-4">
+        <div class="row">
           <!-- Ingredients Section - Left Side -->
           <div class="col-lg-4">
             <div class="content-section">
@@ -88,12 +88,12 @@
 
         <!-- Health Benefits Section - Displayed Horizontally -->
         <div
-          v-if="recipe.healthBenefits && recipe.healthBenefits.length"
+          v-if="recipe.health_benefits && recipe.health_benefits.length"
           class="content-section health-benefits-section"
         >
           <h2>Health Benefits</h2>
           <ul class="health-benefits-list">
-            <li v-for="(benefit, index) in recipe.healthBenefits" :key="index" class="list-before">
+            <li v-for="(benefit, index) in recipe.health_benefits" :key="index" class="list-before">
               <DynamicContent :content="benefit" />
             </li>
           </ul>
@@ -138,32 +138,11 @@ watch(recipeData, (val) => {
   recipe.value = {
     ...val.data,
     imageUrl: getImageUrl(val.data.image, '/placeholder-recipe.jpg'),
-    preparationTime: val.data.preparation_time || 'N/A',
-    healthBenefits: val.data.health_benefits || [],
-    ingredients: val.data.ingredients || [],
-    instructions: val.data.instructions || '',
-    servings: val.data.servings || 0,
-    category: val.data.category || 'Main Dishes',
-    description: val.data.description || '',
-    title: val.data.title || '',
+    
   };
 }, { immediate: true });
 
-// Helper function to map API response property names to component property names
-function mapRecipeData(data) {
-  if (!data) return null;
 
-  return {
-    ...data,
-    // Map snake_case properties to camelCase
-    preparationTime: data.preparation_time || "N/A",
-    healthBenefits: data.health_benefits || [],
-    // Add imageUrl for displaying images
-    imageUrl: data.image?._id
-      ? `http://localhost:9000/assets/link/${data.image._id}`
-      : "/placeholder-recipe.jpg",
-  };
-}
 </script>
 
 <style scoped lang="scss" >
@@ -178,12 +157,6 @@ function mapRecipeData(data) {
   .recipe-header {
     padding-bottom: 2rem;
     border-bottom: 1px solid $border-color;
-
-    .recipe-title {
-      margin-bottom: 1rem;
-      color: $color-primary;
-      line-height: 1.2;
-    }
 
     .recipe-description {
       font-size: 1.1rem;
@@ -235,6 +208,14 @@ function mapRecipeData(data) {
       box-shadow: $card-shadow;
     }
 
+     //Ingredients
+  li {
+          padding: 0.7rem 0;
+          border-bottom: 1px solid $border-color;
+          position: relative;
+          padding-left: 1.5rem;
+        }
+
     // Health Benefits styles
     .health-benefits-section {
       .health-benefits-list {
@@ -244,17 +225,26 @@ function mapRecipeData(data) {
         padding: 0;
         margin: 0;
         list-style: none;
-
-        
+        li {
+          background-color: rgba($color-secondary, 0.1);
+          padding: 0.6rem 1.2rem;
+          border-radius: 25px;
+          font-size: 0.95rem;
+          color: #666;
+          display: inline-flex;
+          align-items: center;}
       }
     }
   }
+  
+ 
 
-  // Navigation Actions
+
   .navigation-actions {
     margin-top: 1.5rem;
     display: flex;
     justify-content: center; 
   }
 }
+
 </style>

@@ -5,7 +5,7 @@
     :id="sectionId"
   >
     <div class="container">
-      <h2>{{ title }}</h2>
+      <h1 class="text-center">{{ title }}</h1>
       <p v-if="subtitle" class="sub-heading">{{ subtitle }}</p>
 
       <!-- Loading State -->

@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <h1 class="mb-4 fw-bold text-center">Order History</h1>
+    <h1 class="mb-4 text-center">Order History</h1>
     <div v-if="loading" class="text-center my-5">
       <span class="spinner-border text-primary"></span>
     </div>

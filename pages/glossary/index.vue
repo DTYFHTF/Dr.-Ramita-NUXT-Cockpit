@@ -2,7 +2,7 @@
   <div id="glossary" class="glossary-index">
     <!-- Header Section -->
     <header class="glossary-header mb-5">
-      <h1 class="display-4 mb-4">Yoga & Wellness Glossary</h1>
+      <h1 class="text-center mb-4">Yoga & Wellness Glossary</h1>
       
       <!-- Search & Filters -->
       <div class="search-filter-container mb-4">
@@ -48,7 +48,7 @@
       <template v-for="(group, letter) in filteredGroups" :key="letter">
         <h2 :id="`letter-${letter}`" class="alphabet-section-header">
           {{ letter }}
-          <span class="badge bg-secondary ms-2">{{ group.length }}</span>
+          <span class="badge bg-secondary ms-3">{{ group.length }}</span>     
         </h2>
         
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -211,7 +211,7 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .glossary-index {
   max-width: 1400px;
   margin: 2rem auto;
@@ -221,7 +221,7 @@ onMounted(async () => {
 .glossary-header {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba($background-light, 0.9);
   z-index: 1000;
   padding: 2rem 0;
   backdrop-filter: blur(10px);
@@ -246,19 +246,19 @@ onMounted(async () => {
 .alphabet-section-header {
   margin: 2rem 0 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid $border-color;
 }
 
 .glossary-card {
   position: relative;
   padding-bottom: 3rem; /* Add space for related terms */
   transition: all 0.2s ease;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid $border-color;
 }
 
 .glossary-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: $card-shadow;
 }
 
 .term-preview {
@@ -283,15 +283,15 @@ onMounted(async () => {
 
 .preview-content {
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba($border-color, 0.05);
 }
 
 .badge-category {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: #2D7B7B; /* Updated to consistent color */
-  color: #fff;
+  background-color: $button-bg; 
+  color: $text-light;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -304,16 +304,13 @@ onMounted(async () => {
   justify-content: center;
 }
 
-h1.display-4 {
-  color: #2a4d3a; /* Updated title color */
-}
 
 .alphabet-nav a {
-  color: #2a4d3a; /* Updated alphabet color */
+  color: $text-primary; 
 }
 
 .alphabet-nav a.text-primary {
-  color: #2a4d3a !important; /* Ensure active alphabet color matches */
+  color: $text-primary !important; 
 }
 
 @media (max-width: 768px) {

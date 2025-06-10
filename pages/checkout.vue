@@ -1,6 +1,6 @@
 <template>
   <div class="checkout-page container py-5">
-    <h1 class="mb-4 fw-bold text-center">Checkout</h1>
+    <h1 class="mb-4 text-center">Checkout</h1>
     <div v-if="orderSuccess">
       <div class="alert alert-success text-center p-4 rounded-4 shadow-sm">
         <LucideIcon icon="mdi:check-circle" class="me-2 text-success" size="2em" />
