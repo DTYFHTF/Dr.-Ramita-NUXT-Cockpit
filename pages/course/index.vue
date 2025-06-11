@@ -25,12 +25,14 @@ const { data: coursesData, error, loading } = useApiLaravel('courses');
 const courses = ref([]);
 const { getImageUrl } = useImageUrl();
 
+const addImageUrl = (item, fallback = '/placeholder-course.jpg') => ({
+  ...item,
+  image: getImageUrl(item.image, fallback),
+});
+
 watch(coursesData, (val) => {
   if (!val || !val.data) return;
-  courses.value = val.data.map(course => ({
-    ...course,
-    imageUrl: course.image ? getImageUrl(course.image, '/placeholder-course.jpg') : undefined
-  }));
+  courses.value = val.data.map(course => addImageUrl(course));
 }, { immediate: true });
 
 const coursesWithImages = computed(() => courses.value);

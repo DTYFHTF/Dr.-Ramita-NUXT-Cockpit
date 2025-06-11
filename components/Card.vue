@@ -7,7 +7,7 @@
 
     <div class="card-content">
       <h3 class="title">{{ title }}</h3>
-      <p class="description">{{ description }}</p>
+      <p class="description"><DynamicContent :content="description || ''" /></p>
 
       
 

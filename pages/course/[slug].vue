@@ -186,7 +186,8 @@ watch(courseData, (val) => {
   if (!val || !val.data) return;
   course.value = {
     ...val.data,
-    imageUrl: val.data.image ? getImageUrl(val.data.image, '/placeholder-course.jpg') : undefined
+    imageUrl: val.data.image ? getImageUrl(val.data.image, '/placeholder-course.jpg') : undefined,
+    instructorImageUrl: val.data.instructor?.image ? getImageUrl(val.data.instructor.image, '/placeholder-instructor.jpg') : undefined
   };
 }, { immediate: true });
 
