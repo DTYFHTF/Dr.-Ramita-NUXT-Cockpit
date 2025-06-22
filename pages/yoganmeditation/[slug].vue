@@ -38,20 +38,25 @@
             
             <h1 class="fw-bold mb-4">{{ yoga.title }}</h1>
             
-            <p class="yoga-slogan lead fs-3 text-muted mb-5">
+            <p class="yoga-slogan lead fs-3 text-muted mb-4">
               {{yoga.sub_title}}
             </p>
             <div class="yoga-meta d-flex gap-4">
               <div class="meta-item d-flex align-items-center fs-5">
                 <LucideIcon
                   icon="mdi:clock-outline"
-                  class="me-2 text-deep-green fs-4"
+                  class="me-2 fs-4"
                 />
                 <span class="text-muted">{{ yoga.duration }}</span>
-              <div class=" px-5 tags"><LucideIcon icon="mdi:tag-outline" class="me-2" />{{ tag }}
-              <span class="tag">{{
-                yoga.tags ?? "Uncategorized"
-              }}</span></div>
+              <div class=" px-5 tags">
+                <LucideIcon icon="mdi:tag-outline" class="me-2" />
+              <span class="tag">
+                {{
+                  Array.isArray(yoga.tags)
+                    ? yoga.tags.join(', ')
+                    : (yoga.tags ?? "Uncategorized")
+                }}
+              </span></div>
             
               </div>
             </div>
@@ -67,7 +72,7 @@
               <img
                 :src="yoga.coverImageUrl"
                 :alt="yoga.title"
-                class="img-fluid rounded-4 shadow-lg"
+                class="img-fluid shadow-lg"
                 loading="lazy"
                 style="max-height: 600px; object-fit: cover" />
             </div>
@@ -83,7 +88,7 @@
       <div class="container">
         <!-- Enhanced Short Description -->
         <section v-if="yoga.short_description" class="short-description mb-7 text-start">
-          <div class="lead fs-4 text-muted max-w-700 mx-auto lh-lg">
+          <div class="lead fs-4 text-muted max-w-700 mx-auto lh-lg mb-3">
             <DynamicContent :content="yoga.short_description" />
           </div>
         </section>
@@ -182,35 +187,31 @@
 import LucideIcon from "@/components/LucideIcon.vue";
 import SimilarReads from "@/components/SimilarReads.vue";
 import DynamicContent from '@/components/DynamicContent.vue';
-import { ref, watch, onMounted } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import useSimilarPosts from '@/composables/useSimilarPosts.js'
-import vueScrollTo from 'vue-scrollto';
-import { autoLinkContent } from '@/composables/autoLinkParser';
 
 const route = useRoute();
 const { getImageUrl } = useImageUrl();
 const { data: yogaData, error, loading } = useApiLaravel(`yoga-meditations/${route.params.slug}`);
-const yoga = ref(null);
-
-watch(yogaData, (val) => {
-  if (!val || !val.data) return;
-  yoga.value = {
-    ...val.data,
-    coverImageUrl: getImageUrl(val.data.image, '/placeholder-yoga.jpg'),
-    poses: (val.data.poses || []).map((pose) => ({
+const yoga = computed(() => {
+  if (!yogaData.value || !yogaData.value.data) return null;
+  const data = yogaData.value.data;
+  return {
+    ...data,
+    coverImageUrl: getImageUrl(data.image, '/placeholder-yoga.jpg'),
+    poses: (data.poses || []).map((pose) => ({
       ...pose,
-      poseImageUrl: getImageUrl(pose.pose_image, '/placeholder-yoga.jpg'),
+      poseImageUrl: getImageUrl(pose.poseImage, '/placeholder-yoga.jpg'),
       title: pose.title || pose.poseName || '',
       instructions: pose.instructions || '',
     })),
-    tags: val.data.tags || 'Uncategorized',
-    duration: val.data.duration || 'N/A',
-    shortDescription: val.data.short_description || val.data.shortDescription || '',
+    tags: data.tags || 'Uncategorized',
+    duration: data.duration || 'N/A',
   };
-}, { immediate: true });
+});
 
 // Similar Reads
 const { posts: latestPosts } = useSimilarPosts('yoga-meditations', {
@@ -226,46 +227,33 @@ const retryFetch = async () => {
   await refetch();
 };
 
-// Watch for changes in the `yoga` data and reapply the directive
-watch(() => yoga.value, (newVal) => {
-  if (newVal) {
-    const sloganElement = document.querySelector('.yoga-slogan');
-    if (sloganElement) {
-      const originalContent = sloganElement.innerHTML;
-      autoLinkContent(originalContent).then((linkedContent) => {
-        sloganElement.innerHTML = linkedContent;
-      });
-    }
-  }
-});
+
 </script>
 <style scoped lang="scss">
 
 .yoga-header {
-  margin-top: 2rem; // Add spacing above the header
+  margin-top: 2rem; 
 
   @media (max-width: 768px) {
-    margin-top: 1rem; // Adjust spacing for smaller screens
+    margin-top: 1rem; 
   }
 }
 
 .container {
-  margin-bottom: 2rem; // Ensure consistent spacing between sections
+  margin-bottom: 2rem; 
 }
 
 .cover-image img {
   width: 100%;
-  height: 475px; // Default height for larger screens
+  height: 475px; 
   object-fit: cover;
   border-radius: 1rem;
 
   @media (max-width: 768px) {
-    height: 300px; // Adjust height for smaller screens
+    height: 300px; 
   }
 }
-.section-header.text-center {
-  text-align: left !important;
-}
+
 
 .pose-step {
   transition: all 0.3s ease;
@@ -312,7 +300,6 @@ watch(() => yoga.value, (newVal) => {
 }
 
 .max-w-700 {
-  // max-width: 700px;
   margin: 0 auto;
 }
 
@@ -323,39 +310,4 @@ watch(() => yoga.value, (newVal) => {
   }
 }
 
-.fs-5 {
-  font-size: 1.25rem;
-}
-.fs-6 {
-  font-size: 1.1rem;
-}
-.py-7 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-.mb-7 {
-  margin-bottom: 2rem;
-}
-.rounded-4 {
-  border-radius: 1.5rem;
-}
-
-.similar-reads {
-  position: sticky;
-  top: 2rem;
-  max-width: 300px;
-  margin-left: auto;
-}
-
-.similar-read-item img {
-  border-radius: 0.5rem;
-}
-
-.similar-read-item h4 {
-  font-size: 1rem;
-}
-
-.similar-read-item p {
-  font-size: 0.875rem;
-}
 </style>

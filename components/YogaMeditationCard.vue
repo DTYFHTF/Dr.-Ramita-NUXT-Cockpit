@@ -4,7 +4,7 @@
     :description="short_description"
     :image="image || '/placeholder-yoga.jpg'"
     :imageAlt="title"
-    :badge="tags || 'Uncategorized'"
+    :badge="tags[0] || 'Uncategorized'"
     :link="`/yoganmeditation/${slug}`"
     customClass="yoga-card"
   >
@@ -12,10 +12,6 @@
       <div class="meta-item">
         <LucideIcon icon="mdi:clock-outline" class="icon" />
         <span>{{ duration || 'N/A' }}</span>
-      </div>
-      <div class="meta-item">
-        <LucideIcon icon="mdi:tag-outline" class="me-2" />
-        <span>{{ tags || 'N/A' }}</span>
       </div>
     </template>
     <template #button>
