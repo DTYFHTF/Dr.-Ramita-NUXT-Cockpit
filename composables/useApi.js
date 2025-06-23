@@ -65,3 +65,22 @@ export function useApiLaravel(endpoint) {
     loading: pending
   }
 }
+
+export function postBookingLaravel(data) {
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.apiBase; // e.g., http://localhost:8000/api
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    // Add Authorization if your Laravel API requires it
+  };
+
+  return useFetch(`${baseUrl}/consultations`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data), // Ensure JSON body for Laravel
+    onResponseError({ response }) {
+      console.error('API Error:', response.status, response._data);
+    }
+  });
+}

@@ -35,7 +35,7 @@
             </div>
           </div>
         </div>
-        <router-link to="/" class="btn btn-primary mt-4 px-4 py-2">Continue Shopping</router-link>
+        <router-link to="/" class="btn-smooth-success mt-4 px-4 py-2">Continue Shopping</router-link>
       </div>
     </div>
     <div v-else>

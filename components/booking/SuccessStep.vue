@@ -37,7 +37,7 @@
 import { computed } from 'vue'
 import { parseISO, format } from 'date-fns'
 import { useBookingStore } from '~/stores/booking'
-import { useApi } from '~/composables/useApi'
+import { useApiLaravel } from '~/composables/useApi'
 
 const store = useBookingStore()
 
@@ -50,7 +50,7 @@ const formattedTime = computed(() => {
   return time ? `${formatTime(time.start)} - ${formatTime(time.end)}` : ''
 })
 
-const { data: doctorData } = useApi('items/doctor')
+const { data: doctorData } = useApiLaravel('doctors')
 const doctorName = computed(() =>
   doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
 )

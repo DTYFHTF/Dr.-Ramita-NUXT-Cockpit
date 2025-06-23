@@ -24,17 +24,20 @@ export const useDoctorStore = defineStore('doctor', {
       this.error = null
       try {
         const config = useRuntimeConfig()
-        const response = await $fetch<Doctor[]>(
-          `${config.public.cockpitUrl}/api/content/items/doctor`,
+        const response = await $fetch<any>(
+          `${config.public.apiBase}/doctors`,
           {
             headers: {
-              Authorization: String(config.public.cockpitToken)
+              Accept: 'application/json'
+              // Add Authorization if needed
             }
           }
         )
 
         if (Array.isArray(response)) {
-          this.doctors = response
+          this.doctors = response;
+        } else if (response && Array.isArray(response.data)) {
+          this.doctors = response.data;
         } else {
           throw new Error('Invalid doctor data format')
         }

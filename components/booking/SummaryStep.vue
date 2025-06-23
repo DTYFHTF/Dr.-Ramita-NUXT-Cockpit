@@ -35,9 +35,14 @@
 import { computed } from 'vue'
 import { parseISO, format } from 'date-fns'
 import { useBookingStore } from '~/stores/booking'
-import { postContentItem } from '~/composables/useApi'
+import { postBookingLaravel } from '~/composables/useApi'
+import { useApiLaravel } from '~/composables/useApi'
+import { useUserStore } from '~/stores/user'
+import { useDoctorStore } from '~/stores/doctorStore'
 
 const store = useBookingStore()
+const userStore = useUserStore()
+const doctorStore = useDoctorStore()
 
 const formattedDate = computed(() =>
   store.formData.date
@@ -51,7 +56,7 @@ const formattedTime = computed(() =>
     : 'Not selected'
 )
 
-const { data: doctorData } = useApi('items/doctor')
+const { data: doctorData } = useApiLaravel('doctors')
 const doctorName = computed(() =>
   doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
 )
@@ -62,18 +67,21 @@ const formatTime = (time) => {
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`
 }
 
+const doctor_id = doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
 const postBookingInfo = () => {
   const bookingData = {
+    user_id: userStore.user?.id,
+    doctor_id: doctor_id,
     date: store.formData.date,
-    duration: '45 mins', // Assuming time contains start and end
-    patient_name: store.formData.name,
-    patient_email: store.formData.email,
-    patient_phone: store.formData.phone,
+    duration: {
+      start: store.formData.time?.start,
+      end: store.formData.time?.end
+    },
     notes: store.formData.notes,
-    status: 'pending', // Default status
+    status: 'pending',
   };
 
-  postContentItem('consultations', bookingData)
+  postBookingLaravel(bookingData)
     .then(() => {
       console.log('Booking information posted successfully');
     })

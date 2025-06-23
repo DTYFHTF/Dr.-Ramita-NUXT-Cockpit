@@ -52,9 +52,7 @@
                 <LucideIcon icon="mdi:tag-outline" class="me-2" />
               <span class="tag">
                 <DynamicContent :content="Array.isArray(yoga.tags) ? yoga.tags.join(', ') : (yoga.tags ?? 'Uncategorized')" />
-
               </span></div>
-            
               </div>
             </div>
           </div>
