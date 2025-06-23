@@ -66,8 +66,10 @@ const formatTime = (time) => {
   const hour = parseInt(hours, 10)
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`
 }
-
+//Currently only the first doctor is used for booking
+// This can be modified to allow selection of a specific doctor if needed
 const doctor_id = doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
+
 const postBookingInfo = () => {
   const bookingData = {
     user_id: userStore.user?.id,
@@ -77,6 +79,9 @@ const postBookingInfo = () => {
       start: store.formData.time?.start,
       end: store.formData.time?.end
     },
+    patient_name: store.formData.name,
+    patient_email: store.formData.email,
+    patient_phone: store.formData.phone,
     notes: store.formData.notes,
     status: 'pending',
   };
