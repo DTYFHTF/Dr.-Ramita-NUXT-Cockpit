@@ -31,24 +31,15 @@ import LucideIcon from '@/components/LucideIcon.vue';
 const props = defineProps({
   disease_name: String,
   disease_description: String,
-  image: String, // Renamed from diseaseImage to image
+  image: String, 
   slug: String,
   dosha: String,
 });
 
-
-
-// const truncatedDescription = computed(() => {
-//   const maxLength = 100; // Set a fixed length for the description
-//   const plainText = props.disease_description || '';
-//   return plainText.length > maxLength
-//     ? plainText.slice(0, maxLength) + '...'
-//     : plainText;
-// });
 </script>
 
 <style scoped>
 .home-remedy-card {
-  margin-bottom: 1.5rem; /* Example spacing */
+  margin-bottom: 1.5rem; 
 }
 </style>

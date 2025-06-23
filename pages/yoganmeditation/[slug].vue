@@ -51,11 +51,8 @@
               <div class=" px-5 tags">
                 <LucideIcon icon="mdi:tag-outline" class="me-2" />
               <span class="tag">
-                {{
-                  Array.isArray(yoga.tags)
-                    ? yoga.tags.join(', ')
-                    : (yoga.tags ?? "Uncategorized")
-                }}
+                <DynamicContent :content="Array.isArray(yoga.tags) ? yoga.tags.join(', ') : (yoga.tags ?? 'Uncategorized')" />
+
               </span></div>
             
               </div>

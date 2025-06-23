@@ -22,7 +22,7 @@ import HomeRemedyCard from '~/components/HomeRemedyCard.vue';
 import IndexSection from '~/components/IndexSection.vue'; // Assuming this is your reusable section component
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 const { data: remediesData, error, loading } = useApiLaravel('home-remedies');
 const remedies = ref([]);
@@ -32,20 +32,13 @@ watch(remediesData, (val) => {
   if (!val || !val.data) return;
   remedies.value = val.data.map(remedy => ({
     ...remedy,
-    imageUrl: remedy.image ? getImageUrl(remedy.image, '/fallback.jpg') : undefined
+    image: getImageUrl(remedy.image, '/placeholder-remedy.jpg'),
   }));
 }, { immediate: true });
 
-const homeRemediesWithImages = computed(() => {
-  return remedies.value.map(remedy => ({
-    ...remedy,
-    image: remedy.image_url || remedy.image || '/placeholder-remedy.jpg', 
-    title: remedy.title || 'Untitled Remedy',
-    description: remedy.subtitle || remedy.description || 'No description available.'
-  }));
-});
+const homeRemediesWithImages = computed(() => remedies.value);
+
 </script>
 
 <style scoped>
-/* Add any page-specific styles here */
 </style>

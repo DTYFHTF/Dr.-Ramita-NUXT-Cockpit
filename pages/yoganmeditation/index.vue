@@ -23,5 +23,17 @@ import { computed } from 'vue';
 
 const { data: yoganMeditationData, error, loading } = useApiLaravel('yoga-meditations');
 const { getImageUrl } = useImageUrl();
+
+const yogaandmeditation = computed(() => {
+  return yoganMeditationData.value?.data?.map(item => ({
+    ...item,
+    image: getImageUrl(item.image, '/placeholder-yoga.jpg'),
+    title: item.title,
+    short_description: item.short_description,
+    tags: item.tags || 'Uncategorized',
+    duration: item.duration || 'N/A',
+    slug: item.slug
+  })) || [];
+});
 </script>
 
