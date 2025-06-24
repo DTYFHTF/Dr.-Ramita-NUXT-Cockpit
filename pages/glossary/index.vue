@@ -80,9 +80,7 @@
                   :class="{ 'show': activePreview === term.slug }"
                 >
                   <div class="preview-content">
-                    <p class="text-muted mb-2">
-                      {{ truncate(term.excerpt, 120) }}
-                    </p>
+                    <DynamicContent :content="truncate(term.excerpt, 120)" />
                     <div class="related-terms" v-if="term.relatedTerms?.length">
                       <span class="badge bg-light text-dark me-1">
                                               {{ term.relatedTerms.join(', ') }}
