@@ -81,7 +81,7 @@ const bookingStore = useBookingStore()
 const doctorStore = useDoctorStore()
 const { doctors } = storeToRefs(doctorStore)
 
-const currentDate = ref(new Date(2025, 4, 1)) // May 2025
+const currentDate = ref(new Date()) // Use current date dynamically
 const currentMonth = computed(() => format(currentDate.value, 'MMMM yyyy'))
 
 const visibleDates = computed(() => {
@@ -100,7 +100,7 @@ const visibleDates = computed(() => {
   // Add actual dates
   days.forEach(date => {
     dates.push({
-      date: date.toISOString(),
+      date: format(date, 'yyyy-MM-dd'), // Use local date string only, no time
       day: format(date, 'd'),
       weekday: format(date, 'EEE')
     })
@@ -115,17 +115,31 @@ const isDateAvailable = (date) => {
 }
 
 const isDateSelected = (date) => {
-  return bookingStore.formData.date === date.date
+  if (!bookingStore.formData.date || !date.date) return false;
+  return bookingStore.formData.date === date.date;
 }
 
 const selectDate = (date) => {
   if (isDateAvailable(date)) {
-    bookingStore.formData.date = date.date
+    bookingStore.formData.date = date.date;
   }
 }
 
 onMounted(() => {
-  doctorStore.fetchDoctors()
+  doctorStore.fetchDoctors();
+  setTimeout(() => {
+    const today = new Date();
+    const todayDate = format(today, 'yyyy-MM-dd');
+    const availableDateObj = visibleDates.value.find(d => {
+      if (!d.date) return false;
+      return d.date >= todayDate && isDateAvailable(d);
+    });
+    if (availableDateObj) {
+      bookingStore.formData.date = availableDateObj.date;
+    } else {
+      bookingStore.formData.date = '';
+    }
+  }, 0);
 })
 </script>
 

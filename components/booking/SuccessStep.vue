@@ -26,7 +26,7 @@
     </div>
 
     <div class="confirmation-actions">
-      <button class="btn btn-success btn-smooth-success" @click="resetBooking">
+      <button class="btn-smooth-success" @click="resetBooking">
         Book Another Consultation
       </button>
     </div>
@@ -123,6 +123,8 @@ const resetBooking = () => {
 
 .confirmation-actions {
   margin-top: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
 .step-title {
