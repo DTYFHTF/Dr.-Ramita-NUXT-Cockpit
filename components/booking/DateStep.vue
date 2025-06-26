@@ -2,7 +2,11 @@
   <div class="date-step">
     <div class="step-header mb-5">
       <h2>Schedule a personalized session with Dr. Ramita</h2>
-      <p class="current-month">{{ currentMonth }}</p>
+      <div class="calendar-month-nav">
+        <button class="month-nav-btn" @click="changeMonth(-1)" aria-label="Previous Month">&#8592;</button>
+        <p class="current-month">{{ currentMonth }}</p>
+        <button class="month-nav-btn" @click="changeMonth(1)" aria-label="Next Month">&#8594;</button>
+      </div>
     </div>
 
     <div v-if="doctorStore.loading" class="loading-state text-center py-4">
@@ -98,11 +102,15 @@ const visibleDates = computed(() => {
   }
 
   // Add actual dates
+  const today = new Date();
+  const todayDate = format(today, 'yyyy-MM-dd');
   days.forEach(date => {
+    const dateStr = format(date, 'yyyy-MM-dd');
     dates.push({
-      date: format(date, 'yyyy-MM-dd'), // Use local date string only, no time
+      date: dateStr,
       day: format(date, 'd'),
-      weekday: format(date, 'EEE')
+      weekday: format(date, 'EEE'),
+      isPast: dateStr < todayDate // Mark if this date is in the past
     })
   })
 
@@ -111,7 +119,8 @@ const visibleDates = computed(() => {
 
 const isDateAvailable = (date) => {
   if (!date.date || !doctors.value.length) return false
-  return doctors.value[0].available_days.includes(date.weekday)
+  // Only allow available days that are today or in the future
+  return !date.isPast && doctors.value[0].available_days.includes(date.weekday)
 }
 
 const isDateSelected = (date) => {
@@ -123,6 +132,13 @@ const selectDate = (date) => {
   if (isDateAvailable(date)) {
     bookingStore.formData.date = date.date;
   }
+}
+
+// Add month navigation
+const changeMonth = (direction) => {
+  const newDate = new Date(currentDate.value)
+  newDate.setMonth(newDate.getMonth() + direction)
+  currentDate.value = newDate
 }
 
 onMounted(() => {
@@ -165,12 +181,6 @@ onMounted(() => {
   font-size: 1.75rem;
   color: var(--calendar-text);
   margin-bottom: 0.5rem;
-}
-
-.current-month {
-  color: var(--calendar-text-secondary);
-  font-size: 1.1rem;
-  font-weight: 500;
 }
 
 .calendar-container {
@@ -364,5 +374,33 @@ onMounted(() => {
 }
 .day-number{
   color:#000;
+}
+.calendar-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.month-nav-btn {
+  background: none;
+  border: none;
+  color: var(--calendar-text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  transition: color 0.2s;
+}
+
+.month-nav-btn:hover {
+  color: var(--calendar-primary);
+}
+
+.current-month {
+  color: var(--calendar-text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
 }
 </style>
