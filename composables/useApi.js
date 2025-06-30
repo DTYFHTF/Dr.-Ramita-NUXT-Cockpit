@@ -84,3 +84,11 @@ export function postBookingLaravel(data) {
     }
   });
 }
+
+// Google Auth: Redirect to backend for Google login
+export function loginWithGoogle() {
+  const config = useRuntimeConfig();
+  // Adjust this URL to match your Laravel backend's Google auth route
+  const googleAuthUrl = `${config.public.apiBase}/auth/google/redirect`;
+  window.location.href = googleAuthUrl;
+}
