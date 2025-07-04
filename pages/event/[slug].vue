@@ -2,11 +2,7 @@
   <div class="event-detail">
     <!-- Enhanced Loading State -->
     <div v-if="loading && !event" class="loading-state text-center py-9">
-      <div
-        class="spinner-grow text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status"
-      >
+      <div class="spinner-grow " style="width: 3rem; height: 3rem" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
       <p class="mt-4 text-muted fs-5">Loading event details...</p>
@@ -14,10 +10,7 @@
 
     <!-- Enhanced Error State -->
     <div v-else-if="error && !event" class="error-state text-center py-9">
-      <div
-        class="alert alert-danger mx-auto p-4 shadow-sm"
-        style="max-width: 500px"
-      >
+      <div class="alert alert-danger mx-auto p-4 shadow-sm" style="max-width: 500px">
         <LucideIcon icon="mdi:alert-circle-outline" class="me-2 fs-4" />
         <strong class="fs-5">Error:</strong>
         <p class="mt-2 mb-0">
@@ -31,262 +24,213 @@
 
     <!-- Event Content -->
     <article v-if="event" class="event-container">
-      <!-- Enhanced Header Section -->
-      <header class="event-header mb-7">
-        <div class="container">
-          <div class="header-content max-w-800 mx-auto py-6">
-            <!-- Event Status and Category -->
-            <div class="mb-3">
-              <span class="badge bg-primary me-2 fs-6">{{ event.category || 'Event' }}</span>
-              <span class="badge fs-6" :class="getStatusBadgeClass(event.status)">
-                {{ event.status ? event.status.charAt(0).toUpperCase() + event.status.slice(1) : 'Upcoming' }}
-              </span>
-            </div>
-            
-            <h1 class="fw-bold mb-4">{{ event.title }}</h1>
-            
-            <p class="event-description lead fs-3 text-muted mb-4">
-              <DynamicContent :content="event.short_description || event.description || ''" />
-            </p>
+      <!-- Event Header -->
 
-            <!-- Event Meta Information -->
-            <div class="event-meta d-flex flex-wrap gap-4 mb-4">
-              <div class="meta-item d-flex align-items-center fs-5">
-                <LucideIcon icon="mdi:calendar-outline" class="me-2 fs-4" />
-                <span class="text-muted">{{ formatDate(event.date) }}</span>
-              </div>
-              <div class="meta-item d-flex align-items-center fs-5">
-                <LucideIcon icon="mdi:clock-outline" class="me-2 fs-4" />
-                <span class="text-muted">{{ event.time || 'TBA' }}</span>
-              </div>
-              <div class="meta-item d-flex align-items-center fs-5">
-                <LucideIcon icon="mdi:map-marker-outline" class="me-2 fs-4" />
-                <span class="text-muted">{{ event.location || 'Online' }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <!-- Enhanced Cover Image -->
-      <div v-if="event.image" class="cover-image mb-7">
-        <div class="container px-xxl-12">
-          <div class="row">
-            <div class="col-lg-8">
-              <img
-                :src="event.coverImageUrl"
-                :alt="event.title"
-                class="img-fluid shadow-lg rounded-4"
-                loading="lazy"
-                style="max-height: 600px; object-fit: cover; width: 100%"
-              />
-            </div>
-            <div class="col-lg-4">
-              <!-- Event Registration Card -->
-              <div class="card shadow-sm border-0 sticky-top" style="top: 2rem;">
-                <div class="card-body p-4">
-                  <h5 class="card-title fw-bold mb-3">Event Registration</h5>
-                  
-                  <!-- Registration Details -->
-                  <div class="registration-details mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <span class="text-muted">Price:</span>
-                      <span class="fw-bold text-primary fs-5">
-                        {{ event.price ? `$${event.price}` : 'Free' }}
-                      </span>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <span class="text-muted">Capacity:</span>
-                      <span>{{ event.capacity || 'Unlimited' }}</span>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <span class="text-muted">Registered:</span>
-                      <span class="fw-semibold">{{ event.registered_count || 0 }}</span>
-                    </div>
-                    
-                    <!-- Registration Progress -->
-                    <div v-if="event.capacity" class="mb-3">
-                      <div class="progress" style="height: 8px;">
-                        <div 
-                          class="progress-bar bg-primary" 
-                          :style="{ width: registrationProgress + '%' }"
-                        ></div>
-                      </div>
-                      <small class="text-muted">{{ registrationProgress }}% filled</small>
-                    </div>
-                  </div>
 
-                  <!-- Action Buttons -->
-                  <div class="d-grid gap-2">
-                    <button 
-                      v-if="event.status === 'upcoming' && !isEventFull"
-                      @click="registerForEventAction"
-                      class="btn btn-primary btn-lg"
-                      :disabled="registering"
-                    >
-                      <span v-if="registering" class="spinner-border spinner-border-sm me-2" role="status"></span>
-                      Register Now
-                    </button>
-                    
-                    <button v-else-if="isEventFull" class="btn btn-secondary btn-lg" disabled>
-                      Event Full
-                    </button>
-                    
-                    <button v-else-if="event.status === 'completed'" class="btn btn-outline-primary btn-lg" disabled>
-                      Event Completed
-                    </button>
-                    
-                    <button @click="shareEvent" class="btn btn-outline-secondary">
-                      <i class="bi bi-share me-2"></i>
-                      Share Event
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Main Content -->
+      <!-- Main Content Layout -->
       <div class="container">
-        <!-- Event Description -->
-        <section v-if="event.description" class="event-description mb-7 text-start">
-          <div class="section-header mb-6">
-            <h2>About This Event</h2>
-            <p class="section-subtitle text-muted fs-5">
-              Everything you need to know
-            </p>
-          </div>
-          
-          <div class="lead fs-5 text-muted lh-lg">
-            <DynamicContent :content="event.description" />
-          </div>
-        </section>
+        <div class="row g-4">
+          <!-- Left Column: Event Details -->
+          <div class="col-lg-8">
 
-        <!-- Event Speakers Section -->
-        <section v-if="event.speakers && event.speakers.length" class="speakers-section mb-7">
-          <div class="section-header mb-6">
-            <h2>Featured Speakers</h2>
-            <p class="section-subtitle text-muted fs-5">
-              Meet our expert presenters
-            </p>
+            <div class="event-header pt-3">
+              <div class="container">
+                <div class="d-flex align-items-center justify-content-between">
+                  <h1 class="event-title display-4 fw-bold mb-4 mb-lg-0">{{ event.title }}</h1>
+                  <button class="btn btn-link p-0 ms-2" @click="shareEvent" title="Share Event">
+                    <LucideIcon icon="mdi:share-variant" class="fs-3 text-muted" />
+                  </button>
+                </div>
+                <p class="event-description lead mb-4 text-muted">
+                  <DynamicContent :content="event.short_description || event.description || ''" />
+                </p>
+              </div>
+            </div>
+            <!-- Event Image -->
+            <div v-if="event.image" class="event-image-section mb-2">
+              <div class="container">
+                <div class="image-container">
+                  <img :src="event.coverImageUrl" :alt="event.title" class="event-image img-fluid" loading="lazy" />
+                </div>
+              </div>
+            </div>
+            <!-- Event Description -->
+            <section v-if="event.description" class="content-section mb-5">
+              <div class="section-card">
+                <h2 class="section-title">
+                  <LucideIcon icon="mdi:information" class="me-2 " />
+                  About This Event
+                </h2>
+                <div class="content-body">
+                  <DynamicContent :content="event.description" />
+                </div>
+              </div>
+            </section>
+
+            <!-- Enhanced Speakers Section -->
+            <section v-if="event.speakers && event.speakers.length" class="content-section mb-5">
+              <div class="section-card">
+                <h2 class="section-title">
+                  <LucideIcon icon="mdi:account-group" class="me-2 " />
+                  Featured Speakers
+                </h2>
+                <p class="section-subtitle mb-4">Meet our expert presenters</p>
+
+                <div class="speakers-grid">
+                  <div v-for="speaker in event.speakers" :key="speaker.id" class="speaker-card">
+
+                    <div class="speaker-avatar">
+                      <img
+                        :src="getImageUrl(speaker.avatar, '/placeholder-speaker.jpg')"
+                        :alt="speaker.name"
+                        class="avatar-image"
+                        loading="lazy"
+                        @error="event => event.target.src = '/placeholder-speaker.jpg'"
+                      />
+                    </div>
+
+                    <div class="speaker-info">
+                      <h4 class="speaker-name">{{ speaker.name }}</h4>
+                      <p class="speaker-title">{{ speaker.title }}</p>
+                      <p class="speaker-bio">{{ speaker.bio }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Enhanced Agenda Section -->
+            <section v-if="event.agenda && event.agenda.length" class="content-section mb-5">
+              <div class="section-card">
+                <h2 class="section-title">
+                  <LucideIcon icon="mdi:clock-outline" class="me-2 " />
+                  Event Agenda
+                </h2>
+                <p class="section-subtitle mb-4">Detailed schedule and timeline</p>
+
+                <div class="agenda-list">
+                  <div v-for="(item, index) in event.agenda" :key="index" class="agenda-item">
+                    <div class="agenda-time">{{ item.time }}</div>
+                    <div class="agenda-content">
+                      <h5 class="agenda-title">{{ item.title }}</h5>
+                      <p class="agenda-description">{{ item.description }}</p>
+                      <div v-if="item.speaker" class="agenda-speaker">
+                        Speaker: {{ item.speaker }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Enhanced Features Section -->
+            <section v-if="event.facilities && event.facilities.length" class="content-section mb-5">
+              <div class="section-card">
+                <h2 class="section-title">
+                  <LucideIcon icon="mdi:star" class="me-2 " />
+                  What's Included
+                </h2>
+                <p class="section-subtitle mb-4">Everything you get with your registration</p>
+
+                <div class="features-list">
+                  <div v-for="facility in event.facilities" :key="facility" class="feature-item">
+                    <LucideIcon icon="mdi:check" class="check-icon" />
+                    <span>{{ facility }}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          <div class="row g-4">
-            <div 
-              v-for="speaker in event.speakers" 
-              :key="speaker.id"
-              class="col-md-6 col-lg-4"
-            >
-              <div class="card speaker-card h-100 border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                  <img
-                    :src="speaker.avatar || '/placeholder-speaker.jpg'"
-                    :alt="speaker.name"
-                    class="rounded-circle mb-3"
-                    style="width: 80px; height: 80px; object-fit: cover"
-                  />
-                  <h5 class="card-title fw-bold">{{ speaker.name }}</h5>
-                  <p class="text-muted mb-2">{{ speaker.title }}</p>
-                  <p class="card-text small">{{ speaker.bio }}</p>
+          <!-- Right Column: Registration Panel -->
+          <div class="col-lg-4">
+            <div class="registration-panel sticky-top">
+              <!-- Registration Card -->
+              <div class="registration-card">
+                <!-- Event Details -->
+                <div class="event-details">
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:calendar" class="detail-icon" />
+                    <span>{{ formatDate(event.date) }}</span>
+                  </div>
+                  <div class="add-calendar-section" style="padding: 0.5rem 0 0.5rem 2.2rem;">
+                    <button class="btn btn-outline-secondary btn-sm" @click="addToCalendar">
+                      <LucideIcon icon="mdi:calendar-plus" class="me-1" /> Add to Calendar
+                    </button>
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:clock" class="detail-icon" />
+                    <span>{{ event.time || '6:00 PM' }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:timer" class="detail-icon" />
+                    <span>{{ event.duration || '1 hour 30 minutes' }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:account-group" class="detail-icon" />
+                    <span>{{ event.age_limit || 'Age Limit - 18yrs +' }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:translate" class="detail-icon" />
+                    <span>{{ event.language || 'Hindi, English' }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:tag" class="detail-icon" />
+                    {{ (event.tags && event.tags.length) ? event.tags.join(', ') : 'Comedy' }}
+                  </div>
+
+                  <div class="detail-item">
+                    <LucideIcon icon="mdi:map-marker" class="detail-icon" />
+                    <span>
+                      {{ event.location_type === 'physical' ? (event.location || 'Venue address TBA') : 'Online Zoom Conference' }}
+                    </span>
+                  </div>
+
+                  <div v-if="event.other_venues" class="other-venues">
+                    <a href="#" class="venue-link">View {{ event.other_venues || '5' }} Other Venues</a>
+                  </div>
+                </div>
+
+                <!-- Pricing and Booking -->
+                <div class="booking-section">
+                  <div class="price-section">
+                    <span class="price">₹{{ event.price || '499' }} onwards</span>
+                    <span class="filling-fast">Filling Fast</span>
+                  </div>
+
+                  <template v-if="event.status === 'upcoming' && !isEventFull">
+                    <button class="book-now-btn" @click="showRegistration = true">Book Now</button>
+                    <BaseModal :show="showRegistration" @close="showRegistration = false">
+                      <div class="modal-narrow">
+                        <EventRegistrationForm :event-slug="event.slug" />
+                      </div>
+                    </BaseModal>
+                  </template>
+
+                  <button v-else-if="isEventFull" class="book-now-btn disabled" disabled>
+                    Event Full
+                  </button>
+
+                  <button v-else-if="event.status === 'completed'" class="book-now-btn disabled" disabled>
+                    Event Completed
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-
-        <!-- Event Agenda Section -->
-        <section v-if="event.agenda && event.agenda.length" class="agenda-section mb-7">
-          <div class="section-header mb-6">
-            <h2>Event Agenda</h2>
-            <p class="section-subtitle text-muted fs-5">
-              Schedule and activities
-            </p>
-          </div>
-
-          <div class="agenda-timeline">
-            <div 
-              v-for="(item, index) in event.agenda" 
-              :key="index"
-              class="agenda-item d-flex mb-4"
-            >
-              <div class="agenda-time flex-shrink-0 me-4">
-                <div class="badge bg-light text-dark fw-semibold fs-6 px-3 py-2">
-                  {{ item.time }}
-                </div>
-              </div>
-              <div class="agenda-content flex-grow-1">
-                <h5 class="fw-bold mb-2">{{ item.title }}</h5>
-                <p class="text-muted mb-1">{{ item.description }}</p>
-                <small v-if="item.speaker" class="text-primary">
-                  Speaker: {{ item.speaker }}
-                </small>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Event Facilities/Features -->
-        <section v-if="event.facilities && event.facilities.length" class="facilities-section mb-7">
-          <div class="section-header mb-6">
-            <h2>Event Features</h2>
-            <p class="section-subtitle text-muted fs-5">
-              What's included in this event
-            </p>
-          </div>
-
-          <div class="row g-3">
-            <div 
-              v-for="facility in event.facilities" 
-              :key="facility"
-              class="col-md-6 col-lg-4"
-            >
-              <div class="d-flex align-items-center p-3 bg-light rounded">
-                <i class="bi bi-check-circle-fill text-success me-3"></i>
-                <span>{{ facility }}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Location Details -->
-        <section v-if="event.location && event.location !== 'Online'" class="location-section mb-7">
-          <div class="section-header mb-6">
-            <h2>Event Location</h2>
-            <p class="section-subtitle text-muted fs-5">
-              How to find us
-            </p>
-          </div>
-          
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="location-details">
-                <h5 class="fw-bold mb-3">{{ event.location }}</h5>
-                <p v-if="event.address" class="mb-3">
-                  <LucideIcon icon="mdi:map-marker" class="me-2" />
-                  {{ event.address }}
-                </p>
-                <p v-if="event.venue_details" class="text-muted">
-                  {{ event.venue_details }}
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <!-- Placeholder for map - can be replaced with actual map integration -->
-              <div class="bg-light rounded p-4 text-center">
-                <LucideIcon icon="mdi:map" class="fs-1 text-muted mb-2" />
-                <p class="text-muted">Interactive map coming soon</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
       </div>
     </article>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -295,6 +239,10 @@ import { useEvents } from '@/composables/useEvents'
 import { useImageUrl } from '@/composables/useImageUrl'
 import DynamicContent from '@/components/DynamicContent.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
+import EventRegistrationForm from '@/components/EventRegistrationForm.vue'
+import BaseModal from '@/components/BaseModal.vue'
+
+const showRegistration = ref(false)
 
 const route = useRoute()
 const slug = route.params.slug
@@ -318,12 +266,17 @@ const isEventFull = computed(() => {
   return event.value?.capacity && event.value?.registered_count >= event.value?.capacity
 })
 
+const spotsRemaining = computed(() => {
+  if (!event.value?.capacity) return null
+  return Math.max(0, event.value.capacity - (event.value.registered_count || 0))
+})
+
 // Fetch event data
 const fetchEventData = async () => {
   try {
     loading.value = true
     error.value = null
-    
+
     const eventData = await getEventBySlug(slug)
     if (eventData) {
       event.value = {
@@ -343,7 +296,7 @@ const fetchEventData = async () => {
 // Actions
 const registerForEventAction = async () => {
   if (!event.value) return
-  
+
   try {
     registering.value = true
     await registerForEvent(event.value.id)
@@ -372,24 +325,34 @@ const shareEvent = () => {
   }
 }
 
+const addToCalendar = () => {
+  if (!event.value) return
+
+  const startDate = new Date(event.value.date)
+  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000) // 2 hours duration
+
+  const calendarEvent = {
+    title: event.value.title,
+    start: startDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
+    end: endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
+    description: event.value.description,
+    location: event.value.location
+  }
+
+  const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarEvent.title)}&dates=${calendarEvent.start}/${calendarEvent.end}&details=${encodeURIComponent(calendarEvent.description)}&location=${encodeURIComponent(calendarEvent.location)}`
+
+  window.open(calendarUrl, '_blank')
+}
+
 const retryFetch = () => {
   fetchEventData()
 }
 
-// Utility functions
-const getStatusBadgeClass = (status) => {
-  const statusClasses = {
-    upcoming: 'bg-success',
-    ongoing: 'bg-warning text-dark',
-    completed: 'bg-secondary',
-    cancelled: 'bg-danger'
-  }
-  return statusClasses[status] || 'bg-success'
-}
+
 
 const formatDate = (date) => {
   if (!date) return 'TBA'
-  
+
   try {
     const eventDate = new Date(date)
     return eventDate.toLocaleDateString('en-US', {
@@ -420,9 +383,14 @@ useHead(() => ({
 }))
 </script>
 
-<style scoped>
+
+
+<style lang="scss" scoped>
+
+/* === GENERAL LAYOUT === */
 .event-detail {
   min-height: 100vh;
+  background: $background-light;
 }
 
 .loading-state,
@@ -434,80 +402,329 @@ useHead(() => ({
   align-items: center;
 }
 
+
+/* === EVENT HEADER === */
+
 .event-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 0 0 2rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid $border-color;
 }
 
-.cover-image img {
-  border-radius: 1rem;
+.event-title {
+  color: $color-primary;
+  font-size: 2.5rem;
+  line-height: 1.2;
 }
 
-.speaker-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.event-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: $text-secondary;
 }
 
-.speaker-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+/* Removed unused .event-meta and .meta-item classes */
+
+/* === EVENT IMAGE === */
+.event-image-section {
+  padding: 1rem 0;
 }
 
-.agenda-timeline {
-  position: relative;
+.image-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.agenda-timeline::before {
-  content: '';
-  position: absolute;
-  left: 70px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #e9ecef;
+.event-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
 }
 
-.agenda-item {
-  position: relative;
-  padding-left: 1rem;
+/* === CONTENT SECTIONS === */
+.content-section {
+  margin-bottom: 2rem;
 }
 
-.agenda-time {
-  position: relative;
-  z-index: 1;
+
+.section-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: .5rem;
+  box-shadow: $card-shadow;
+  border: 1px solid $border-color;
 }
 
-.section-header {
-  text-align: center;
-}
 
-.section-header h2 {
-  color: #2c3e50;
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  color: $color-primary;
 }
 
 .section-subtitle {
-  font-style: italic;
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.max-w-800 {
-  max-width: 800px;
+
+.content-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $text-secondary;
 }
 
-.max-w-700 {
-  max-width: 700px;
+/* === SPEAKERS === */
+.speakers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
+.speaker-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: $card-shadow;
+  border: 1px solid $border-color;
+  text-align: center;
+}
+
+.speaker-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.speaker-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-primary;
+  margin-bottom: 0.25rem;
+}
+
+.speaker-title {
+  color: $text-secondary;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.speaker-bio {
+  color: $text-secondary;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* === AGENDA === */
+.agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agenda-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: $background-light;
+  border-radius: 8px;
+}
+
+.agenda-time {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: $color-primary;
+  min-width: 80px;
+}
+
+.agenda-content {
+  flex: 1;
+}
+
+.agenda-title {
+  font-weight: 600;
+  color: $color-primary;
+  margin-bottom: 0.25rem;
+}
+
+.agenda-description {
+  color: $text-secondary;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.agenda-speaker {
+  color: $text-secondary;
+  font-size: 0.85rem;
+}
+
+/* Removed unused agenda-type and progress bar classes */
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: $background-light;
+  border-radius: 6px;
+}
+
+.check-icon {
+  color: $accent-soft-green;
+  font-size: 1rem;
+}
+
+/* === REGISTRATION PANEL === */
+.registration-panel {
+  top: 2rem;
+}
+
+
+.registration-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+/* === EVENT DETAILS === */
+
+.event-details {
+  padding: 1.5rem;
+}
+
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid $border-color;
+  font-size: 0.9rem;
+  color: $text-secondary;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-icon {
+  color: $text-secondary;
+  font-size: 1rem;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.other-venues {
+  padding-top: 0.75rem;
+}
+
+
+.venue-link {
+  color: $color-secondary;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.venue-link:hover {
+  text-decoration: underline;
+}
+
+/* === BOOKING SECTION === */
+
+.booking-section {
+  padding: 1.5rem;
+  border-top: 1px solid $border-color;
+  background: $background-light;
+}
+
+.price-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+
+.price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-primary;
+}
+
+
+.filling-fast {
+  color: $accent-soft-green;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+
+.book-now-btn {
+  width: 100%;
+  @include primary-button;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.book-now-btn.disabled {
+  background: $border-color;
+  color: $text-secondary;
+  cursor: not-allowed;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
-  .cover-image .row {
-    flex-direction: column-reverse;
+  .event-title {
+    font-size: 2rem;
   }
-  
-  .agenda-timeline::before {
-    left: 30px;
+
+  .event-image {
+    height: 200px;
   }
-  
-  .meta-item {
-    font-size: 0.9rem !important;
+
+  .section-card {
+    padding: 1.5rem;
+  }
+
+  .speakers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+
+  .agenda-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .agenda-time {
+    min-width: auto;
+  }
+
+  .event-meta {
+    flex-direction: column;
   }
 }
+
 </style>
+
