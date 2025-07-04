@@ -28,7 +28,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useFetch } from '#app'
+import { useApiLaravel } from '@/composables/useApi.js'
 import BaseModal from './BaseModal.vue'
 
 const props = defineProps({
@@ -57,22 +57,25 @@ const submitForm = async () => {
   success.value = ''
   loading.value = true
   try {
-    // Use slug for registration endpoint
-    const { data, error: fetchError } = await useFetch(`api/events/${props.slug}/register`, {
+    const endpoint = `events/${props.eventSlug}/register`;
+    const { data, error: fetchError, loading: apiLoading } = useApiLaravel(endpoint);
+    // POST the form data
+    const { data: postData, error: postError } = await useFetch(`${useRuntimeConfig().public.apiBase}/${endpoint}`, {
       method: 'POST',
       body: form.value,
-    })
-    if (fetchError.value) {
-      error.value = fetchError.value.data?.message || 'Registration failed.'
-    } else if (data.value?.message) {
-      success.value = data.value.message
-      form.value = { name: '', email: '', phone: '' }
-      showModal.value = true
+      headers: { 'Accept': 'application/json' }
+    });
+    if (postError?.value) {
+      error.value = postError.value.data?.message || 'Registration failed.'
+    } else if (postData.value?.message) {
+      success.value = postData.value.message;
+      form.value = { name: '', email: '', phone: '' };
+      showModal.value = true;
     }
   } catch (e) {
-    error.value = 'Registration failed.'
+    error.value = 'Registration failed.';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
