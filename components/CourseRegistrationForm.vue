@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm" class="event-registration-form">
+  <form @submit.prevent="submitForm" class="course-registration-form">
     <div class="form-group">
       <label for="name">Name<span class="required">*</span></label>
       <input v-model="form.name" id="name" type="text" required maxlength="255" :disabled="loading" />
@@ -13,13 +13,13 @@
       <input v-model="form.phone" id="phone" type="text" maxlength="20" :disabled="loading" />
     </div>
     <div v-if="error" class="form-error">{{ error }}</div>
-    <button type="submit" class="book-now-btn" :disabled="loading">
-      {{ loading ? 'Registering...' : 'Register' }}
+    <button type="submit" class="enroll-now-btn" :disabled="loading">
+      {{ loading ? 'Enrolling...' : 'Enroll' }}
     </button>
   </form>
   <BaseModal :show="showModal" @close="closeModal">
     <div class="text-center py-3">
-      <h3 class="mb-3">Registration Successful!</h3>
+      <h3 class="mb-3">Enrollment Successful!</h3>
       <p>{{ success }}</p>
       <button class="btn btn-smooth-primary mt-3" @click="closeModal">Close</button>
     </div>
@@ -32,11 +32,7 @@ import { useApiLaravel } from '@/composables/useApi.js'
 import BaseModal from './BaseModal.vue'
 
 const props = defineProps({
-  eventId: {
-    type: [String, Number],
-    required: false
-  },
-  eventSlug: {
+  courseSlug: {
     type: String,
     required: true
   }
@@ -59,10 +55,10 @@ const submitForm = async () => {
   try {
     const config = useRuntimeConfig()
     const baseUrl = config.public.apiBase
-    const endpoint = `events/${props.eventSlug}/register`;
+    const endpoint = `courses/${props.courseSlug}/enroll`;
     const response = await $fetch(`${baseUrl}/${endpoint}`, {
       method: 'POST',
-      body: form.value,
+      body: { ...form.value },
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -74,15 +70,12 @@ const submitForm = async () => {
       showModal.value = true;
     }
   } catch (e) {
-    // Laravel returns 422 for validation errors, which $fetch throws as an error
-    if (e?.data?.message) {
+    if (e?.data?.errors) {
+      error.value = Object.values(e.data.errors).flat().join(' ');
+    } else if (e?.data?.message) {
       error.value = e.data.message;
-    } else if (e?.data?.errors) {
-      // Show first validation error if available
-      const firstError = Object.values(e.data.errors)[0];
-      error.value = Array.isArray(firstError) ? firstError[0] : firstError;
     } else {
-      error.value = 'Registration failed.';
+      error.value = 'Enrollment failed.';
     }
   } finally {
     loading.value = false;
@@ -95,7 +88,7 @@ const closeModal = () => {
 </script>
 
 <style lang="scss" scoped>
-.event-registration-form {
+.course-registration-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -129,7 +122,7 @@ input:disabled {
   color: $color-primary;
   font-size: 0.95rem;
 }
-.book-now-btn {
+.enroll-now-btn {
   @include primary-button;
   width: 100%;
   border-radius: 6px;

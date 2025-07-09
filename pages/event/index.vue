@@ -28,7 +28,7 @@ const { getImageUrl } = useImageUrl();
 const eventsWithImages = computed(() => {
   return eventsData.value?.data?.map(event => ({
     ...event,
-    image: getImageUrl(event.image_url, '/placeholder-event.jpg'),
+    image: getImageUrl(event.image || event.image_url, '/placeholder-event.jpg'),
     title: event.title,
     short_description: event.short_description || event.description,
     slug: event.slug || event.id

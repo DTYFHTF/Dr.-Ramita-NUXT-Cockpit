@@ -166,14 +166,10 @@
                     <span>{{ event.time || '6:00 PM' }}</span>
                   </div>
 
-                  <div class="detail-item">
-                    <LucideIcon icon="mdi:timer" class="detail-icon" />
-                    <span>{{ event.duration || '1 hour 30 minutes' }}</span>
-                  </div>
 
                   <div class="detail-item">
                     <LucideIcon icon="mdi:account-group" class="detail-icon" />
-                    <span>{{ event.age_limit || 'Age Limit - 18yrs +' }}</span>
+                    <span>{{ event.age_limit + 'yrs +' || 'Age Limit - 18yrs +' }}</span>
                   </div>
 
                   <div class="detail-item">
@@ -183,7 +179,7 @@
 
                   <div class="detail-item">
                     <LucideIcon icon="mdi:tag" class="detail-icon" />
-                    {{ (event.tags && event.tags.length) ? event.tags.join(', ') : 'Comedy' }}
+                    {{ (event.tags && event.tags.length) ? event.tags.join(', ') : 'Yoga' }}
                   </div>
 
                   <div class="detail-item">
@@ -193,9 +189,6 @@
                     </span>
                   </div>
 
-                  <div v-if="event.other_venues" class="other-venues">
-                    <a href="#" class="venue-link">View {{ event.other_venues || '5' }} Other Venues</a>
-                  </div>
                 </div>
 
                 <!-- Pricing and Booking -->

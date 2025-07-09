@@ -131,23 +131,26 @@
         <!-- CTA Section -->
         <footer class="cta-section mt-5 pt-4 border-top">
           <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
-            <a
-              :href="course.external_link"
+            <button
               class="btn-smooth-primary"
-              target="_blank"
-              rel="noopener"
+              @click="showEnrollModal = true"
             >
               {{
                 course.price === 0
                   ? "Enroll for Free"
                   : `Enroll Now - ₹${course.price}`
               }}
-            </a>
+            </button>
             <p class="text-muted text-center small mt-2">
               <LucideIcon icon="mdi:lock" class="me-1" />
               Secure payment processing
             </p>
           </div>
+          <BaseModal :show="showEnrollModal" @close="showEnrollModal = false">
+            <div class="modal-narrow">
+              <CourseRegistrationForm :course-slug="course.slug" />
+            </div>
+          </BaseModal>
         </footer>
       </div>
     </article>
@@ -162,6 +165,9 @@ import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import BaseModal from '@/components/BaseModal.vue';
+import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
+const showEnrollModal = ref(false);
 
 // Initialize route and reactive variables
 const route = useRoute();
