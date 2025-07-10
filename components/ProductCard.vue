@@ -99,6 +99,10 @@
     <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
   <div v-if="showNotification" class="toast-message">Product added to cart!</div>
+  <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
+    Product added to wishlist! 
+    <NuxtLink to="/wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -117,6 +121,7 @@ const userStore = useUserStore();
 const { getImageUrl } = useImageUrl();
 
 const showNotification = ref(false);
+const showWishlistNotification = ref(false);
 const showQuickView = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
@@ -132,7 +137,16 @@ const handleWishlistToggle = async () => {
     return;
   }
   try {
+    const wasInWishlist = isInWishlist.value;
     await wishlistStore.toggleWishlist(props.product);
+    
+    // Show notification only when adding to wishlist
+    if (!wasInWishlist) {
+      showWishlistNotification.value = true;
+      setTimeout(() => {
+        showWishlistNotification.value = false;
+      }, 3000);
+    }
   } catch (err: any) {
     alert('Error updating wishlist: ' + (err?.message || err));
   }
@@ -311,6 +325,20 @@ function imageUrl(img: string) {
 .price{
   color:#28C092;
   font-weight: 500;
+}
+
+.wishlist-toast {
+  background-color: $color-primary !important; // Pink color for wishlist
+  bottom: 80px !important; // Position above cart notification if both show
+}
+
+.wishlist-toast a {
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+.wishlist-toast a:hover {
+  opacity: 0.8;
 }
 
 
