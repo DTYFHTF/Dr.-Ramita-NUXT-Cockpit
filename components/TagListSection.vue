@@ -30,9 +30,10 @@ defineProps({
 .section-title {
   font-size: 1.5rem;
   font-weight: bold;
+  color: var(--text-primary);
 }
 .section-subtitle {
   font-size: 1rem;
-  color: #888;
+  color: var(--text-muted);
 }
 </style>

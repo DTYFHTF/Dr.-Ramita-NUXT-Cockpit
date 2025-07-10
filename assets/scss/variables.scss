@@ -6,6 +6,7 @@ $color-primary: #2a4d3a;
 $color-secondary: #6b9c7d;
 $accent-soft-green: #87c5a4;
 $background-light: #f2f7f4;
+$background-white:#ffffff;
 //Text
 $text-primary: #101e16;
 $text-secondary: #555555;
@@ -78,7 +79,7 @@ $font-secondary: 'sans-serif';
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-100%);
+    transform: translateX(-5%);
     transition: transform 0.5s ease;
     z-index: -1;
     border-radius: inherit;

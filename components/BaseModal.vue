@@ -19,19 +19,19 @@ const close = () => emit('close')
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(var(--modal-overlay-rgb), 0.35);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .modal-content {
-  background: #fff;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 2rem 1.5rem 1.5rem 1.5rem;
   min-width: 320px;
   max-width: 90vw;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
   position: relative;
   width: 40%;
 }
@@ -42,7 +42,7 @@ const close = () => emit('close')
   background: none;
   border: none;
   font-size: 2rem;
-  color: #888;
+  color: var(--text-muted);
   cursor: pointer;
 }
 </style>

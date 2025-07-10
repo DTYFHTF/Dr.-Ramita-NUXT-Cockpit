@@ -399,12 +399,12 @@ useHead(() => ({
 /* === EVENT HEADER === */
 
 .event-header {
-  background: #fff;
-  border-bottom: 1px solid $border-color;
+  background: var(--background-white);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .event-title {
-  color: $color-primary;
+  color: var(--color-primary);
   font-size: 2.5rem;
   line-height: 1.2;
 }
@@ -425,7 +425,7 @@ useHead(() => ({
 .image-container {
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(var(--shadow-light-rgb), 0.1);
 }
 
 .event-image {
@@ -441,11 +441,11 @@ useHead(() => ({
 
 
 .section-card {
-  background: #fff;
+  background: var(--background-white);
   border-radius: 12px;
   padding: .5rem;
-  box-shadow: $card-shadow;
-  border: 1px solid $border-color;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
 }
 
 
@@ -455,11 +455,11 @@ useHead(() => ({
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 .section-subtitle {
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -479,11 +479,11 @@ useHead(() => ({
 }
 
 .speaker-card {
-  background: #fff;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: $card-shadow;
-  border: 1px solid $border-color;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
   text-align: center;
 }
 
@@ -590,9 +590,9 @@ useHead(() => ({
 
 
 .registration-card {
-  background: #fff;
+  background: var(--background-white);
   border-radius: 12px;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   overflow: hidden;
   margin-top: 1.5rem;
 }

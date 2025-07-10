@@ -70,6 +70,6 @@ async function login({ email, password }: { email: string, password: string }) {
 
 <style scoped>
 .login-page {
-  background: #f8fafc;
+  background: var(--background-light);
 }
 </style>

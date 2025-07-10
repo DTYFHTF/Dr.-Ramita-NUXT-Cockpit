@@ -42,7 +42,7 @@
       <div v-if="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
       <div class="row g-5 align-items-start">
         <div class="col-lg-7">
-          <form @submit.prevent="submitOrder" novalidate class="p-4 rounded-4 shadow-sm bg-white">
+          <form @submit.prevent="submitOrder" novalidate class="p-4 rounded-4 shadow-sm" style="background-color: var(--background-white);">
             <h4 class="mb-4 fw-semibold border-bottom pb-2">Shipping & Contact Information</h4>
             <div class="row mb-3">
               <div class="col-md-6 mb-3">

@@ -7,7 +7,7 @@
     <div v-else-if="error" class="alert alert-danger text-center">{{ error }}</div>
     <div v-else-if="orders.length === 0" class="alert alert-info text-center">No orders found.</div>
     <div v-else>
-      <div class="table-responsive rounded-4 shadow-sm bg-white p-3">
+      <div class="table-responsive rounded-4 shadow-sm p-3" style="background-color: var(--background-white);">
         <table class="table align-middle">
           <thead>
             <tr>
@@ -35,7 +35,7 @@
           </tbody>
         </table>
       </div>
-      <div v-if="selectedOrder" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.2);">
+      <div v-if="selectedOrder" class="modal fade show d-block" tabindex="-1" style="background:rgba(var(--modal-overlay-rgb), 0.2);">
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">

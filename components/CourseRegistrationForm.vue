@@ -101,25 +101,25 @@ const closeModal = () => {
 input[type="text"],
 input[type="email"] {
   padding: 0.5rem 0.75rem;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
-  background: #fff;
-  color: $text-primary;
+  background: var(--background-white);
+  color: var(--text-primary);
 }
 input:disabled {
-  background: $background-light;
+  background: var(--background-light);
 }
 .required {
-  color: $color-secondary;
+  color: var(--color-secondary);
   margin-left: 0.25rem;
 }
 .form-error {
-  color: $text-error;
+  color: var(--text-error);
   font-size: 0.95rem;
 }
 .form-success {
-  color: $color-primary;
+  color: var(--color-primary);
   font-size: 0.95rem;
 }
 .enroll-now-btn {

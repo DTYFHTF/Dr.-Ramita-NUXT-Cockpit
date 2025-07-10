@@ -121,7 +121,7 @@
                     :alt="pose.title"
                     class="card-img-bottom d-block mx-auto"
                     loading="lazy"
-                    style="max-height: 300px; width: auto; object-fit: contain; background: #fff;"
+                    style="max-height: 300px; width: auto; object-fit: contain; background: white;"
                   />
                   <div class="pose-instructions text-muted fs-5 lh-lg">
                     <DynamicContent :content="pose.instructions" />
@@ -139,7 +139,7 @@
               <h2>Transformative Benefits</h2>
               <p class="section-subtitle text-muted fs-5">Nourish your body and mind</p>
             </div>
-            <ol class="benefits-list bg-white">
+            <ol class="benefits-list">
               <li v-for="(benefit, idx) in yoga.benefits" :key="idx" class="fs-5 lh-lg mb-2">
                 <DynamicContent :content="benefit" />
               </li>
@@ -276,7 +276,7 @@ const retryFetch = async () => {
   max-width: 460px;
   height: 300px;
   object-fit: contain;
-  background: #fff;
+  background: $background-white;
 }
 
 .benefits-content {

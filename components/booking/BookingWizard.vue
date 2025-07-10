@@ -92,37 +92,37 @@ const currentStepComponent = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: $background-light;
+  background: var(--background-light);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 0.5rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-muted);
   position: relative;
   z-index: 1;
 }
 
 .step-indicator.active .step-number {
-  background-color: #2c7a7b;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--text-white);
 }
 
 .step-indicator.completed .step-number {
-  background-color: #48bb78;
-  color: white;
+  background-color: var(--color-secondary);
+  color: var(--text-white);
 }
 
 .step-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .step-content {
-  background: white;
+  background: var(--background-white);
   border-radius: 0.5rem;
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(var(--shadow-rgb), 0.1);
   min-height: 400px;
 }
 

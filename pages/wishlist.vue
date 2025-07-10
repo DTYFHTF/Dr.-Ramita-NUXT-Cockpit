@@ -20,7 +20,7 @@
           <!-- Empty State -->
           <div v-else-if="wishlist.length === 0" class="empty-wishlist text-center py-5">
             <div class="empty-icon mb-3">
-              <LucideIcon icon="mdi:heart-outline" size="4rem" color="#6c757d" />
+              <LucideIcon icon="mdi:heart-outline" size="4rem" color="var(--text-muted)" />
             </div>
             <h3 class="text-muted mb-3">Your wishlist is empty</h3>
             <p class="text-muted mb-4">
@@ -69,7 +69,7 @@
     </div>
 
     <!-- Confirmation Modal for Clear All -->
-    <div v-if="showClearConfirm" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div v-if="showClearConfirm" class="modal fade show d-block" tabindex="-1" style="background: rgba(var(--modal-overlay-rgb), 0.5);">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -214,7 +214,7 @@ onMounted(async () => {
   color: white;
   padding: 12px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(var(--shadow-medium-rgb), 0.2);
   z-index: 9999;
   animation: slideInRight 0.3s ease;
 }

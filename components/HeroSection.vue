@@ -46,7 +46,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
   position: relative;
 }
 .overlay {
-  background-color: rgba($background-light, 0.6);
+  background-color: rgba(var(--background-light-rgb), 0.6);
   z-index: 0;
 }
 .container {

@@ -97,9 +97,9 @@ function firstAvailableImage(product) {
   width: 1000px !important;
   max-width: 1000px !important;
   min-width: 900px;
-  background: white;
+  background: var(--background-white);
   border-radius: 8px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 24px rgba(var(--shadow-rgb), 0.1);
   max-height: 400px;
   display: flex;
   overflow: hidden;
@@ -116,8 +116,8 @@ function firstAvailableImage(product) {
 
 .category-list {
   width: 170px;
-  background: #f8f9fa;
-  border-right: 1px solid #e9ecef;
+  background: var(--card-background);
+  border-right: 1px solid var(--border-color);
   overflow-y: auto;
   max-height: 368px; /* Adjust as needed to fit inside the menu */
   padding: 12px 0;
@@ -139,11 +139,11 @@ function firstAvailableImage(product) {
 }
 
 .category-list li:hover {
-  background: #e9ecef;
+  background: var(--background-light);
 }
 
 .category-list li.active-category {
-  background: white;
+  background: var(--background-white);
   font-weight: 500;
 }
 
@@ -200,7 +200,7 @@ function firstAvailableImage(product) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 </style>

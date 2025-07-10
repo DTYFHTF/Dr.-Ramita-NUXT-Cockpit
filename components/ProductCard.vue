@@ -43,7 +43,7 @@
             </span>
           </template>
           <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
-            <LucideIcon icon="mdi:star" color="#ffc107" size="18" class="me-1" />
+            <LucideIcon icon="mdi:star" color="var(--color-warning)" size="18" class="me-1" />
             <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
           </span>
         </div>
@@ -234,11 +234,11 @@ function imageUrl(img: string) {
 <style scoped lang="scss">
 .product-card {
   transition: box-shadow 0.18s, transform 0.18s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(var(--shadow-light-rgb), 0.1);
   border-radius: 8px;
 }
 .product-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(var(--shadow-medium-rgb), 0.15);
   transform: translateY(-4px) scale(1.02);
 }
 .image-container {
@@ -286,7 +286,7 @@ function imageUrl(img: string) {
 }
 .wishlist-btn:hover,
 .quick-view-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(var(--shadow-light-rgb), 0.1);
 }
 .add-to-cart-btn {
   position: relative;
@@ -323,7 +323,7 @@ function imageUrl(img: string) {
   white-space: normal;
 }
 .price{
-  color:#28C092;
+  color: $accent-soft-green;
   font-weight: 500;
 }
 

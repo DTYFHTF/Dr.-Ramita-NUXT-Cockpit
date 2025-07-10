@@ -247,9 +247,9 @@ watchEffect(() => {
 
   .course-section {
     padding: 2rem;
-    background: white;
+    background: var(--background-white);
     border-radius: 1rem;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
 
     .course-list {
       list-style: none;

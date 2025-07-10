@@ -67,12 +67,12 @@ const handlePageChange = (page: number) => {
   min-width: 45px;
   text-align: center;
   transition: all 0.2s ease;
-  color:$color-primary;
+  color: var(--color-primary);
 }
 
 .page-item.active .page-link {
-  background-color: $color-primary;
-  border-color: $color-primary;
-  color: white;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-white);
 }
 </style>

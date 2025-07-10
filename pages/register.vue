@@ -98,6 +98,6 @@ async function resendVerification() {
 
 <style scoped>
 .register-page {
-  background: #f8fafc;
+  background: var(--background-light);
 }
 </style>

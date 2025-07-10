@@ -55,12 +55,13 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: var(--card-background);
 }
 .feedback-form h1 {
   text-align: center;
+  color: var(--text-primary);
 }
 .feedback-form div {
   margin-bottom: 15px;
@@ -68,26 +69,29 @@ export default {
 .feedback-form label {
   display: block;
   margin-bottom: 5px;
+  color: var(--text-secondary);
 }
 .feedback-form input,
 .feedback-form textarea {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
+  background: var(--background-white);
+  color: var(--text-primary);
 }
 .feedback-form button {
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--text-white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 .feedback-form button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-dark);
 }
 .success-message {
   color: green;

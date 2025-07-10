@@ -89,7 +89,7 @@ const formatDate = (date) => {
   display: flex;
   align-items: center;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .meta-item .icon {

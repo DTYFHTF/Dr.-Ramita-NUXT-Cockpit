@@ -96,7 +96,7 @@ const resetBooking = () => {
   border-radius: 12px;
   padding: 2rem;
   margin: 2rem 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(var(--shadow-light-rgb), 0.05);
 }
 
 .detail-item {

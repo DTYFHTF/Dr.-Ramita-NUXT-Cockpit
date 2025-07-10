@@ -131,11 +131,11 @@ onMounted(async () => {
 .breadcrumbs {
   margin-bottom: 2rem;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .breadcrumbs a {
-  color: #007bff;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -159,9 +159,9 @@ onMounted(async () => {
 
 .sidebar {
   flex: 1;
-  background-color: #f9f9f9;
+  background-color: var(--card-background);
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   align-self: flex-start; /* Ensures the sidebar height matches content */
   width: 250px; /* Fixed width for sidebar */
@@ -184,7 +184,7 @@ onMounted(async () => {
 
 .divider {
   border: none;
-  border-top: 2px solid #0a0a0a;
+  border-top: 2px solid var(--border-color);
   margin: 1rem 0;
 }
 </style>

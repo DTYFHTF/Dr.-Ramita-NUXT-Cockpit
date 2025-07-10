@@ -61,7 +61,7 @@ onMounted(async () => {
   justify-content: center;
   font-size: 1.2rem;
 }
-.loading { color: #888; }
-.error { color: #c00; }
-.success { color: #2a4d3a; }
+.loading { color: var(--text-muted); }
+.error { color: var(--color-error); }
+.success { color: var(--color-primary); }
 </style>

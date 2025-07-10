@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm py-2">
     <div class="container">
       <!-- Brand/Logo -->
       <NuxtLink to="/" class="navbar-brand d-flex align-items-center">
@@ -92,6 +92,9 @@
             <div v-if="user" class="nav-link">
               <CartIndicator />
             </div>
+            <div class="nav-link">
+              <ThemeToggle />
+            </div>
           </template>
         </div>
       </div>
@@ -105,6 +108,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import MegaMenu from "./MegaMenu.vue";
 import UserSection from '@/components/UserSection.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { ref } from "vue";
 import LucideIcon from '@/components/LucideIcon.vue';
 
@@ -128,24 +132,19 @@ const handleMouseEnter = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .navbar {
   position: sticky;
   top: 0;
   z-index: 1030;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.brand-text {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-deep-green);
+  background-color: var(--background-light);
+  box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.1);
 }
 
 .nav-link {
   font-size: 1.05rem;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   padding: 0.1rem 0;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -154,7 +153,7 @@ const handleMouseEnter = () => {
 
 .nav-link:hover {
   transform: translateY(-2px);
-  color: var(--text-deep-green);
+  color: var(--color-primary);
 }
 
 .mega-menu-wrapper {
@@ -166,8 +165,8 @@ const handleMouseEnter = () => {
   max-width: 90vw;
   width: 600px;
   z-index: 1050;
-  background: #fff;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  background: var(--background-white);
+  box-shadow: 0 4px 24px rgba(var(--shadow-rgb), 0.12);
   border-radius: 0 0 12px 12px;
   padding: 1.5rem 2rem;
   margin-top: 0.5rem;

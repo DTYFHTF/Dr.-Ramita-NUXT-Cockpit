@@ -48,11 +48,12 @@ const props = defineProps({
 
 <style scoped lang="scss">
 .card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--background-white);
 }
 
 .card-header {
@@ -69,16 +70,16 @@ const props = defineProps({
   position: absolute;
   top: 10px;
   left: 10px;
-  background: $badge-color;
-  color: $color-primary;
+  background: var(--badge-color);
+  color: var(--color-primary);
   padding: 4px 8px;
   border-radius: 10px;
   font-size: 0.8rem;
 }
 
 .badge.free {
-  background: $badge-free-color;
-  color: $color-primary;
+  background: var(--badge-free-color);
+  color: var(--color-primary);
 }
 
 .card-content {
@@ -90,11 +91,13 @@ const props = defineProps({
 .title {
   font-size: 1.25rem;
   margin-bottom: 8px;
+  color: var(--text-primary);
 }
 
 .description {
   font-size: 1rem;
   margin-bottom: 16px;
+  color: var(--text-secondary);
 }
 
 .meta-info {

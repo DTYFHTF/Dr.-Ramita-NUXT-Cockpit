@@ -40,9 +40,9 @@ function onSubmit() {
   max-width: 400px;
   margin: 0 auto;
   padding: 2rem;
-  background: #fff;
+  background: var(--background-white);
   border-radius: 8px;
-  box-shadow: 0 2px 16px rgba($color-primary,0.08);
+  box-shadow: 0 2px 16px rgba(var(--color-primary-rgb), 0.08);
 }
 .form-group {
   margin-bottom: 1rem;
@@ -50,21 +50,24 @@ function onSubmit() {
 label {
   display: block;
   margin-bottom: 0.5rem;
+  color: var(--text-secondary);
 }
 input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
+  background: var(--background-white);
+  color: var(--text-primary);
 }
 button {
   width: 100%;
 }
 button:disabled {
-  background: #aaa;
+  background: var(--color-muted);
 }
 .error {
-  color: red;
+  color: var(--color-error);
   margin-bottom: 1rem;
   text-align: center;
 }

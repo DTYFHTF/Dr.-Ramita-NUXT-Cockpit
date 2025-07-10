@@ -159,14 +159,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>:root {
-  --text-deep-green: #2a4d3a; /* Your deep green color */
-  --calendar-primary: var(--text-deep-green);
-  --calendar-text: var(--text-deep-green); /* Date number color */
-  --calendar-text-secondary: #4a5568; /* Month and weekday color */
-  --calendar-success: #48bb78; /* Availability indicator */
-}
-
+<style scoped>
 .date-step {
   max-width: 800px;
   margin: 0 auto;
@@ -187,7 +180,7 @@ onMounted(() => {
   background: var(--calendar-bg);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(var(--shadow-light-rgb), 0.05);
   margin: 0 1rem;
 }
 
@@ -233,15 +226,15 @@ onMounted(() => {
   &:hover:not(.disabled) {
     transform: scale(1.05);
     z-index: 1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(var(--shadow-light-rgb), 0.1);
   }
 
   &.current-month:not(.disabled) {
-    background-color: #f7fafc;
+    background-color: var(--background-light);
   }
 
   &.available:not(.selected):hover {
-    border-color: var(--calendar-primary);
+    border-color: var(--color-primary);
   }
 }
 
@@ -276,7 +269,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(var(--shadow-medium-rgb), 0.15);
   animation: popIn 0.2s ease;
 }
 
@@ -295,11 +288,11 @@ onMounted(() => {
 }
 /* Current month dates */
 .calendar-day.current-month:not(.disabled) {
-  background-color: rgba(245, 250, 245, 0.5); /* Light green background */
+  background-color: rgba(var(--background-light-rgb), 0.5); /* Light green background */
 }
 
 .disabled {
-  background-color: #f8fafc;
+  background-color: var(--background-light);
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -354,13 +347,13 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--shimmer-rgb), 0.2), transparent);
   transform: translateX(-100%);
 }
 
 .btn-smooth-green:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(42, 77, 58, 0.3);
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .btn-smooth-green:hover::before {
@@ -373,7 +366,7 @@ onMounted(() => {
   text-align: center;
 }
 .day-number{
-  color:#000;
+  color: var(--text-primary);
 }
 .calendar-month-nav {
   display: flex;
@@ -386,7 +379,7 @@ onMounted(() => {
 .month-nav-btn {
   background: none;
   border: none;
-  color: var(--calendar-text-secondary);
+  color: var(--text-secondary);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0 0.5rem;
@@ -394,7 +387,7 @@ onMounted(() => {
 }
 
 .month-nav-btn:hover {
-  color: var(--calendar-primary);
+  color: var(--color-primary);
 }
 
 .current-month {

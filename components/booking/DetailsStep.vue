@@ -89,7 +89,7 @@ const handleSubmit = () => {
   background: white;
   border-radius: 12px;
   /* padding: 1rem; */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(var(--shadow-light-rgb), 0.05);
 }
 
 .form-group {

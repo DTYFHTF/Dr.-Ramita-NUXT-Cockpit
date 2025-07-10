@@ -1,3 +1,147 @@
+// CSS Custom Properties for Theme Support
+:root {
+  // Light theme (default)
+  --color-primary: #{$color-primary};
+  --primary-dark: #1e3624; // Darker shade of primary for hover states
+  --color-secondary: #{$color-secondary};
+  --accent-soft-green: #{$accent-soft-green};
+  --background-light: #{$background-light};
+  --background-white: #{$background-white};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-light: #{$text-light};
+  --text-error: #{$text-error};
+  --border-color: #{$border-color};
+  --button-bg: #{$button-bg};
+  --card-shadow: #{$card-shadow};
+  --badge-color: #{$badge-color};
+  --badge-free-color: #{$badge-free-color};
+  
+  // Additional theme variables
+  --text-white: #ffffff;
+  --text-muted: #6c757d;
+  --color-error: #dc3545;
+  --color-warning: #ffc107;
+  --color-success: #38a169;
+  --color-muted: #aaa;
+  
+  // Brand colors (generally consistent across themes)
+  --brand-whatsapp: #01CB37;
+  --brand-facebook: #1877F2;
+  --brand-twitter: #1DA1F2;
+  --brand-instagram: #C13584;
+  
+  // RGB values for transparent colors
+  --background-white-rgb: 255, 255, 255;
+  --background-light-rgb: 242, 247, 244;
+  --color-primary-rgb: 42, 77, 58;
+  --shadow-light-rgb: 0, 0, 0;
+  --shadow-medium-rgb: 0, 0, 0;
+  --shimmer-rgb: 255, 255, 255;
+}
+
+// Dark theme
+[data-theme="dark"] {
+  --color-primary: #4a7a5a;
+  --primary-dark: #3a5a4a; // Darker shade for dark theme
+  --color-secondary: #8bc9a8;
+  --accent-soft-green: #a7d5c4;
+  --background-light: #1a1a1a;
+  --background-white: #2d2d2d;
+  --text-primary: #e8f2ec;
+  --text-secondary: #b0b0b0;
+  --text-light: #1a1a1a;
+  --text-error: #ff6b6b;
+  --border-color: #404040;
+  --button-bg: #4a7a5a;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --badge-color: #3a3a3a;
+  --badge-free-color: #5a8a5a;
+  
+  // Additional dark theme variables
+  --text-white: #ffffff;
+  --text-muted: #888;
+  --color-error: #ff6b6b;
+  --color-warning: #ffc107;
+  --color-success: #38a169;
+  --color-muted: #666;
+  --card-background: #3a3a3a;
+  --modal-overlay-rgb: 0, 0, 0;
+  --shadow-rgb: 0, 0, 0;
+  --success-bg: #1e3a1e;
+  --error-bg: #3a1e1e;
+  
+  // RGB values for transparent colors
+  --background-white-rgb: 45, 45, 45;
+  --background-light-rgb: 26, 26, 26;
+  --color-primary-rgb: 74, 122, 90;
+}
+
+// Global body and html styles for theme support
+html {
+  background-color: var(--background-light);
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Section background classes for index page
+.bg-herbal-light {
+  background-color: var(--background-white);
+}
+
+.bg-sandal-light {
+  background-color: var(--background-light);
+}
+
+// Override Bootstrap utilities with theme variables
+.bg-white {
+  background-color: var(--background-white) !important;
+}
+
+.bg-light {
+  background-color: var(--background-light) !important;
+}
+
+.text-dark {
+  color: var(--text-primary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+// Additional Bootstrap overrides for comprehensive theme support
+.card {
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.modal-content {
+  background-color: var(--background-white);
+  color: var(--text-primary);
+}
+
+.table {
+  color: var(--text-primary);
+}
+
+.form-control {
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.form-control:focus {
+  background-color: var(--background-white);
+  border-color: var(--color-primary);
+  color: var(--text-primary);
+}
+
 .btn-smooth {
   @include button-base;
 }
@@ -20,11 +164,11 @@
   position: absolute;
   top: 25px;
   left: 25px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 240, 235, 0.9) 100%);
+  background: linear-gradient(90deg, rgba(var(--background-white-rgb, 255, 255, 255), 0.9) 0%, rgba(var(--background-light-rgb, 245, 240, 235), 0.9) 100%);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
-  color: #7a6a5c;
+  color: var(--text-secondary);
   z-index: 10; /* Ensure it is above other elements */
   backdrop-filter: blur(2px);
 }

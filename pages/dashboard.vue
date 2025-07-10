@@ -323,27 +323,27 @@ onMounted(() => {
 @import '@/assets/scss/variables.scss';
 
 .dashboard-wrapper {
-  background-color: $background-light;
+  background-color: var(--background-light);
   min-height: 100vh;
 }
 
 .welcome-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: $card-shadow;
-  border: 1px solid $border-color;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
 }
 
 .user-avatar {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, $color-primary, $color-secondary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-white);
   font-size: 1.5rem;
 }
 
@@ -356,16 +356,16 @@ onMounted(() => {
 
 .welcome-subtitle {
   margin: 0;
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .section-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: $card-shadow;
-  border: 1px solid $border-color;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
   height: 100%;
 }
 
@@ -382,12 +382,12 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: white;
-  border: 1px solid $color-secondary;
+  background: var(--background-white);
+  border: 1px solid var(--color-secondary);
   border-radius: 8px;
   padding: 1.5rem 1rem;
   text-decoration: none;
-  color: $text-primary;
+  color: var(--text-primary);
   transition: all 0.3s ease;
   height: 100px;
   position: relative;
@@ -405,7 +405,7 @@ onMounted(() => {
 .action-icon {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: $color-primary;
+  color: var(--color-primary);
   position: relative;
 }
 
@@ -419,8 +419,8 @@ onMounted(() => {
   position: absolute;
   top: -5px;
   right: -5px;
-  background: $color-primary;
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-white);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -516,17 +516,17 @@ onMounted(() => {
 .nav-card {
   display: flex;
   align-items: center;
-  background: white;
-  border: 1px solid $border-color;
+  background: var(--background-white);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1rem;
   text-decoration: none;
-  color: $text-primary;
+  color: var(--text-primary);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: $color-primary;
-    background: $background-light;
+    border-color: var(--color-primary);
+    background: var(--background-light);
     transform: translateY(-1px);
     box-shadow: $btn-hover-shadow;
     color: $text-primary;
@@ -538,11 +538,11 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: linear-gradient(135deg, $color-primary, $color-secondary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-white);
   font-size: 1.2rem;
   margin-right: 1rem;
   flex-shrink: 0;
@@ -563,35 +563,35 @@ onMounted(() => {
 }
 
 .btn-primary {
-  background-color: $button-bg;
-  border-color: $button-bg;
+  background-color: var(--button-bg);
+  border-color: var(--button-bg);
 
   &:hover {
-    background-color: darken($button-bg, 10%);
-    border-color: darken($button-bg, 10%);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
   }
 }
 
 .btn-outline-primary {
-  color: $button-bg;
-  border-color: $button-bg;
+  color: var(--button-bg);
+  border-color: var(--button-bg);
 
   &:hover {
-    background-color: $button-bg;
-    border-color: $button-bg;
+    background-color: var(--button-bg);
+    border-color: var(--button-bg);
   }
 }
 
 .alert-success {
-  background-color: lighten($color-secondary, 40%);
-  border-color: $color-secondary;
-  color: darken($color-secondary, 20%);
+  background-color: var(--success-bg);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 .alert-danger {
-  background-color: lighten($text-error, 40%);
-  border-color: $text-error;
-  color: $text-error;
+  background-color: var(--error-bg);
+  border-color: var(--text-error);
+  color: var(--text-error);
 }
 
 // Responsive adjustments

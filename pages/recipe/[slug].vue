@@ -230,7 +230,7 @@ watch(recipeData, (val) => {
           padding: 0.6rem 1.2rem;
           border-radius: 25px;
           font-size: 0.95rem;
-          color: #666;
+          color: $text-secondary;
           display: inline-flex;
           align-items: center;}
       }

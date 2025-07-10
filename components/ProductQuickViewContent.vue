@@ -211,28 +211,28 @@
             target="_blank"
             rel="noopener"
             title="Share on WhatsApp"
-            ><LucideIcon icon="mdi:whatsapp" color="#01CB37"
+            ><LucideIcon icon="mdi:whatsapp" color="var(--brand-whatsapp)"
           /></a>
           <a
             :href="shareUrl('facebook')"
             target="_blank"
             rel="noopener"
             title="Share on Facebook"
-            ><LucideIcon icon="mdi:facebook" color="#1877F2"
+            ><LucideIcon icon="mdi:facebook" color="var(--brand-facebook)"
           /></a>
           <a
             :href="shareUrl('twitter')"
             target="_blank"
             rel="noopener"
             title="Share on Twitter"
-            ><LucideIcon icon="mdi:twitter" color="#1DA1F2"
+            ><LucideIcon icon="mdi:twitter" color="var(--brand-twitter)"
           /></a>
           <a
             :href="shareUrl('instagram')"
             target="_blank"
             rel="noopener"
             title="Share on Instagram"
-            ><LucideIcon icon="mdi:instagram" color="#C13584"
+            ><LucideIcon icon="mdi:instagram" color="var(--brand-instagram)"
           /></a>
         </div>
       </div>
@@ -365,13 +365,13 @@ function shareUrl(platform: string) {
 }
 .quick-view-content {
   position: relative;
-  background: #fff;
+  background: var(--background-white);
   border-radius: 10px;
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
 }
 .quick-view-image {
   min-width: 280px;
@@ -381,7 +381,7 @@ function shareUrl(platform: string) {
   border-radius: 8px;
   margin: 0 auto;
   display: block;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.04);
 }
 .image-col {
   position: relative;
@@ -425,26 +425,34 @@ function shareUrl(platform: string) {
 }
 .carousel-control-prev-icon {
   background-image: none !important;
-  /* Use SVG for left arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    center/1.5rem 1.5rem no-repeat !important;
-  background-color: #226144 !important;
+  /* Create arrow shape with border */
+  border: none;
+  border-left: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(45deg);
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  mask: none !important;
+  -webkit-mask: none !important;
 }
 .carousel-control-next-icon {
   background-image: none !important;
-  /* Use SVG for right arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    center/1.5rem 1.5rem no-repeat !important;
-  background-color: #226144 !important;
+  /* Create arrow shape with border */
+  border: none;
+  border-right: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(-45deg);
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  mask: none !important;
+  -webkit-mask: none !important;
 }
 
 .btn-smooth-outline.active {
-  background-color: #226144 !important; 
-  color: #fff !important;
-  border-color: #226144 !important;
+  background-color: var(--color-primary) !important; 
+  color: var(--text-white) !important;
+  border-color: var(--color-primary) !important;
 }
 </style>
