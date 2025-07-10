@@ -67,8 +67,18 @@
       </div>
     </NuxtLink>
     <div class="d-flex justify-content-between align-items-center w-100 px-3 pb-3">
-      <button class="btn btn-outline-secondary wishlist-btn" title="Add to Wishlist">
-        <LucideIcon icon="mdi:heart-outline" color="black" />
+      <button 
+        @click="handleWishlistToggle" 
+        :class="[
+          'btn wishlist-btn', 
+          isInWishlist ? 'btn-danger' : 'btn-outline-secondary'
+        ]" 
+        :title="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
+      >
+        <LucideIcon 
+          :icon="isInWishlist ? 'mdi:heart' : 'mdi:heart-outline'" 
+          :color="isInWishlist ? 'white' : 'black'" 
+        />
       </button>
       <button
         class="btn btn-smooth-success add-to-cart-btn"
@@ -96,11 +106,13 @@ import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
 import { useCart } from '@/composables/useCart';
+import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
+const wishlistStore = useWishlist();
 const userStore = useUserStore();
 const { getImageUrl } = useImageUrl();
 
@@ -108,6 +120,23 @@ const showNotification = ref(false);
 const showQuickView = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
+const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id));
+
+const handleWishlistToggle = async () => {
+  if (!userStore.hydrated) {
+    alert('Please wait, authentication state is loading.');
+    return;
+  }
+  if (!isAuthenticated.value) {
+    alert('You need to be logged in to manage your wishlist.');
+    return;
+  }
+  try {
+    await wishlistStore.toggleWishlist(props.product);
+  } catch (err: any) {
+    alert('Error updating wishlist: ' + (err?.message || err));
+  }
+};
 
 const handleAddToCart = async (product: Product) => {
   if (!userStore.hydrated) {

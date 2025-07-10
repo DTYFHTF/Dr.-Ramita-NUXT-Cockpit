@@ -22,7 +22,7 @@
           <div class="section-card">
             <h3 class="section-title">Quick Actions</h3>
             <div class="row g-3">
-              <div class="col-6 col-md-3">
+              <div class="col-6 col-md-4 col-lg-3">
                 <NuxtLink to="/products" class="action-card">
                   <div class="action-icon">
                     <LucideIcon icon="mdi:shopping" />
@@ -30,7 +30,7 @@
                   <span class="action-text">Browse Products</span>
                 </NuxtLink>
               </div>
-              <div class="col-6 col-md-3">
+              <div class="col-6 col-md-4 col-lg-3">
                 <button @click="openBookingWizard" class="action-card">
                   <div class="action-icon">
                     <LucideIcon icon="mdi:calendar-plus" />
@@ -38,7 +38,7 @@
                   <span class="action-text">Book Consultation</span>
                 </button>
               </div>
-              <div class="col-6 col-md-3">
+              <div class="col-6 col-md-4 col-lg-3">
                 <NuxtLink to="/CartPage" class="action-card">
                   <div class="action-icon">
                     <LucideIcon icon="mdi:cart" />
@@ -47,12 +47,21 @@
                   <span class="action-text">My Cart</span>
                 </NuxtLink>
               </div>
-              <div class="col-6 col-md-3">
+              <div class="col-6 col-md-4 col-lg-3">
                 <NuxtLink to="/orders" class="action-card">
                   <div class="action-icon">
                     <LucideIcon icon="mdi:package-variant" />
                   </div>
                   <span class="action-text">Orders</span>
+                </NuxtLink>
+              </div>
+              <div class="col-6 col-md-4 col-lg-3">
+                <NuxtLink to="/wishlist" class="action-card">
+                  <div class="action-icon">
+                    <LucideIcon icon="mdi:heart" />
+                    <span v-if="wishlistStore.totalItems > 0" class="cart-badge">{{ wishlistStore.totalItems }}</span>
+                  </div>
+                  <span class="action-text">Wishlist</span>
                 </NuxtLink>
               </div>
             </div>
@@ -121,6 +130,12 @@
                 <div class="status-label">Cart Items</div>
                 <div class="status-value">
                   <LucideIcon icon="mdi:cart" /> {{ cartStore.totalItems }} items
+                </div>
+              </div>
+              <div class="status-item">
+                <div class="status-label">Wishlist Items</div>
+                <div class="status-value">
+                  <LucideIcon icon="mdi:heart" /> {{ wishlistStore.totalItems }} items
                 </div>
               </div>
             </div>
@@ -199,12 +214,14 @@
 import LucideIcon from '@/components/LucideIcon.vue'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
+import { useWishlistStore } from '@/stores/wishlist'
 import { useBookingStore } from '@/stores/booking'
 import { storeToRefs } from 'pinia'
 import { ref, computed, onMounted } from 'vue'
 
 const userStore = useUserStore()
 const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
 const bookingStore = useBookingStore()
 const { user } = storeToRefs(userStore)
 
@@ -360,12 +377,13 @@ onMounted(() => {
 }
 
 .action-card {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: white;
-  border: 2px solid $border-color;
+  border: 1px solid $color-secondary;
   border-radius: 8px;
   padding: 1.5rem 1rem;
   text-decoration: none;

@@ -34,7 +34,7 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+          <NuxtLink to="/wishlist" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:heart" class="me-2" />
             Wishlist
           </NuxtLink>
