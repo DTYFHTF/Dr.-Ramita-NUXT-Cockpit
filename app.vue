@@ -20,7 +20,6 @@ initTheme();
 <style>
 :root {
   --text-deep-green: #3f5947;
-  --accent-soft-green: #d6e1d8;
   
   
   font-family: var(--font-primary), var(--font-secondary);

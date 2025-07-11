@@ -25,18 +25,13 @@
       <!-- Header Section -->
       <header class="course-header text-center mb-5">
         <div class="course-badge mb-3">
-          <span
-            class="badge"
-            :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'"
-          >
+          <span class="badge" :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'">
             {{ course.price === 0 ? "Free" : `${course.price}` }}
           </span>
         </div>
         <h1 class="course-title mb-3">{{ course.title }}</h1>
 
-        <div
-          class="course-meta d-flex justify-content-center gap-4 flex-wrap mb-4"
-        >
+        <div class="course-meta d-flex justify-content-center gap-4 flex-wrap mb-4">
           <div class="meta-item d-flex align-items-center">
             <LucideIcon icon="mdi:clock" class="me-2" />
             <span>{{ course.duration || "Approx. 20 hours" }}</span>
@@ -48,19 +43,18 @@
             }}</span>
           </div>
         </div>
-        <img
-          :src="course.imageUrl"
-          :alt="`Cover image for ${course.title}`"
-          class="course-cover img-fluid rounded-3 shadow-lg"
-          loading="lazy"
-        />
+        <img :src="course.imageUrl" :alt="`Cover image for ${course.title}`"
+          class="course-cover img-fluid rounded-3 shadow-lg" loading="lazy" />
       </header>
 
       <!-- Main Content -->
       <div class="course-content">
         <!-- About Section -->
         <section class="course-section mb-5">
-          <h2 class="mb-4">About This Course</h2>
+          <h2 class="mb-4">About This Course Lifetime accessCommunity support
+            Mobile & desktop friendly
+
+          </h2>
           <div class="section-content">
             <DynamicContent :content="course.description" />
           </div>
@@ -72,11 +66,7 @@
             <section class="course-section">
               <h2 class="mb-4">Skills You'll Gain</h2>
               <ul class="course-list">
-                <li
-                  v-for="skill in course.skills"
-                  :key="skill"
-                  class="list-before"
-                >
+                <li v-for="skill in course.skills" :key="skill" class="list-before">
                   <DynamicContent :content="skill" />
                 </li>
               </ul>
@@ -87,11 +77,7 @@
             <section class="course-section">
               <h2 class="mb-4">What You'll Learn</h2>
               <ul class="course-list">
-                <li
-                  v-for="item in course.learning_outcomes"
-                  :key="item"
-                  class="list-before"
-                >
+                <li v-for="item in course.learning_outcomes" :key="item" class="list-before">
                   <DynamicContent :content="item" />
                 </li>
               </ul>
@@ -102,19 +88,10 @@
         <!-- Instructor Section -->
         <section class="course-section mt-5">
           <h2 class="mb-4">Course Instructor</h2>
-          <div
-            class="instructor-card card border-0 shadow-sm"
-            v-if="course.instructor"
-          >
+          <div class="instructor-card card border-0 shadow-sm" v-if="course.instructor">
             <div class="card-body d-flex align-items-center gap-4">
-              <img
-                :src="course.instructorImageUrl"
-                :alt="`Instructor ${course.instructor.name}`"
-                class="instructor-avatar rounded-circle"
-                width="100"
-                height="100"
-                loading="lazy"
-              />
+              <img :src="course.instructorImageUrl" :alt="`Instructor ${course.instructor.name}`"
+                class="instructor-avatar rounded-circle" width="100" height="100" loading="lazy" />
               <div>
                 <h3 class="instructor-name mb-1">
                   {{ course.instructor.name }}
@@ -131,10 +108,7 @@
         <!-- CTA Section -->
         <footer class="cta-section mt-5 pt-4 border-top">
           <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
-            <button
-              class="btn-smooth-primary"
-              @click="showEnrollModal = true"
-            >
+            <button class="btn-smooth-primary" @click="showEnrollModal = true">
               {{
                 course.price === 0
                   ? "Enroll for Free"
@@ -163,62 +137,51 @@ import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
-import { ref, watch, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import BaseModal from '@/components/BaseModal.vue';
 import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
+
 const showEnrollModal = ref(false);
 
 // Initialize route and reactive variables
 const route = useRoute();
 const slug = route.params.slug;
-const { data: courseData, error, loading } = useApiLaravel(`courses/${slug}`);
-const course = ref({
-  title: '',
-  price: 0,
-  duration: '',
-  certification: false,
-  imageUrl: '',
-  description: '',
-  skills: [],
-  learningOutcomes: [],
-  instructor: { name: '', position: '' },
-  instructorImageUrl: '',
-  external_link: ''
-});
+const { data: courseData, error, loading: isLoading } = useApiLaravel(`courses/${slug}`);
 const { getImageUrl } = useImageUrl();
 
-watch(courseData, (val) => {
-  if (!val || !val.data) return;
-  course.value = {
-    ...val.data,
-    imageUrl: val.data.image ? getImageUrl(val.data.image, '/placeholder-course.jpg') : undefined,
-    instructorImageUrl: val.data.instructor?.image ? getImageUrl(val.data.instructor.image, '/placeholder-instructor.jpg') : undefined
+// Create computed course object that properly handles the image URL
+const course = computed(() => {
+  if (!courseData.value?.data) {
+    return {
+      title: '',
+      price: 0,
+      duration: '',
+      certification: false,
+      imageUrl: '/placeholder-course.jpg',
+      description: '',
+      skills: [],
+      learning_outcomes: [],
+      instructor: { name: '', position: '' },
+      instructorImageUrl: '/placeholder-instructor.jpg',
+      external_link: '',
+      slug: ''
+    };
+  }
+
+  const data = courseData.value.data;
+  return {
+    ...data,
+    imageUrl: data.image ? getImageUrl(data.image, '/placeholder-course.jpg') : '/placeholder-course.jpg',
+    instructorImageUrl: data.instructor?.image ? getImageUrl(data.instructor.image, '/placeholder-instructor.jpg') : '/placeholder-instructor.jpg'
   };
-}, { immediate: true });
+});
 
 // Retry fetch logic
-const retryFetch = async () => {
-  await fetchCourse();
+const retryFetch = () => {
+  // Force refresh by navigating to same route
+  window.location.reload();
 };
-
-// Fetch course on mount and when slug changes
-const fetchCourse = async () => {
-  if (!slug) return;
-  const { data, error } = await useApiLaravel(`courses/${slug}`);
-  if (data?.value?.data) {
-    course.value = {
-      ...data.value.data,
-      imageUrl: data.value.data.image ? getImageUrl(data.value.data.image, '/placeholder-course.jpg') : undefined
-    };
-  } else {
-    console.error('Failed to fetch course:', error);
-  }
-};
-
-watchEffect(() => {
-  fetchCourse();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -302,6 +265,7 @@ watchEffect(() => {
         font-size: 2rem;
       }
     }
+
     .course-section {
       padding: 1.5rem;
     }

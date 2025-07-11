@@ -135,13 +135,12 @@ section {
 
 .sub-heading {
   font-size: 1.2rem;
-  color: $text-secondary;
+  color: var(--text-secondary);
   margin-bottom: 3rem;
   text-align: center;
 }
 
 .bg-sandal-light {
-  background-color: $background-light;
   margin: 0px;
 }
 

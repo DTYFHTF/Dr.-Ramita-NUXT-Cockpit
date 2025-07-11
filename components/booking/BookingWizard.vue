@@ -57,7 +57,7 @@ const currentStepComponent = computed(() => {
 <style scoped lang="scss">
 .booking-wizard {
   padding: 2rem 1rem;
-  background: rgba($background-light,0.1);
+  background: var(--background-white);
 }
 
 .wizard-container {

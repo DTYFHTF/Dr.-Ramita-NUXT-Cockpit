@@ -89,12 +89,12 @@
               </NuxtLink>
               <MegaMenu v-if="showMegaMenu" class="mega-menu-wrapper" />
             </div>
-            <div v-if="user" class="nav-link">
-              <CartIndicator />
+            <div v-if="user">
+              <CartIndicator class="nav-link"/>
             </div>
-            <div class="nav-link">
-              <ThemeToggle />
-            </div>
+            <!-- <div >
+              <ThemeToggle class="nav-link"/>
+            </div> -->
           </template>
         </div>
       </div>
@@ -137,7 +137,7 @@ const handleMouseEnter = () => {
   position: sticky;
   top: 0;
   z-index: 1030;
-  background-color: var(--background-light);
+  background-color: var(--background-white);
   box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.1);
 }
 

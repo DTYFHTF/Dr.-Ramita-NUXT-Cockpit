@@ -71,7 +71,7 @@ const props = defineProps({
   top: 10px;
   left: 10px;
   background: var(--badge-color);
-  color: var(--color-primary);
+  color: var(--text-primary);
   padding: 4px 8px;
   border-radius: 10px;
   font-size: 0.8rem;
@@ -79,7 +79,7 @@ const props = defineProps({
 
 .badge.free {
   background: var(--badge-free-color);
-  color: var(--color-primary);
+  color: var(--text-primary);
 }
 
 .card-content {

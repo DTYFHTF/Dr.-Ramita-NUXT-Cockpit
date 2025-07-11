@@ -26,7 +26,7 @@
             <p class="text-muted mb-4">
               Browse our products and add your favorites to your wishlist!
             </p>
-            <NuxtLink to="/products" class="btn btn-primary btn-lg">
+            <NuxtLink to="/products" class="btn btn-smooth-success btn-lg">
               <LucideIcon icon="mdi:shopping" class="me-2" />
               Start Shopping
             </NuxtLink>
@@ -173,7 +173,6 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/variables.scss';
 
 .wishlist-page {
   background-color: $background-light;
@@ -208,7 +207,7 @@ onMounted(async () => {
 
 .toast-message {
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   right: 20px;
   background: $color-secondary;
   color: white;

@@ -70,7 +70,7 @@ function onClick() {
 <style scoped lang="scss">
 .glossary-term {
   cursor: pointer;
-  color: $color-primary;
+  color: var(--text-primary);
   text-decoration: underline;
 }
 

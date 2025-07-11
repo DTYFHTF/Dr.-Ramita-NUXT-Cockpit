@@ -55,12 +55,10 @@
 import { computed } from "vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useBookingStore } from "~/stores/booking";
-import ReusableCardSection from '@/components/IndexSection.vue'
 import HomeRemedyCard from '@/components/HomeRemedyCard.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import YogaMeditationCard from '@/components/YogaMeditationCard.vue'
 import CourseCard from '@/components/CourseCard.vue'
-import MegaMenu from "@/components/MegaMenu.vue";
 import { useImageUrl } from '@/composables/useImageUrl.js'
 
 
