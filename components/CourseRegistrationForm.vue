@@ -17,19 +17,11 @@
       {{ loading ? 'Enrolling...' : 'Enroll' }}
     </button>
   </form>
-  <BaseModal :show="showModal" @close="closeModal">
-    <div class="text-center py-3">
-      <h3 class="mb-3">Enrollment Successful!</h3>
-      <p>{{ success }}</p>
-      <button class="btn btn-smooth-primary mt-3" @click="closeModal">Close</button>
-    </div>
-  </BaseModal>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useApiLaravel } from '@/composables/useApi.js'
-import BaseModal from './BaseModal.vue'
 
 const props = defineProps({
   courseSlug: {
@@ -38,6 +30,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['enrollment-success'])
+
 const form = ref({
   name: '',
   email: '',
@@ -45,12 +39,9 @@ const form = ref({
 })
 const loading = ref(false)
 const error = ref('')
-const success = ref('')
-const showModal = ref(false)
 
 const submitForm = async () => {
   error.value = ''
-  success.value = ''
   loading.value = true
   try {
     const config = useRuntimeConfig()
@@ -65,9 +56,9 @@ const submitForm = async () => {
       }
     });
     if (response?.message) {
-      success.value = response.message;
       form.value = { name: '', email: '', phone: '' };
-      showModal.value = true;
+      // Emit success event to parent component
+      emit('enrollment-success', response.message);
     }
   } catch (e) {
     if (e?.data?.errors) {
@@ -80,10 +71,6 @@ const submitForm = async () => {
   } finally {
     loading.value = false;
   }
-}
-
-const closeModal = () => {
-  showModal.value = false
 }
 </script>
 

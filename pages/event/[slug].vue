@@ -200,9 +200,25 @@
 
                   <template v-if="event.status === 'upcoming' && !isEventFull">
                     <button class="book-now-btn" @click="showRegistration = true">Book Now</button>
+                    
+                    <!-- Registration Form Modal -->
                     <BaseModal :show="showRegistration" @close="showRegistration = false">
                       <div class="modal-narrow">
-                        <EventRegistrationForm :event-slug="event.slug" />
+                        <EventRegistrationForm 
+                          :event-slug="event.slug" 
+                          @registration-success="handleRegistrationSuccess"
+                        />
+                      </div>
+                    </BaseModal>
+                    
+                    <!-- Success Modal -->
+                    <BaseModal :show="registrationSuccess" @close="registrationSuccess = false">
+                      <div class="text-center py-4">
+                        <h3 class="mb-3 text-success">Registration Successful!</h3>
+                        <p>{{ successMessage }}</p>
+                        <button class="btn btn-smooth-primary mt-3" @click="registrationSuccess = false">
+                          Close
+                        </button>
                       </div>
                     </BaseModal>
                   </template>
@@ -236,6 +252,15 @@ import EventRegistrationForm from '@/components/EventRegistrationForm.vue'
 import BaseModal from '@/components/BaseModal.vue'
 
 const showRegistration = ref(false)
+const registrationSuccess = ref(false)
+const successMessage = ref('')
+
+// Handle successful registration
+const handleRegistrationSuccess = (message) => {
+  showRegistration.value = false; // Close the registration modal
+  registrationSuccess.value = true; // Show success modal
+  successMessage.value = message;
+}
 
 const route = useRoute()
 const slug = route.params.slug

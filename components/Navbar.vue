@@ -53,7 +53,7 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Herbal Treatment</a>
+            <a class="nav-link" href="/event">Events</a>
           </li>
         </ul>
         <!-- User Section -->

@@ -122,7 +122,21 @@
           </div>
           <BaseModal :show="showEnrollModal" @close="showEnrollModal = false">
             <div class="modal-narrow">
-              <CourseRegistrationForm :course-slug="course.slug" />
+              <CourseRegistrationForm 
+                :course-slug="course.slug" 
+                @enrollment-success="handleEnrollmentSuccess"
+              />
+            </div>
+          </BaseModal>
+          
+          <!-- Success Modal -->
+          <BaseModal :show="enrollmentSuccess" @close="enrollmentSuccess = false">
+            <div class="text-center py-4">
+              <h3 class="mb-3 text-success">Enrollment Successful!</h3>
+              <p>{{ successMessage }}</p>
+              <button class="btn btn-smooth-primary mt-3" @click="enrollmentSuccess = false">
+                Close
+              </button>
             </div>
           </BaseModal>
         </footer>
@@ -143,6 +157,15 @@ import BaseModal from '@/components/BaseModal.vue';
 import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
 
 const showEnrollModal = ref(false);
+const enrollmentSuccess = ref(false);
+const successMessage = ref('');
+
+// Handle successful enrollment
+const handleEnrollmentSuccess = (message) => {
+  showEnrollModal.value = false; // Close the enrollment modal
+  enrollmentSuccess.value = true; // Show success modal
+  successMessage.value = message;
+}
 
 // Initialize route and reactive variables
 const route = useRoute();
