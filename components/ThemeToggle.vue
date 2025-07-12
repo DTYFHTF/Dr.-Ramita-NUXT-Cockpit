@@ -20,7 +20,6 @@ const { theme, toggleTheme } = useTheme()
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/variables.scss';
 
 .theme-toggle-btn {
   background: transparent;

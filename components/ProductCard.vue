@@ -66,7 +66,7 @@
         </p>
       </div>
     </NuxtLink>
-    <div class="d-flex justify-content-between align-items-center w-100 px-3 pb-3">
+    <div class="d-flex align-items-center w-100 px-3 pb-3" :class="{ 'justify-content-center': hideActions, 'justify-content-between': !hideActions }">
       <button 
         @click="handleWishlistToggle" 
         :class="[
@@ -80,21 +80,23 @@
           :color="isInWishlist ? 'white' : 'black'" 
         />
       </button>
-      <button
-        class="btn btn-smooth-success add-to-cart-btn"
-        :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
-        @click.stop="handleAddToCart(product)"
-      >
-        <span class="add-to-cart-text">Add to Cart</span>
-        <LucideIcon
-          icon="mdi:cart"
-          color="white"
-          class="add-to-cart-icon"
-        />
-      </button>
-      <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
-        <LucideIcon icon="mdi:eye-outline" color="black" />
-      </button>
+      <template v-if="!hideActions">
+        <button
+          class="btn btn-smooth-success add-to-cart-btn"
+          :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+          @click.stop="handleAddToCart(product)"
+        >
+          <span class="add-to-cart-text">Add to Cart</span>
+          <LucideIcon
+            icon="mdi:cart"
+            color="white"
+            class="add-to-cart-icon"
+          />
+        </button>
+        <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
+          <LucideIcon icon="mdi:eye-outline" color="black" />
+        </button>
+      </template>
     </div>
     <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
@@ -199,7 +201,10 @@ const closeQuickView = () => {
   showQuickView.value = false;
 };
 
-const props = defineProps<{ product: Product }>();
+const props = defineProps<{ 
+  product: Product;
+  hideActions?: boolean; // New prop to hide add to cart and quick view buttons
+}>();
 
 const images = computed(() => {
   // Only use image and image_2 for the product card
@@ -339,6 +344,10 @@ function imageUrl(img: string) {
 
 .wishlist-toast a:hover {
   opacity: 0.8;
+}
+
+.wishlist-only {
+  justify-content: center !important;
 }
 
 

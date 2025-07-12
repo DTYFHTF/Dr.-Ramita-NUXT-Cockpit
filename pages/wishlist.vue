@@ -41,7 +41,7 @@
                   <span class="text-muted">{{ totalItems }} product{{ totalItems !== 1 ? 's' : '' }} in your wishlist</span>
                   <button 
                     @click="confirmClearWishlist" 
-                    class="btn btn-outline-danger btn-sm"
+                    class="btn btn-smooth-outline btn-sm"
                     v-if="totalItems > 0"
                   >
                     <LucideIcon icon="mdi:delete-outline" class="me-1" />
@@ -58,9 +58,9 @@
                     :key="item.id" 
                     class="col-12 col-sm-6 col-lg-4 col-xl-3"
                   >
-                    <ProductCard :product="item.product" />
+                    <ProductCard :product="item.product" :hide-actions="true" />
                   </div>
-                </div>
+                </div>  
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@
             <button type="button" class="btn btn-secondary" @click="showClearConfirm = false">
               Cancel
             </button>
-            <button type="button" class="btn btn-danger" @click="handleClearWishlist">
+            <button type="button" class="btn btn-smooth-primary" @click="handleClearWishlist">
               Clear All
             </button>
           </div>
