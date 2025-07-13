@@ -100,7 +100,13 @@
     </div>
     <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
-  <div v-if="showNotification" class="toast-message">Product added to cart!</div>
+  <div v-if="showNotification" class="toast-message">
+    Product added to cart!
+    <NuxtLink to="/CartPage" class="ms-2 text-white text-decoration-underline d-inline-flex align-items-center">
+      <LucideIcon icon="mdi:cart" class="me-1" size="16" />
+      View Cart
+    </NuxtLink>
+  </div>
   <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
     Product added to wishlist! 
     <NuxtLink to="/wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
