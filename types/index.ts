@@ -90,11 +90,13 @@ export interface OrderItem {
 export interface ShippingInfo {
   name: string;
   phone: string;
-  email: string;
+  pincode: string;
   address: string;
+  area: string;
+  landmark?: string;
   city: string;
   state: string;
-  zip: string;
+  default?: boolean;
   country: string;
 }
 

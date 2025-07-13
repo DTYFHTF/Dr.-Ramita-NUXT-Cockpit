@@ -10,9 +10,11 @@
           <h5 class="fw-semibold mb-3">Order Summary</h5>
           <div class="mb-2">Order ID: <span class="fw-semibold">{{ orderData?.id }}</span></div>
           <div class="mb-2">Status: <span class="badge bg-info">{{ orderData?.status }}</span></div>
-          <div class="mb-2">Order Date: <span class="fw-semibold">{{ orderData?.created_at ? new Date(orderData.created_at).toLocaleString() : '' }}</span></div>
+          <div class="mb-2">Order Date: <span class="fw-semibold">{{ orderData?.created_at ? new
+            Date(orderData.created_at).toLocaleString() : '' }}</span></div>
           <ul class="list-group mb-3">
-            <li v-for="item in orderData?.cart" :key="`${item.product_id}:${item.variation_id}`" class="list-group-item d-flex justify-content-between align-items-center">
+            <li v-for="item in orderData?.cart" :key="`${item.product_id}:${item.variation_id}`"
+              class="list-group-item d-flex justify-content-between align-items-center">
               <span>
                 {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name }}</span>
                 <span class="text-muted small ms-2">x{{ item.quantity }}</span>
@@ -21,17 +23,19 @@
             </li>
           </ul>
           <div class="mb-2">Shipping: <span class="fw-semibold">₹{{ orderData?.shipping_cost }}</span></div>
-          <div class="mb-2">Estimated Delivery: <span class="fw-semibold">{{ orderData?.estimated_delivery }}</span></div>
+          <div class="mb-2">Estimated Delivery: <span class="fw-semibold">{{ orderData?.estimated_delivery || estimatedDelivery }}</span></div>
           <div class="h5 mt-3">Total: <span class="fw-bold text-success">₹{{ orderData?.total }}</span></div>
           <div class="mt-4 p-3 bg-light rounded-3">
             <h6 class="fw-semibold mb-2">Shipping Details</h6>
             <div v-if="orderData?.shipping">
               <div>{{ orderData.shipping.name }}</div>
               <div>{{ orderData.shipping.address }}</div>
-              <div>{{ orderData.shipping.city }}, {{ orderData.shipping.state }} {{ orderData.shipping.zip }}</div>
+              <div>{{ orderData.shipping.area }},</div>
+              <div>{{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }},</div>
               <div>{{ orderData.shipping.country }}</div>
-              <div>Phone: {{ orderData.shipping.phone }}</div>
-              <div>Email: {{ orderData.shipping.email }}</div>
+              <div v-if="orderData.shipping.landmark"><strong>Landmark:</strong> {{ orderData.shipping.landmark }}</div>
+
+              <div><strong>Mobile Number:</strong> {{ orderData.shipping.phone }}</div>
             </div>
           </div>
         </div>
@@ -42,50 +46,57 @@
       <div v-if="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
       <div class="row g-5 align-items-start">
         <div class="col-lg-7">
-          <form @submit.prevent="submitOrder" novalidate class="p-4 rounded-4 shadow-sm" style="background-color: var(--background-white);">
+          <form @submit.prevent="submitOrder" novalidate class="p-4 rounded-4 shadow-sm"
+            style="background-color: var(--background-white);">
             <h4 class="mb-4 fw-semibold border-bottom pb-2">Shipping & Contact Information</h4>
             <div class="row mb-3">
               <div class="col-md-6 mb-3">
-                <label class="form-label">Full Name</label>
+                <label class="form-label">Full Name (First and Last Name) <span class="text-danger">*</span></label>
                 <input v-model="shipping.name" type="text" class="form-control form-control-lg" required />
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Phone</label>
+                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
                 <input v-model="shipping.phone" type="tel" class="form-control form-control-lg" required />
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Email</label>
-                <input v-model="shipping.email" type="email" class="form-control form-control-lg" required />
+                <label class="form-label">Pin Code <span class="text-danger">*</span></label>
+                <input v-model="shipping.pincode" type="text" class="form-control form-control-lg" required />
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">City</label>
+                <label class="form-label">Flat, House no., Building, Apartment <span class="text-danger">*</span></label>
+                <input v-model="shipping.address" type="text" class="form-control form-control-lg" required />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Area, Street, Sector, Village <span class="text-danger">*</span></label>
+                <input v-model="shipping.area" type="text" class="form-control form-control-lg" required />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Landmark</label>
+                <input v-model="shipping.landmark" type="text" class="form-control form-control-lg" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Town/City <span class="text-danger">*</span></label>
                 <input v-model="shipping.city" type="text" class="form-control form-control-lg" required />
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">State</label>
+                <label class="form-label">State <span class="text-danger">*</span></label>
                 <input v-model="shipping.state" type="text" class="form-control form-control-lg" required />
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Zip Code</label>
-                <input v-model="shipping.zip" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-12 mb-3">
-                <label class="form-label">Address</label>
-                <input v-model="shipping.address" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-12 mb-3">
-                <label class="form-label">Country</label>
+                <label class="form-label">Country <span class="text-danger">*</span></label>
                 <input v-model="shipping.country" type="text" class="form-control form-control-lg" required />
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Special Instructions (optional)</label>
-              <textarea v-model="specialInstructions" class="form-control form-control-lg" rows="2" placeholder="Any notes for delivery?"></textarea>
+              <textarea v-model="specialInstructions" class="form-control form-control-lg" rows="2"
+                placeholder="Any notes for delivery?"></textarea>
             </div>
             <h4 class="mb-3 fw-semibold border-bottom pb-2">Payment Method</h4>
             <div class="mb-3">
               <div class="form-check form-check-lg mb-2" v-for="method in paymentMethods" :key="method.value">
-                <input class="form-check-input" type="radio" :id="method.value" :value="method.value" v-model="paymentMethod" required />
+                <input class="form-check-input" type="radio" :id="method.value" :value="method.value"
+                  v-model="paymentMethod" required />
                 <label class="form-check-label" :for="method.value">
                   {{ method.label }}
                 </label>
@@ -97,7 +108,8 @@
             <div class="d-flex gap-3 mt-4 justify-content-end">
               <router-link to="/cartpage" class="btn btn-smooth-outline px-4 py-2">Back to Cart</router-link>
               <button type="submit" class="btn btn-smooth-success px-4 py-2" :disabled="isSubmitting">
-                <span v-if="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span>Placing Order...</span>
+                <span v-if="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span>Placing
+                  Order...</span>
                 <span v-else>Review & Confirm</span>
               </button>
             </div>
@@ -108,7 +120,8 @@
             <div class="card-body">
               <h5 class="card-title mb-3 fw-semibold">Order Summary</h5>
               <ul class="list-group mb-3">
-                <li v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="list-group-item d-flex justify-content-between align-items-center">
+                <li v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`"
+                  class="list-group-item d-flex justify-content-between align-items-center">
                   <span>
                     {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name }}</span>
                     <span class="text-muted small ms-2">x{{ item.quantity }}</span>
@@ -118,7 +131,8 @@
               </ul>
               <div class="mb-2">Shipping: <span class="fw-semibold">₹{{ shippingCost }}</span></div>
               <div class="mb-2">Estimated Delivery: <span class="fw-semibold">{{ estimatedDelivery }}</span></div>
-              <div class="h5 mt-3">Total: <span class="fw-bold text-success">₹{{ totalPrice + shippingCost }}</span></div>
+              <div class="h5 mt-3">Total: <span class="fw-bold text-success">₹{{ totalPrice + shippingCost }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -145,11 +159,12 @@ const userStore = useUserStore();
 const shipping = ref<ShippingInfo>({
   name: '',
   phone: '',
-  email: '',
+  pincode: '',
   address: '',
+  area: '',
+  landmark: '',
   city: '',
   state: '',
-  zip: '',
   country: ''
 });
 const specialInstructions = ref('');
@@ -160,7 +175,7 @@ const paymentMethods = [
   { value: 'upi', label: 'UPI' },
   { value: 'paypal', label: 'PayPal' }
 ];
-const shippingCost = 50;
+const shippingCost = 85;
 const estimatedDelivery = '3-7 business days';
 
 const orderSuccess = ref(false);
@@ -217,20 +232,26 @@ const submitOrder = async () => {
 .checkout-page {
   max-width: 1100px;
 }
+
 .order-summary ul {
   margin-bottom: 0;
 }
-.card, .alert {
+
+.card,
+.alert {
   border-radius: 1rem;
 }
+
 .form-control-lg {
   min-height: 2.5rem;
   font-size: 1.1rem;
 }
+
 .form-check-lg .form-check-input {
   width: 1.3em;
   height: 1.3em;
 }
+
 .form-check-lg .form-check-label {
   font-size: 1.1rem;
   margin-left: 0.5em;
