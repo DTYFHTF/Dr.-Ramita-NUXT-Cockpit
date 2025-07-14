@@ -84,27 +84,7 @@ const onBlur = () => {
   z-index: 1;
 }
 
-.search-input {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  font-size: 1rem;
-  background: var(--background-white);
-  color: var(--text-primary);
-  transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--color-success);
-  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-  opacity: 0.8;
-}
+/* Removed duplicate .search-input styles - using global CSS from main.scss */
 
 .suggestions-list {
   position: absolute;
@@ -112,7 +92,7 @@ const onBlur = () => {
   left: 0;
   right: 0;
   background: var(--background-white);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-muted);
   border-top: none;
   border-radius: 0 0 12px 12px;
   max-height: 300px;

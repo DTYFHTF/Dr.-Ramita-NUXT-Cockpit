@@ -361,7 +361,7 @@ function shareUrl(platform: string) {
 }
 .quick-view-content {
   position: relative;
-  background: var(--background-white);
+  background: var(--background-light); 
   border-radius: 10px;
   max-width: 900px;
   width: 100%;
