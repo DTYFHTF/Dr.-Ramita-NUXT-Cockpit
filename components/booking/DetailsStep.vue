@@ -7,49 +7,53 @@
 
     <form @submit.prevent="handleSubmit" class="booking-form">
       <div class="form-group">
-        <label>Full Name</label>
+        <label class="form-label">Full Name<span class="required">*</span></label>
         <input
           v-model="form.name"
           type="text"
+          class="form-input"
           required
           placeholder="Enter your full name"
         />
       </div>
 
       <div class="form-group">
-        <label>Email Address</label>
+        <label class="form-label">Email Address<span class="required">*</span></label>
         <input
           v-model="form.email"
           type="email"
+          class="form-input"
           required
           placeholder="your.email@example.com"
         />
       </div>
 
       <div class="form-group">
-        <label>Phone Number</label>
+        <label class="form-label">Phone Number<span class="required">*</span></label>
         <input
           v-model="form.phone"
           type="tel"
+          class="form-input"
           required
           placeholder="+91 12345 67890"
         />
       </div>
 
       <div class="form-group">
-        <label>Additional Notes (optional)</label>
+        <label class="form-label">Additional Notes (optional)</label>
         <textarea
           v-model="form.notes"
+          class="form-textarea"
           rows="3"
           placeholder="Any special requirements or notes..."
         ></textarea>
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+        <button type="button" class="btn btn-outline" @click="$emit('prev')">
           Back
         </button>
-        <button type="submit" class="btn btn-primary btn-smooth-primary">
+        <button type="submit" class="btn btn-primary">
           Continue
         </button>
       </div>

@@ -24,7 +24,7 @@
       <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
-      <button class="btn btn-success btn-smooth-success" @click="confirmBooking">
+      <button class="btn btn-primary" @click="confirmBooking">
         Confirm Booking
       </button>
     </div>

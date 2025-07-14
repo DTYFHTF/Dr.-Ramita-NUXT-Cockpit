@@ -1,19 +1,35 @@
 <template>
-  <div class="feedback-form">
-    <h1>Submit Your Feedback</h1>
-    <form @submit.prevent="submitFeedback">
-      <div>
-        <label for="title">Title</label>
-        <input type="text" id="title" v-model="title" required />
-      </div>
-      <div>
-        <label for="description">Description</label>
-        <textarea id="description" v-model="description" required></textarea>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-    <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
-    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+  <div class="feedback-page">
+    <div class="feedback-container">
+      <h1>Submit Your Feedback</h1>
+      <form @submit.prevent="submitFeedback" class="feedback-form">
+        <div class="form-group">
+          <label for="title" class="form-label">Title<span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="title" 
+            v-model="title" 
+            class="form-input"
+            placeholder="Enter feedback title"
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="description" class="form-label">Description<span class="required">*</span></label>
+          <textarea 
+            id="description" 
+            v-model="description" 
+            class="form-textarea"
+            placeholder="Describe your feedback in detail"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+      </form>
+      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+    </div>
   </div>
 </template>
 
@@ -50,55 +66,61 @@ export default {
 };
 </script>
 
-<style scoped>
-.feedback-form {
+<style lang="scss" scoped>
+.feedback-page {
+  min-height: 80vh;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-light);
+}
+
+.feedback-container {
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  background-color: var(--card-background);
-}
-.feedback-form h1 {
-  text-align: center;
-  color: var(--text-primary);
-}
-.feedback-form div {
-  margin-bottom: 15px;
-}
-.feedback-form label {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--text-secondary);
-}
-.feedback-form input,
-.feedback-form textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
   background: var(--background-white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.feedback-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
   color: var(--text-primary);
 }
-.feedback-form button {
-  display: block;
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.btn {
   width: 100%;
-  padding: 10px;
-  background-color: var(--color-primary);
-  color: var(--text-white);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  margin-top: 1rem;
 }
-.feedback-form button:hover {
-  background-color: var(--primary-dark);
-}
+
 .success-message {
-  color: green;
+  color: var(--color-success);
   text-align: center;
+  font-weight: 600;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-success);
 }
+
 .error-message {
-  color: red;
+  color: var(--color-error);
   text-align: center;
+  font-weight: 600;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-error);
 }
 </style>

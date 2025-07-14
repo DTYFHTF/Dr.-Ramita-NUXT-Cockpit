@@ -25,8 +25,8 @@
         <div class="footer-column">
           <h4>Newsletter</h4>
           <p>Subscribe to our newsletter for updates.</p>
-          <input type="email" placeholder="Enter your email" />
-          <button class="btn-smooth-primary">Subscribe</button>
+          <input type="email" class="form-input newsletter-input" placeholder="Enter your email" />
+          <button class="btn btn-primary newsletter-btn">Subscribe</button>
         </div>
       </div>
     </div>
@@ -91,27 +91,15 @@ import SmoothLink from '~/components/SmoothLink.vue'
   text-decoration: underline;
 }
 
-.footer-column input {
-  padding: 0.5rem;
+.newsletter-input {
   margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.newsletter-btn {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
   width: 100%;
-  border: none;
-  border-radius: 5px;
-}
-
-.footer-column button {
-  background-color: $background-light;
-  color: $color-primary;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  margin-top: 0.5rem;
-  cursor: pointer;
-  font-weight:500;
-}
-
-.footer-column button:hover {
-  transform: translateY(-2px);
 }
 
 .footer-bottom {

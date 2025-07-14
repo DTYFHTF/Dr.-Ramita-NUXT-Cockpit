@@ -72,7 +72,7 @@
         <NuxtLink
           v-if="showViewDetails !== false"
           :to="`/products/${product.slug}`"
-          class="btn btn-smooth-primary view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
+          class="btn btn-primary view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
         >
           View Details
         </NuxtLink>
@@ -151,7 +151,7 @@
               v-for="variation in product.variations"
               :key="variation.id"
               type="button"
-              class="btn btn-smooth-outline btn-sm variation-btn py-2"
+              class="btn btn-outline btn-sm variation-btn py-2"
               :class="{
                 active: selectedVariationId === variation.id,
                 'out-of-stock': (variation.stock ?? 0) <= 0,
@@ -170,11 +170,7 @@
         
 
         <div class="d-flex align-items-center">
-          <button
-            class="btn btn-outline-secondary"
-            @click="decrement"
-            :disabled="quantity <= 1"
-          >
+          <button class="btn btn-outline" @click="decrement" :disabled="quantity <= 1">
             -
           </button>
           <input
@@ -184,11 +180,11 @@
             v-model.number="quantity"
             min="1"
           />
-          <button class="btn btn-outline-secondary" @click="increment">
+          <button class="btn btn-outline" @click="increment">
             +
           </button>
           <button
-            class="btn btn-smooth-success ms-3"
+            class="btn btn-primary ms-3"
             :disabled="!canAddToCart"
             @click="addToCartHandler"
           >
@@ -423,9 +419,9 @@ function shareUrl(platform: string) {
   mask-image: none !important;
   -webkit-mask-image: none !important;
 }
+
 .carousel-control-prev-icon {
   background-image: none !important;
-  /* Create arrow shape with border */
   border: none;
   border-left: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
@@ -436,9 +432,9 @@ function shareUrl(platform: string) {
   mask: none !important;
   -webkit-mask: none !important;
 }
+
 .carousel-control-next-icon {
   background-image: none !important;
-  /* Create arrow shape with border */
   border: none;
   border-right: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
@@ -450,9 +446,9 @@ function shareUrl(platform: string) {
   -webkit-mask: none !important;
 }
 
-.btn-smooth-outline.active {
-  background-color: var(--color-primary) !important; 
+.btn.variation-btn.active {
+  background-color: var(--color-success) !important; 
   color: var(--text-white) !important;
-  border-color: var(--color-primary) !important;
+  border-color: var(--color-success) !important;
 }
 </style>

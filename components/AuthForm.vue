@@ -1,17 +1,32 @@
 <template>
   <form @submit.prevent="onSubmit" class="auth-form">
     <slot />
-    <div v-if="error" class="error">{{ error }}</div>
+    <div v-if="error" class="form-error">{{ error }}</div>
     <div class="form-group">
-      <label for="email">Email</label>
-      <input v-model="email" id="email" type="email" required />
+      <label for="email" class="form-label">Email<span class="required">*</span></label>
+      <input 
+        v-model="email" 
+        id="email" 
+        type="email" 
+        class="form-input"
+        placeholder="Enter your email address"
+        required 
+      />
     </div>
     <div class="form-group">
-      <label for="password">Password</label>
-      <input v-model="password" id="password" type="password" required minlength="8" />
+      <label for="password" class="form-label">Password<span class="required">*</span></label>
+      <input 
+        v-model="password" 
+        id="password" 
+        type="password" 
+        class="form-input"
+        placeholder="Enter your password"
+        required 
+        minlength="8" 
+      />
     </div>
     <slot name="extra-fields" />
-    <button type="submit" class="btn-smooth-primary" :disabled="loading">{{ submitLabel }}</button>
+    <button type="submit" class="btn btn-primary" :disabled="loading">{{ submitLabel }}</button>
   </form>
 </template>
 
@@ -35,40 +50,18 @@ function onSubmit() {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .auth-form {
-  max-width: 400px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 2rem;
   background: var(--background-white);
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(var(--color-primary-rgb), 0.08);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
 }
-.form-group {
-  margin-bottom: 1rem;
-}
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-secondary);
-}
-input {
+
+.btn {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: var(--background-white);
-  color: var(--text-primary);
-}
-button {
-  width: 100%;
-}
-button:disabled {
-  background: var(--color-muted);
-}
-.error {
-  color: var(--color-error);
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-top: 1rem;
 }
 </style>

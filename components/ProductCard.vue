@@ -82,7 +82,7 @@
       </button>
       <template v-if="!hideActions">
         <button
-          class="btn btn-smooth-success add-to-cart-btn"
+          class="btn btn-primary add-to-cart-btn"
           :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
           @click.stop="handleAddToCart(product)"
         >
@@ -334,12 +334,12 @@ function imageUrl(img: string) {
   white-space: normal;
 }
 .price{
-  color: $accent-soft-green;
+  color: var(--color-success);
   font-weight: 500;
 }
 
 .wishlist-toast {
-  background-color: $color-primary !important; // Pink color for wishlist
+  background-color: var(--color-success) !important;
   bottom: 80px !important; // Position above cart notification if both show
 }
 

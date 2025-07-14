@@ -1,31 +1,75 @@
 <template>
   <form @submit.prevent="onSubmit" class="auth-form">
     <div class="form-group">
-      <label for="first_name">First Name</label>
-      <input v-model="firstName" id="first_name" type="text" required />
+      <label for="first_name" class="form-label">First Name<span class="required">*</span></label>
+      <input 
+        v-model="firstName" 
+        id="first_name" 
+        type="text" 
+        class="form-input"
+        placeholder="Enter your first name"
+        required 
+      />
     </div>
     <div class="form-group">
-      <label for="last_name">Last Name</label>
-      <input v-model="lastName" id="last_name" type="text" required />
+      <label for="last_name" class="form-label">Last Name<span class="required">*</span></label>
+      <input 
+        v-model="lastName" 
+        id="last_name" 
+        type="text" 
+        class="form-input"
+        placeholder="Enter your last name"
+        required 
+      />
     </div>
     <div class="form-group">
-      <label for="email">Email</label>
-      <input v-model="email" id="email" type="email" required />
+      <label for="email" class="form-label">Email<span class="required">*</span></label>
+      <input 
+        v-model="email" 
+        id="email" 
+        type="email" 
+        class="form-input"
+        placeholder="Enter your email address"
+        required 
+      />
     </div>
     <div class="form-group">
-      <label for="phone">Phone</label>
-      <input v-model="phone" id="phone" type="tel" required />
+      <label for="phone" class="form-label">Phone<span class="required">*</span></label>
+      <input 
+        v-model="phone" 
+        id="phone" 
+        type="tel" 
+        class="form-input"
+        placeholder="Enter your phone number"
+        required 
+      />
     </div>
     <div class="form-group">
-      <label for="password">Password</label>
-      <input v-model="password" id="password" type="password" required minlength="8" />
+      <label for="password" class="form-label">Password<span class="required">*</span></label>
+      <input 
+        v-model="password" 
+        id="password" 
+        type="password" 
+        class="form-input"
+        placeholder="Enter your password (min 8 characters)"
+        required 
+        minlength="8" 
+      />
     </div>
     <div class="form-group">
-      <label for="password_confirmation">Confirm Password</label>
-      <input v-model="passwordConfirmation" id="password_confirmation" type="password" required minlength="8" />
+      <label for="password_confirmation" class="form-label">Confirm Password<span class="required">*</span></label>
+      <input 
+        v-model="passwordConfirmation" 
+        id="password_confirmation" 
+        type="password" 
+        class="form-input"
+        placeholder="Confirm your password"
+        required 
+        minlength="8" 
+      />
     </div>
-    <div v-if="error" class="error">{{ error }}</div>
-    <button type="submit" :disabled="loading">{{ submitLabel }}</button>
+    <div v-if="error" class="form-error">{{ error }}</div>
+    <button type="submit" class="btn btn-primary" :disabled="loading">{{ submitLabel }}</button>
   </form>
 </template>
 
@@ -58,47 +102,18 @@ function onSubmit() {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .auth-form {
-  max-width: 400px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 2rem;
   background: var(--background-white);
-  border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(var(--shadow-rgb), 0.08);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
 }
-.form-group {
-  margin-bottom: 1rem;
-}
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-secondary);
-}
-input {
+
+.btn {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: var(--background-white);
-  color: var(--text-primary);
-}
-button {
-  width: 100%;
-  padding: 0.75rem;
-  background: var(--color-primary);
-  color: var(--text-white);
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-button:disabled {
-  background: var(--color-muted);
-}
-.error {
-  color: var(--color-error);
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-top: 1rem;
 }
 </style>

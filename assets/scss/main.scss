@@ -1,3 +1,7 @@
+// ====================================
+// GLOBAL CSS VARIABLES & THEME SYSTEM
+// ====================================
+
 // CSS Custom Properties for Theme Support
 :root {
   // Light theme (default)
@@ -77,6 +81,10 @@
   --color-primary-rgb: 74, 222, 128;
 }
 
+// ====================================
+// GLOBAL BASE STYLES
+// ====================================
+
 // Global body and html styles for theme support
 html {
   background-color: var(--background-light);
@@ -88,7 +96,146 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-// Section background classes for index page
+// ====================================
+// GLOBAL FORM COMPONENTS
+// ====================================
+
+// Universal form input styles for consistency across all components
+.form-input,
+.form-textarea,
+.search-input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--background-white);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+  
+  &:disabled {
+    background: var(--background-light);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Form labels
+.form-label,
+label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+// Required field indicator
+.required {
+  color: var(--color-error);
+}
+
+// Form groups
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ====================================
+// GLOBAL BUTTON SYSTEM
+// ====================================
+
+// Universal button base
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+}
+
+// Button variants
+.btn-primary {
+  background: var(--color-success);
+  color: var(--text-white);
+  
+  &:hover:not(:disabled) {
+    background: var(--primary-dark);
+    color: var(--text-white);
+    text-decoration: none;
+  }
+}
+
+.btn-outline {
+  background: var(--background-white);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
+  
+  &:hover:not(:disabled) {
+    background: var(--background-light);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+}
+
+.btn-error {
+  background: var(--color-error);
+  color: var(--text-white);
+  
+  &:hover:not(:disabled) {
+    background: #c82333;
+    color: var(--text-white);
+  }
+}
+
+// ====================================
+// GLOBAL UTILITY CLASSES
+// ====================================
+
+// Section background classes
 .bg-herbal-light {
   background-color: var(--background-white);
 }
@@ -96,6 +243,23 @@ body {
 .bg-sandal-light {
   background-color: var(--background-light);
 }
+
+// Text utilities
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+// Spacing utilities
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+.mb-5 { margin-bottom: 3rem; }
+
+// ====================================
+// BOOTSTRAP OVERRIDES
+// ====================================
 
 // Override Bootstrap utilities with theme variables
 .bg-white {
@@ -114,7 +278,19 @@ body {
   color: var(--text-muted) !important;
 }
 
-// Additional Bootstrap overrides for comprehensive theme support
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.bg-success {
+  background: var(--button-bg) !important;
+}
+
+.bg-danger {
+  background: #EE6678 !important;
+}
+
+// Bootstrap component overrides
 .card {
   background-color: var(--background-white);
   border-color: var(--border-color);
@@ -134,13 +310,23 @@ body {
   background-color: var(--background-white);
   border-color: var(--border-color);
   color: var(--text-primary);
+  
+  &:focus {
+    background-color: var(--background-white);
+    border-color: var(--color-primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
 }
 
-.form-control:focus {
-  background-color: var(--background-white);
-  border-color: var(--color-primary);
-  color: var(--text-primary);
-}
+// ====================================
+// CUSTOM BUTTON MIXINS
+// ====================================
 
 .btn-smooth {
   @include button-base;
@@ -157,8 +343,6 @@ body {
 .btn-smooth-outline {
   @include outline-button;
 }
-
-// Additional global interactive elements can be added here
 
 .category-tag {
   position: absolute;

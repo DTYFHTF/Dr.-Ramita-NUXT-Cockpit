@@ -143,31 +143,47 @@ const clearAllFilters = () => {
   font-size: 0.9rem;
   padding: 0.25rem 0.75rem;
   transition: all 0.2s ease;
+  background: var(--background-white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 
   &:hover {
-    background-color: var(--bs-light);
+    background-color: var(--background-light);
     transform: translateY(-1px);
+    color: var(--text-primary);
   }
 }
 
 .filter-item {
-  color: $color-primary;
+  color: var(--text-primary);
   padding: 0.25rem 0;
   text-decoration: none;
   display: block;
   transition: all 0.2s ease;
 
   &:hover {
-    color: $accent-soft-green;
+    color: var(--color-success);
     transform: translateX(3px);
+    text-decoration: none;
   }
 
   &.active {
-    color: $color-primary;
-    font-weight: 500;
+    color: var(--color-success);
+    font-weight: 600;
     text-decoration: underline;
   }
 }
 
+.card {
+  background: var(--background-white);
+  border-color: var(--border-color);
+}
 
+.card-title {
+  color: var(--text-primary);
+}
+
+.form-label {
+  color: var(--text-primary);
+}
 </style>
