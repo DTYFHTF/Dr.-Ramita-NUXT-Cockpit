@@ -2,7 +2,7 @@
   <div class="card h-100 product-card border shadow-sm">
     <NuxtLink
       :to="`/products/${product.slug}`"
-      class="text-decoration-none text-dark d-flex flex-column h-100"
+      class="text-decoration-none product-link d-flex flex-column h-100"
     >
       <div class="image-container">
         <img
@@ -77,7 +77,7 @@
       >
         <LucideIcon 
           :icon="isInWishlist ? 'mdi:heart' : 'mdi:heart-outline'" 
-          :color="isInWishlist ? 'white' : 'black'" 
+          :color="isInWishlist ? 'white' : 'var(--text-primary)'" 
         />
       </button>
       <template v-if="!hideActions">
@@ -94,7 +94,7 @@
           />
         </button>
         <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
-          <LucideIcon icon="mdi:eye-outline" color="black" />
+          <LucideIcon icon="mdi:eye-outline" :color="'var(--text-primary)'" />
         </button>
       </template>
     </div>
@@ -247,6 +247,16 @@ function imageUrl(img: string) {
   transition: box-shadow 0.18s, transform 0.18s;
   box-shadow: 0 4px 8px rgba(var(--shadow-light-rgb), 0.1);
   border-radius: 8px;
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+}
+
+.product-link {
+  color: var(--text-primary) !important;
+  
+  &:hover {
+    color: var(--text-primary) !important;
+  }
 }
 .product-card:hover {
   box-shadow: 0 6px 12px rgba(var(--shadow-medium-rgb), 0.15);
@@ -294,10 +304,12 @@ function imageUrl(img: string) {
   height: 40px;
   border-radius: 50%;
   transition: background-color 0.3s ease;
+  background-color: var(--background-white);
+  border-color: var(--border-color);
 }
 .wishlist-btn:hover,
 .quick-view-btn:hover {
-  background-color: rgba(var(--shadow-light-rgb), 0.1);
+  background-color: var(--background-light);
 }
 .add-to-cart-btn {
   position: relative;
@@ -354,6 +366,29 @@ function imageUrl(img: string) {
 
 .wishlist-only {
   justify-content: center !important;
+}
+
+// Toast notifications with dark mode support
+.toast-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--color-success);
+  color: var(--text-white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 1050;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  
+  a {
+    color: var(--text-white) !important;
+    text-decoration: underline !important;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 
