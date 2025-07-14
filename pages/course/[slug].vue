@@ -43,6 +43,22 @@
             }}</span>
           </div>
         </div>
+
+        <!-- Course Features -->
+        <div class="course-features d-flex justify-content-center gap-3 flex-wrap mb-4">
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:infinity" class="me-2" />
+            <span>Lifetime Access</span>
+          </div>
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:account-group" class="me-2" />
+            <span>Community Support</span>
+          </div>
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:devices" class="me-2" />
+            <span>Mobile & Desktop Friendly</span>
+          </div>
+        </div>
         <img :src="course.imageUrl" :alt="`Cover image for ${course.title}`"
           class="course-cover img-fluid rounded-3 shadow-lg" loading="lazy" />
       </header>
@@ -51,10 +67,7 @@
       <div class="course-content">
         <!-- About Section -->
         <section class="course-section mb-5">
-          <h2 class="mb-4">About This Course Lifetime accessCommunity support
-            Mobile & desktop friendly
-
-          </h2>
+          <h2 class="mb-4">About This Course</h2>
           <div class="section-content">
             <DynamicContent :content="course.description" />
           </div>
@@ -214,6 +227,7 @@ const retryFetch = () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  color: var(--text-primary);
 
   .course-header {
     .course-badge {
@@ -223,6 +237,18 @@ const retryFetch = () => {
         border-radius: 2rem;
       }
     }
+
+    .course-title {
+      color: var(--text-primary);
+    }
+
+    .course-meta {
+      .meta-item {
+        color: var(--text-secondary);
+      }
+    }
+
+    
 
     .course-cover {
       max-height: 500px;
@@ -236,6 +262,11 @@ const retryFetch = () => {
     background: var(--background-white);
     border-radius: 1rem;
     box-shadow: var(--card-shadow);
+    color: var(--text-primary);
+
+    h2 {
+      color: var(--text-primary);
+    }
 
     .course-list {
       list-style: none;
@@ -246,7 +277,8 @@ const retryFetch = () => {
         padding: 0.75rem 0;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
 
         &:last-child {
           border-bottom: none;
@@ -256,19 +288,42 @@ const retryFetch = () => {
   }
 
   .instructor-card {
+    background: var(--background-white);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    
+    &.card {
+      background: var(--background-white);
+      border-color: var(--border-color);
+    }
+    
+    .card-body {
+      color: var(--text-primary);
+    }
+    
     .instructor-avatar {
       object-fit: cover;
-      border: 3px solid $color-secondary;
+      border: 3px solid var(--color-secondary);
     }
 
     .instructor-name {
       font-size: 1.25rem;
       font-weight: 600;
-      color: $color-primary;
+      color: var(--color-primary);
+    }
+    
+    .instructor-title {
+      color: var(--text-secondary) !important;
+      
+      &.text-muted {
+        color: var(--text-secondary) !important;
+      }
     }
   }
 
   .cta-section {
+    border-top: 1px solid var(--border-color);
+    
     .btn {
       padding: 1rem 2rem;
       border-radius: 2rem;
@@ -277,9 +332,32 @@ const retryFetch = () => {
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: $btn-hover-shadow;
+        box-shadow: var(--btn-hover-shadow, 0 4px 15px rgba(135, 197, 164, 0.3));
       }
     }
+    
+    .text-muted {
+      color: var(--text-secondary) !important;
+    }
+  }
+
+  // Global dark mode overrides for this component
+  .text-muted {
+    color: var(--text-secondary) !important;
+  }
+  
+  .text-center {
+    color: inherit;
+  }
+  
+  .alert {
+    background: var(--background-white);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .spinner-grow {
+    color: var(--color-primary);
   }
 
   @media (max-width: 768px) {
