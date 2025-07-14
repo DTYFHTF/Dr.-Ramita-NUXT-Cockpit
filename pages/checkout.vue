@@ -332,20 +332,20 @@ const submitOrder = async () => {
 .checkout-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .checkout-subtitle {
   font-size: 1.1rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 /* Success Page */
 .success-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 20px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
   padding: 3rem;
   text-align: center;
   max-width: 700px;
@@ -359,13 +359,13 @@ const submitOrder = async () => {
 .success-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #059669;
+  color: var(--color-success);
   margin-bottom: 1rem;
 }
 
 .success-message {
   font-size: 1.1rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
 }
 
@@ -380,7 +380,7 @@ const submitOrder = async () => {
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8fafc;
+  background: var(--background-light);
   border-radius: 12px;
 }
 
@@ -392,19 +392,19 @@ const submitOrder = async () => {
 
 .order-info-item .label {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .order-info-item .value {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -413,7 +413,7 @@ const submitOrder = async () => {
 }
 
 .items-list {
-  background: #f8fafc;
+  background: var(--background-light);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -423,7 +423,7 @@ const submitOrder = async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   gap: 1rem;
 }
 
@@ -440,7 +440,7 @@ const submitOrder = async () => {
   height: 60px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 }
 
 .item-details {
@@ -452,26 +452,26 @@ const submitOrder = async () => {
 
 .item-name {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .item-variation {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .item-quantity {
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .item-price {
   font-weight: 600;
-  color: #059669;
+  color: var(--color-success);
 }
 
 .order-summary-final {
-  background: #f8fafc;
+  background: var(--background-light);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -485,11 +485,11 @@ const submitOrder = async () => {
 }
 
 .total-row {
-  border-top: 2px solid #e5e7eb;
+  border-top: 2px solid var(--border-color);
   padding-top: 1rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #059669;
+  color: var(--color-success);
 }
 
 .shipping-info {
@@ -497,24 +497,24 @@ const submitOrder = async () => {
 }
 
 .address-details {
-  background: #f8fafc;
+  background: var(--background-light);
   border-radius: 12px;
   padding: 1.5rem;
 }
 
 .recipient-name {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .address-line {
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .phone-number {
-  color: #059669;
+  color: var(--color-success);
   font-weight: 500;
   margin-top: 0.5rem;
 }
@@ -523,8 +523,8 @@ const submitOrder = async () => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #059669;
-  color: white;
+  background: var(--color-success);
+  color: var(--text-white);
   padding: 1rem 2rem;
   border-radius: 12px;
   text-decoration: none;
@@ -533,8 +533,8 @@ const submitOrder = async () => {
 }
 
 .continue-shopping-btn:hover {
-  background: #047857;
-  color: white;
+  background: var(--primary-dark);
+  color: var(--text-white);
   transform: translateY(-1px);
 }
 
@@ -555,10 +555,10 @@ const submitOrder = async () => {
 
 /* Form Styles */
 .form-container {
-  background: white;
+  background: var(--background-white);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
 }
 
 .form-section {
@@ -571,11 +571,11 @@ const submitOrder = async () => {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid var(--background-light);
 }
 
 .section-icon {
-  color: #059669;
+  color: var(--color-success);
   width: 24px;
   height: 24px;
 }
@@ -583,7 +583,7 @@ const submitOrder = async () => {
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -605,31 +605,33 @@ const submitOrder = async () => {
 
 .form-label {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .form-input, .form-textarea {
   padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background: white;
+  background: var(--background-white);
+  color: var(--text-primary);
 }
 
 .form-input:focus, .form-textarea:focus {
   outline: none;
-  border-color: #059669;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
 }
 
 .form-input::placeholder, .form-textarea::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted);
+  opacity: 0.8;
 }
 
 /* Payment Options */
@@ -651,16 +653,16 @@ const submitOrder = async () => {
 .payment-label {
   display: block;
   padding: 1rem 1.25rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: white;
+  background: var(--background-white);
 }
 
 .payment-radio:checked + .payment-label {
-  border-color: #059669;
-  background: #f0fdf4;
+  border-color: var(--color-success);
+  background: var(--background-light);
 }
 
 .payment-content {
@@ -671,17 +673,17 @@ const submitOrder = async () => {
 
 .payment-name {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .payment-icon {
-  color: #6b7280;
+  color: var(--text-secondary);
   width: 20px;
   height: 20px;
 }
 
 .payment-radio:checked + .payment-label .payment-icon {
-  color: #059669;
+  color: var(--color-success);
 }
 
 .payment-info {
@@ -689,9 +691,9 @@ const submitOrder = async () => {
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: #eff6ff;
+  background: var(--badge-color);
   border-radius: 12px;
-  color: #1e40af;
+  color: var(--color-primary);
   font-size: 0.875rem;
   margin-top: 1rem;
 }
@@ -703,7 +705,7 @@ const submitOrder = async () => {
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 2px solid #f1f5f9;
+  border-top: 2px solid var(--background-light);
 }
 
 .btn {
@@ -721,29 +723,29 @@ const submitOrder = async () => {
 }
 
 .btn-outline {
-  background: white;
-  color: #6b7280;
-  border: 2px solid #e5e7eb;
+  background: var(--background-white);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .btn-outline:hover {
-  background: #f9fafb;
-  color: #374151;
+  background: var(--background-light);
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 .btn-primary {
-  background: #059669;
-  color: white;
+  background: var(--color-success);
+  color: var(--text-white);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #047857;
+  background: var(--primary-dark);
   transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
-  background: #9ca3af;
+  background: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -769,10 +771,10 @@ const submitOrder = async () => {
 }
 
 .summary-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
 }
 
 .summary-header {
@@ -781,11 +783,11 @@ const submitOrder = async () => {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid var(--background-light);
 }
 
 .summary-icon {
-  color: #059669;
+  color: var(--color-success);
   width: 24px;
   height: 24px;
 }
@@ -793,7 +795,7 @@ const submitOrder = async () => {
 .summary-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -806,7 +808,7 @@ const submitOrder = async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--background-light);
   gap: 0.75rem;
 }
 
@@ -823,7 +825,7 @@ const submitOrder = async () => {
   height: 50px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 }
 
 .item-info {
@@ -835,29 +837,29 @@ const submitOrder = async () => {
 
 .item-name {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
 .item-variant {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .item-qty {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .item-total {
   font-weight: 600;
-  color: #059669;
+  color: var(--color-success);
   font-size: 0.875rem;
 }
 
 .summary-totals {
   padding-top: 1rem;
-  border-top: 2px solid #f1f5f9;
+  border-top: 2px solid var(--background-light);
 }
 
 .total-row {
@@ -865,14 +867,14 @@ const submitOrder = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .final-total {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #059669;
-  border-top: 2px solid #e5e7eb;
+  color: var(--color-success);
+  border-top: 2px solid var(--border-color);
   padding-top: 1rem;
   margin-top: 0.5rem;
 }
@@ -882,12 +884,12 @@ const submitOrder = async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--badge-color);
+  color: var(--text-error);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-error);
 }
 
 /* Responsive Design */

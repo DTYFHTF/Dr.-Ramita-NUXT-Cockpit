@@ -42,39 +42,39 @@
 
 // Dark theme
 [data-theme="dark"] {
-  --color-primary: #2D7B7B;
-  --primary-dark: #3a5a4a; // Darker shade for dark theme
+  --color-primary: #4ade80;
+  --primary-dark: #22c55e; // Darker shade for dark theme
   --color-secondary: #8bc9a8;
   --accent-soft-green: #a7d5c4;
-  --background-light: #1a1a1a;
-  --background-white: #2d2d2d;
-  --text-primary: #e8f2ec;
-  --text-secondary: #b0b0b0;
+  --background-light: #111827;
+  --background-white: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
   --text-light: #1a1a1a;
-  --text-error: #ff6b6b;
-  --border-color: #404040;
-  --button-bg: #4a7a5a;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --badge-color: #3a3a3a;
-  --badge-free-color: #147a7a;
+  --text-error: #ef4444;
+  --border-color: #4b5563;
+  --button-bg: #10b981;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --badge-color: #374151;
+  --badge-free-color: #22c55e;
   
   // Additional dark theme variables
   --text-white: #ffffff;
-  --text-muted: #888;
-  --color-error: #ff6b6b;
-  --color-warning: #ffc107;
-  --color-success: #38a169;
-  --color-muted: #666;
-  --card-background: #3a3a3a;
+  --text-muted: #d1d5db;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-success: #10b981;
+  --color-muted: #9ca3af;
+  --card-background: #374151;
   --modal-overlay-rgb: 0, 0, 0;
   --shadow-rgb: 0, 0, 0;
-  --success-bg: #1e3a1e;
-  --error-bg: #3a1e1e;
+  --success-bg: #064e3b;
+  --error-bg: #7f1d1d;
   
   // RGB values for transparent colors
-  --background-white-rgb: 45, 45, 45;
-  --background-light-rgb: 26, 26, 26;
-  --color-primary-rgb: 74, 122, 90;
+  --background-white-rgb: 31, 41, 55;
+  --background-light-rgb: 17, 24, 39;
+  --color-primary-rgb: 74, 222, 128;
 }
 
 // Global body and html styles for theme support

@@ -92,9 +92,9 @@
             <div v-if="user">
               <CartIndicator class="nav-link"/>
             </div>
-            <!-- <div >
+            <div >
               <ThemeToggle class="nav-link"/>
-            </div> -->
+            </div>
           </template>
         </div>
       </div>
