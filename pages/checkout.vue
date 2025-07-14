@@ -1,137 +1,222 @@
 <template>
   <div class="checkout-page container py-5">
-    <h1 class="mb-4 text-center">Checkout</h1>
+    <div class="checkout-header text-center mb-5">
+      <h1 class="checkout-title">Checkout</h1>
+      <p class="checkout-subtitle text-muted">Complete your order in just a few steps</p>
+    </div>
     <div v-if="orderSuccess">
-      <div class="alert alert-success text-center p-4 rounded-4 shadow-sm">
-        <LucideIcon icon="mdi:check-circle" class="me-2 text-success" size="2em" />
-        <h4 class="mb-2">Thank you for your order!</h4>
-        <p>Your order has been placed successfully.</p>
-        <div class="order-summary mt-4 mx-auto" style="max-width: 500px;">
-          <h5 class="fw-semibold mb-3">Order Summary</h5>
-          <div class="mb-2">Order ID: <span class="fw-semibold">{{ orderData?.id }}</span></div>
-          <div class="mb-2">Status: <span class="badge bg-info">{{ orderData?.status }}</span></div>
-          <div class="mb-2">Order Date: <span class="fw-semibold">{{ orderData?.created_at ? new
-            Date(orderData.created_at).toLocaleString() : '' }}</span></div>
-          <ul class="list-group mb-3">
-            <li v-for="item in orderData?.cart" :key="`${item.product_id}:${item.variation_id}`"
-              class="list-group-item d-flex justify-content-between align-items-center">
-              <span>
-                {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name }}</span>
-                <span class="text-muted small ms-2">x{{ item.quantity }}</span>
-              </span>
-              <span class="fw-semibold">₹{{ item.price * item.quantity }}</span>
-            </li>
-          </ul>
-          <div class="mb-2">Shipping: <span class="fw-semibold">₹{{ orderData?.shipping_cost }}</span></div>
-          <div class="mb-2">Estimated Delivery: <span class="fw-semibold">{{ orderData?.estimated_delivery || estimatedDelivery }}</span></div>
-          <div class="h5 mt-3">Total: <span class="fw-bold text-success">₹{{ orderData?.total }}</span></div>
-          <div class="mt-4 p-3 bg-light rounded-3">
-            <h6 class="fw-semibold mb-2">Shipping Details</h6>
-            <div v-if="orderData?.shipping">
-              <div>{{ orderData.shipping.name }}</div>
-              <div>{{ orderData.shipping.address }}</div>
-              <div>{{ orderData.shipping.area }},</div>
-              <div>{{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }},</div>
-              <div>{{ orderData.shipping.country }}</div>
-              <div v-if="orderData.shipping.landmark"><strong>Landmark:</strong> {{ orderData.shipping.landmark }}</div>
+      <div class="success-card">
+        <div class="success-icon">
+          <LucideIcon icon="mdi:check-circle" class="text-success" size="3em" />
+        </div>
+        <h2 class="success-title">Order Placed Successfully!</h2>
+        <p class="success-message">Thank you for your purchase. We'll send you a confirmation email shortly.</p>
+        
+        <div class="order-details">
+          <div class="order-info-grid">
+            <div class="order-info-item">
+              <span class="label">Order ID</span>
+              <span class="value">{{ orderData?.id }}</span>
+            </div>
+            <div class="order-info-item">
+              <span class="label">Status</span>
+              <span class="badge bg-success">{{ orderData?.status }}</span>
+            </div>
+            <div class="order-info-item">
+              <span class="label">Order Date</span>
+              <span class="value">{{ orderData?.created_at ? new Date(orderData.created_at).toLocaleDateString() : '' }}</span>
+            </div>
+          </div>
 
-              <div><strong>Mobile Number:</strong> {{ orderData.shipping.phone }}</div>
+          <div class="order-items">
+            <h5 class="section-title">Items Ordered</h5>
+            <div class="items-list">
+              <div v-for="item in orderData?.cart" :key="`${item.product_id}:${item.variation_id}`" class="item-row">
+                <div class="item-image">
+                  <img :src="item.image || (cart.find(c => c.product_id === item.product_id && c.variation_id === item.variation_id)?.image) || '/placeholder-product.jpg'" :alt="item.name" class="product-img" />
+                </div>
+                <div class="item-details">
+                  <span class="item-name">{{ item.name }}</span>
+                  <span v-if="item.variation_name" class="item-variation">{{ item.variation_name }}</span>
+                  <span class="item-quantity">Qty: {{ item.quantity }}</span>
+                </div>
+                <span class="item-price">₹{{ (item.price * item.quantity).toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-summary-final">
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>₹{{ orderData?.shipping_cost || shippingCost }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Estimated Delivery</span>
+              <span>{{ orderData?.estimated_delivery || estimatedDelivery }}</span>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total</span>
+              <span>₹{{ orderData?.total?.toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <div class="shipping-info">
+            <h5 class="section-title">Delivery Address</h5>
+            <div v-if="orderData?.shipping" class="address-details">
+              <p class="recipient-name">{{ orderData.shipping.name }}</p>
+              <p class="address-line">{{ orderData.shipping.area }}</p>
+              <p class="address-line">{{ orderData.shipping.address }}</p>
+              <p class="address-line">{{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }}</p>
+              <p class="address-line">{{ orderData.shipping.country }}</p>
+              <p class="phone-number">📞 {{ orderData.shipping.phone }}</p>
+              <p v-if="orderData.shipping.landmark" class="address-line">Near {{ orderData.shipping.landmark }}</p>
+
             </div>
           </div>
         </div>
-        <router-link to="/" class="btn-smooth-success mt-4 px-4 py-2">Continue Shopping</router-link>
+        
+        <router-link to="/" class="continue-shopping-btn">Continue Shopping</router-link>
       </div>
     </div>
     <div v-else>
-      <div v-if="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
-      <div class="row g-5 align-items-start">
-        <div class="col-lg-7">
-          <form @submit.prevent="submitOrder" novalidate class="p-4 rounded-4 shadow-sm"
-            style="background-color: var(--background-white);">
-            <h4 class="mb-4 fw-semibold border-bottom pb-2">Shipping & Contact Information</h4>
-            <div class="row mb-3">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Full Name (First and Last Name) <span class="text-danger">*</span></label>
-                <input v-model="shipping.name" type="text" class="form-control form-control-lg" required />
+      <div v-if="errorMessage" class="error-alert">
+        <LucideIcon icon="mdi:alert-circle" class="me-2" />
+        {{ errorMessage }}
+      </div>
+      
+      <div class="checkout-content">
+        <div class="checkout-form">
+          <form @submit.prevent="submitOrder" novalidate class="form-container">
+            <div class="form-section">
+              <div class="section-header">
+                <LucideIcon icon="mdi:truck" class="section-icon" />
+                <h3 class="section-title">Delivery Information</h3>
               </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                <input v-model="shipping.phone" type="tel" class="form-control form-control-lg" required />
+              
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Full Name <span class="required">*</span></label>
+                  <input v-model="shipping.name" type="text" class="form-input" required placeholder="Enter your full name" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mobile Number <span class="required">*</span></label>
+                  <input v-model="shipping.phone" type="tel" class="form-input" required placeholder="+91 00000 00000" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Pin Code <span class="required">*</span></label>
+                  <input v-model="shipping.pincode" type="text" class="form-input" required placeholder="000000" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Address <span class="required">*</span></label>
+                  <input v-model="shipping.address" type="text" class="form-input" required placeholder="Flat, House no., Building" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Area <span class="required">*</span></label>
+                  <input v-model="shipping.area" type="text" class="form-input" required placeholder="Area, Street, Sector" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Landmark</label>
+                  <input v-model="shipping.landmark" type="text" class="form-input" placeholder="Nearby landmark" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">City <span class="required">*</span></label>
+                  <input v-model="shipping.city" type="text" class="form-input" required placeholder="Your city" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">State <span class="required">*</span></label>
+                  <input v-model="shipping.state" type="text" class="form-input" required placeholder="Your state" />
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Country <span class="required">*</span></label>
+                  <input v-model="shipping.country" type="text" class="form-input" required placeholder="India" />
+                </div>
               </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Pin Code <span class="text-danger">*</span></label>
-                <input v-model="shipping.pincode" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Flat, House no., Building, Apartment <span class="text-danger">*</span></label>
-                <input v-model="shipping.address" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Area, Street, Sector, Village <span class="text-danger">*</span></label>
-                <input v-model="shipping.area" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Landmark</label>
-                <input v-model="shipping.landmark" type="text" class="form-control form-control-lg" />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Town/City <span class="text-danger">*</span></label>
-                <input v-model="shipping.city" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">State <span class="text-danger">*</span></label>
-                <input v-model="shipping.state" type="text" class="form-control form-control-lg" required />
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Country <span class="text-danger">*</span></label>
-                <input v-model="shipping.country" type="text" class="form-control form-control-lg" required />
+              
+              <div class="form-group">
+                <label class="form-label">Special Instructions</label>
+                <textarea v-model="specialInstructions" class="form-textarea" rows="3" placeholder="Any special delivery instructions..."></textarea>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Special Instructions (optional)</label>
-              <textarea v-model="specialInstructions" class="form-control form-control-lg" rows="2"
-                placeholder="Any notes for delivery?"></textarea>
-            </div>
-            <h4 class="mb-3 fw-semibold border-bottom pb-2">Payment Method</h4>
-            <div class="mb-3">
-              <div class="form-check form-check-lg mb-2" v-for="method in paymentMethods" :key="method.value">
-                <input class="form-check-input" type="radio" :id="method.value" :value="method.value"
-                  v-model="paymentMethod" required />
-                <label class="form-check-label" :for="method.value">
-                  {{ method.label }}
-                </label>
+
+            <div class="form-section">
+              <div class="section-header">
+                <LucideIcon icon="mdi:credit-card" class="section-icon" />
+                <h3 class="section-title">Payment Method</h3>
+              </div>
+              
+              <div class="payment-options">
+                <div v-for="method in paymentMethods" :key="method.value" class="payment-option">
+                  <input class="payment-radio" type="radio" :id="method.value" :value="method.value" v-model="paymentMethod" required />
+                  <label class="payment-label" :for="method.value">
+                    <div class="payment-content">
+                      <span class="payment-name">{{ method.label }}</span>
+                      <LucideIcon v-if="method.value === 'cod'" icon="mdi:cash" class="payment-icon" />
+                      <LucideIcon v-else-if="method.value === 'card'" icon="mdi:credit-card" class="payment-icon" />
+                      <LucideIcon v-else-if="method.value === 'upi'" icon="mdi:cellphone" class="payment-icon" />
+                      <LucideIcon v-else icon="mdi:paypal" class="payment-icon" />
+                    </div>
+                  </label>
+                </div>
+              </div>
+              
+              <div v-if="paymentMethod !== 'cod'" class="payment-info">
+                <LucideIcon icon="mdi:information" class="me-2" />
+                Payment will be processed securely after order confirmation.
               </div>
             </div>
-            <div v-if="paymentMethod !== 'cod'" class="alert alert-info mb-3">
-              <strong>Note:</strong> Payment will be handled via a secure payment gateway after you review your order.
-            </div>
-            <div class="d-flex gap-3 mt-4 justify-content-end">
-              <router-link to="/cartpage" class="btn btn-smooth-outline px-4 py-2">Back to Cart</router-link>
-              <button type="submit" class="btn btn-smooth-success px-4 py-2" :disabled="isSubmitting">
-                <span v-if="isSubmitting"><span class="spinner-border spinner-border-sm me-2"></span>Placing
-                  Order...</span>
-                <span v-else>Review & Confirm</span>
+
+            <div class="form-actions">
+              <router-link to="/cartpage" class="btn btn-outline">
+                <LucideIcon icon="mdi:arrow-left" class="me-2" />
+                Back to Cart
+              </router-link>
+              <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+                <span v-if="isSubmitting">
+                  <span class="spinner"></span>
+                  Placing Order...
+                </span>
+                <span v-else>
+                  <LucideIcon icon="mdi:check" class="me-2" />
+                  Place Order
+                </span>
               </button>
             </div>
           </form>
         </div>
-        <div class="col-lg-5">
-          <div class="card shadow-sm sticky-top" style="top: 2rem;">
-            <div class="card-body">
-              <h5 class="card-title mb-3 fw-semibold">Order Summary</h5>
-              <ul class="list-group mb-3">
-                <li v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`"
-                  class="list-group-item d-flex justify-content-between align-items-center">
-                  <span>
-                    {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name }}</span>
-                    <span class="text-muted small ms-2">x{{ item.quantity }}</span>
-                  </span>
-                  <span class="fw-semibold">₹{{ item.price * item.quantity }}</span>
-                </li>
-              </ul>
-              <div class="mb-2">Shipping: <span class="fw-semibold">₹{{ shippingCost }}</span></div>
-              <div class="mb-2">Estimated Delivery: <span class="fw-semibold">{{ estimatedDelivery }}</span></div>
-              <div class="h5 mt-3">Total: <span class="fw-bold text-success">₹{{ totalPrice + shippingCost }}</span>
+
+        <div class="order-summary">
+          <div class="summary-card">
+            <div class="summary-header">
+              <LucideIcon icon="mdi:receipt" class="summary-icon" />
+              <h3 class="summary-title">Order Summary</h3>
+            </div>
+            
+            <div class="summary-items">
+              <div v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="summary-item">
+                <div class="summary-item-image">
+                  <img :src="item.image || '/placeholder-product.jpg'" :alt="item.name" class="summary-img" />
+                </div>
+                <div class="item-info">
+                  <span class="item-name">{{ item.name }}</span>
+                  <span v-if="item.variation_name" class="item-variant">{{ item.variation_name }}</span>
+                  <span class="item-qty">× {{ item.quantity }}</span>
+                </div>
+                <span class="item-total">₹{{ (item.price * item.quantity).toFixed(2) }}</span>
+              </div>
+            </div>
+            
+            <div class="summary-totals">
+              <div class="total-row">
+                <span>Shipping</span>
+                <span>₹{{ orderData?.shipping_cost || shippingCost }}</span>
+              </div>
+              <div class="total-row">
+                <span>Delivery</span>
+                <span>{{ estimatedDelivery }}</span>
+              </div>
+              <div class="total-row final-total">
+                <span>Total</span>
+                <span>₹{{ ((orderData?.total) ? orderData.total : (totalPrice + (orderData?.shipping_cost || shippingCost))).toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -205,7 +290,11 @@ const submitOrder = async () => {
     cart: cart.map((item) => ({
       product_id: item.product_id,
       variation_id: item.variation_id,
-      quantity: item.quantity
+      quantity: item.quantity,
+      name: item.name,
+      variation_name: item.variation_name,
+      price: item.price,
+      image: item.image
     })),
     shipping_cost: shippingCost,
     estimated_delivery: estimatedDelivery,
@@ -221,7 +310,7 @@ const submitOrder = async () => {
     orderSuccess.value = true;
     cartStore.clearCart();
   } catch (e: any) {
-    errorMessage.value = e?.data?.message || e?.message || 'Failed to place order.';
+    errorMessage.value = e?.data?.error || e?.data?.message || e?.message || 'Failed to place order.';
   } finally {
     isSubmitting.value = false;
   }
@@ -229,31 +318,624 @@ const submitOrder = async () => {
 </script>
 
 <style scoped>
+/* Main Layout */
 .checkout-page {
-  max-width: 1100px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.order-summary ul {
-  margin-bottom: 0;
+/* Header */
+.checkout-header {
+  margin-bottom: 3rem;
 }
 
-.card,
-.alert {
-  border-radius: 1rem;
+.checkout-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
 }
 
-.form-control-lg {
-  min-height: 2.5rem;
+.checkout-subtitle {
   font-size: 1.1rem;
+  color: #6b7280;
 }
 
-.form-check-lg .form-check-input {
-  width: 1.3em;
-  height: 1.3em;
+/* Success Page */
+.success-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  padding: 3rem;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.form-check-lg .form-check-label {
+.success-icon {
+  margin-bottom: 1.5rem;
+}
+
+.success-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669;
+  margin-bottom: 1rem;
+}
+
+.success-message {
   font-size: 1.1rem;
-  margin-left: 0.5em;
+  color: #6b7280;
+  margin-bottom: 2.5rem;
+}
+
+.order-details {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.order-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.order-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.order-info-item .label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.order-info-item .value {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.order-items {
+  margin-bottom: 2rem;
+}
+
+.items-list {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 1rem;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-image {
+  flex-shrink: 0;
+}
+
+.product-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.item-variation {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.item-quantity {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #059669;
+}
+
+.order-summary-final {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.total-row {
+  border-top: 2px solid #e5e7eb;
+  padding-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.shipping-info {
+  margin-bottom: 2rem;
+}
+
+.address-details {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.recipient-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.address-line {
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.phone-number {
+  color: #059669;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.continue-shopping-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #059669;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.continue-shopping-btn:hover {
+  background: #047857;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Form Layout */
+.checkout-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .checkout-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Form Styles */
+.form-container {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.section-icon {
+  color: #059669;
+  width: 24px;
+  height: 24px;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.form-input, .form-textarea {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Payment Options */
+.payment-options {
+  display: grid;
+  gap: 1rem;
+}
+
+.payment-option {
+  position: relative;
+}
+
+.payment-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.payment-label {
+  display: block;
+  padding: 1rem 1.25rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.payment-radio:checked + .payment-label {
+  border-color: #059669;
+  background: #f0fdf4;
+}
+
+.payment-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.payment-icon {
+  color: #6b7280;
+  width: 20px;
+  height: 20px;
+}
+
+.payment-radio:checked + .payment-label .payment-icon {
+  color: #059669;
+}
+
+.payment-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #eff6ff;
+  border-radius: 12px;
+  color: #1e40af;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f1f5f9;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-outline {
+  background: white;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+  color: #374151;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #059669;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Order Summary */
+.order-summary {
+  position: sticky;
+  top: 2rem;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.summary-icon {
+  color: #059669;
+  width: 24px;
+  height: 24px;
+}
+
+.summary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.summary-items {
+  margin-bottom: 1.5rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 0.75rem;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item-image {
+  flex-shrink: 0;
+}
+
+.summary-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 0.875rem;
+}
+
+.item-variant {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.item-qty {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.item-total {
+  font-weight: 600;
+  color: #059669;
+  font-size: 0.875rem;
+}
+
+.summary-totals {
+  padding-top: 1rem;
+  border-top: 2px solid #f1f5f9;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: #6b7280;
+}
+
+.final-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #059669;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Error Alert */
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid #fecaca;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .checkout-page {
+    padding: 1rem;
+  }
+  
+  .checkout-title {
+    font-size: 2rem;
+  }
+  
+  .form-container, .summary-card, .success-card {
+    padding: 1.5rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .success-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .order-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .summary-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .item-row {
+    gap: 0.75rem;
+  }
+  
+  .summary-item {
+    gap: 0.5rem;
+  }
 }
 </style>

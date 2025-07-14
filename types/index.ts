@@ -85,6 +85,7 @@ export interface OrderItem {
   variation_name?: string;
   price: number;
   quantity: number;
+  image?: string;
 }
 
 export interface ShippingInfo {
