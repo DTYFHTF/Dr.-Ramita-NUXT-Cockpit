@@ -2,7 +2,7 @@
   <div class="product-search position-relative">
     <input
       type="text"
-      class="form-control"
+      class="search-input"
       :value="query"
       @input="onInput"
       placeholder="Search products"
@@ -10,11 +10,11 @@
       @blur="onBlur"
       aria-label="Search products"
     />
-    <ul v-if="showSuggestions && suggestions.length" class="list-group suggestions-list position-absolute w-100 shadow-sm">
+    <ul v-if="showSuggestions && suggestions.length" class="suggestions-list">
       <li
         v-for="suggestion in suggestions"
         :key="suggestion.id"
-        class="list-group-item list-group-item-action"
+        class="suggestion-item"
         @mousedown="selectSuggestion(suggestion)" 
       >
         {{ suggestion.name }}
@@ -80,16 +80,64 @@ const onBlur = () => {
 
 <style scoped>
 .product-search {
+  position: relative;
   z-index: 1;
 }
+
+.search-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--background-white);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
 .suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-white);
+  border: 2px solid var(--border-color);
   border-top: none;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 0 0 12px 12px;
   max-height: 300px;
   overflow-y: auto;
+  box-shadow: var(--card-shadow);
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-.list-group-item-action {
+
+.suggestion-item {
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
   cursor: pointer;
+  border-bottom: 1px solid var(--background-light);
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background: var(--background-light);
+  color: var(--color-success);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
 }
 </style>
