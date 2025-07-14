@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div id="app">
     <Navbar />
-    <!-- Existing content -->
-    <NuxtPage />
+    <main class="main-content">
+      <NuxtPage />
+    </main>
     <Footer />
   </div>
 </template>
@@ -35,6 +36,23 @@ initTheme();
 }
 html{
   scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  min-height: 0;
 }
 
 .title { margin-bottom: calc(var(--spacing-unit) * 1.25); }
