@@ -252,11 +252,12 @@ const retryFetch = async () => {
 
 .pose-step {
   transition: all 0.3s ease;
-  border: 1px solid rgba($border-color, 0.3);
+  border: 1px solid var(--border-color);
+  background: var(--background-white);
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
   }
 
   .step-number {
@@ -265,6 +266,9 @@ const retryFetch = async () => {
     font-size: 1.25rem;
     margin-right: 1rem;
     margin-left:0;
+    background: var(--color-secondary);
+    color: var(--text-white, #fff);
+    border-radius: 50%;
   }
 }
 
@@ -276,7 +280,12 @@ const retryFetch = async () => {
   max-width: 460px;
   height: 300px;
   object-fit: contain;
-  background: $background-white;
+  background: var(--background-white);
+}
+
+.pose-instructions {
+  color: var(--text-primary);
+  background: transparent;
 }
 
 .benefits-content {

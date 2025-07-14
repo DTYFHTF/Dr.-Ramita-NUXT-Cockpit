@@ -151,18 +151,18 @@ watch(recipeData, (val) => {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
-  color: $text-secondary;
+  color: var(--text-secondary);
 
   // Recipe Header Styles
   .recipe-header {
     padding-bottom: 2rem;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid var(--border-color);
 
     .recipe-description {
       font-size: 1.1rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
-      color: $text-secondary;
+      color: var(--text-secondary);
     }
 
     .recipe-meta {
@@ -183,7 +183,7 @@ watch(recipeData, (val) => {
       position: relative;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba($color-primary, 0.1);
+      box-shadow: 0 6px 16px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
       
 
       .recipe-image {
@@ -201,20 +201,22 @@ watch(recipeData, (val) => {
     margin-top: 2rem;
 
     .content-section {
-      background: rgba($background-light,0.5);
+      background: var(--background-white);
       border-radius: 10px;
       padding: 1.8rem;
       margin-bottom: 2rem;
-      box-shadow: $card-shadow;
+      box-shadow: var(--card-shadow);
+      color: var(--text-primary);
     }
 
-     //Ingredients
-  li {
-          padding: 0.7rem 0;
-          border-bottom: 1px solid $border-color;
-          position: relative;
-          padding-left: 1.5rem;
-        }
+    //Ingredients
+    li {
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+      padding-left: 1.5rem;
+      color: var(--text-primary);
+    }
 
     // Health Benefits styles
     .health-benefits-section {
@@ -226,13 +228,14 @@ watch(recipeData, (val) => {
         margin: 0;
         list-style: none;
         li {
-          background-color: rgba($color-secondary, 0.1);
+          background-color: var(--color-secondary);
           padding: 0.6rem 1.2rem;
           border-radius: 25px;
           font-size: 0.95rem;
-          color: $text-secondary;
+          color: var(--text-white, #fff);
           display: inline-flex;
-          align-items: center;}
+          align-items: center;
+        }
       }
     }
   }
