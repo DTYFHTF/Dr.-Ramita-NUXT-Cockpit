@@ -17,6 +17,15 @@ export interface Doctor {
     start: string;
     end: string;
   }>;
+  education?: Array<{
+    degree: string;
+    institution: string;
+    year: string;
+  }>;
+  treatment_specialties?: Array<{
+    condition: string;
+    frequency: 'very_high' | 'high' | 'normal' | 'low';
+  }>;
   social_links?: string[];
   awards?: string[];
   memberships?: string[];

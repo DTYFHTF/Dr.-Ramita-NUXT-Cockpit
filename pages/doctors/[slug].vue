@@ -111,6 +111,18 @@
                   <p>{{ doctor.qualifications }}</p>
                 </div>
               </div>
+              <div v-if="doctor.treatment_specialties && doctor.treatment_specialties.length" class="content-section">
+                <h2>Treatment Specialties</h2>
+                <div class="treatment-specialties-minimal">
+                  <span 
+                    v-for="specialty in doctor.treatment_specialties" 
+                    :key="specialty.condition"
+                    class="specialty-pill pill-badge"
+                  >
+                    {{ specialty.condition }}
+                  </span>
+                </div>
+              </div>
 
               <!-- Awards -->
               <div v-if="doctor.awards && doctor.awards.length" class="content-section">
@@ -192,7 +204,7 @@
                       <span 
                         v-for="mode in doctor.consultation_modes" 
                         :key="mode"
-                        class="mode-badge"
+                        class="mode-badge pill-badge"
                         :class="`mode-${mode.replace('_', '-')}`"
                       >
                         {{ formatMode(mode) }}
@@ -219,15 +231,12 @@
                     <h4>Working Hours</h4>
                     <div class="working-hours">
                       <div 
-                        v-for="schedule in doctor.working_hours.slice(0, 3)" 
+                        v-for="schedule in doctor.working_hours" 
                         :key="schedule.day"
                         class="schedule-item"
                       >
                         <span class="day">{{ schedule.day }}</span>
                         <span class="time">{{ schedule.start }} - {{ schedule.end }}</span>
-                      </div>
-                      <div v-if="doctor.working_hours.length > 3" class="more-hours">
-                        +{{ doctor.working_hours.length - 3 }} more days
                       </div>
                     </div>
                   </div>
@@ -351,6 +360,7 @@ if (error.value) {
 </script>
 
 <style lang="scss" scoped>
+// Use global utility classes and variables for DRY and maintainability
 .doctor-page {
   min-height: 100vh;
 }
@@ -358,9 +368,9 @@ if (error.value) {
 .loading-container,
 .error-container {
   min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @extend .d-flex !optional;
+  @extend .align-items-center !optional;
+  @extend .justify-content-center !optional;
 }
 
 .doctor-content {
@@ -376,31 +386,26 @@ if (error.value) {
   box-shadow: var(--card-shadow);
 }
 
-.doctor-avatar {
-  img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--color-primary);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
+.doctor-avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.doctor-info {
-  .doctor-name {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-  
-  .doctor-specialization {
-    font-size: 1.1rem;
-    color: var(--color-primary);
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
+.doctor-info .doctor-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+.doctor-info .doctor-specialization {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .doctor-rating {
@@ -408,26 +413,22 @@ if (error.value) {
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  
-  .stars {
-    display: flex;
-    gap: 2px;
-    
-    .star {
-      color: #ddd;
-      font-size: 1.1rem;
-      
-      &.filled {
-        color: #ffd700;
-      }
-    }
-  }
-  
-  .rating-text {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
+}
+.doctor-rating .stars {
+  display: flex;
+  gap: 2px;
+}
+.doctor-rating .star {
+  color: #ddd;
+  font-size: 1.1rem;
+}
+.doctor-rating .star.filled {
+  color: #ffd700;
+}
+.doctor-rating .rating-text {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .doctor-meta-cards {
@@ -436,7 +437,6 @@ if (error.value) {
   gap: 1rem;
   margin-top: 1rem;
 }
-
 .meta-card {
   background: var(--background-light);
   border: 1px solid var(--border-color);
@@ -446,16 +446,14 @@ if (error.value) {
   align-items: center;
   gap: 1rem;
   transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
 }
-
+.meta-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 .meta-icon {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
   width: 40px;
   height: 40px;
   border-radius: 10px;
@@ -463,45 +461,64 @@ if (error.value) {
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  
-  :deep(.lucide-icon) {
-    color: white;
-    width: 20px;
-    height: 20px;
-  }
 }
-
+.meta-icon :deep(.lucide-icon) {
+  color: #fff;
+  width: 20px;
+  height: 20px;
+}
 .meta-content {
   display: flex;
   flex-direction: column;
-  
-  .meta-label {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .meta-value {
-    font-size: 0.95rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-top: 0.2rem;
-  }
+}
+.meta-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.meta-value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 0.2rem;
 }
 
 .content-section {
   margin-bottom: 3rem;
-  
-  h2 {
-    color: var(--text-primary);
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid var(--color-primary);
-    padding-bottom: 0.5rem;
-    display: inline-block;
-  }
+}
+.content-section h2 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+.treatment-specialties-minimal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.pill-badge {
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  border: none;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pill-badge:hover {
+  background: var(--color-secondary);
 }
 
 .about-content {
@@ -510,30 +527,22 @@ if (error.value) {
   color: var(--text-secondary);
 }
 
-.specializations-list,
 .languages-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-
 .language-tag {
   background: var(--color-primary);
-  color: white;
+  color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
-.qualifications-content,
-.awards-list,
-.memberships-list,
-.social-links {
-  .qualification-item,
-  .award-item,
-  .membership-item,
-  .social-link {
+.awards-list, .memberships-list, .social-links {
+  .award-item, .membership-item, .social-link {
     background: var(--background-light);
     padding: 1rem 1.5rem;
     border-radius: 8px;
@@ -541,245 +550,132 @@ if (error.value) {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    
-    :deep(.lucide-icon) {
-      color: var(--color-primary);
-      font-size: 1.1rem;
-      width: 20px;
-      height: 20px;
-    }
   }
-  
   .social-link {
     text-decoration: none;
     color: var(--text-primary);
     transition: all 0.3s ease;
-    
-    &:hover {
-      background: var(--color-primary);
-      color: white;
-      
-      :deep(.lucide-icon) {
-        color: white;
-      }
-    }
+  }
+  .social-link:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .social-link:hover :deep(.lucide-icon) {
+    color: #fff;
   }
 }
 
 .consultation-modes {
   margin-bottom: 1.5rem;
-  
-  h4 {
-    font-size: 1rem;
-    color: var(--text-primary);
-    margin-bottom: 0.75rem;
-  }
-  
-  .modes-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .mode-badge {
-    background: var(--background-light);
-    color: var(--text-primary);
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-weight: 500;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    
-    :deep(.lucide-icon) {
-      width: 14px;
-      height: 14px;
-    }
-    
-    &.mode-online {
-      background: #3b82f6;
-      color: white;
-      border-color: #3b82f6;
-    }
-    
-    &.mode-phone {
-      background: #10b981;
-      color: white;
-      border-color: #10b981;
-    }
-    
-    &.mode-in-person {
-      background: var(--color-primary);
-      color: white;
-      border-color: var(--color-primary);
-    }
-  }
+}
+.consultation-modes h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+.modes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.mode-badge {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+}
+.mode-badge :deep(.lucide-icon) {
+  width: 14px;
+  height: 14px;
+}
+.mode-badge.mode-online,
+.mode-badge.mode-phone,
+.mode-badge.mode-in-person {
+  /* Unified color, no extra style needed */
 }
 
 .working-hours-section {
   margin-bottom: 1.5rem;
-  
-  h4 {
-    font-size: 1rem;
-    color: var(--text-primary);
-    margin-bottom: 0.75rem;
-  }
-  
-  .working-hours {
-    background: var(--background-light);
-    border-radius: 8px;
-    padding: 1rem;
-  }
-  
-  .schedule-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border-color);
-    
-    &:last-child {
-      border-bottom: none;
-    }
-    
-    .day {
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-    
-    .time {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-  }
-  
-  .more-hours {
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--border-color);
-  }
 }
-
-.reviews-list {
-  .review-item {
-    background: var(--background-light);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    
-    .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-      
-      .reviewer-info {
-        .review-rating {
-          .star {
-            color: #ddd;
-            font-size: 0.9rem;
-            
-            &.filled {
-              color: #ffd700;
-            }
-          }
-        }
-      }
-      
-      .review-date {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-      }
-    }
-    
-    .review-text {
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin: 0;
-    }
-  }
+.working-hours-section h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+.working-hours {
+  background: var(--background-light);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+.schedule-item:last-child {
+  border-bottom: none;
+}
+.schedule-item .day {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.schedule-item .time {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .booking-widget {
   top: 2rem;
 }
-
 .booking-card {
   background: var(--background-white);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
-  
-  h3 {
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
 }
-
+.booking-card h3 {
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 .consultation-fee {
   text-align: center;
   margin-bottom: 2rem;
-  
-  .fee-amount {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-primary);
-  }
-  
-  .fee-label {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
+}
+.fee-amount {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.fee-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .availability-section,
 .time-slots-section {
   margin-bottom: 1.5rem;
-  
-  h4 {
-    font-size: 1rem;
-    color: var(--text-primary);
-    margin-bottom: 0.75rem;
-  }
 }
-
+.availability-section h4,
+.time-slots-section h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
 .days-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-
 .day-badge {
   background: var(--color-secondary);
-  color: white;
+  color: #fff;
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
   font-size: 0.8rem;
   font-weight: 500;
-}
-
-.time-slots {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.time-slot {
-  background: var(--background-light);
-  padding: 0.5rem;
-  border-radius: 6px;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
 }
 
 .btn-book {
@@ -790,11 +686,10 @@ if (error.value) {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  
-  :deep(.lucide-icon) {
-    width: 18px;
-    height: 18px;
-  }
+}
+.btn-book :deep(.lucide-icon) {
+  width: 18px;
+  height: 18px;
 }
 
 .quick-contact {
@@ -809,34 +704,27 @@ if (error.value) {
     position: static !important;
   }
 }
-
 @media (max-width: 768px) {
   .doctor-header {
     padding: 1.5rem;
-    
-    .row {
-      text-align: center;
-    }
   }
-  
+  .doctor-header .row {
+    text-align: center;
+  }
   .doctor-avatar img {
     width: 100px;
     height: 100px;
   }
-  
   .doctor-info .doctor-name {
     font-size: 1.75rem;
   }
-  
   .doctor-meta-cards {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-  
   .doctor-content {
     padding: 1.5rem 0;
   }
-  
   .time-slots {
     grid-template-columns: 1fr;
   }

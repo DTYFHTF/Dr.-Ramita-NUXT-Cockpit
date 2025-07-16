@@ -81,7 +81,7 @@
             <span class="currency">$</span>
             <span class="amount">{{ doctor.consultation_fee }}</span>
           </div>
-          <span class="fee-label">Consultation</span>
+          <span class="fee-label">/Consultation</span>
         </div>
         
         <div class="selection-area">
