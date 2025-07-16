@@ -21,15 +21,16 @@
       No doctors available at the moment. Please try again later.
     </div>
 
-    <div v-else class="doctors-grid">
+    <!-- Doctor List -->
+    <div v-else class="doctors-list">
       <div
         v-for="doctor in doctors"
         :key="doctor.id"
-        class="doctor-card"
+        class="doctor-list-item"
         :class="{ selected: isSelected(doctor) }"
         @click="selectDoctor(doctor)"
       >
-        <div class="doctor-image">
+        <div class="doctor-avatar">
           <img 
             :src="doctor.image || '/default-doctor.svg'" 
             :alt="doctor.name"
@@ -37,53 +38,59 @@
           />
         </div>
         
-        <div class="doctor-info">
-          <h3 class="doctor-name">{{ doctor.name }}</h3>
-          
-          <p v-if="doctor.specialization" class="doctor-specialization">
-            {{ doctor.specialization }}
-          </p>
-          
-          <p v-if="doctor.experience" class="doctor-experience">
-            {{ doctor.experience }} years experience
-          </p>
-          
-          <div v-if="doctor.rating" class="doctor-rating">
-            <div class="stars">
-              <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.floor(doctor.rating) }">
-                ★
-              </span>
-            </div>
-            <span class="rating-text">{{ doctor.rating }}/5</span>
+        <div class="doctor-details">
+          <div class="doctor-main-info">
+            <h3 class="doctor-name">{{ doctor.name }}</h3>
+            <p v-if="doctor.specialization" class="doctor-specialization">
+              {{ doctor.specialization }}
+            </p>
           </div>
           
-          <p v-if="doctor.description" class="doctor-description">
-            {{ doctor.description }}
-          </p>
+          <div class="doctor-meta">
+            <div v-if="doctor.experience" class="experience">
+              <span class="label">Experience:</span>
+              <span class="value">{{ doctor.experience }} years</span>
+            </div>
+            
+            <div v-if="doctor.rating" class="rating">
+              <div class="stars">
+                <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.floor(doctor.rating) }">
+                  ★
+                </span>
+              </div>
+              <span class="rating-value">{{ doctor.rating }}/5</span>
+            </div>
+          </div>
           
           <div class="doctor-availability">
-            <p class="availability-label">Available Days:</p>
-            <div class="availability-days">
+            <span class="availability-label">Available:</span>
+            <div class="days-compact">
               <span 
                 v-for="day in doctor.available_days" 
                 :key="day"
-                class="day-badge"
+                class="day-compact"
               >
                 {{ day }}
               </span>
             </div>
           </div>
-          
-          <div v-if="doctor.consultation_fee" class="consultation-fee">
-            <span class="fee-label">Consultation Fee:</span>
-            <span class="fee-amount">${{ doctor.consultation_fee }}</span>
-          </div>
         </div>
         
-        <div v-if="isSelected(doctor)" class="selected-indicator">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>
+        <div class="doctor-price">
+          <div v-if="doctor.consultation_fee" class="fee">
+            <span class="currency">$</span>
+            <span class="amount">{{ doctor.consultation_fee }}</span>
+          </div>
+          <span class="fee-label">Consultation</span>
+        </div>
+        
+        <div class="selection-area">
+          <div v-if="isSelected(doctor)" class="selected-check">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          </div>
+          <div v-else class="select-circle"></div>
         </div>
       </div>
     </div>
@@ -100,46 +107,61 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted } from 'vue'
-import { useBookingStore } from '~/stores/booking'
-import { useDoctorStore } from '~/stores/doctorStore'
-import { storeToRefs } from 'pinia'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useBookingStore } from '~/stores/booking';
+import { useDoctorStore } from '~/stores/doctorStore';
 
-const emit = defineEmits(['next'])
-
-const bookingStore = useBookingStore()
-const doctorStore = useDoctorStore()
-const { doctors } = storeToRefs(doctorStore)
-
-const isSelected = (doctor) => {
-  return bookingStore.formData.doctorId === doctor.id
+interface Doctor {
+  id: number;
+  name: string;
+  specialization?: string;
+  experience?: number;
+  rating?: number;
+  image?: string;
+  consultation_fee?: number;
+  available_days?: string[];
 }
 
-const selectDoctor = (doctor) => {
-  bookingStore.formData.doctorId = doctor.id
-  doctorStore.selectDoctor(doctor)
+const emit = defineEmits(['next']);
+
+const bookingStore = useBookingStore();
+const doctorStore = useDoctorStore();
+
+// Computed
+const doctors = computed(() => doctorStore.doctors);
+
+// Methods
+const isSelected = (doctor: Doctor) => {
+  return bookingStore.formData.doctorId === doctor.id;
+};
+
+const selectDoctor = (doctor: Doctor) => {
+  bookingStore.formData.doctorId = doctor.id;
+  doctorStore.selectDoctor(doctor);
   
   // Clear date and time when doctor changes
-  bookingStore.formData.date = ''
-  bookingStore.formData.time = null
-}
+  bookingStore.formData.date = '';
+  bookingStore.formData.time = null;
+};
+
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement;
+  img.src = '/default-doctor.svg';
+};
 
 const handleContinue = () => {
   if (bookingStore.formData.doctorId) {
-    emit('next')
+    emit('next');
   }
-}
+};
 
-const handleImageError = (event) => {
-  event.target.src = '/default-doctor.svg'
-}
-
-onMounted(() => {
-  if (!doctors.value.length) {
-    doctorStore.fetchDoctors()
+// Lifecycle
+onMounted(async () => {
+  if (doctorStore.doctors.length === 0) {
+    await doctorStore.fetchDoctors();
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -170,164 +192,232 @@ onMounted(() => {
   }
 }
 
-.doctors-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+.doctors-list {
+  max-width: 800px;
+  margin: 0 auto 2rem;
 }
 
-.doctor-card {
+.doctor-list-item {
+  display: flex;
+  align-items: center;
   background: var(--background-white);
   border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
+  margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
   
   &:hover {
     border-color: var(--color-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(var(--color-primary-rgb, 42,77,58), 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
   }
   
   &.selected {
     border-color: var(--color-primary);
     background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
-    
-    .selected-indicator {
-      display: block;
-    }
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
-.doctor-image {
-  text-align: center;
-  margin-bottom: 1rem;
+.doctor-avatar {
+  flex-shrink: 0;
+  margin-right: 1.5rem;
   
   img {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--border-color);
+    border: 2px solid var(--border-color);
   }
 }
 
-.doctor-info {
-  text-align: center;
+.doctor-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.doctor-main-info {
+  margin-bottom: 0.75rem;
 }
 
 .doctor-name {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.25rem 0;
 }
 
 .doctor-specialization {
   color: var(--color-primary);
   font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.doctor-experience {
-  color: var(--text-secondary);
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
-.doctor-rating {
+.doctor-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.experience {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  
+  .label {
+    color: var(--text-secondary);
+  }
+  
+  .value {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+}
+
+.rating {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
   
   .stars {
     display: flex;
-    gap: 2px;
+    gap: 1px;
   }
   
   .star {
     color: #ddd;
-    font-size: 1rem;
+    font-size: 0.85rem;
     
     &.filled {
       color: #ffd700;
     }
   }
   
-  .rating-text {
-    font-size: 0.85rem;
+  .rating-value {
+    font-size: 0.8rem;
     color: var(--text-secondary);
   }
-}
-
-.doctor-description {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 1rem;
 }
 
 .doctor-availability {
-  margin-bottom: 1rem;
-  
-  .availability-label {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-  }
-  
-  .availability-days {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    justify-content: center;
-  }
-  
-  .day-badge {
-    background: var(--color-secondary);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-  }
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.consultation-fee {
+.availability-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.days-compact {
   display: flex;
+  gap: 0.25rem;
+}
+
+.day-compact {
+  background: var(--color-secondary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.doctor-price {
+  flex-shrink: 0;
+  text-align: center;
+  margin: 0 1rem;
+}
+
+.fee {
+  display: flex;
+  align-items: baseline;
   justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
   
-  .fee-label {
+  .currency {
     font-size: 0.9rem;
     color: var(--text-secondary);
   }
   
-  .fee-amount {
+  .amount {
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--color-primary);
-    font-size: 1.1rem;
   }
 }
 
-.selected-indicator {
-  display: none;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+.fee-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.selection-area {
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.selected-check {
   background: var(--color-primary);
   color: white;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
+  display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.select-circle {
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  transition: border-color 0.2s ease;
+}
+
+.doctor-list-item:hover .select-circle {
+  border-color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .doctor-list-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .doctor-avatar {
+    margin-right: 0;
+  }
+  
+  .doctor-meta {
+    justify-content: center;
+  }
+  
+  .doctor-availability {
+    justify-content: center;
+  }
+  
+  .doctor-price {
+    margin: 0;
+  }
+  
+  .selection-area {
+    margin-left: 0;
+  }
 }
 
 .navigation-actions {
@@ -342,12 +432,30 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .doctors-grid {
-    grid-template-columns: 1fr;
+  .doctor-list-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
   }
   
-  .doctor-card {
-    padding: 1rem;
+  .doctor-avatar {
+    margin-right: 0;
+  }
+  
+  .doctor-meta {
+    justify-content: center;
+  }
+  
+  .doctor-availability {
+    justify-content: center;
+  }
+  
+  .doctor-price {
+    margin: 0;
+  }
+  
+  .selection-area {
+    margin-left: 0;
   }
 }
 </style>
