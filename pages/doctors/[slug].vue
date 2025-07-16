@@ -23,63 +23,75 @@
 
     <!-- Doctor Profile -->
     <div v-else-if="doctor" class="doctor-profile">
-      <!-- Hero Section -->
-      <section class="doctor-hero">
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-4 text-center">
-              <div class="doctor-avatar-large">
-                <img 
-                  :src="doctorImage" 
-                  :alt="doctor.name"
-                  @error="handleImageError"
-                />
-              </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="doctor-info">
-                <h1 class="doctor-name">{{ doctor.name }}</h1>
-                <p v-if="doctor.specialization" class="doctor-specialization">
-                  {{ doctor.specialization }}
-                </p>
-                <div class="doctor-rating" v-if="doctor.rating">
-                  <div class="stars">
-                    <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.floor(doctor.rating) }">
-                      ★
-                    </span>
-                  </div>
-                  <span class="rating-text">{{ doctor.rating }}/5 ({{ doctor.reviews_count || 0 }} reviews)</span>
-                </div>
-                <div class="doctor-meta">
-                  <div v-if="doctor.experience_years" class="meta-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>{{ doctor.experience_years }} years experience</span>
-                  </div>
-                  <div v-if="doctor.consultation_fee" class="meta-item">
-                    <i class="fas fa-rupee-sign"></i>
-                    <span>₹{{ formatFee(doctor.consultation_fee) }} consultation fee</span>
-                  </div>
-                  <div v-if="doctor.location" class="meta-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>{{ doctor.location }}</span>
-                  </div>
-                  <div v-if="doctor.contact" class="meta-item">
-                    <i class="fas fa-phone"></i>
-                    <span>{{ doctor.contact }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Main Content -->
       <section class="doctor-content">
         <div class="container">
           <div class="row">
             <!-- Left Column - Details -->
             <div class="col-lg-8">
+              <!-- Doctor Header Section -->
+              <div class="doctor-header">
+                <div class="row align-items-center mb-4">
+                  <div class="col-md-3">
+                    <div class="doctor-avatar">
+                      <img 
+                        :src="doctorImage" 
+                        :alt="doctor.name"
+                        @error="handleImageError"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="doctor-info">
+                      <h1 class="doctor-name">{{ doctor.name }}</h1>
+                      <p v-if="doctor.specialization" class="doctor-specialization">
+                        {{ doctor.specialization }}
+                      </p>
+                      <div class="doctor-rating" v-if="doctor.rating">
+                        <div class="stars">
+                          <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.floor(doctor.rating) }">
+                            ★
+                          </span>
+                        </div>
+                        <span class="rating-text">{{ doctor.rating }}/5 ({{ doctor.reviews_count || 0 }} reviews)</span>
+                      </div>
+                      
+                      <!-- Enhanced Meta Information -->
+                      <div class="doctor-meta-cards">
+                        <div v-if="doctor.experience_years" class="meta-card">
+                          <div class="meta-icon">
+                            <LucideIcon icon="mdi:school" />
+                          </div>
+                          <div class="meta-content">
+                            <span class="meta-label">Experience</span>
+                            <span class="meta-value">{{ doctor.experience_years }} years</span>
+                          </div>
+                        </div>
+                        
+                        <div v-if="doctor.contact" class="meta-card">
+                          <div class="meta-icon">
+                            <LucideIcon icon="mdi:phone" />
+                          </div>
+                          <div class="meta-content">
+                            <span class="meta-label">Contact</span>
+                            <span class="meta-value">{{ doctor.contact }}</span>
+                          </div>
+                        </div>
+                        <div v-if="doctor.location" class="meta-card">
+                          <div class="meta-icon">
+                            <LucideIcon icon="mdi:map-marker" />
+                          </div>
+                          <div class="meta-content">
+                            <span class="meta-label">Location</span>
+                            <span class="meta-value">{{ doctor.location }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- About Section -->
               <div class="content-section">
                 <h2>About Dr. {{ doctor.name }}</h2>
@@ -109,7 +121,7 @@
                     :key="award"
                     class="award-item"
                   >
-                    <i class="fas fa-trophy"></i>
+                    <LucideIcon icon="mdi:trophy" />
                     <span>{{ award }}</span>
                   </div>
                 </div>
@@ -124,7 +136,7 @@
                     :key="membership"
                     class="membership-item"
                   >
-                    <i class="fas fa-certificate"></i>
+                    <LucideIcon icon="mdi:certificate" />
                     <span>{{ membership }}</span>
                   </div>
                 </div>
@@ -156,7 +168,7 @@
                     rel="noopener noreferrer"
                     class="social-link"
                   >
-                    <i class="fas fa-external-link-alt"></i>
+                    <LucideIcon icon="mdi:link" />
                     {{ link }}
                   </a>
                 </div>
@@ -183,7 +195,6 @@
                         class="mode-badge"
                         :class="`mode-${mode.replace('_', '-')}`"
                       >
-                        <i :class="getModeIcon(mode)"></i>
                         {{ formatMode(mode) }}
                       </span>
                     </div>
@@ -226,7 +237,7 @@
                     class="btn btn-primary w-100 btn-book"
                     @click="handleBookConsultation"
                   >
-                    <i class="fas fa-calendar-plus me-2"></i>
+                    <LucideIcon icon="mdi:calendar-plus" />
                     Book Consultation
                   </button>
 
@@ -324,18 +335,9 @@ const formatFee = (fee?: number) => {
 const formatMode = (mode: string) => {
   switch (mode) {
     case 'in_person': return 'In-Person';
-    case 'phone': return 'Phone';
-    case 'online': return 'Online';
+    case 'phone': return 'WhatsApp/ Phone Call';
+    case 'online': return 'Online (Zoom / Google Meet)';
     default: return mode;
-  }
-};
-
-const getModeIcon = (mode: string) => {
-  switch (mode) {
-    case 'in_person': return 'fas fa-user-md';
-    case 'phone': return 'fas fa-phone';
-    case 'online': return 'fas fa-video';
-    default: return 'fas fa-stethoscope';
   }
 };
 
@@ -361,33 +363,40 @@ if (error.value) {
   justify-content: center;
 }
 
-.doctor-hero {
-  background: linear-gradient(135deg, var(--background-light) 0%, var(--background-white) 100%);
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--border-color);
+.doctor-content {
+  padding: 2rem 0;
 }
 
-.doctor-avatar-large {
+.doctor-header {
+  background: var(--background-white);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.doctor-avatar {
   img {
-    width: 200px;
-    height: 200px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid white;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
 }
 
 .doctor-info {
   .doctor-name {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
   }
   
   .doctor-specialization {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--color-primary);
     font-weight: 600;
     margin-bottom: 1rem;
@@ -406,7 +415,7 @@ if (error.value) {
     
     .star {
       color: #ddd;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       
       &.filled {
         color: #ffd700;
@@ -417,29 +426,69 @@ if (error.value) {
   .rating-text {
     color: var(--text-secondary);
     font-weight: 500;
+    font-size: 0.9rem;
   }
 }
 
-.doctor-meta {
+.doctor-meta-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.meta-card {
+  background: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.meta-icon {
+  background: var(--color-primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  
+  :deep(.lucide-icon) {
+    color: white;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.meta-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   
-  .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  .meta-label {
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    
-    i {
-      color: var(--color-primary);
-      width: 16px;
-    }
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-}
-
-.doctor-content {
-  padding: 3rem 0;
+  
+  .meta-value {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-top: 0.2rem;
+  }
 }
 
 .content-section {
@@ -493,10 +542,11 @@ if (error.value) {
     align-items: center;
     gap: 0.75rem;
     
-    i {
+    :deep(.lucide-icon) {
       color: var(--color-primary);
       font-size: 1.1rem;
       width: 20px;
+      height: 20px;
     }
   }
   
@@ -509,7 +559,7 @@ if (error.value) {
       background: var(--color-primary);
       color: white;
       
-      i {
+      :deep(.lucide-icon) {
         color: white;
       }
     }
@@ -543,8 +593,9 @@ if (error.value) {
     align-items: center;
     gap: 0.4rem;
     
-    i {
-      font-size: 0.7rem;
+    :deep(.lucide-icon) {
+      width: 14px;
+      height: 14px;
     }
     
     &.mode-online {
@@ -735,6 +786,15 @@ if (error.value) {
   margin: 2rem 0 1rem;
   padding: 0.75rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  :deep(.lucide-icon) {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .quick-contact {
@@ -744,23 +804,6 @@ if (error.value) {
 }
 
 @media (max-width: 992px) {
-  .doctor-hero {
-    padding: 2rem 0;
-    text-align: center;
-  }
-  
-  .doctor-info {
-    margin-top: 2rem;
-    
-    .doctor-name {
-      font-size: 2rem;
-    }
-  }
-  
-  .doctor-meta {
-    justify-content: center;
-  }
-  
   .booking-widget {
     margin-top: 2rem;
     position: static !important;
@@ -768,17 +811,30 @@ if (error.value) {
 }
 
 @media (max-width: 768px) {
-  .doctor-avatar-large img {
-    width: 150px;
-    height: 150px;
+  .doctor-header {
+    padding: 1.5rem;
+    
+    .row {
+      text-align: center;
+    }
+  }
+  
+  .doctor-avatar img {
+    width: 100px;
+    height: 100px;
   }
   
   .doctor-info .doctor-name {
     font-size: 1.75rem;
   }
   
+  .doctor-meta-cards {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
   .doctor-content {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
   }
   
   .time-slots {
