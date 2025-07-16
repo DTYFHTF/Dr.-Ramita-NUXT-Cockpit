@@ -73,15 +73,21 @@ const currentStepComponent = computed(() => {
 }
 
 .progress-indicator {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
+  padding: 0 1rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .step-indicator {
   text-align: center;
   position: relative;
+  flex: 1;
+  min-width: 120px;
+  max-width: 140px;
 }
 
 .step-indicator:not(:last-child)::after {
