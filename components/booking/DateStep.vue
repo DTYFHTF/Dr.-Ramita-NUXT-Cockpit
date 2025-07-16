@@ -1,7 +1,10 @@
 <template>
   <div class="date-step">
     <div class="step-header mb-5">
-      <h2>Schedule a personalized session with Dr. Ramita</h2>
+      <h2>Schedule your consultation</h2>
+      <div v-if="selectedDoctor" class="selected-doctor-info">
+        <p class="selected-doctor">with {{ selectedDoctor.name }}</p>
+      </div>
       <div class="calendar-month-nav">
         <button class="month-nav-btn" @click="changeMonth(-1)" aria-label="Previous Month">&#8592;</button>
         <p class="current-month">{{ currentMonth }}</p>
@@ -85,6 +88,11 @@ const bookingStore = useBookingStore()
 const doctorStore = useDoctorStore()
 const { doctors } = storeToRefs(doctorStore)
 
+const selectedDoctor = computed(() => {
+  if (!bookingStore.formData.doctorId) return null
+  return doctorStore.getDoctorById(bookingStore.formData.doctorId)
+})
+
 const currentDate = ref(new Date()) // Use current date dynamically
 const currentMonth = computed(() => format(currentDate.value, 'MMMM yyyy'))
 
@@ -118,9 +126,13 @@ const visibleDates = computed(() => {
 })
 
 const isDateAvailable = (date) => {
-  if (!date.date || !doctors.value.length) return false
+  if (!date.date || !bookingStore.formData.doctorId) return false
+  
+  const selectedDoctor = doctorStore.getDoctorById(bookingStore.formData.doctorId)
+  if (!selectedDoctor) return false
+  
   // Only allow available days that are today or in the future
-  return !date.isPast && doctors.value[0].available_days.includes(date.weekday)
+  return !date.isPast && selectedDoctor.available_days.includes(date.weekday)
 }
 
 const isDateSelected = (date) => {
@@ -142,7 +154,10 @@ const changeMonth = (direction) => {
 }
 
 onMounted(() => {
-  doctorStore.fetchDoctors();
+  if (!doctors.value.length) {
+    doctorStore.fetchDoctors();
+  }
+  
   setTimeout(() => {
     const today = new Date();
     const todayDate = format(today, 'yyyy-MM-dd');
@@ -169,6 +184,16 @@ onMounted(() => {
 .step-header {
   text-align: center;
   margin-bottom: 2rem;
+  
+  .selected-doctor-info {
+    margin-bottom: 1rem;
+    
+    .selected-doctor {
+      color: var(--color-primary);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .step-title {

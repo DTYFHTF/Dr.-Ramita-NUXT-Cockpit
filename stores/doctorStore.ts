@@ -1,22 +1,35 @@
 import { defineStore } from 'pinia'
 
 interface Doctor {
+  id: number
   name: string
+  specialization?: string
+  experience?: string
+  description?: string
+  image?: string
   available_days: string[]
   working_hours: Array<{
     day: string
     start: string
     end: string
   }>
-  // Add other fields if needed
+  consultation_fee?: number
+  rating?: number
 }
 
 export const useDoctorStore = defineStore('doctor', {
   state: () => ({
     doctors: [] as Doctor[],
+    selectedDoctor: null as Doctor | null,
     loading: false,
     error: null as string | null
   }),
+  
+  getters: {
+    getSelectedDoctor: (state) => state.selectedDoctor,
+    getDoctorById: (state) => (id: number) => 
+      state.doctors.find(doctor => doctor.id === id)
+  },
   
   actions: {
     async fetchDoctors() {
@@ -47,6 +60,14 @@ export const useDoctorStore = defineStore('doctor', {
       } finally {
         this.loading = false
       }
+    },
+    
+    selectDoctor(doctor: Doctor) {
+      this.selectedDoctor = doctor
+    },
+    
+    clearSelection() {
+      this.selectedDoctor = null
     }
   }
 })

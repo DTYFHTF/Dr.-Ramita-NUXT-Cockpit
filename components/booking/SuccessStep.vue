@@ -37,9 +37,11 @@
 import { computed } from 'vue'
 import { parseISO, format } from 'date-fns'
 import { useBookingStore } from '~/stores/booking'
+import { useDoctorStore } from '~/stores/doctorStore'
 import { useApiLaravel } from '~/composables/useApi'
 
 const store = useBookingStore()
+const doctorStore = useDoctorStore()
 
 const formattedDate = computed(() =>
   format(parseISO(store.formData.date), 'EEE, d MMM yyyy')
@@ -51,9 +53,15 @@ const formattedTime = computed(() => {
 })
 
 const { data: doctorData } = useApiLaravel('doctors')
-const doctorName = computed(() =>
-  doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
-)
+const selectedDoctor = computed(() => {
+  if (!store.formData.doctorId) return null
+  return doctorStore.getDoctorById(store.formData.doctorId)
+})
+
+const doctorName = computed(() => {
+  if (selectedDoctor.value) return selectedDoctor.value.name
+  return doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
+})
 
 const formatTime = (time) => {
   const [hours, minutes] = time.split(':')

@@ -1,9 +1,10 @@
 <template>
   <div class="time-step">
     <div class="step-header mb-5">
-      <h2>Schedule a personalized session with Dr. Ramita 
-
-</h2>
+      <h2>Choose your consultation time</h2>
+      <div v-if="selectedDoctor" class="selected-doctor-info">
+        <p class="selected-doctor">with {{ selectedDoctor.name }}</p>
+      </div>
       <p class="step-subtitle">Pick a convenient time slot</p>
     </div>
 
@@ -47,15 +48,24 @@ import { useDoctorStore } from '~/stores/doctorStore'
 import { storeToRefs } from 'pinia'
 
 const store = useBookingStore()
+const bookingStore = useBookingStore()
 const doctorStore = useDoctorStore()
 const { doctors } = storeToRefs(doctorStore)
 
+const selectedDoctor = computed(() => {
+  if (!bookingStore.formData.doctorId) return null
+  return doctorStore.getDoctorById(bookingStore.formData.doctorId)
+})
+
 // Time slot logic
 const availableTimeSlots = computed(() => {
-  if (!doctors.value?.length || !store.formData.date) return []
+  if (!bookingStore.formData.doctorId || !store.formData.date) return []
+  
+  const selectedDoctor = doctorStore.getDoctorById(bookingStore.formData.doctorId)
+  if (!selectedDoctor) return []
   
   const selectedDay = format(parseISO(store.formData.date), 'EEE')
-  const workingHours = doctors.value[0].working_hours.find(wh => wh.day === selectedDay)
+  const workingHours = selectedDoctor.working_hours.find(wh => wh.day === selectedDay)
   
   return workingHours ? generateTimeSlots(workingHours.start, workingHours.end) : []
 })
@@ -106,6 +116,16 @@ const selectTime = (slot) => {
   
   h2 {
     color: var(--text-primary);
+  }
+  
+  .selected-doctor-info {
+    margin-bottom: 0.5rem;
+    
+    .selected-doctor {
+      color: var(--color-primary);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
   }
   
   .step-subtitle {

@@ -57,18 +57,24 @@ const formattedTime = computed(() =>
 )
 
 const { data: doctorData } = useApiLaravel('doctors')
-const doctorName = computed(() =>
-  doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
-)
+const selectedDoctor = computed(() => {
+  if (!store.formData.doctorId) return null
+  return doctorStore.getDoctorById(store.formData.doctorId)
+})
+
+const doctorName = computed(() => {
+  if (selectedDoctor.value) return selectedDoctor.value.name
+  return doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
+})
 
 const formatTime = (time) => {
   const [hours, minutes] = time.split(':')
   const hour = parseInt(hours, 10)
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`
 }
-//Currently only the first doctor is used for booking
-// This can be modified to allow selection of a specific doctor if needed
-const doctor_id = doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
+//Currently uses the selected doctor from the booking form
+// This provides better user experience with doctor selection
+const doctor_id = store.formData.doctorId || doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
 
 const postBookingInfo = () => {
   const bookingData = {
