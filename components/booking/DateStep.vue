@@ -161,13 +161,14 @@ onMounted(() => {
 
 <style scoped>
 .date-step {
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  color: var(--text-primary);
 }
 
 .step-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
 .step-title {
@@ -177,81 +178,77 @@ onMounted(() => {
 }
 
 .calendar-container {
-  background: var(--calendar-bg);
-  border-radius: 12px;
+  background: var(--background-white);
+  border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(var(--shadow-light-rgb), 0.05);
-  margin: 0 1rem;
+  box-shadow: var(--card-shadow);
 }
 
 .calendar-grid {
-  display: grid;
-  gap: 4px;
+  width: 100%;
 }
 
 .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .day-header {
   text-align: center;
-  color: var(--calendar-text-secondary);
-  font-weight: 500;
-  padding: 0.75rem 0.5rem;
+  font-weight: 600;
   font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 0.5rem;
 }
 
 .calendar-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 0.5rem;
 }
 
 .calendar-day {
   position: relative;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 60px;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-weight: 600;
-  color: var(--calendar-text);
-  background-color: transparent;
-  border: 2px solid transparent;
-
+  background: var(--background-white);
+  
   &:hover:not(.disabled) {
-    transform: scale(1.05);
-    z-index: 1;
-    box-shadow: 0 2px 8px rgba(var(--shadow-light-rgb), 0.1);
-  }
-
-  &.current-month:not(.disabled) {
-    background-color: var(--background-light);
-  }
-
-  &.available:not(.selected):hover {
     border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
   }
 }
 
+.day-number {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
 .availability-indicator {
-  position: absolute;
-  bottom: 4px;
-  left: 0;
-  right: 0;
+  position: relative;
+  width: 16px;
   height: 4px;
   display: flex;
+  align-items: center;
   justify-content: center;
 }
 
 .availability-bar {
   width: 70%;
   height: 100%;
-  background-color: var(--calendar-success);
+  background-color: var(--color-secondary);
   border-radius: 2px;
   opacity: 0.8;
 }
@@ -261,29 +258,34 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
-  background-color: var(--calendar-success);
+  color: var(--text-white, #fff);
+  background-color: var(--color-primary);
   width: 24px;
   height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(var(--shadow-medium-rgb), 0.15);
+  box-shadow: var(--card-shadow);
   animation: popIn 0.2s ease;
 }
 
 .selected-check svg path {
-  fill: var(--text-deep-green);
+  fill: var(--text-white);
 }
 
 .calendar-day.selected {
-  background-color: var(--calendar-success);
-  color: white;
-  border-color: var(--calendar-success-dark);
+  background-color: var(--color-primary);
+  color: var(--text-white);
+  border-color: var(--color-primary);
   
   .availability-bar {
     display: none;
+  }
+  
+  .day-number {
+    color: var(--text-primary);
+    font-weight: 600;
   }
 }
 /* Current month dates */
@@ -313,25 +315,25 @@ onMounted(() => {
 
 /* Custom green button styling */
 .btn-green {
-  background-color: var(--text-deep-green);
-  border-color: var(--text-deep-green);
-  color: white;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-white, #fff);
 }
 
 .btn-green:hover, 
 .btn-green:focus, 
 .btn-green:active {
-  background-color: var(--text-deep-green);
-  border-color: var(--text-deep-green);
+  background-color: var(--primary-dark, var(--color-primary));
+  border-color: var(--primary-dark, var(--color-primary));
   filter: brightness(1.1);
-  color: white;
+  color: var(--text-white, #fff);
 }
 
 .btn-green:disabled {
-  background-color: var(--text-deep-green);
-  border-color: var(--text-deep-green);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   opacity: 0.65;
-  color: white;
+  color: var(--text-white, #fff);
 }
 
 .btn-smooth-green {

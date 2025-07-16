@@ -57,12 +57,17 @@ const currentStepComponent = computed(() => {
 <style scoped lang="scss">
 .booking-wizard {
   padding: 2rem 1rem;
-  background: var(--background-white);
+  background: var(--background-light);
+  color: var(--text-primary);
 }
 
 .wizard-container {
   max-width: 800px;
   margin: 0 auto;
+  
+  h1 {
+    color: var(--text-primary);
+  }
 }
 
 .progress-indicator {
@@ -84,7 +89,7 @@ const currentStepComponent = computed(() => {
   left: 50%;
   right: -50%;
   height: 2px;
-  background: $background-light;
+  background: var(--border-color);
   z-index: 0;
 }
 
@@ -92,37 +97,40 @@ const currentStepComponent = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--background-light);
+  background: var(--background-white);
+  border: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 0.5rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   position: relative;
   z-index: 1;
 }
 
 .step-indicator.active .step-number {
   background-color: var(--color-primary);
-  color: var(--text-white);
+  color: var(--text-white, #fff);
+  border-color: var(--color-primary);
 }
 
 .step-indicator.completed .step-number {
   background-color: var(--color-secondary);
-  color: var(--text-white);
+  color: var(--text-white, #fff);
+  border-color: var(--color-secondary);
 }
 
 .step-label {
   font-size: 0.875rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .step-content {
   background: var(--background-white);
   border-radius: 0.5rem;
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(var(--shadow-rgb), 0.1);
+  box-shadow: var(--card-shadow);
   min-height: 400px;
 }
 

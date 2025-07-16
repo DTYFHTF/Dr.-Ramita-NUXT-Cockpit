@@ -98,6 +98,19 @@ const selectTime = (slot) => {
 .time-step {
   max-width: 800px;
   margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.step-header {
+  color: var(--text-primary);
+  
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .time-grid {
@@ -113,20 +126,20 @@ const selectTime = (slot) => {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: white;
+  background: var(--background-white);
 
   &:hover {
-    border-color: $color-primary;
+    border-color: var(--color-primary);
     transform: translateY(-2px);
   }
 
   &.selected {
-    background: $color-primary;
-    border-color: $color-primary;
-    color: white;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--text-white, #fff);
     
     .slot-time, .slot-period {
-      color: white;
+      color: var(--text-white, #fff);
     }
   }
 }
@@ -134,12 +147,12 @@ const selectTime = (slot) => {
 .slot-time {
   font-size: 1.1rem;
   font-weight: 500;
-  color: var(--text-dark);
+  color: var(--text-primary);
 }
 
 .slot-period {
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .navigation-actions {
@@ -152,6 +165,21 @@ const selectTime = (slot) => {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
-  gap: 1rem; /* Add gap between buttons */
+  gap: 1rem;
+}
+
+.alert {
+  background: var(--background-white);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.loading-overlay {
+  text-align: center;
+  padding: 2rem;
+  
+  .spinner-border {
+    color: var(--color-primary);
+  }
 }
 </style>

@@ -87,13 +87,27 @@ const handleSubmit = () => {
 .details-step {
   max-width: 600px;
   margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .booking-form {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
-  /* padding: 1rem; */
-  box-shadow: 0 4px 6px rgba(var(--shadow-light-rgb), 0.05);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
 }
 
 .form-group {
@@ -102,8 +116,12 @@ const handleSubmit = () => {
   label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text-primary);
     font-weight: 500;
+  }
+
+  .required {
+    color: var(--text-error, #ef4444);
   }
 
   input,
@@ -113,11 +131,17 @@ const handleSubmit = () => {
     border: 2px solid var(--border-color);
     border-radius: 8px;
     transition: border-color 0.2s ease;
+    background: var(--background-white);
+    color: var(--text-primary);
 
     &:focus {
       outline: none;
-      border-color: $color-primary;
-      box-shadow: 0 0 0 3px $color-primary;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary);
     }
   }
 

@@ -72,12 +72,23 @@ const resetBooking = () => {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
+  color: var(--text-primary);
+}
+
+.confirmation-header {
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .checkmark-circle {
   width: 80px;
   height: 80px;
-  background: var(--success-color);
+  background: var(--color-success, #10b981);
   border-radius: 50%;
   margin: 0 auto 1.5rem;
   display: flex;
@@ -87,16 +98,16 @@ const resetBooking = () => {
   svg {
     width: 40px;
     height: 40px;
-    color: white;
+    color: var(--text-white, #fff);
   }
 }
 
 .confirmation-details {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 2rem;
   margin: 2rem 0;
-  box-shadow: 0 4px 6px rgba(var(--shadow-light-rgb), 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .detail-item {
@@ -112,12 +123,12 @@ const resetBooking = () => {
 }
 
 .detail-label {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .detail-value {
-  color: var(--text-dark);
+  color: var(--text-primary);
   font-weight: 600;
 }
 

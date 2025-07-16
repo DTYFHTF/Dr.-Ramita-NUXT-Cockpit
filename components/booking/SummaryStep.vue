@@ -105,13 +105,27 @@ const confirmBooking = () => {
 .summary-step {
   max-width: 800px;
   margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .booking-summary-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(var(--shadow-light-rgb), 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .summary-item {
@@ -127,12 +141,12 @@ const confirmBooking = () => {
 }
 
 .summary-label {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .summary-value {
-  color: var(--text-dark);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
