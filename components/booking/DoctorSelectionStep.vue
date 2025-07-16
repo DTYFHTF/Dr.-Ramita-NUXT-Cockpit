@@ -32,7 +32,7 @@
       >
         <div class="doctor-avatar">
           <img 
-            :src="doctor.image || '/default-doctor.svg'" 
+            :src="getDoctorImage(doctor)" 
             :alt="doctor.name"
             @error="handleImageError"
           />
@@ -47,9 +47,9 @@
           </div>
           
           <div class="doctor-meta">
-            <div v-if="doctor.experience" class="experience">
+            <div v-if="doctor.experience_years" class="experience">
               <span class="label">Experience:</span>
-              <span class="value">{{ doctor.experience }} years</span>
+              <span class="value">{{ doctor.experience_years }} years</span>
             </div>
             
             <div v-if="doctor.rating" class="rating">
@@ -109,18 +109,25 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import { useBookingStore } from '~/stores/booking';
-import { useDoctorStore } from '~/stores/doctorStore';
+import { useBookingStore } from '@/stores/booking';
+import { useDoctorStore } from '@/stores/doctorStore';
 
 interface Doctor {
   id: number;
   name: string;
+  slug: string;
+  photo?: string;
   specialization?: string;
-  experience?: number;
+  experience_years?: number;
   rating?: number;
-  image?: string;
   consultation_fee?: number;
   available_days?: string[];
+  languages: string[];
+  location?: string;
+  consultation_modes?: string[];
+  is_active: boolean;
+  reviews_count?: number;
+  bio?: string;
 }
 
 const emit = defineEmits(['next']);
@@ -143,6 +150,19 @@ const selectDoctor = (doctor: Doctor) => {
   // Clear date and time when doctor changes
   bookingStore.formData.date = '';
   bookingStore.formData.time = null;
+};
+
+const getDoctorImage = (doctor: Doctor) => {
+  if (doctor.photo) {
+    // If photo is a full URL, use it directly
+    if (doctor.photo.startsWith('http')) {
+      return doctor.photo;
+    }
+    // If it's a relative path, construct the full URL
+    const config = useRuntimeConfig();
+    return `${config.public.apiBase}/storage/${doctor.photo}`;
+  }
+  return '/default-doctor.svg';
 };
 
 const handleImageError = (event: Event) => {

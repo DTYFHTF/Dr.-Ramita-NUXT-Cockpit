@@ -32,6 +32,9 @@
             >
           </li>
           <li class="nav-item">
+            <NuxtLink to="/doctors" class="nav-link">Doctors</NuxtLink>
+          </li>
+          <li class="nav-item">
             <SmoothLink
               to="ynm"
               fallbackRoute="/yoganmeditation"

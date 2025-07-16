@@ -1,3 +1,32 @@
+export interface Doctor {
+  id: number;
+  name: string;
+  slug: string;
+  photo?: string;
+  contact?: string;
+  specialization?: string;
+  qualifications?: string;
+  experience_years?: number;
+  bio?: string;
+  languages: string[];
+  location?: string;
+  consultation_fee?: number;
+  available_days: string[];
+  working_hours: Array<{
+    day: string;
+    start: string;
+    end: string;
+  }>;
+  social_links?: string[];
+  awards?: string[];
+  memberships?: string[];
+  consultation_modes?: string[];
+  is_active: boolean;
+  rating?: number | null;
+  reviews_count?: number;
+  created_at?: string;
+  updated_at?: string;
+}
 export interface ProductVariation {
   id: string;
   name: string;
