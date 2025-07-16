@@ -111,24 +111,7 @@
 import { computed, onMounted } from 'vue';
 import { useBookingStore } from '@/stores/booking';
 import { useDoctorStore } from '@/stores/doctorStore';
-
-interface Doctor {
-  id: number;
-  name: string;
-  slug: string;
-  photo?: string;
-  specialization?: string;
-  experience_years?: number;
-  rating?: number;
-  consultation_fee?: number;
-  available_days?: string[];
-  languages: string[];
-  location?: string;
-  consultation_modes?: string[];
-  is_active: boolean;
-  reviews_count?: number;
-  bio?: string;
-}
+import type { Doctor } from '@/types/index';
 
 const emit = defineEmits(['next']);
 
