@@ -47,46 +47,6 @@
                       <p v-if="doctor.specialization" class="doctor-specialization">
                         {{ doctor.specialization }}
                       </p>
-                      <div class="doctor-rating" v-if="doctor.rating">
-                        <div class="stars">
-                          <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.floor(doctor.rating) }">
-                            ★
-                          </span>
-                        </div>
-                        <span class="rating-text">{{ doctor.rating }}/5 ({{ doctor.reviews_count || 0 }} reviews)</span>
-                      </div>
-                      
-                      <!-- Enhanced Meta Information -->
-                      <div class="doctor-meta-cards">
-                        <div v-if="doctor.experience_years" class="meta-card">
-                          <div class="meta-icon">
-                            <LucideIcon icon="mdi:school" />
-                          </div>
-                          <div class="meta-content">
-                            <span class="meta-label">Experience</span>
-                            <span class="meta-value">{{ doctor.experience_years }} years</span>
-                          </div>
-                        </div>
-                        
-                        <div v-if="doctor.contact" class="meta-card">
-                          <div class="meta-icon">
-                            <LucideIcon icon="mdi:phone" />
-                          </div>
-                          <div class="meta-content">
-                            <span class="meta-label">Contact</span>
-                            <span class="meta-value">{{ doctor.contact }}</span>
-                          </div>
-                        </div>
-                        <div v-if="doctor.location" class="meta-card">
-                          <div class="meta-icon">
-                            <LucideIcon icon="mdi:map-marker" />
-                          </div>
-                          <div class="meta-content">
-                            <span class="meta-label">Location</span>
-                            <span class="meta-value">{{ doctor.location }}</span>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -117,7 +77,7 @@
                   <span 
                     v-for="specialty in doctor.treatment_specialties" 
                     :key="specialty.condition"
-                    class="specialty-pill pill-badge"
+                    class="specialty-pill day-badge"
                   >
                     {{ specialty.condition }}
                   </span>
@@ -183,8 +143,13 @@
                     <LucideIcon icon="mdi:link" />
                     {{ link }}
                   </a>
+                  <span v-if="doctor.location">
+                  <LucideIcon icon="mdi:map-marker-outline" />
+                  {{ doctor.location }}
+                </span>
                 </div>
               </div>
+              
             </div>
 
             <!-- Right Column - Booking Widget -->
@@ -194,7 +159,7 @@
                   <h3>Book Consultation</h3>
                   <div class="consultation-fee">
                     <span class="fee-amount">₹{{ formatFee(doctor.consultation_fee) }}</span>
-                    <span class="fee-label">consultation fee</span>
+                    <span class="fee-label">/consultation fee</span>
                   </div>
                   
                   <!-- Consultation Modes -->
@@ -204,7 +169,7 @@
                       <span 
                         v-for="mode in doctor.consultation_modes" 
                         :key="mode"
-                        class="mode-badge pill-badge"
+                        class="mode-badge day-badge"
                         :class="`mode-${mode.replace('_', '-')}`"
                       >
                         {{ formatMode(mode) }}
@@ -378,7 +343,6 @@ if (error.value) {
 }
 
 .doctor-header {
-  background: var(--background-white);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 2rem;
@@ -392,97 +356,13 @@ if (error.value) {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--color-primary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--card-shadow);
 }
 
-.doctor-info .doctor-name {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
 .doctor-info .doctor-specialization {
   font-size: 1.1rem;
   color: var(--color-primary);
   font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.doctor-rating {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.doctor-rating .stars {
-  display: flex;
-  gap: 2px;
-}
-.doctor-rating .star {
-  color: #ddd;
-  font-size: 1.1rem;
-}
-.doctor-rating .star.filled {
-  color: #ffd700;
-}
-.doctor-rating .rating-text {
-  color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.doctor-meta-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-.meta-card {
-  background: var(--background-light);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  transition: all 0.3s ease;
-}
-.meta-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-.meta-icon {
-  background: var(--color-primary);
-  color: #fff;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-}
-.meta-icon :deep(.lucide-icon) {
-  color: #fff;
-  width: 20px;
-  height: 20px;
-}
-.meta-content {
-  display: flex;
-  flex-direction: column;
-}
-.meta-label {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.meta-value {
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  margin-top: 0.2rem;
 }
 
 .content-section {
@@ -502,23 +382,6 @@ if (error.value) {
   gap: 0.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-}
-.pill-badge {
-  background: var(--color-primary);
-  color: #fff;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  border: none;
-  transition: background 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.pill-badge:hover {
-  background: var(--color-secondary);
 }
 
 .about-content {
@@ -714,9 +577,6 @@ if (error.value) {
   .doctor-avatar img {
     width: 100px;
     height: 100px;
-  }
-  .doctor-info .doctor-name {
-    font-size: 1.75rem;
   }
   .doctor-meta-cards {
     grid-template-columns: 1fr;

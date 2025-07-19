@@ -87,6 +87,7 @@ export interface Category {
   id: string;
   name: string;
   products_count: number;
+  icon: string; // Added icon property for category icon support
 }
 
 export interface Pagination {

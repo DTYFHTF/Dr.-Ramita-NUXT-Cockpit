@@ -5,12 +5,8 @@
         <div class="col-lg-10">
           <!-- Page Header -->
           <div class="booking-header text-center mb-5">
-            <h1 class="page-title">Book Your Consultation</h1>
-            <p class="page-subtitle">
-              Schedule a consultation with our expert Ayurvedic practitioners
-            </p>
+            <h1 class="page-title">Schedule a consultation with our experts</h1>
           </div>
-
           <!-- Booking Wizard -->
           <BookingWizard />
         </div>
@@ -26,11 +22,11 @@ import { useDoctorStore } from '@/stores/doctorStore';
 
 // Meta tags
 useHead({
-  title: 'Book Consultation - Schedule Your Ayurvedic Consultation',
+  title: 'Book Consultation - Schedule Your Consultation',
   meta: [
     {
       name: 'description',
-      content: 'Book a consultation with our certified Ayurvedic doctors. Easy online booking with flexible scheduling options.'
+      content: 'Book a consultation with our certified Practitioners. Easy online booking with flexible scheduling options.'
     }
   ]
 });
@@ -75,7 +71,6 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .booking-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--background-light) 0%, white 50%, var(--background-light) 100%);
   padding: 2rem 0;
 }
 
@@ -91,12 +86,6 @@ onMounted(async () => {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-  
-  .page-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin: 0;
   }
 }
 

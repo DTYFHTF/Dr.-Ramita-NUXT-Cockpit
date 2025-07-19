@@ -40,7 +40,7 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Additional Notes (optional)</label>
+        <label class="form-label">Share any information that might help us serve you better.</label>
         <textarea
           v-model="form.notes"
           class="form-textarea"

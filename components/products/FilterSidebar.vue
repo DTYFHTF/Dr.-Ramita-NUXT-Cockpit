@@ -50,6 +50,7 @@
               @click.prevent="$emit('category-change', cat.id)"
               :class="{ active: activeCategory === cat.id }"
             >
+              <LucideIcon :icon="cat.icon" class="me-2" />
               {{ cat.name }} ({{ cat.products_count || 0 }})
             </a>
           </li>
@@ -117,6 +118,7 @@ const props = defineProps({
   priceMax: Number,
   inStock: Boolean,
   onSale: Boolean,
+  icon:String,
 });
 
 // Emits

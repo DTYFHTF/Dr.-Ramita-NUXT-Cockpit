@@ -1,8 +1,8 @@
 <template>
   <div class="doctor-selection-step">
     <div class="step-header mb-5">
-      <h2>Choose Your Doctor</h2>
-      <p class="step-subtitle">Select a doctor for your consultation</p>
+      <h2>Choose Your Wellness Expert</h2>
+      <p class="step-subtitle">Select an expert for your consultation</p>
     </div>
 
     <div v-if="doctorStore.loading" class="loading-state text-center py-4">
