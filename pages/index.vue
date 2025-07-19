@@ -91,9 +91,9 @@ const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3
 
 
 const goToCoursesPage = () => navigateTo("/course");
-const goToYoganMeditationPage = () => navigateTo("/yoganmeditation");
-const goToRecipesPage = () => navigateTo("/recipe");
-const goToHomeRemediesPage = () => navigateTo("/homeremedy");
+const goToYoganMeditationPage = () => navigateTo("blog/yoganmeditation");
+const goToRecipesPage = () => navigateTo("blog/recipe");
+const goToHomeRemediesPage = () => navigateTo("blog/homeremedy");
 
 </script>
 
