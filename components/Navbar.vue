@@ -34,26 +34,34 @@
           <li class="nav-item">
             <NuxtLink to="/doctors" class="nav-link">Doctors</NuxtLink>
           </li>
-          <li class="nav-item">
-            <SmoothLink
-              to="ynm"
-              fallbackRoute="/yoganmeditation"
-              class="nav-link"
-              >Yoga & Meditation</SmoothLink
-            >
-          </li>
-          <li class="nav-item">
-            <SmoothLink to="recipes" fallbackRoute="/recipe" class="nav-link"
-              >Recipes</SmoothLink
-            >
-          </li>
-          <li class="nav-item">
-            <SmoothLink
-              to="home-remedies"
-              fallbackRoute="/homeremedy"
-              class="nav-link"
-              >Home Remedies</SmoothLink
-            >
+          <li class="nav-item dropdown blog-dropdown"
+              @mouseenter="handleBlogDropdownEnter"
+              @mouseleave="handleBlogDropdownLeave">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="blogDropdown" role="button"
+              :aria-expanded="showBlogDropdown ? 'true' : 'false'">
+              Blogs
+            </a>
+            <ul class="dropdown-menu custom-blog-dropdown"
+                :class="{ show: showBlogDropdown }"
+                aria-labelledby="blogDropdown"
+                @mouseenter="cancelBlogDropdownClose"
+                @mouseleave="handleBlogDropdownLeave">
+              <li>
+                <SmoothLink to="ynm" fallbackRoute="/yoganmeditation" class="dropdown-item d-flex align-items-center gap-2">
+                  <LucideIcon icon="mdi:meditation" class="me-2" /> Yoga & Meditation
+                </SmoothLink>
+              </li>
+              <li>
+                <SmoothLink to="recipes" fallbackRoute="/recipe" class="dropdown-item d-flex align-items-center gap-2">
+                  <LucideIcon icon="mdi:chef-hat" class="me-2" /> Recipes
+                </SmoothLink>
+              </li>
+              <li>
+                <SmoothLink to="home-remedies" fallbackRoute="/homeremedy" class="dropdown-item d-flex align-items-center gap-2">
+                  <LucideIcon icon="mdi:leaf" class="me-2" /> Home Remedies
+                </SmoothLink>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/event">Events</a>
@@ -90,7 +98,12 @@
                 <LucideIcon icon="mdi:shop" class="fs-4" />
                 <span>Shop</span>
               </NuxtLink>
-              <MegaMenu v-if="showMegaMenu" class="mega-menu-wrapper" />
+              <MegaMenu 
+                v-if="showMegaMenu" 
+                class="mega-menu-wrapper"
+                @mouseenter="cancelClose"
+                @mouseleave="handleMouseLeave"
+              />
             </div>
             <div v-if="user">
               <CartIndicator class="nav-link"/>
@@ -132,6 +145,23 @@ const cancelClose = () => {
 const handleMouseEnter = () => {
   clearTimeout(closeTimeout); // Ensure any pending close is cancelled
   showMegaMenu.value = true;
+};
+
+// Blog dropdown
+const showBlogDropdown = ref(false);
+let blogDropdownTimeout = null;
+
+const handleBlogDropdownEnter = () => {
+  clearTimeout(blogDropdownTimeout);
+  showBlogDropdown.value = true;
+};
+const handleBlogDropdownLeave = () => {
+  blogDropdownTimeout = setTimeout(() => {
+    showBlogDropdown.value = false;
+  }, 180);
+};
+const cancelBlogDropdownClose = () => {
+  clearTimeout(blogDropdownTimeout);
 };
 </script>
 
@@ -178,7 +208,50 @@ const handleMouseEnter = () => {
 
 .nav-item {
   position: relative;
-  
+}
+
+.blog-dropdown .dropdown-menu.custom-blog-dropdown {
+  min-width: 250px;
+  background: var(--background-white);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.13);
+  padding: 1rem 0.5rem;
+  border: none;
+  margin-top: 0.5rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  color: var(--text-primary);
+}
+
+.blog-dropdown .dropdown-menu.custom-blog-dropdown.show {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.blog-dropdown .dropdown-menu.custom-blog-dropdown {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.blog-dropdown .dropdown-item {
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.blog-dropdown .dropdown-item:hover {
+  background: var(--background-light);
+  color: var(--text-primary);
+}
+
+.blog-dropdown .dropdown-item:focus {
+  background: var(--background-light);
+  color: var(--text-primary);
+  outline: none;
 }
 
 
