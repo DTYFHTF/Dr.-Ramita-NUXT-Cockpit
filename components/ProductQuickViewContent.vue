@@ -72,7 +72,7 @@
         <NuxtLink
           v-if="showViewDetails !== false"
           :to="`/products/${product.slug}`"
-          class="btn btn-primary view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
+          class="btn btn-smooth-success view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
         >
           View Details
         </NuxtLink>
@@ -184,7 +184,7 @@
             +
           </button>
           <button
-            class="btn btn-primary ms-3"
+            class="btn btn-smooth-success ms-3"
             :disabled="!canAddToCart"
             @click="addToCartHandler"
           >

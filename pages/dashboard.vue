@@ -80,7 +80,7 @@
             <div v-else-if="recentOrders.length === 0" class="empty-state">
               <LucideIcon icon="mdi:package-variant-closed" />
               <p>No recent orders found</p>
-              <NuxtLink to="/products" class="btn btn-primary btn-sm">Start Shopping</NuxtLink>
+              <NuxtLink to="/products" class="btn btn-smooth-success btn-sm">Start Shopping</NuxtLink>
             </div>
             <div v-else>
               <div class="order-item" v-for="order in recentOrders" :key="order.id">
@@ -95,8 +95,8 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-3 text-center">
-                <NuxtLink to="/orders" class="btn btn-outline-primary btn-sm">View All Orders</NuxtLink>
+              <div class="mt-3 d-flex justify-content-center">
+                <NuxtLink to="/orders" class="btn btn-smooth-outline btn-sm">View All Orders</NuxtLink>
               </div>
             </div>
           </div>
@@ -204,7 +204,7 @@
       <div class="text-center">
         <h1>Dashboard</h1>
         <p>You are not logged in.</p>
-        <NuxtLink to="/login" class="btn btn-primary">Login</NuxtLink>
+        <NuxtLink to="/login" class="btn btn-smooth-success">Login</NuxtLink>
       </div>
     </div>
   </div>
@@ -321,6 +321,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @import '@/assets/scss/variables.scss';
+
 
 .dashboard-wrapper {
   background-color: var(--background-light);
@@ -562,25 +563,6 @@ onMounted(() => {
   }
 }
 
-.btn-primary {
-  background-color: var(--button-bg);
-  border-color: var(--button-bg);
-
-  &:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-  }
-}
-
-.btn-outline-primary {
-  color: var(--button-bg);
-  border-color: var(--button-bg);
-
-  &:hover {
-    background-color: var(--button-bg);
-    border-color: var(--button-bg);
-  }
-}
 
 .alert-success {
   background-color: var(--success-bg);

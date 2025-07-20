@@ -30,10 +30,10 @@
     </div>
 
     <div class="step-navigation mt-5">
-      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+      <button class="btn btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
-      <button class="btn btn-primary btn-smooth-primary" @click="$emit('next')" :disabled="!selectedTime">
+      <button class="btn btn-smooth-success" @click="$emit('next')" :disabled="!selectedTime">
         Continue
       </button>
     </div>

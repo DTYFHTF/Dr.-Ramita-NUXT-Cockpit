@@ -26,7 +26,7 @@
     </div>
 
     <div class="confirmation-actions">
-      <button class="btn btn-primary" @click="resetBooking">
+      <button class="btn btn-smooth-success" @click="resetBooking">
         Book Another Consultation
       </button>
     </div>

@@ -21,10 +21,10 @@
     </div>
 
     <div class="step-navigation mt-5">
-      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+      <button class="btn btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
-      <button class="btn btn-primary" @click="confirmBooking">
+      <button class="btn btn-smooth-success" @click="confirmBooking">
         Confirm Booking
       </button>
     </div>

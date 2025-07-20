@@ -82,7 +82,7 @@
       </button>
       <template v-if="!hideActions">
         <button
-          class="btn btn-primary add-to-cart-btn"
+          class="btn btn-smooth-success add-to-cart-btn"
           :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
           @click.stop="handleAddToCart(product)"
         >

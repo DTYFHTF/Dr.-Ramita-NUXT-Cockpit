@@ -40,7 +40,7 @@
         <!-- Mobile Filter Button -->
         <div class="mobile-filter-btn">
           <button
-            class="btn btn-primary filter-toggle"
+            class="btn btn-smooth-success filter-toggle"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#filterOffcanvas"

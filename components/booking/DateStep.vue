@@ -63,11 +63,11 @@
     </div>
 
     <div class="navigation-actions">
-      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+      <button class="btn btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
       <button 
-        class="btn btn-green btn-smooth-green" 
+        class="btn btn-smooth-success" 
         @click="$emit('next')" 
         :disabled="!bookingStore.formData.date"
       >
@@ -338,55 +338,6 @@ onMounted(() => {
   gap: 1rem; /* Add gap between buttons */
 }
 
-/* Custom green button styling */
-.btn-green {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--text-white, #fff);
-}
-
-.btn-green:hover, 
-.btn-green:focus, 
-.btn-green:active {
-  background-color: var(--primary-dark, var(--color-primary));
-  border-color: var(--primary-dark, var(--color-primary));
-  filter: brightness(1.1);
-  color: var(--text-white, #fff);
-}
-
-.btn-green:disabled {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  opacity: 0.65;
-  color: var(--text-white, #fff);
-}
-
-.btn-smooth-green {
-  position: relative;
-  transition: all 0.3s ease, transform 0.2s ease;
-  overflow: hidden;
-}
-
-.btn-smooth-green::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(var(--shimmer-rgb), 0.2), transparent);
-  transform: translateX(-100%);
-}
-
-.btn-smooth-green:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
-}
-
-.btn-smooth-green:hover::before {
-  transform: translateX(100%);
-  transition: transform 0.9s ease;
-}
 
 .loading-state {
   padding: 2rem;

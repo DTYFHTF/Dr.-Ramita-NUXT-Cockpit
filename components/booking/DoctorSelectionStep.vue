@@ -97,7 +97,7 @@
 
     <div class="navigation-actions mt-5">
       <button 
-        class="btn btn-primary btn-smooth-primary" 
+        class="btn btn-smooth-success btn-smooth-primary" 
         @click="handleContinue" 
         :disabled="!bookingStore.formData.doctorId"
       >

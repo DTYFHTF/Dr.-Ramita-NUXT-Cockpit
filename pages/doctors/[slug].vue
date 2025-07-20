@@ -14,7 +14,7 @@
         <div class="alert alert-danger text-center">
           <h4>Doctor Not Found</h4>
           <p>The doctor you're looking for doesn't exist or has been removed.</p>
-          <NuxtLink to="/doctors" class="btn btn-primary">
+          <NuxtLink to="/doctors" class="btn btn-smooth-success">
             Browse All Doctors
           </NuxtLink>
         </div>
@@ -208,7 +208,7 @@
 
                   <!-- Book Now Button -->
                   <button 
-                    class="btn btn-primary w-100 btn-book"
+                    class="btn btn-smooth-success w-100 btn-book"
                     @click="handleBookConsultation"
                   >
                     <LucideIcon icon="mdi:calendar-plus" />

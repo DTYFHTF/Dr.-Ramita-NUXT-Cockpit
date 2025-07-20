@@ -10,8 +10,8 @@
         <LucideIcon icon="mdi:cart-outline" size="4em" />
       </div>
       <h2 class="empty-title">Your cart is empty</h2>
-      <p class="empty-message">Discover amazing Ayurvedic products and start your wellness journey!</p>
-      <router-link to="/products" class="btn btn-primary">
+      <p class="empty-message">Discover amazing products and start your wellness journey!</p>
+      <router-link to="/products" class="btn btn-smooth-success">
         <LucideIcon icon="mdi:shopping" class="me-2" />
         Start Shopping
       </router-link>
@@ -117,7 +117,7 @@
           </div>
           
           <div class="summary-actions">
-            <router-link to="/checkout" class="btn btn-primary checkout-btn">
+            <router-link to="/checkout" class="btn btn-smooth-success checkout-btn">
               <LucideIcon icon="mdi:check" class="me-2" />
               Proceed to Checkout
             </router-link>
@@ -535,30 +535,6 @@ function imageUrl(img: string) {
   border: none;
   cursor: pointer;
   font-size: 1rem;
-}
-
-.btn-primary {
-  background: var(--color-success);
-  color: var(--text-white);
-}
-
-.btn-primary:hover {
-  background: var(--primary-dark);
-  color: var(--text-white);
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-.btn-outline {
-  background: var(--background-white);
-  color: var(--text-secondary);
-  border: 2px solid var(--border-color);
-}
-
-.btn-outline:hover {
-  background: var(--background-light);
-  color: var(--text-primary);
-  text-decoration: none;
 }
 
 .delivery-info {

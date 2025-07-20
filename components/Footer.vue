@@ -26,7 +26,7 @@
           <h4>Newsletter</h4>
           <p>Subscribe to our newsletter for updates.</p>
           <input type="email" class="form-input newsletter-input" placeholder="Enter your email" />
-          <button class="btn btn-primary newsletter-btn">Subscribe</button>
+          <button class="btn btn-smooth-success newsletter-btn">Subscribe</button>
         </div>
       </div>
     </div>

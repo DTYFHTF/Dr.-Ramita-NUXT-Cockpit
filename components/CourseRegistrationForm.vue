@@ -39,7 +39,7 @@
       />
     </div>
     <div v-if="error" class="form-error">{{ error }}</div>
-    <button type="submit" class="btn btn-primary" :disabled="loading">
+    <button type="submit" class="btn btn-smooth-success" :disabled="loading">
       {{ loading ? 'Enrolling...' : 'Enroll' }}
     </button>
   </form>

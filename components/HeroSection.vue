@@ -64,10 +64,6 @@ import LucideIcon from '@/components/LucideIcon.vue';
   z-index: 1;
 }
 
-.btn-primary {
-  transition: background-color 0.3s ease;
-  margin-top: 2rem;
-}
 
 
 

@@ -53,7 +53,7 @@
         <button type="button" class="btn btn-outline" @click="$emit('prev')">
           Back
         </button>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-smooth-success">
           Continue
         </button>
       </div>

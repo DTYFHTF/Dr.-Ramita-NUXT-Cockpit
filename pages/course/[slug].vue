@@ -15,7 +15,7 @@
         <strong>Error:</strong>
         {{ error.message || "Failed to load course details" }}
       </div>
-      <button class="btn btn-primary mt-3" @click="retryFetch">
+      <button class="btn btn-smooth-success mt-3" @click="retryFetch">
         <LucideIcon icon="mdi:refresh" class="me-2" />Try Again
       </button>
     </div>

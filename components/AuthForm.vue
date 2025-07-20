@@ -26,7 +26,7 @@
       />
     </div>
     <slot name="extra-fields" />
-    <button type="submit" class="btn btn-primary" :disabled="loading">{{ submitLabel }}</button>
+    <button type="submit" class="btn btn-smooth-success" :disabled="loading">{{ submitLabel }}</button>
   </form>
 </template>
 

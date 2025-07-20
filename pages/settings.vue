@@ -14,7 +14,7 @@
         <label class="form-label">Notifications</label>
         <input type="checkbox" v-model="notifications" /> Enable notifications
       </div>
-      <button class="btn btn-primary" @click="saveSettings">Save Settings</button>
+      <button class="btn btn-smooth-success" @click="saveSettings">Save Settings</button>
     </div>
   </div>
 </template>

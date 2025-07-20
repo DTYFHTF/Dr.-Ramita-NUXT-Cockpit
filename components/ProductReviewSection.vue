@@ -151,7 +151,7 @@
             required
           ></textarea>
         </div>
-        <button class="btn btn-primary mb-5 mt-3" type="submit">
+        <button class="btn btn-smooth-success mb-5 mt-3" type="submit">
           {{ editingReview ? "Update Review" : "Submit Review" }}
         </button>
         <button

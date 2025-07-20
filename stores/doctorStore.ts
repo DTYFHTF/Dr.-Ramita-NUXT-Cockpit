@@ -31,7 +31,7 @@ export const useDoctorStore = defineStore('doctor', {
           {
             headers: {
               Accept: 'application/json'
-              // Add Authorization if needed
+              // ...existing code...
             }
           }
         )
@@ -48,48 +48,6 @@ export const useDoctorStore = defineStore('doctor', {
         this.error = err.message || 'Failed to load doctor data'
         console.error('Doctor fetch error:', err)
         
-        // Temporary: Add mock data for testing
-        this.doctors = [
-          {
-            id: 1,
-            name: "Dr. Sarah Johnson",
-            slug: "dr-sarah-johnson",
-            specialization: "General Practice",
-            experience_years: 10,
-            bio: "Experienced Ayurvedic practitioner specializing in holistic health approaches.",
-            languages: ["English", "Hindi"],
-            location: "New York",
-            consultation_fee: 150,
-            available_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            working_hours: [
-              { day: "Monday", start: "09:00", end: "17:00" }
-            ],
-            consultation_modes: ["online", "phone", "in_person"],
-            is_active: true,
-            rating: 4.8,
-            reviews_count: 125
-          },
-          {
-            id: 2,
-            name: "Dr. Raj Patel",
-            slug: "dr-raj-patel",
-            specialization: "Herbal Medicine",
-            experience_years: 15,
-            bio: "Expert in traditional Ayurvedic herbal treatments and natural healing.",
-            languages: ["English", "Gujarati", "Hindi"],
-            location: "California",
-            consultation_fee: 200,
-            available_days: ["Monday", "Wednesday", "Friday"],
-            working_hours: [
-              { day: "Monday", start: "10:00", end: "16:00" }
-            ],
-            consultation_modes: ["online", "in_person"],
-            is_active: true,
-            rating: 4.9,
-            reviews_count: 89
-          }
-        ];
-        // console.log('Using mock data:', this.doctors);
       } finally {
         this.loading = false
       }
@@ -112,7 +70,7 @@ export const useDoctorStore = defineStore('doctor', {
           {
             headers: {
               Accept: 'application/json'
-              // Add Authorization if needed
+              // ...existing code...
             }
           }
         )

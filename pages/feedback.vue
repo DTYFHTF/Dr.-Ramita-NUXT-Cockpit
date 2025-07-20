@@ -25,7 +25,7 @@
             required
           ></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        <button type="submit" class="btn btn-smooth-success">Submit Feedback</button>
       </form>
       <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>

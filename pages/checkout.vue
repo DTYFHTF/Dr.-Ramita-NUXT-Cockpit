@@ -170,7 +170,7 @@
                 <LucideIcon icon="mdi:arrow-left" class="me-2" />
                 Back to Cart
               </router-link>
-              <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+              <button type="submit" class="btn btn-smooth-success" :disabled="isSubmitting">
                 <span v-if="isSubmitting">
                   <span class="spinner"></span>
                   Placing Order...
