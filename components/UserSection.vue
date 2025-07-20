@@ -24,7 +24,7 @@
         <li>
           <NuxtLink to="/dashboard" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:user" class="me-2" />
-            Profile
+            Dashboard
           </NuxtLink>
         </li>
         <li>
