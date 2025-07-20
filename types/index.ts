@@ -111,7 +111,21 @@ export interface User {
   email: string;
   phone?: string;
   email_verified_at?: string | null;
-  role:string;
+  role: string;
+  profile_image?: string | null;
+  gender?: string | null;
+  date_of_birth?: string | null;
+  address?: {
+    pincode?: string;
+    address?: string;
+    area?: string;
+    landmark?: string;
+    city?: string;
+    state?: string;
+  };
+  is_active?: number;
+  created_at?: string;
+  updated_at?: string;
   // Add more fields as needed
 }
 

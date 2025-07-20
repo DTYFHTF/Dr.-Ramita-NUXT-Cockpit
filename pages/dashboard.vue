@@ -7,7 +7,7 @@
           <div class="welcome-card">
             <div class="d-flex align-items-center">
               <div class="user-avatar">
-                <LucideIcon icon="mdi:account" />
+                <UserAvatar :src="user.profile_image ?? undefined" size="md" />
               </div>
               <div class="ms-3">
                 <h2 class="welcome-title">Welcome back, {{ user.first_name }}!</h2>
@@ -212,6 +212,7 @@
 
 <script setup lang="ts">
 import LucideIcon from '@/components/LucideIcon.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
@@ -237,20 +238,20 @@ const ordersLoading = ref(false)
 // Fetch recent orders
 const fetchRecentOrders = async () => {
   if (!user.value || !userStore.token) return
-  
+
   ordersLoading.value = true
   try {
     const response = await $fetch(`${API_BASE}/orders`, {
       method: 'GET',
-      headers: { 
-        Accept: 'application/json', 
-        Authorization: `Bearer ${userStore.token}` 
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${userStore.token}`
       }
     }) as any
-    
+
     // Get the orders from the response
     const allOrders = response.orders || response.data || response || []
-    
+
     // Take only the first 3 orders for dashboard display
     recentOrders.value = allOrders.slice(0, 3)
   } catch (e) {
@@ -271,14 +272,14 @@ const getGreeting = () => {
 
 const getProfileCompleteness = () => {
   if (!user.value) return 0
-  
+
   let completeness = 0
   const fields = ['first_name', 'last_name', 'email', 'phone', 'email_verified_at']
-  
+
   fields.forEach(field => {
     if ((user.value as any)[field]) completeness += 20
   })
-  
+
   return completeness
 }
 
@@ -320,9 +321,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/variables.scss';
-
-
 .dashboard-wrapper {
   background-color: var(--background-light);
   min-height: 100vh;
@@ -336,17 +334,7 @@ onMounted(() => {
   border: 1px solid var(--border-color);
 }
 
-.user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-white);
-  font-size: 1.5rem;
-}
+
 
 .welcome-title {
   margin: 0;

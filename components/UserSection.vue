@@ -9,7 +9,7 @@
       tabindex="0"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <LucideIcon :icon="'mdi:account-circle'" class="fs-4" />
+      <UserAvatar :src="user.profile_image" size="sm" class="mb-1" />
       <span>Hi, {{ user.first_name }}</span>
     </button>
     <transition name="fade">
@@ -50,6 +50,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
@@ -57,6 +58,7 @@ import { storeToRefs } from 'pinia';
 import LogoutButton from '@/components/LogoutButton.vue';
 import DropDownItems from '@/components/DropDownItems.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
+import UserAvatar from '@/components/UserAvatar.vue';
 import { NuxtLink } from '#components';
 import { useRouter } from 'vue-router';
 
