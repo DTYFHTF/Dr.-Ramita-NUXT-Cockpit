@@ -17,10 +17,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
               resolve(navigateTo('/login'))
               return
             }
-            if (userStore.user && !userStore.user.email_verified_at && to.path !== '/email/verify/resend') {
-              resolve(navigateTo('/email/verify/resend'))
-              return
-            }
+            // Allow access to dashboard even without email verification
+            // Email verification can be handled within the dashboard
             resolve()
           }
         },
@@ -33,8 +31,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (!userStore.token) {
     return navigateTo('/login')
   }
-  // Prevent access if email is not verified
-  if (userStore.user && !userStore.user.email_verified_at && to.path !== '/email/verify/resend') {
-    return navigateTo('/email/verify/resend')
-  }
+  
+  // Allow access - email verification is not mandatory for dashboard access
+  // Users can verify email from within their dashboard if needed
 })

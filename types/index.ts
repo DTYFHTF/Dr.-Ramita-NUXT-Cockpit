@@ -152,6 +152,7 @@ export interface ShippingInfo {
   state: string;
   default?: boolean;
   country: string;
+  email?: string;
 }
 
 export type PaymentMethod = 'cod' | 'card' | 'upi' | 'paypal';
