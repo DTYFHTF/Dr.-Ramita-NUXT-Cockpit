@@ -41,11 +41,14 @@ async function login({ email, password }: { email: string, password: string }) {
   error.value = ''
   loading.value = true
   try {
-    const loginResponse = await $fetch(`${API_BASE}/login`, {
+    const loginResponse = await $fetch<any>(`${API_BASE}/login`, {
       method: 'POST',
       body: { email, password },
-      headers: { Accept: 'application/json' }
-    }) as { token: string, user: any }
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
     console.log('[LOGIN] loginResponse:', JSON.stringify(loginResponse))
     if (!loginResponse.token) throw new Error('No token returned from API')
     userStore.setToken(loginResponse.token)

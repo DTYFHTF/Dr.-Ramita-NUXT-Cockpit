@@ -12,16 +12,6 @@
     
     <div class="profile-avatar-section text-center mb-4">
       <UserAvatar :src="user?.profile_image ?? undefined" size="lg" />
-      <div class="mt-2">
-        <input type="file" ref="avatarInput" @change="handleAvatarUpload" accept="image/*" style="display: none;">
-        <button class="btn btn-smooth-outline btn-sm" @click="triggerAvatarUpload" :disabled="avatarUploading">
-          <LucideIcon icon="mdi:camera" class="me-1" />
-          <span v-if="avatarUploading">Uploading...</span>
-          <span v-else>Change Avatar</span>
-        </button>
-      </div>
-      <div v-if="avatarError" class="alert alert-danger mt-2">{{ avatarError }}</div>
-      <div v-if="avatarSuccess" class="alert alert-success mt-2">{{ avatarSuccess }}</div>
     </div>
 
     <div class="profile-info-grid">
@@ -69,6 +59,24 @@
           </div>
           <div class="modal-body">
             <form @submit.prevent="updateProfile">
+              <div class="text-center mb-4">
+                <UserAvatar :src="(selectedImagePreview || user?.profile_image) ?? undefined" size="lg" />
+                <div class="mt-2">
+                  <input type="file" ref="avatarInput" @change="handleImageSelect" accept="image/*" style="display: none;">
+                  <button type="button" class="btn btn-smooth-outline" @click="triggerAvatarUpload">
+                    <LucideIcon icon="mdi:camera" class="me-1" />
+                    {{ selectedImageFile ? 'Change Image' : 'Select Image' }}
+                  </button>
+                  <button v-if="selectedImageFile" type="button" class="btn btn-outline-secondary btn-sm ms-2" @click="clearImageSelection">
+                    <LucideIcon icon="mdi:close" class="me-1" />
+                    Remove
+                  </button>
+                </div>
+                <div v-if="selectedImageFile" class="text-muted mt-1 small">
+                  Image selected: {{ selectedImageFile.name }}
+                </div>
+                <div v-if="avatarError" class="alert alert-danger mt-2">{{ avatarError }}</div>
+              </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">First Name *</label>
@@ -231,6 +239,10 @@ const avatarError = ref('')
 const avatarSuccess = ref('')
 const avatarInput = ref<HTMLInputElement>()
 
+// Image selection for profile update
+const selectedImageFile = ref<File | null>(null)
+const selectedImagePreview = ref<string | null>(null)
+
 // Utility functions
 const formatDateOfBirth = (dateString: string | null) => {
   if (!dateString) return 'Not specified'
@@ -258,7 +270,7 @@ const triggerAvatarUpload = () => {
   avatarInput.value?.click()
 }
 
-const handleAvatarUpload = async (event: Event) => {
+const handleImageSelect = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   
@@ -276,48 +288,23 @@ const handleAvatarUpload = async (event: Event) => {
     return
   }
   
-  if (!userStore.token) {
-    avatarError.value = 'No authentication token'
-    return
-  }
-  
-  avatarUploading.value = true
+  selectedImageFile.value = file
   avatarError.value = ''
-  avatarSuccess.value = ''
   
-  try {
-    const formData = new FormData()
-    formData.append('profile_image', file)
-    
-    const response = await $fetch(`${API_BASE}/user/profile`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${userStore.token}`
-      },
-      body: formData
-    }) as any
-    
-    // Update user store with new profile image
-    if (response?.data) {
-      userStore.setUser(response.data)
-    } else if (response?.user) {
-      userStore.setUser(response.user)
-    } else if (response) {
-      userStore.setUser(response)
-    }
-    
-    avatarSuccess.value = 'Profile image updated successfully!'
-    
-    // Clear success message after 3 seconds
-    setTimeout(() => {
-      avatarSuccess.value = ''
-    }, 3000)
-  } catch (e: any) {
-    avatarError.value = e.data?.message || 'Failed to upload image'
-  } finally {
-    avatarUploading.value = false
-    // Reset file input
-    if (target) target.value = ''
+  // Create preview URL
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    selectedImagePreview.value = e.target?.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
+const clearImageSelection = () => {
+  selectedImageFile.value = null
+  selectedImagePreview.value = null
+  avatarError.value = '' // Clear any image-related errors
+  if (avatarInput.value) {
+    avatarInput.value.value = ''
   }
 }
 
@@ -346,6 +333,7 @@ const closeProfileEdit = () => {
   showProfileEdit.value = false
   profileEditError.value = ''
   profileEditSuccess.value = ''
+  clearImageSelection() // Clear any selected image
   initializeProfileForm() // Reset form
 }
 
@@ -353,23 +341,81 @@ const updateProfile = async () => {
   profileEditing.value = true
   profileEditError.value = ''
   profileEditSuccess.value = ''
+  avatarError.value = '' // Clear any previous image errors
   
   try {
     if (!userStore.token) {
       throw new Error('No authentication token')
     }
     
-    const { useAuthApi } = await import('@/composables/useApi')
-    const authApi = useAuthApi()
+    let response
     
-    const response = await authApi.put('user/profile', userStore.token, {
-      first_name: profileForm.value.first_name,
-      last_name: profileForm.value.last_name,
-      phone: profileForm.value.phone,
-      gender: profileForm.value.gender,
-      date_of_birth: profileForm.value.date_of_birth,
-      address: profileForm.value.address
-    })
+    // If image is selected, use FormData for multipart upload
+    if (selectedImageFile.value) {
+      console.log('[PROFILE] Updating with image:', selectedImageFile.value.name)
+      const formData = new FormData()
+      
+      // Laravel requires _method field for PUT requests with FormData
+      formData.append('_method', 'PUT')
+      formData.append('profile_image', selectedImageFile.value)
+      
+      // Ensure required fields are not empty
+      const firstName = profileForm.value.first_name?.trim()
+      const lastName = profileForm.value.last_name?.trim()
+      
+      if (!firstName) {
+        throw new Error('First name is required')
+      }
+      if (!lastName) {
+        throw new Error('Last name is required')
+      }
+      
+      formData.append('first_name', firstName)
+      formData.append('last_name', lastName)
+      formData.append('phone', profileForm.value.phone?.trim() || '')
+      formData.append('gender', profileForm.value.gender || '')
+      formData.append('date_of_birth', profileForm.value.date_of_birth || '')
+      
+      // Add address fields
+      formData.append('address[address]', profileForm.value.address.address?.trim() || '')
+      formData.append('address[area]', profileForm.value.address.area?.trim() || '')
+      formData.append('address[city]', profileForm.value.address.city?.trim() || '')
+      formData.append('address[state]', profileForm.value.address.state?.trim() || '')
+      formData.append('address[pincode]', profileForm.value.address.pincode?.trim() || '')
+      formData.append('address[country]', profileForm.value.address.country || 'India')
+      
+      console.log('[PROFILE] FormData entries:')
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value)
+      }
+      
+      // Use POST with _method=PUT for Laravel FormData handling
+      response = await $fetch(`${API_BASE}/user/profile`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userStore.token}`,
+          Accept: 'application/json'
+          // Do not set Content-Type - let browser set it with boundary for FormData
+        },
+        body: formData
+      })
+    } else {
+      console.log('[PROFILE] Updating without image')
+      // No image, use regular JSON update
+      const { useAuthApi } = await import('@/composables/useApi')
+      const authApi = useAuthApi()
+      
+      response = await authApi.put('user/profile', userStore.token, {
+        first_name: profileForm.value.first_name,
+        last_name: profileForm.value.last_name,
+        phone: profileForm.value.phone,
+        gender: profileForm.value.gender,
+        date_of_birth: profileForm.value.date_of_birth,
+        address: profileForm.value.address
+      })
+    }
+    
+    console.log('[PROFILE] Response:', response)
     
     // Update user store with new data
     if (response?.data) {
@@ -380,6 +426,9 @@ const updateProfile = async () => {
       userStore.setUser(response)
     }
     
+    // Clear image selection after successful update
+    clearImageSelection()
+    
     profileEditSuccess.value = 'Profile updated successfully!'
     
     // Close modal after 2 seconds
@@ -387,7 +436,8 @@ const updateProfile = async () => {
       closeProfileEdit()
     }, 2000)
   } catch (e: any) {
-    profileEditError.value = e.data?.message || 'Failed to update profile'
+    console.error('[PROFILE] Update failed:', e)
+    profileEditError.value = e.data?.message || e.message || 'Failed to update profile'
   } finally {
     profileEditing.value = false
   }
