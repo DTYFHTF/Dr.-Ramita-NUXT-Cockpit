@@ -46,6 +46,55 @@ export function postBookingLaravel(data) {
   });
 }
 
+// Authenticated API composable for dashboard and protected routes
+export function useAuthApi() {
+  const config = useRuntimeConfig()
+  const baseUrl = config.public.apiBase
+
+  const getAuthHeaders = (token) => ({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  })
+
+  const get = async (endpoint, token) => {
+    return await $fetch(`${baseUrl}/${endpoint}`, {
+      method: 'GET',
+      headers: getAuthHeaders(token)
+    })
+  }
+
+  const post = async (endpoint, token, body = {}) => {
+    return await $fetch(`${baseUrl}/${endpoint}`, {
+      method: 'POST',
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(body)
+    })
+  }
+
+  const put = async (endpoint, token, body = {}) => {
+    return await $fetch(`${baseUrl}/${endpoint}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(body)
+    })
+  }
+
+  const del = async (endpoint, token) => {
+    return await $fetch(`${baseUrl}/${endpoint}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(token)
+    })
+  }
+
+  return {
+    get,
+    post,
+    put,
+    delete: del
+  }
+}
+
 // Google Auth: Redirect to backend for Google login
 export function loginWithGoogle() {
   const config = useRuntimeConfig();

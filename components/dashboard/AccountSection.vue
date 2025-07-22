@@ -139,10 +139,11 @@
     
     <!-- Loading state for when user data is not yet available -->
     <div v-else class="text-center py-4">
-      <div class="spinner-border text-primary" role="status">
+      <div v-if="!loadError" class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-2 text-muted">Loading user information...</p>
+      <p v-if="!loadError" class="mt-2 text-muted">Loading user information...</p>
+      <div v-if="loadError" class="alert alert-danger">{{ loadError }}</div>
     </div>
   </div>
 </template>
@@ -155,18 +156,52 @@ import LucideIcon from '@/components/LucideIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+const { user, token, hydrated } = storeToRefs(userStore)
+const loadError = ref('')
 
 const API_BASE = useRuntimeConfig().public.apiBase
 
-// Check if user data is available
 const isUserLoaded = computed(() => {
   return user.value !== null && user.value !== undefined
 })
 
-// Debug: Log user data on mount (remove in production)
-onMounted(() => {
-  console.log('AccountSection: User data loaded:', !!user.value)
+onMounted(async () => {
+  try {
+    // Wait for hydration to complete, but set a timeout (e.g. 5 seconds)
+    const hydrationTimeout = 5000
+    let hydratedResolved = false
+    if (!hydrated.value) {
+      await Promise.race([
+        new Promise(resolve => {
+          const unwatch = watch(hydrated, (newVal) => {
+            if (newVal) {
+              hydratedResolved = true
+              unwatch()
+              resolve(true)
+            }
+          })
+        }),
+        new Promise((_, reject) => setTimeout(() => {
+          if (!hydratedResolved) reject(new Error('Hydration timeout'))
+        }, hydrationTimeout))
+      ])
+    }
+
+    // Check authentication status after hydration or timeout
+    if (!token.value) {
+      loadError.value = 'No authentication token found. Please log in again.'
+    } else if (!user.value) {
+      loadError.value = 'User data not found. Please log in again.'
+    }
+    // If we have both token and user, we're good to go - no need to fetch
+  } catch (e: any) {
+    if (e?.message === 'Hydration timeout') {
+      loadError.value = 'Failed to load user data (hydration timeout). Please refresh or log in again.'
+    } else {
+      loadError.value = 'Failed to initialize user profile.'
+      console.error('Failed to initialize user profile:', e)
+    }
+  }
 })
 
 // Profile editing
@@ -241,6 +276,11 @@ const handleAvatarUpload = async (event: Event) => {
     return
   }
   
+  if (!userStore.token) {
+    avatarError.value = 'No authentication token'
+    return
+  }
+  
   avatarUploading.value = true
   avatarError.value = ''
   avatarSuccess.value = ''
@@ -258,8 +298,12 @@ const handleAvatarUpload = async (event: Event) => {
     }) as any
     
     // Update user store with new profile image
-    if (response.user) {
+    if (response?.data) {
+      userStore.setUser(response.data)
+    } else if (response?.user) {
       userStore.setUser(response.user)
+    } else if (response) {
+      userStore.setUser(response)
     }
     
     avatarSuccess.value = 'Profile image updated successfully!'
@@ -311,26 +355,29 @@ const updateProfile = async () => {
   profileEditSuccess.value = ''
   
   try {
-    const response = await $fetch(`${API_BASE}/user/profile`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userStore.token}`
-      },
-      body: JSON.stringify({
-        first_name: profileForm.value.first_name,
-        last_name: profileForm.value.last_name,
-        phone: profileForm.value.phone,
-        gender: profileForm.value.gender,
-        date_of_birth: profileForm.value.date_of_birth,
-        address: profileForm.value.address
-      })
-    }) as any
+    if (!userStore.token) {
+      throw new Error('No authentication token')
+    }
+    
+    const { useAuthApi } = await import('@/composables/useApi')
+    const authApi = useAuthApi()
+    
+    const response = await authApi.put('user/profile', userStore.token, {
+      first_name: profileForm.value.first_name,
+      last_name: profileForm.value.last_name,
+      phone: profileForm.value.phone,
+      gender: profileForm.value.gender,
+      date_of_birth: profileForm.value.date_of_birth,
+      address: profileForm.value.address
+    })
     
     // Update user store with new data
-    if (response.user) {
+    if (response?.data) {
+      userStore.setUser(response.data)
+    } else if (response?.user) {
       userStore.setUser(response.user)
+    } else if (response) {
+      userStore.setUser(response)
     }
     
     profileEditSuccess.value = 'Profile updated successfully!'

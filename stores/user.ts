@@ -1,42 +1,74 @@
 import { defineStore } from 'pinia'
-import type { User } from '@/types';
+import { ref } from 'vue'
+import type { User } from '@/types'
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    user: null as User | null,
-    token: null as string | null,
-    hydrated: false as boolean
-  }),
-  actions: {
-    setUser(user: User | null) {
-      this.user = user;
-      if (typeof window !== 'undefined') {
-        if (user) localStorage.setItem('user', JSON.stringify(user));
-        else localStorage.removeItem('user');
+export const useUserStore = defineStore('user', () => {
+  const user = ref<User | null>(null)
+  const token = ref<string | null>(null)
+  const hydrated = ref(true) // or false if you want to control hydration
+
+  // Debug: Log when store is created
+  if (typeof window !== 'undefined') {
+    console.log('[DEBUG] User store created. LocalStorage user:', localStorage.getItem('user'))
+    console.log('[DEBUG] User store created. LocalStorage token:', localStorage.getItem('auth_token'))
+  }
+
+  function setUser(u: User | null) {
+    user.value = u
+  }
+  function setToken(t: string | null) {
+    token.value = t
+  }
+  function logout() {
+    user.value = null
+    setToken(null)
+  }
+  async function fetchUserProfile() {
+    try {
+      const { useAuthApi } = await import('@/composables/useApi')
+      const authApi = useAuthApi()
+      if (!token.value) throw new Error('No auth token available')
+      let response;
+      try {
+        response = await authApi.get('user', token.value)
+      } catch (userError: any) {
+        if (userError?.status === 405 || userError?.status === 404) {
+          response = await authApi.get('user/profile', token.value)
+        } else {
+          throw userError
+        }
       }
-    },
-    setToken(token: string | null) {
-      this.token = token;
-      if (typeof window !== 'undefined') {
-        if (token) localStorage.setItem('auth_token', token);
-        else localStorage.removeItem('auth_token');
+      if (response?.data) {
+        setUser(response.data)
+      } else if (response?.user) {
+        setUser(response.user)
+      } else if (response) {
+        setUser(response)
+      } else {
+        throw new Error('No user data in response')
       }
-    },
-    logout() {
-      this.user = null;
-      this.setToken(null);
+    } catch (e: any) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('user');
+        console.error('[DEBUG] Failed to fetch user profile:', e)
+        console.error('[DEBUG] Error status:', e?.status)
+        console.error('[DEBUG] Error data:', e?.data)
       }
-    },
-    hydrateFromLocalStorage() {
-      if (typeof window !== 'undefined') {
-        const userRaw = localStorage.getItem('user');
-        const tokenRaw = localStorage.getItem('auth_token');
-        this.user = userRaw ? JSON.parse(userRaw) : null;
-        this.token = tokenRaw;
-        this.hydrated = true;
+      if (e?.status === 401 || e?.status === 403 || e?.data?.message?.includes('Unauthenticated')) {
+        logout()
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login'
+        }
+      } else {
+        console.warn('[DEBUG] Profile fetch failed, keeping existing user data')
       }
+      throw e
     }
+  }
+
+  return { user, token, hydrated, setUser, setToken, logout, fetchUserProfile }
+}, {
+  persist: {
+    storage: typeof window !== 'undefined' ? localStorage : undefined,
+    pick: ['user', 'token']
   }
 })

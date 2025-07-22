@@ -1,122 +1,128 @@
 <template>
-  <div class="dashboard-wrapper" v-if="user">
-    <div class="container-fluid py-4">
-      <div class="row">
-        <!-- Sidebar Navigation -->
-        <div class="col-12 col-lg-3 d-flex justify-content-center">
-          <div class="profile-sidebar">
-            <!-- User Profile Header -->
-            <div class="profile-header">
-              <div class="d-flex align-items-center mb-3">
-                <UserAvatar :src="user.profile_image ?? undefined" size="md" class="me-3" />
-                <div>
-                  <div class="profile-greeting">{{ getGreeting() }}</div>
-                  <div class="profile-name">{{ user.first_name }} {{ user.last_name }}</div>
+  <client-only>
+    <div class="dashboard-wrapper" v-if="hydrated">
+      <div v-if="user" class="container-fluid py-4">
+        <div class="row">
+          <!-- Sidebar Navigation -->
+          <div class="col-12 col-lg-3 d-flex justify-content-center">
+            <div class="profile-sidebar">
+              <!-- User Profile Header -->
+              <div class="profile-header">
+                <div class="d-flex align-items-center mb-3">
+                  <UserAvatar :src="user.profile_image ?? undefined" size="md" class="me-3" />
+                  <div>
+                    <div class="profile-greeting">{{ getGreeting() }}</div>
+                    <div class="profile-name">{{ user.first_name }} {{ user.last_name }}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Navigation Menu -->
+              <div class="sidebar-nav">
+                <button 
+                  @click="activeTab = 'profile'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'profile' }]"
+                >
+                  <LucideIcon icon="mdi:account" class="me-2" />
+                  My Account
+                </button>
+                <button 
+                  @click="activeTab = 'orders'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'orders' }]"
+                >
+                  <LucideIcon icon="mdi:package-variant" class="me-2" />
+                  My Orders
+                </button>
+                <button 
+                  @click="activeTab = 'wishlist'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'wishlist' }]"
+                >
+                  <LucideIcon icon="mdi:heart" class="me-2" />
+                  My Wishlist
+                </button>
+                <button 
+                  @click="activeTab = 'password'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'password' }]"
+                >
+                  <LucideIcon icon="mdi:lock" class="me-2" />
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Main Content Area -->
+          <div class="col-12 col-lg-9">
+            <!-- Profile Information Tab -->
+            <div v-if="activeTab === 'profile'" class="content-card">
+              <AccountSection />
+            </div>
+            <!-- Change Password Tab -->
+            <div v-if="activeTab === 'password'" class="content-card">
+              <h3 class="content-title mb-4">Change Password</h3>
+              <div class="row">
+                <div class="col-md-8">
+                  <form @submit.prevent="changePassword">
+                    <div class="form-group mb-3">
+                      <label class="form-label">Current Password</label>
+                      <input type="password" v-model="passwordForm.currentPassword" class="form-input" required>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label class="form-label">New Password</label>
+                      <input type="password" v-model="passwordForm.newPassword" class="form-input" required minlength="8">
+                    </div>
+                    <div class="form-group mb-3">
+                      <label class="form-label">Confirm New Password</label>
+                      <input type="password" v-model="passwordForm.confirmPassword" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-smooth-success" :disabled="passwordChanging">
+                      <span v-if="passwordChanging">Changing...</span>
+                      <span v-else>Update Password</span>
+                    </button>
+                  </form>
+                  <div v-if="passwordMsg" class="alert alert-success mt-3">{{ passwordMsg }}</div>
+                  <div v-if="passwordError" class="alert alert-danger mt-3">{{ passwordError }}</div>
                 </div>
               </div>
             </div>
-            
-            <!-- Navigation Menu -->
-            <div class="sidebar-nav">
-              <button 
-                @click="activeTab = 'profile'" 
-                :class="['sidebar-nav-item', { active: activeTab === 'profile' }]"
-              >
-                <LucideIcon icon="mdi:account" class="me-2" />
-                My Account
-              </button>
-              <button 
-                @click="activeTab = 'orders'" 
-                :class="['sidebar-nav-item', { active: activeTab === 'orders' }]"
-              >
-                <LucideIcon icon="mdi:package-variant" class="me-2" />
-                My Orders
-              </button>
-              <button 
-                @click="activeTab = 'wishlist'" 
-                :class="['sidebar-nav-item', { active: activeTab === 'wishlist' }]"
-              >
-                <LucideIcon icon="mdi:heart" class="me-2" />
-                My Wishlist
-              </button>
-              <button 
-                @click="activeTab = 'password'" 
-                :class="['sidebar-nav-item', { active: activeTab === 'password' }]"
-              >
-                <LucideIcon icon="mdi:lock" class="me-2" />
-                Change Password
-              </button>
+            <!-- My Orders Tab -->
+            <div v-if="activeTab === 'orders'" class="content-card">
+              <h3 class="content-title mb-4">My Orders</h3>
+              <OrdersSection />
+            </div>
+            <!-- My Wishlist Tab -->
+            <div v-if="activeTab === 'wishlist'" class="content-card">
+              <h3 class="content-title mb-4">My Wishlist</h3>
+              <WishlistSection />
             </div>
           </div>
         </div>
-
-        <!-- Main Content Area -->
-        <div class="col-12 col-lg-9">
-          <!-- Profile Information Tab -->
-          <div v-if="activeTab === 'profile'" class="content-card">
-            <AccountSection />
-          </div>
-
-          <!-- Change Password Tab -->
-          <div v-if="activeTab === 'password'" class="content-card">
-            <h3 class="content-title mb-4">Change Password</h3>
-            <div class="row">
-              <div class="col-md-8">
-                <form @submit.prevent="changePassword">
-                  <div class="form-group mb-3">
-                    <label class="form-label">Current Password</label>
-                    <input type="password" v-model="passwordForm.currentPassword" class="form-input" required>
-                  </div>
-                  <div class="form-group mb-3">
-                    <label class="form-label">New Password</label>
-                    <input type="password" v-model="passwordForm.newPassword" class="form-input" required minlength="8">
-                  </div>
-                  <div class="form-group mb-3">
-                    <label class="form-label">Confirm New Password</label>
-                    <input type="password" v-model="passwordForm.confirmPassword" class="form-input" required>
-                  </div>
-                  <button type="submit" class="btn btn-smooth-success" :disabled="passwordChanging">
-                    <span v-if="passwordChanging">Changing...</span>
-                    <span v-else">Update Password</span>
-                  </button>
-                </form>
-                <div v-if="passwordMsg" class="alert alert-success mt-3">{{ passwordMsg }}</div>
-                <div v-if="passwordError" class="alert alert-danger mt-3">{{ passwordError }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- My Orders Tab -->
-          <div v-if="activeTab === 'orders'" class="content-card">
-            <h3 class="content-title mb-4">My Orders</h3>
-            <OrdersSection />
-          </div>
-
-          <!-- My Wishlist Tab -->
-          <div v-if="activeTab === 'wishlist'" class="content-card">
-            <h3 class="content-title mb-4">My Wishlist</h3>
-            <WishlistSection />
-          </div>
+      </div>
+      <div v-else class="container-fluid py-4">
+        <div class="text-center">
+          <h1>Dashboard</h1>
+          <p>You are not logged in.</p>
+          <NuxtLink to="/login" class="btn btn-smooth-success">Login</NuxtLink>
         </div>
       </div>
     </div>
-  </div>
-  <div v-else class="dashboard-wrapper">
-    <div class="container-fluid py-4">
-      <div class="text-center">
-        <h1>Dashboard</h1>
-        <p>You are not logged in.</p>
-        <NuxtLink to="/login" class="btn btn-smooth-success">Login</NuxtLink>
+    <div v-else class="dashboard-wrapper">
+      <div class="container-fluid py-4">
+        <div class="text-center">
+          <div v-if="!dashboardLoadError" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p v-if="!dashboardLoadError" class="mt-2 text-muted">Initializing dashboard...</p>
+          <div v-if="dashboardLoadError" class="alert alert-danger mt-3">{{ dashboardLoadError }}</div>
+        </div>
       </div>
     </div>
-  </div>
+  </client-only>
 </template>
 
 <script setup lang="ts">
 // Add authentication middleware
-definePageMeta({
-  middleware: 'auth'
-})
+// definePageMeta({
+//   middleware: 'auth'
+// })
 
 import LucideIcon from '@/components/LucideIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -127,22 +133,73 @@ import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
 import { useBookingStore } from '@/stores/booking'
+import { useAuthApi } from '@/composables/useApi'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const userStore = useUserStore()
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
 const bookingStore = useBookingStore()
-const { user } = storeToRefs(userStore)
+const { user, hydrated } = storeToRefs(userStore)
+
+// Initialize Auth API composable
+const authApi = useAuthApi()
 
 // Debug: Log user data on mount (remove in production)
-onMounted(() => {
-  console.log('Dashboard: User authenticated:', !!user.value)
-})
-
-// Tab management
 const activeTab = ref('profile')
+const dashboardLoadError = ref('')
+
+onMounted(async () => {
+  try {
+    // Debug: Check localStorage directly
+    console.log('[Dashboard] LocalStorage user:', localStorage.getItem('user'))
+    console.log('[Dashboard] LocalStorage auth_token:', localStorage.getItem('auth_token'))
+    console.log('[Dashboard] Store user.value:', user.value)
+    console.log('[Dashboard] Store token.value:', userStore.token)
+    
+    // Wait for hydration to complete, but set a timeout (e.g. 5 seconds)
+    const hydrationTimeout = 5000
+    let hydratedResolved = false
+    console.log('[Dashboard] onMounted: hydrated.value =', hydrated.value)
+    if (!hydrated.value) {
+      await Promise.race([
+        new Promise(resolve => {
+          const unwatch = watch(hydrated, (newVal) => {
+            console.log('[Dashboard] hydrated watcher fired:', newVal)
+            if (newVal) {
+              hydratedResolved = true
+              unwatch()
+              resolve(true)
+            }
+          })
+        }),
+        new Promise((_, reject) => setTimeout(() => {
+          if (!hydratedResolved) {
+            console.error('[Dashboard] Hydration timeout after 5s! hydrated.value =', hydrated.value)
+            reject(new Error('Hydration timeout'))
+          }
+        }, hydrationTimeout))
+      ])
+    }
+    console.log('[Dashboard] After hydration: user.value =', user.value, 'token =', userStore.token)
+    if (!user.value) {
+      dashboardLoadError.value = 'User data not found after hydration. Please log in again.'
+      console.error('[Dashboard] User missing after hydration!')
+    } else {
+      console.log('[Dashboard] User authenticated:', !!user.value)
+      console.log('[Dashboard] User profile:', user.value)
+    }
+  } catch (e: any) {
+    if (e?.message === 'Hydration timeout') {
+      dashboardLoadError.value = 'Failed to load dashboard (hydration timeout). Please refresh or log in again.'
+      console.error('[Dashboard] Hydration timeout error:', e)
+    } else {
+      dashboardLoadError.value = 'Failed to initialize dashboard.'
+      console.error('[Dashboard] Failed to initialize dashboard:', e)
+    }
+  }
+})
 
 // Email verification
 const sending = ref(false)
@@ -158,8 +215,6 @@ const passwordForm = ref({
   newPassword: '',
   confirmPassword: ''
 })
-
-const API_BASE = useRuntimeConfig().public.apiBase
 
 // Utility functions
 const getGreeting = () => {
@@ -180,18 +235,10 @@ const changePassword = async () => {
   passwordError.value = ''
 
   try {
-    await $fetch(`${API_BASE}/change-password`, {
-      method: 'POST',
-      headers: { 
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userStore.token}` 
-      },
-      body: JSON.stringify({
-        current_password: passwordForm.value.currentPassword,
-        password: passwordForm.value.newPassword,
-        password_confirmation: passwordForm.value.confirmPassword
-      })
+    await authApi.post('change-password', userStore.token, {
+      current_password: passwordForm.value.currentPassword,
+      new_password: passwordForm.value.newPassword,
+      new_password_confirmation: passwordForm.value.confirmPassword
     })
     
     passwordMsg.value = 'Password changed successfully!'
@@ -217,13 +264,7 @@ async function sendVerification() {
   sentMsg.value = ''
   sendError.value = ''
   try {
-    await $fetch(`${API_BASE}/email/verification-notification`, {
-      method: 'POST',
-      headers: { 
-        Accept: 'application/json', 
-        Authorization: `Bearer ${userStore.token}` 
-      }
-    })
+    await authApi.post('email/verification-notification', userStore.token, {})
     sentMsg.value = 'Verification email sent! Please check your inbox.'
   } catch (e) {
     sendError.value = 'Failed to send verification email.'
