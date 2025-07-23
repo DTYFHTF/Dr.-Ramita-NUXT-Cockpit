@@ -5,12 +5,13 @@ import type { User } from '@/types'
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
   const token = ref<string | null>(null)
-  const hydrated = ref(true) // or false if you want to control hydration
+  const hydrated = ref(false) // Start as false, will be set to true after hydration
 
-  // Debug: Log when store is created
+  // Set hydrated to true after a short delay to allow for restoration
   if (typeof window !== 'undefined') {
-    console.log('[DEBUG] User store created. LocalStorage user:', localStorage.getItem('user'))
-    console.log('[DEBUG] User store created. LocalStorage token:', localStorage.getItem('auth_token'))
+    setTimeout(() => {
+      hydrated.value = true
+    }, 100)
   }
 
   function setUser(u: User | null) {
