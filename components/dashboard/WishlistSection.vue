@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-5">
@@ -42,8 +42,6 @@
         <div v-for="item in wishlist" :key="item.id" class="col-lg-4 col-md-6 col-sm-12 mb-4">
           <ProductCard 
             :product="item.product"
-            :show-remove-button="true"
-            @remove-from-wishlist="handleRemoveFromWishlist"
           />
         </div>
       </div>

@@ -40,7 +40,7 @@ export const useCartStore = defineStore('cart', () => {
   };
 
   const addToCart = async (product: Product, quantity: number = 1) => {
-    if (!userStore.token) return;
+    if (!userStore.token) throw new Error('Authentication required');
     
     const product_id = (product as any).parent_id ? (product as any).parent_id : product.id;
     let variation_id: number | null = null;
@@ -48,17 +48,29 @@ export const useCartStore = defineStore('cart', () => {
       variation_id = Number(product.variation_id);
       if (isNaN(variation_id)) variation_id = null;
     }
+    
     const payload = {
       product_id,
       variation_id,
       quantity: Math.max(1, Number(quantity))
     };
-    await $fetch(`${API_BASE}/cart`, {
-      method: 'POST',
-      body: payload,
-      headers: { Authorization: `Bearer ${userStore.token}` }
-    });
-    await fetchCart();
+    
+    console.log('[CART] Adding to cart:', { product: product.name, payload });
+    
+    try {
+      await $fetch(`${API_BASE}/cart`, {
+        method: 'POST',
+        body: payload,
+        headers: { 
+          Authorization: `Bearer ${userStore.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      await fetchCart();
+    } catch (error: any) {
+      console.error('[CART] Add to cart failed:', error);
+      throw error;
+    }
   };
 
   const removeFromCart = async (productId: number, variationId: number | null) => {

@@ -77,7 +77,7 @@
       >
         <LucideIcon 
           :icon="isInWishlist ? 'mdi:heart' : 'mdi:heart-outline'" 
-          :color="isInWishlist ? 'white' : 'var(--text-primary)'" 
+          :color="isInWishlist ? 'var(--color-error)' : 'var(--text-primary)'" 
         />
       </button>
       <template v-if="!hideActions">
@@ -93,12 +93,15 @@
             class="add-to-cart-icon"
           />
         </button>
-        <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
-          <LucideIcon icon="mdi:eye-outline" :color="'var(--text-primary)'" />
+        <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView" :disabled="isLoadingProduct">
+          <LucideIcon v-if="!isLoadingProduct" icon="mdi:eye-outline" :color="'var(--text-primary)'" />
+          <div v-else class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
         </button>
       </template>
     </div>
-    <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
+    <ProductQuickView v-if="showQuickView && fullProduct" :product="fullProduct" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
   <div v-if="showNotification" class="toast-message">
     Product added to cart!
@@ -121,16 +124,20 @@ import { useCart } from '@/composables/useCart';
 import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
 import { useImageUrl } from '@/composables/useImageUrl.js'
+import { useProducts } from '@/composables/useProducts';
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
 const wishlistStore = useWishlist();
 const userStore = useUserStore();
 const { getImageUrl } = useImageUrl();
+const { fetchProduct, product: fetchedProduct } = useProducts();
 
 const showNotification = ref(false);
 const showWishlistNotification = ref(false);
 const showQuickView = ref(false);
+const fullProduct = ref<Product | null>(null);
+const isLoadingProduct = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
 const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id));
@@ -170,18 +177,32 @@ const handleAddToCart = async (product: Product) => {
     return;
   }
   try {
-    // If product has variations, open quick view for selection
-    if (product.variations && product.variations.length) {
+    // If product has variations, always open quick view for selection
+    if (product.variations && product.variations.length > 0) {
       openQuickView();
       return;
     }
+    
+    // For products without variations, add directly to cart
     await addToCart(product);
     showNotification.value = true;
     setTimeout(() => {
       showNotification.value = false;
     }, 2000); // Hide notification after 2 seconds
   } catch (err: any) {
-    alert('Error adding to cart: ' + (err?.message || err));
+    console.error('Add to cart error:', err);
+    
+    // Better error handling for 422 validation errors
+    if (err?.status === 422) {
+      if (err?.data?.error?.includes('variation')) {
+        // If it's a variation error, open quick view
+        openQuickView();
+        return;
+      }
+      alert('Validation error: ' + (err?.data?.error || err?.data?.message || 'Invalid product data'));
+    } else {
+      alert('Error adding to cart: ' + (err?.data?.message || err?.message || 'Unknown error'));
+    }
   }
 };
 
@@ -200,11 +221,34 @@ function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_
   closeQuickView();
 }
 
-const openQuickView = () => {
-  showQuickView.value = true;
+const openQuickView = async () => {
+  // If product already has variations, just show it
+  if (props.product.variations && props.product.variations.length > 0) {
+    fullProduct.value = props.product;
+    showQuickView.value = true;
+    return;
+  }
+  
+  // Otherwise, fetch the full product with variations
+  try {
+    isLoadingProduct.value = true;
+    await fetchProduct(props.product.slug);
+    
+    // Use the fetched product if available, otherwise fallback to current product
+    fullProduct.value = fetchedProduct.value || props.product;
+    showQuickView.value = true;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    // Fallback to original product if fetch fails
+    fullProduct.value = props.product;
+    showQuickView.value = true;
+  } finally {
+    isLoadingProduct.value = false;
+  }
 };
 const closeQuickView = () => {
   showQuickView.value = false;
+  fullProduct.value = null;
 };
 
 const props = defineProps<{ 
@@ -303,14 +347,18 @@ function imageUrl(img: string) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   background-color: var(--background-white);
   border-color: var(--border-color);
 }
+
 .wishlist-btn:hover,
-.quick-view-btn:hover {
+.quick-view-btn:hover,
+.wishlist-btn:active,
+.quick-view-btn:active {
   background-color: var(--background-light);
 }
+
 .add-to-cart-btn {
   position: relative;
   overflow: hidden;
