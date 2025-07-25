@@ -21,25 +21,18 @@
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         <div class="mb-2 d-flex align-items-center gap-2">
-          <template v-if="product.variations && product.variations.length">
-            <span v-if="minVariationPrice !== maxVariationPrice" class="price">
-              From ₹{{ minVariationPrice }}
+          <!-- Use backend-calculated display prices -->
+          <template v-if="product.display_sale_price && product.display_sale_price < product.display_price">
+            <span class="text-decoration-line-through text-muted">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
-            <span v-else>
-              ₹{{ minVariationPrice }}
+            <span class="ms-1 price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_sale_price }}
             </span>
           </template>
           <template v-else>
-            <span v-if="product.sale_price && product.sale_price < product.price">
-              <span class="text-decoration-line-through  text-muted ">
-                ₹{{ product.price }}
-              </span>
-              <span class="ms-1 price fw-bold">
-                ₹{{ product.sale_price }}
-              </span>
-            </span>
-            <span v-else class="price fw-bold">
-              ₹{{ product.price }}
+            <span class="price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
           </template>
           <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
@@ -260,19 +253,6 @@ const images = computed(() => {
   // Only use image and image_2 for the product card
   const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
   return Array.from(new Set(imgs));
-});
-
-const minVariationPrice = computed(() => {
-  if (props.product.variations && props.product.variations.length) {
-    return Math.min(...props.product.variations.map(v => v.sale_price ?? v.price));
-  }
-  return props.product.sale_price ?? props.product.price;
-});
-const maxVariationPrice = computed(() => {
-  if (props.product.variations && props.product.variations.length) {
-    return Math.max(...props.product.variations.map(v => v.sale_price ?? v.price));
-  }
-  return props.product.sale_price ?? props.product.price;
 });
 
 // Helper for image fallback

@@ -66,6 +66,8 @@ export interface Product {
   name: string;
   price: number;
   sale_price?: number; // Added sale_price as an optional property
+  display_price: number; // Backend-calculated display price (min variation price or regular price)
+  display_sale_price?: number; // Backend-calculated display sale price
   rating: number;
   stock: number;
   on_sale: boolean;
@@ -76,6 +78,7 @@ export interface Product {
   description?: string;
   in_stock?: boolean; // Optional property to indicate stock availability
   variations?: ProductVariation[];
+  has_variations?: boolean; // Flag to indicate if product has variations
   quantity?: number; // Optional quantity property
   review_count?: number;
   average_rating?: number;
