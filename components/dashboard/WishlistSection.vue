@@ -131,15 +131,14 @@ const showToastMessage = (message: string, type: string = 'success') => {
 
 // Load wishlist on mount
 onMounted(async () => {
-  if (wishlist.value.length === 0) {
-    loading.value = true
-    try {
-      await wishlistStore.fetchWishlist()
-    } catch (error) {
-      showToastMessage('Failed to load wishlist', 'error')
-    } finally {
-      loading.value = false
-    }
+  loading.value = true
+  try {
+    // Force refresh wishlist data to ensure updated product pricing
+    await wishlistStore.refreshWishlist()
+  } catch (error) {
+    showToastMessage('Failed to load wishlist', 'error')
+  } finally {
+    loading.value = false
   }
 })
 </script>

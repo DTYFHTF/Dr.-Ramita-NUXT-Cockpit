@@ -31,9 +31,9 @@ export function useProducts() {
       params.append("page", String(page));
       params.append("per_page", String(perPage));
       if (sort) {
-        if (sort === "price_asc") params.append("sort_by", "price");
-        if (sort === "price_desc") {
-          params.append("sort_by", "price");
+        if (sort === "display_price_asc") params.append("sort_by", "display_price");
+        if (sort === "display_price_desc") {
+          params.append("sort_by", "display_price");
           params.append("sort_order", "desc");
         }
         if (sort === "rating_asc") params.append("sort_by", "average_rating");

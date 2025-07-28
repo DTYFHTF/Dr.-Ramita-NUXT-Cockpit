@@ -15,8 +15,12 @@ export const useWishlistStore = defineStore('wishlist', () => {
   const fetchWishlist = async () => {
     if (!userStore.token) return;
     try {
-      const response = await $fetch<{ wishlist: WishlistItem[] }>(`${API_BASE}/wishlist`, {
-        headers: { Authorization: `Bearer ${userStore.token}` }
+      // Add cache busting parameter to ensure fresh data
+      const response = await $fetch<{ wishlist: WishlistItem[] }>(`${API_BASE}/wishlist?t=${Date.now()}`, {
+        headers: { 
+          Authorization: `Bearer ${userStore.token}`,
+          'Cache-Control': 'no-cache'
+        }
       });
       wishlist.value = response.wishlist || [];
     } catch (e) {
@@ -104,6 +108,11 @@ export const useWishlistStore = defineStore('wishlist', () => {
     return wishlist.value.some(item => item.product_id === productId);
   };
 
+  // Force refresh wishlist data (useful for ensuring price consistency)
+  const refreshWishlist = async () => {
+    await fetchWishlist();
+  };
+
   // Computed properties
   const totalItems = computed(() => wishlist.value.length);
 
@@ -120,6 +129,7 @@ export const useWishlistStore = defineStore('wishlist', () => {
     toggleWishlist,
     clearWishlist,
     fetchWishlist,
+    refreshWishlist,
     isInWishlist
   };
 });

@@ -21,8 +21,8 @@
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         <div class="mb-2 d-flex align-items-center gap-2">
-          <!-- Use backend-calculated display prices -->
-          <template v-if="product.display_sale_price && product.display_sale_price < product.display_price">
+          <!-- Backend now provides display_price consistently -->
+          <template v-if="product.display_sale_price && Number(product.display_sale_price) < Number(product.display_price)">
             <span class="text-decoration-line-through text-muted">
               <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
@@ -116,14 +116,12 @@ import ProductQuickView from './ProductQuickView.vue';
 import { useCart } from '@/composables/useCart';
 import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
-import { useImageUrl } from '@/composables/useImageUrl.js'
 import { useProducts } from '@/composables/useProducts';
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
 const wishlistStore = useWishlist();
 const userStore = useUserStore();
-const { getImageUrl } = useImageUrl();
 const { fetchProduct, product: fetchedProduct } = useProducts();
 
 const showNotification = ref(false);

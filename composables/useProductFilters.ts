@@ -22,7 +22,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
   // Price ranges configuration
   const priceRanges: PriceRange[] = [
     { label: "On Sale", min: null, max: null, onSale: true },
-    { label: "₹0 - ₹500", min: 0, max: 500, onSale: false },
+    { label: "0 - ₹500", min: 0, max: 500, onSale: false },
     { label: "₹500 - ₹1000", min: 500, max: 1000, onSale: false },
     { label: "₹1000 - ₹2000", min: 1000, max: 2000, onSale: false },
     { label: "₹2000 - ₹10000", min: 2000, max: 10000, onSale: false },
@@ -124,7 +124,7 @@ const priceMax = ref<number | null>(route.query.priceMax ? Number(route.query.pr
     }
   );
 
-  const toggleSort = (type: 'price' | 'rating') => {
+  const toggleSort = (type: 'display_price' | 'rating') => {
     sort.value = sort.value === `${type}_asc` ? `${type}_desc` : `${type}_asc`;
     page.value = 1;
   };

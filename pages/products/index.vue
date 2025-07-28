@@ -115,11 +115,11 @@
               <div class="sort-buttons">
                 <button
                   class="sort-btn"
-                  :class="{ active: sort.includes('price') }"
-                  @click="toggleSort('price')"
+                  :class="{ active: sort.includes('display_price') }"
+                  @click="toggleSort('display_price')"
                 >
                   <LucideIcon icon="mdi:currency-inr" class="me-1" />
-                  Price {{ sortArrow("price") }}
+                  Price {{ sortArrow("display_price") }}
                 </button>
                 <button
                   class="sort-btn"
