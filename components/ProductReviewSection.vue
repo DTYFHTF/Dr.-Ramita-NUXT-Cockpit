@@ -170,6 +170,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useUserStore } from '@/stores/user';
 import ProductStarIcon from "@/components/ProductStarIcon.vue";
 import LucideIcon from "@/components/LucideIcon.vue";
 import type { Product, User, Review } from "@/types";
@@ -207,10 +208,17 @@ function startEditReply(review: Review) {
 const config = useRuntimeConfig();
 const API_BASE_URL = config.public.apiBase;
 
+const userStore = useUserStore();
+
+function getAuthToken() {
+  // Prefer Pinia store, fallback to localStorage for backward compatibility
+  return userStore.token ?? localStorage.getItem("auth_token");
+}
+
 async function submitReview() {
   if (!props.user || !props.product) return;
   const productSlug = props.product.slug;
-  const token = localStorage.getItem("auth_token");
+  const token = getAuthToken();
   try {
     if (!editingReview.value) {
       await $fetch(`${API_BASE_URL}/products/${productSlug}/reviews`, {
@@ -246,7 +254,7 @@ async function submitReview() {
 async function deleteReview(review: Review) {
   if (!props.user || !props.product) return;
   const productSlug = props.product.slug;
-  const token = localStorage.getItem("auth_token");
+  const token = getAuthToken();
   try {
     await $fetch(
       `${API_BASE_URL}/products/${productSlug}/reviews/${review.id}`,
@@ -264,7 +272,7 @@ async function deleteReview(review: Review) {
 async function submitReply(review: Review) {
   if (!props.user || !props.product) return;
   const productSlug = props.product.slug;
-  const token = localStorage.getItem("auth_token");
+  const token = getAuthToken();
   try {
     await $fetch(
       `${API_BASE_URL}/products/${productSlug}/reviews/${review.id}/reply`,
@@ -285,7 +293,7 @@ async function submitReply(review: Review) {
 async function deleteReply(review: Review) {
   if (!props.user || !props.product) return;
   const productSlug = props.product.slug;
-  const token = localStorage.getItem("auth_token");
+  const token = getAuthToken();
   try {
     await $fetch(
       `${API_BASE_URL}/products/${productSlug}/reviews/${review.id}/reply`,
