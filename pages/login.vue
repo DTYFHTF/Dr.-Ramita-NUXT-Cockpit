@@ -2,6 +2,13 @@
   <div class="login-page d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
     <div class="w-100" style="max-width: 420px;">
       <h2 class="mb-3 text-center fw-bold">Sign in to your account</h2>
+      
+      <!-- Success message for successful registration -->
+      <div v-if="showSuccessMessage" class="alert alert-success mb-3 text-center">
+        Registration successful! You can now login.<br>
+        <small class="text-muted">If your account requires email verification, please check your email and verify before logging in.</small>
+      </div>
+      
       <AuthForm
         :submit-label="'Login'"
         :error="error"
@@ -23,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, nextTick, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import AuthForm from '@/components/AuthForm.vue'
 import { loginWithGoogle } from '@/composables/useApi'
@@ -32,7 +39,12 @@ import { loginWithGoogle } from '@/composables/useApi'
 const error = ref('')
 const loading = ref(false)
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+
+// Check if we came from registration success
+const showSuccessMessage = computed(() => route.query.success === 'registration')
+
 console.log('[LOGIN] userStore before login:', JSON.stringify(userStore.user), userStore.token)
 
 const API_BASE = useRuntimeConfig().public.apiBase
