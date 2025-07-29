@@ -25,7 +25,7 @@
       <!-- Price Ranges -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Price:</label>
-        <ul class="list-unstyled">
+        <ul v-if="priceRanges && priceRanges.length" class="list-unstyled">
           <li v-for="range in priceRanges" :key="range.label">
             <a
               href="#"
@@ -37,12 +37,13 @@
             </a>
           </li>
         </ul>
+        <div v-else class="text-muted small ps-1">Loading price ranges...</div>
       </div>
-<hr>
+      <hr>
       <!-- Categories -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Category:</label>
-        <ul class="list-unstyled">
+        <ul v-if="visibleCategories && visibleCategories.length" class="list-unstyled">
           <li v-for="cat in visibleCategories" :key="cat.id">
             <a
               href="#"
@@ -55,17 +56,18 @@
             </a>
           </li>
         </ul>
+        <div v-else class="text-muted small ps-1">Loading categories...</div>
         <div class="pb-2">
-        <button
-          v-if="showMoreButton"
-          @click="$emit('toggle-show-more')"
-          class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
-        >
-          {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
-        </button>
+          <button
+            v-if="showMoreButton"
+            @click="$emit('toggle-show-more')"
+            class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
+          >
+            {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
+          </button>
         </div>
       </div>
-<hr>
+      <hr>
       <!-- Stock Status -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Stock Status:</label>
