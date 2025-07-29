@@ -15,7 +15,7 @@
             class="product-card"
           >
             <img
-              :src="imageUrl(product.image)"
+              :src="firstAvailableImage(product)"
               :alt="product.name"
               class="product-image"
             />
@@ -48,8 +48,10 @@ import { ref, onMounted, watch } from 'vue';
 import { useProducts } from '@/composables/useProducts';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { NuxtLink } from '#components';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const { categories, fetchCategories, fetchProducts, products } = useProducts();
+const { getImageUrl } = useImageUrl();
 
 const activeProducts = ref([]);
 const activeCategory = ref(null);
@@ -80,10 +82,9 @@ function filterByCategory(categoryId) {
 }
 
 // Helper for image fallback
-function imageUrl(img) {
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+function firstAvailableImage(product) {
+  const imgs = [product.image, product.image_2, product.image_3].filter(Boolean);
+  return getImageUrl(imgs[0]);
 }
 </script>
 
@@ -96,9 +97,9 @@ function imageUrl(img) {
   width: 1000px !important;
   max-width: 1000px !important;
   min-width: 900px;
-  background: white;
+  background: var(--background-white);
   border-radius: 8px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 24px rgba(var(--shadow-rgb), 0.1);
   max-height: 400px;
   display: flex;
   overflow: hidden;
@@ -114,9 +115,9 @@ function imageUrl(img) {
 }
 
 .category-list {
-  width: 170px;
-  background: #f8f9fa;
-  border-right: 1px solid #e9ecef;
+  width: 200px;
+  background: var(--background-white);
+  border-right: 1px solid var(--border-color);
   overflow-y: auto;
   max-height: 368px; /* Adjust as needed to fit inside the menu */
   padding: 12px 0;
@@ -135,15 +136,20 @@ function imageUrl(img) {
   align-items: center;
   font-size: 0.9rem;
   transition: all 0.2s ease;
+  color: var(--text-primary);
+  border-radius: 6px;
+  margin: 2px 8px;
 }
 
 .category-list li:hover {
-  background: #e9ecef;
+  background: var(--background-light);
+  color: var(--text-primary);
 }
 
 .category-list li.active-category {
-  background: white;
+  background: var(--background-light);
   font-weight: 500;
+  color: var(--text-primary);
 }
 
 .category-name {
@@ -167,12 +173,13 @@ function imageUrl(img) {
 
 .product-card {
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
   transition: transform 0.2s ease;
 }
 
 .product-card:hover {
   transform: translateY(-2px);
+  color: var(--text-primary);
 }
 
 .product-image {
@@ -192,6 +199,7 @@ function imageUrl(img) {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  color: var(--text-primary);
 }
 
 .empty-state {
@@ -199,7 +207,7 @@ function imageUrl(img) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 </style>

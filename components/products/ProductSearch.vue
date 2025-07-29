@@ -2,7 +2,7 @@
   <div class="product-search position-relative">
     <input
       type="text"
-      class="form-control"
+      class="search-input"
       :value="query"
       @input="onInput"
       placeholder="Search products"
@@ -10,11 +10,11 @@
       @blur="onBlur"
       aria-label="Search products"
     />
-    <ul v-if="showSuggestions && suggestions.length" class="list-group suggestions-list position-absolute w-100 shadow-sm">
+    <ul v-if="showSuggestions && suggestions.length" class="suggestions-list">
       <li
         v-for="suggestion in suggestions"
         :key="suggestion.id"
-        class="list-group-item list-group-item-action"
+        class="suggestion-item"
         @mousedown="selectSuggestion(suggestion)" 
       >
         {{ suggestion.name }}
@@ -80,16 +80,44 @@ const onBlur = () => {
 
 <style scoped>
 .product-search {
-  z-index: 1050;
+  position: relative;
+  z-index: 1;
 }
+
+/* Removed duplicate .search-input styles - using global CSS from main.scss */
+
 .suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-white);
+  border: 2px solid var(--color-muted);
   border-top: none;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 0 0 12px 12px;
   max-height: 300px;
   overflow-y: auto;
+  box-shadow: var(--card-shadow);
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-.list-group-item-action {
+
+.suggestion-item {
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
   cursor: pointer;
+  border-bottom: 1px solid var(--background-light);
+  transition: all 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background: var(--background-light);
+  color: var(--color-success);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
 }
 </style>

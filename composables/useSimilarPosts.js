@@ -1,42 +1,44 @@
 // composables/useSimilarPosts.js
+import { useApiLaravel } from './useApi.js'
 import { ref, watchEffect } from 'vue'
 
-export default function useSimilarPosts(apiUrl, options = {}) {
+export default function useSimilarPosts(apiEndpoint, options = {}) {
   const {
     count = 4,
     fallbackImage = '/fallback.jpg',
-    basePath = '/yoganmeditation',
-    imageField = 'coverImage' // Configurable image field
+    basePath = '/homeremedy',
+    imageField = 'image', // Laravel API uses 'image'
+    excludeId = null // Optionally exclude a post by id
   } = options;
 
   const posts = ref([]);
   const error = ref(null);
   const loading = ref(false);
 
-  const { data, error: fetchError, loading: fetchLoading } = useApi(apiUrl);
+  const { data, error: fetchError, loading: fetchLoading } = useApiLaravel(apiEndpoint);
 
   watchEffect(() => {
     loading.value = fetchLoading.value;
     error.value = fetchError.value;
 
-    if (data.value) {
+    if (data.value && data.value.data) {
       try {
-        const processedPosts = data.value.map(post => {
-          const image = post[imageField] || post.image;
-          const coverImageUrl = image && image._id
-            ? `http://localhost:9000/assets/link/${image._id}`
+        let processedPosts = data.value.data.map(post => {
+          const config = useRuntimeConfig();
+          const image = post[imageField];
+          const imageUrl = image
+            ? (image.startsWith('http') ? image : `${config.public.baseUrl}/storage/${image}`)
             : fallbackImage;
           return {
             ...post,
-            coverImageUrl,
+            imageUrl,
             link: `${basePath}/${post.slug}`
           };
         });
-
-        // Shuffle and slice posts
-        posts.value = processedPosts
-          .sort(() => 0.5 - Math.random())
-          .slice(0, count);
+        if (excludeId) {
+          processedPosts = processedPosts.filter(post => post.id !== excludeId);
+        }
+        posts.value = processedPosts.slice(0, count);
       } catch (e) {
         error.value = e;
       }

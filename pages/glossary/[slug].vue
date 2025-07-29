@@ -82,15 +82,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGlossaryStore } from '@/stores/glossary';
 import DynamicContent from '@/components/DynamicContent.vue';
-
-interface GlossaryTerm {
-  title: string;
-  slug: string;
-  excerpt?: string;
-  description?: string;
-  details?: { title: string; description: string }[];
-  relatedTerms?: string[];
-}
+import type { GlossaryTerm } from '@/types';
 
 const route = useRoute();
 const glossaryStore = useGlossaryStore();
@@ -139,11 +131,11 @@ onMounted(async () => {
 .breadcrumbs {
   margin-bottom: 2rem;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .breadcrumbs a {
-  color: #007bff;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -156,7 +148,7 @@ onMounted(async () => {
   gap: 5rem; /* Increased gap between main content and sidebar */
   align-items: flex-start;
 }
-c
+
 .main-content {
   flex: 3;
 }
@@ -167,11 +159,12 @@ c
 
 .sidebar {
   flex: 1;
-  background-color: #f9f9f9;
+  background-color: var(--card-background);
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   align-self: flex-start; /* Ensures the sidebar height matches content */
+  width: 250px; /* Fixed width for sidebar */
 }
 
 .sidebar h2 {
@@ -191,7 +184,7 @@ c
 
 .divider {
   border: none;
-  border-top: 2px solid #0a0a0a;
+  border-top: 2px solid var(--border-color);
   margin: 1rem 0;
 }
 </style>

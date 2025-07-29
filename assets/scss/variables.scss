@@ -1,22 +1,85 @@
 
 @use "sass:color";
 
-// colors
-$text-deep-green: #2a4d3a;
-$text-medium-gray: #6c757d;
+//Colors
+$color-primary: #2a4d3a;
+$color-secondary: #6b9c7d;
 $accent-soft-green: #87c5a4;
+$background-light: #d6e1d8;
+;
+$background-white:#ffffff;
+//Text
+$text-primary: #101e16;
+$text-secondary: #555555;
+$text-light: #f2f7f4;
+$text-error:#721c24;
+
+//Borders
 $border-color: #e9ecef;
+
+//Buttons
 $text-button: #ffffff;
 $text-button-hover-bg: #f4f9f6;
 $button-bg: #2D7B7B;
-$button-success-bg: #2D7B7B; // Using the same teal color for success buttons
-$bg-soft-green: color.adjust($accent-soft-green, $lightness: 45%);
+$button-success-bg: #2D7B7B;
+
+$badge-color:#fff5e6;
+$badge-free-color:#90ee90;
 
 // shadows
 $card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
 
-// Button Mixins - Global button styling
+//Fonts
+$font-primary: 'Cormorant Garamond', serif;
+$font-secondary: 'sans-serif';
+
+// ====================================
+// FORM INPUT MIXINS - For consistent form styling
+// ====================================
+
+@mixin form-input-base {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid $border-color;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: $background-white;
+  color: $text-primary;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &::placeholder {
+    color: $text-secondary;
+    opacity: 0.7;
+  }
+  
+  &:disabled {
+    background: $background-light;
+    color: $text-secondary;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@mixin form-label-base {
+  font-weight: 600;
+  color: $text-primary;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+// ====================================
+// BUTTON MIXINS - Global button styling
+// ====================================
+
 @mixin button-base {
   position: relative;
   display: flex;
@@ -62,7 +125,7 @@ $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-100%);
+    transform: translateX(-5%);
     transition: transform 0.5s ease;
     z-index: -1;
     border-radius: inherit;
@@ -98,12 +161,12 @@ $btn-hover-shadow: 0 4px 15px rgba($accent-soft-green, 0.3);
 @mixin outline-button {
   @include button-base;
   background-color: transparent;
-  color: $text-deep-green;
-  border: 1px solid $text-deep-green;
+  color: $color-primary;
+  border: 1px solid $color-primary;
   
   &:hover {
     background-color: $text-button-hover-bg;
-    color: color.adjust($text-deep-green, $lightness: -10%);
+    color: color.adjust($color-primary, $lightness: -10%);
   }
 }
 

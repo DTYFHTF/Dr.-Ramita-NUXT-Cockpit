@@ -1,8 +1,10 @@
 import { ref } from "vue";
 
-const API_BASE = "http://ayurveda-marketplace.test";
-
 export function useProducts() {
+  // useRuntimeConfig must be called inside this function
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
   const products = ref<any[]>([]);
   const product = ref<any>(null);
   const loading = ref(false);
@@ -19,7 +21,8 @@ export function useProducts() {
     priceMax: number | null = null,
     inStock = true,
     onSale = false,
-    searchQuery?: string // <-- add searchQuery param
+    searchQuery?: string, // <-- add searchQuery param
+    rating?: number // <-- add rating param
   ) {
     loading.value = true;
     error.value = "";
@@ -28,14 +31,14 @@ export function useProducts() {
       params.append("page", String(page));
       params.append("per_page", String(perPage));
       if (sort) {
-        if (sort === "price_asc") params.append("sort_by", "price");
-        if (sort === "price_desc") {
-          params.append("sort_by", "price");
+        if (sort === "display_price_asc") params.append("sort_by", "display_price");
+        if (sort === "display_price_desc") {
+          params.append("sort_by", "display_price");
           params.append("sort_order", "desc");
         }
-        if (sort === "rating_asc") params.append("sort_by", "rating");
+        if (sort === "rating_asc") params.append("sort_by", "average_rating");
         if (sort === "rating_desc") {
-          params.append("sort_by", "rating");
+          params.append("sort_by", "average_rating");
           params.append("sort_order", "desc");
         }
       }
@@ -46,9 +49,10 @@ export function useProducts() {
       params.append("in_stock", String(inStock));
       if (onSale) params.append("on_sale", "true");
       if (searchQuery) params.append("search", searchQuery); // <-- add search param
+      if (rating !== undefined && rating !== null) params.append("rating", String(rating));
 
       const response = (await $fetch(
-        `${API_BASE}/api/products?${params.toString()}`,
+        `${API_BASE}/products?${params.toString()}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -65,23 +69,25 @@ export function useProducts() {
 
   async function fetchCategories() {
     try {
-      const response = (await $fetch(`${API_BASE}/api/categories`, {
+      const response = (await $fetch(`${API_BASE}/categories`, {
         headers: { Accept: "application/json" },
       })) as any;
       categories.value = Array.isArray(response) ? response : response.data;
     } catch (e: any) {
       categories.value = [];
     }
-  }
+  } 
 
   async function fetchProduct(slug: string) {
     loading.value = true;
     error.value = "";
     product.value = null;
     try {
-      product.value = await $fetch(`${API_BASE}/api/products/${slug}`, {
+      const response = await $fetch(`${API_BASE}/products/${slug}`, {
         headers: { Accept: "application/json" },
-      });
+      }) as any;
+      // If the API response is wrapped in { data: ... }, unwrap it
+      product.value = response.data ? response.data : response;
     } catch (e: any) {
       if (e?.status === 404) {
         error.value = "Product not found.";

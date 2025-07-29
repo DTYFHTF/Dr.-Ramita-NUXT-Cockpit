@@ -1,7 +1,7 @@
 <template>
   <section class="booking-wizard" id="book-consultation">
     <div class="wizard-container">
-      <h1 class="wizard-title">Book Your Consultation</h1>
+      <h1 class="text-center mb-4">Book Your Consultation</h1>
       
       <div class="progress-indicator">
         <div 
@@ -32,6 +32,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useBookingStore } from '~/stores/booking'
+import DoctorSelectionStep from './DoctorSelectionStep.vue'
 import DateStep from './DateStep.vue'
 import TimeStep from './TimeStep.vue'
 import DetailsStep from './DetailsStep.vue'
@@ -41,47 +42,52 @@ import SuccessStep from './SuccessStep.vue'
 const store = useBookingStore()
 
 const steps = [
-  { number: 1, label: 'Select Date' },
-  { number: 2, label: 'Choose Time' },
-  { number: 3, label: 'Your Details' },
-  { number: 4, label: 'Confirmation' }
+  { number: 1, label: 'Choose Doctor' },
+  { number: 2, label: 'Select Date' },
+  { number: 3, label: 'Choose Time' },
+  { number: 4, label: 'Your Details' },
+  { number: 5, label: 'Confirmation' }
 ]
 
-const stepComponents = [DateStep, TimeStep, DetailsStep, SummaryStep, SuccessStep]
+const stepComponents = [DoctorSelectionStep, DateStep, TimeStep, DetailsStep, SummaryStep, SuccessStep]
 
 const currentStepComponent = computed(() => {
   return stepComponents[store.currentStep - 1] || DateStep
 })
 </script>
 
-<style>
+<style scoped lang="scss">
 .booking-wizard {
   padding: 2rem 1rem;
-  background-color: #f7fafc;
+  background: var(--background-light);
+  color: var(--text-primary);
 }
 
 .wizard-container {
   max-width: 800px;
   margin: 0 auto;
-}
-
-.wizard-title {
-  text-align: center;
-  font-size: 1.875rem;
-  color: #2d3748;
-  margin-bottom: 2rem;
+  
+  h1 {
+    color: var(--text-primary);
+  }
 }
 
 .progress-indicator {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
+  padding: 0 1rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .step-indicator {
   text-align: center;
   position: relative;
+  flex: 1;
+  min-width: 120px;
+  max-width: 140px;
 }
 
 .step-indicator:not(:last-child)::after {
@@ -91,7 +97,7 @@ const currentStepComponent = computed(() => {
   left: 50%;
   right: -50%;
   height: 2px;
-  background-color: #e2e8f0;
+  background: var(--border-color);
   z-index: 0;
 }
 
@@ -99,37 +105,40 @@ const currentStepComponent = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e2e8f0;
+  background: var(--background-white);
+  border: 2px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 0.5rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   position: relative;
   z-index: 1;
 }
 
 .step-indicator.active .step-number {
-  background-color: #2c7a7b;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--text-white, #fff);
+  border-color: var(--color-primary);
 }
 
 .step-indicator.completed .step-number {
-  background-color: #48bb78;
-  color: white;
+  background-color: var(--color-secondary);
+  color: var(--text-white, #fff);
+  border-color: var(--color-secondary);
 }
 
 .step-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .step-content {
-  background: white;
+  background: var(--background-white);
   border-radius: 0.5rem;
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   min-height: 400px;
 }
 
@@ -140,10 +149,6 @@ const currentStepComponent = computed(() => {
   
   .step-indicator:not(:last-child)::after {
     display: none;
-  }
-  
-  .wizard-title {
-    font-size: 1.5rem;
   }
 }
 </style>

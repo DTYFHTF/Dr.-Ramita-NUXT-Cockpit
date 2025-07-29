@@ -2,17 +2,18 @@
   <div class="card h-100 product-card border shadow-sm">
     <NuxtLink
       :to="`/products/${product.slug}`"
-      class="text-decoration-none text-dark d-flex flex-column h-100"
+      class="text-decoration-none product-link d-flex flex-column h-100"
     >
       <div class="image-container">
         <img
-          :src="imageUrl(product.image)"
+          v-if="images[0]"
+          :src="images[0]"
           :alt="product.name"
           class="card-img-top main-image"
         />
         <img
-          v-if="product.image_2"
-          :src="imageUrl(product.image_2)"
+          v-if="images[1]"
+          :src="images[1]"
           :alt="`${product.name} - alternate view`"
           class="card-img-top hover-image"
         />
@@ -20,27 +21,24 @@
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         <div class="mb-2 d-flex align-items-center gap-2">
-          <template v-if="product.variations && product.variations.length">
-            <span v-if="minVariationPrice !== maxVariationPrice">
-              From ${{ minVariationPrice }}
+          <!-- Backend now provides display_price consistently -->
+          <template v-if="product.display_sale_price && Number(product.display_sale_price) < Number(product.display_price)">
+            <span class="text-decoration-line-through text-muted">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
-            <span v-else>
-              ${{ minVariationPrice }}
+            <span class="ms-1 price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_sale_price }}
             </span>
           </template>
           <template v-else>
-            <span v-if="product.sale_price && product.sale_price < product.price">
-              <span class="text-decoration-line-through text-muted">
-                ${{ product.price }}
-              </span>
-              <span class="ms-1 text-danger fw-bold">
-                ${{ product.sale_price }}
-              </span>
-            </span>
-            <span v-else class="product-price fw-bold text-success">
-              ${{ product.price }}
+            <span class="price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
           </template>
+          <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
+            <LucideIcon icon="mdi:star" color="var(--color-warning)" size="18" class="me-1" />
+            <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
+          </span>
         </div>
         <span
           class="badge mb-2"
@@ -61,29 +59,54 @@
         </p>
       </div>
     </NuxtLink>
-    <div class="d-flex justify-content-between align-items-center w-100 px-3 pb-3">
-      <button class="btn btn-outline-secondary wishlist-btn" title="Add to Wishlist">
-        <LucideIcon icon="mdi:heart-outline" color="black" />
-      </button>
-      <button
-        class="btn btn-smooth-success add-to-cart-btn"
-        :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
-        @click.stop="handleAddToCart(product)"
+    <div class="d-flex align-items-center w-100 px-3 pb-3" :class="{ 'justify-content-center': hideActions, 'justify-content-between': !hideActions }">
+      <button 
+        @click="handleWishlistToggle" 
+        :class="[
+          'btn wishlist-btn', 
+          isInWishlist ? 'btn-danger' : 'btn-outline-secondary'
+        ]" 
+        :title="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
       >
-        <span class="add-to-cart-text">Add to Cart</span>
-        <LucideIcon
-          icon="mdi:cart"
-          color="white"
-          class="add-to-cart-icon"
+        <LucideIcon 
+          :icon="isInWishlist ? 'mdi:heart' : 'mdi:heart-outline'" 
+          :color="isInWishlist ? 'var(--color-error)' : 'var(--text-primary)'" 
         />
       </button>
-      <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView">
-        <LucideIcon icon="mdi:eye-outline" color="black" />
-      </button>
+      <template v-if="!hideActions">
+        <button
+          class="btn btn-smooth-success add-to-cart-btn"
+          :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+          @click.stop="handleAddToCart(product)"
+        >
+          <span class="add-to-cart-text">Add to Cart</span>
+          <LucideIcon
+            icon="mdi:cart"
+            color="white"
+            class="add-to-cart-icon"
+          />
+        </button>
+        <button class="btn btn-outline-secondary quick-view-btn" title="Product Quick View" @click.stop="openQuickView" :disabled="isLoadingProduct">
+          <LucideIcon v-if="!isLoadingProduct" icon="mdi:eye-outline" :color="'var(--text-primary)'" />
+          <div v-else class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </button>
+      </template>
     </div>
-    <ProductQuickView v-if="showQuickView" :product="product" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
+    <ProductQuickView v-if="showQuickView && fullProduct" :product="fullProduct" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
-  <div v-if="showNotification" class="toast-message">Product added to cart!</div>
+  <div v-if="showNotification" class="toast-message">
+    Product added to cart!
+    <NuxtLink to="/CartPage" class="ms-2 text-white text-decoration-underline d-inline-flex align-items-center">
+      <LucideIcon icon="mdi:cart" class="me-1" size="16" />
+      View Cart
+    </NuxtLink>
+  </div>
+  <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
+    Product added to wishlist! 
+    <NuxtLink to="/wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -91,16 +114,49 @@ import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
 import { useCart } from '@/composables/useCart';
+import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
+import { useProducts } from '@/composables/useProducts';
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
+const wishlistStore = useWishlist();
 const userStore = useUserStore();
+const { fetchProduct, product: fetchedProduct } = useProducts();
 
 const showNotification = ref(false);
+const showWishlistNotification = ref(false);
 const showQuickView = ref(false);
+const fullProduct = ref<Product | null>(null);
+const isLoadingProduct = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
+const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id));
+
+const handleWishlistToggle = async () => {
+  if (!userStore.hydrated) {
+    alert('Please wait, authentication state is loading.');
+    return;
+  }
+  if (!isAuthenticated.value) {
+    alert('You need to be logged in to manage your wishlist.');
+    return;
+  }
+  try {
+    const wasInWishlist = isInWishlist.value;
+    await wishlistStore.toggleWishlist(props.product);
+    
+    // Show notification only when adding to wishlist
+    if (!wasInWishlist) {
+      showWishlistNotification.value = true;
+      setTimeout(() => {
+        showWishlistNotification.value = false;
+      }, 3000);
+    }
+  } catch (err: any) {
+    alert('Error updating wishlist: ' + (err?.message || err));
+  }
+};
 
 const handleAddToCart = async (product: Product) => {
   if (!userStore.hydrated) {
@@ -112,25 +168,43 @@ const handleAddToCart = async (product: Product) => {
     return;
   }
   try {
-    // If product has variations, open quick view for selection
-    if (product.variations && product.variations.length) {
+    // If product has variations, always open quick view for selection
+    if (product.variations && product.variations.length > 0) {
       openQuickView();
       return;
     }
+    
+    // For products without variations, add directly to cart
     await addToCart(product);
     showNotification.value = true;
     setTimeout(() => {
       showNotification.value = false;
     }, 2000); // Hide notification after 2 seconds
   } catch (err: any) {
-    alert('Error adding to cart: ' + (err?.message || err));
+    console.error('Add to cart error:', err);
+    
+    // Better error handling for 422 validation errors
+    if (err?.status === 422) {
+      if (err?.data?.error?.includes('variation')) {
+        // If it's a variation error, open quick view
+        openQuickView();
+        return;
+      }
+      alert('Validation error: ' + (err?.data?.error || err?.data?.message || 'Invalid product data'));
+    } else {
+      alert('Error adding to cart: ' + (err?.data?.message || err?.message || 'Unknown error'));
+    }
   }
 };
 
 // Listen for an event from ProductQuickView when a variation is selected and added
-function onQuickViewAddToCart(variationProduct: Product & { quantity?: number }) {
-  // Pass the correct quantity from the quick view
-  addToCart(variationProduct, variationProduct.quantity ?? 1);
+function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_id?: number }) {
+  // Only add variation_id if it exists in the payload
+  const productToAdd: Product & { variation_id?: number } = { ...props.product };
+  if (payload.variation_id !== undefined) {
+    productToAdd.variation_id = payload.variation_id;
+  }
+  addToCart(productToAdd, payload.quantity ?? 1);
   showNotification.value = true;
   setTimeout(() => {
     showNotification.value = false;
@@ -138,45 +212,76 @@ function onQuickViewAddToCart(variationProduct: Product & { quantity?: number })
   closeQuickView();
 }
 
-const openQuickView = () => {
-  showQuickView.value = true;
+const openQuickView = async () => {
+  // If product already has variations, just show it
+  if (props.product.variations && props.product.variations.length > 0) {
+    fullProduct.value = props.product;
+    showQuickView.value = true;
+    return;
+  }
+  
+  // Otherwise, fetch the full product with variations
+  try {
+    isLoadingProduct.value = true;
+    await fetchProduct(props.product.slug);
+    
+    // Use the fetched product if available, otherwise fallback to current product
+    fullProduct.value = fetchedProduct.value || props.product;
+    showQuickView.value = true;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    // Fallback to original product if fetch fails
+    fullProduct.value = props.product;
+    showQuickView.value = true;
+  } finally {
+    isLoadingProduct.value = false;
+  }
 };
 const closeQuickView = () => {
   showQuickView.value = false;
+  fullProduct.value = null;
 };
 
-const props = defineProps<{ product: Product }>();
+const props = defineProps<{ 
+  product: Product;
+  hideActions?: boolean; // New prop to hide add to cart and quick view buttons
+}>();
 
-const minVariationPrice = computed(() => {
-  if (props.product.variations && props.product.variations.length) {
-    return Math.min(...props.product.variations.map(v => v.sale_price ?? v.price));
-  }
-  return props.product.sale_price ?? props.product.price;
-});
-const maxVariationPrice = computed(() => {
-  if (props.product.variations && props.product.variations.length) {
-    return Math.max(...props.product.variations.map(v => v.sale_price ?? v.price));
-  }
-  return props.product.sale_price ?? props.product.price;
+const images = computed(() => {
+  // Only use image and image_2 for the product card
+  const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
+  return Array.from(new Set(imgs));
 });
 
 // Helper for image fallback
 function imageUrl(img: string) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
+
 
 </script>
 
 <style scoped lang="scss">
 .product-card {
   transition: box-shadow 0.18s, transform 0.18s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(var(--shadow-light-rgb), 0.1);
   border-radius: 8px;
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+}
+
+.product-link {
+  color: var(--text-primary) !important;
+  
+  &:hover {
+    color: var(--text-primary) !important;
+  }
 }
 .product-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(var(--shadow-medium-rgb), 0.15);
   transform: translateY(-4px) scale(1.02);
 }
 .image-container {
@@ -193,6 +298,7 @@ function imageUrl(img: string) {
   position: absolute;
   top: 0;
   left: 0;
+  opacity: 0;
 }
 .main-image {
   opacity: 1;
@@ -200,7 +306,6 @@ function imageUrl(img: string) {
   transform: scale(1);
 }
 .hover-image {
-  opacity: 0;
   z-index: 2;
   transform: scale(1.1);
 }
@@ -220,12 +325,18 @@ function imageUrl(img: string) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  background-color: var(--background-white);
+  border-color: var(--border-color);
 }
+
 .wishlist-btn:hover,
-.quick-view-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+.quick-view-btn:hover,
+.wishlist-btn:active,
+.quick-view-btn:active {
+  background-color: var(--background-light);
 }
+
 .add-to-cart-btn {
   position: relative;
   overflow: hidden;
@@ -260,17 +371,50 @@ function imageUrl(img: string) {
   text-overflow: ellipsis;
   white-space: normal;
 }
+.price{
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.wishlist-toast {
+  background-color: var(--color-success) !important;
+  bottom: 80px !important; // Position above cart notification if both show
+}
+
+.wishlist-toast a {
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+.wishlist-toast a:hover {
+  opacity: 0.8;
+}
+
+.wishlist-only {
+  justify-content: center !important;
+}
+
+// Toast notifications with dark mode support
 .toast-message {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: $accent-soft-green;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  animation: fadeInOut 2s ease-in-out;
+  background-color: var(--color-success);
+  color: var(--text-white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 1050;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  
+  a {
+    color: var(--text-white) !important;
+    text-decoration: underline !important;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 

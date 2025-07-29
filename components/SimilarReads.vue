@@ -4,12 +4,12 @@
     <ul class="list-unstyled">
       <li 
         v-for="post in posts" 
-        :key="post._id" 
+        :key="post.id || post._id" 
         class="similar-read-item mb-4"
       >
         <a :href="`${basePath}/${post.slug}`" class="d-flex align-items-start text-decoration-none">
           <img
-            :src="post.coverImageUrl || fallbackImage"
+            :src="post.imageUrl || post.image || fallbackImage"
             :alt="post.title || 'Untitled Post'"
             class="img-thumbnail me-3"
             style="width: 80px; height: 80px; object-fit: cover;"
@@ -42,12 +42,6 @@ export default {
       type: String,
       default: "/placeholder.jpg"
     }
-  },
-  mounted() {
-    console.log('Posts in SimilarReads:', this.posts); // Log posts array for debugging
-    this.posts.forEach(post => {
-      console.log('Post coverImageUrl:', post.coverImageUrl); // Log each post's coverImageUrl
-    });
   }
 }
 </script>

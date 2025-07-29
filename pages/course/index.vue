@@ -16,34 +16,26 @@
 </template>
 
 <script setup>
-import { useApi } from '@/composables/useApi';
 import CourseCard from "~/components/CourseCard.vue";
-import { computed } from 'vue';
+import { computed, watch, ref } from 'vue';
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
-// Destructure loading and error from useApi
-const { data: rawCourses, error, loading } = useApi("items/courses");
+const { data: coursesData, error, loading } = useApiLaravel('courses');
+const courses = ref([]);
+const { getImageUrl } = useImageUrl();
 
-// Enhanced computed property with error handling
-const coursesWithImages = computed(() => {
-  try {
-    return rawCourses.value?.map(course => {
-      if (!course) return null;
-      
-      return {
-        ...course,
-        image: course.image?._id 
-          ? `http://localhost:9000/assets/link/${course.image._id}`
-          : "/placeholder-course.jpg",
-        price: course.price ? `${course.price}` : 'Free'
-      };
-    }).filter(course => course !== null) || [];
-  } catch (e) {
-    console.error("Error processing course data:", e);
-    return [];
-  }
+const addImageUrl = (item, fallback = '/placeholder-course.jpg') => ({
+  ...item,
+  image: getImageUrl(item.image, fallback),
 });
 
-// Optional debugging
-watchEffect(() => {
-});
+watch(coursesData, (val) => {
+  if (!val || !val.data) return;
+  courses.value = val.data.map(course => addImageUrl(course));
+}, { immediate: true });
+
+const coursesWithImages = computed(() => courses.value);
+const coursesLoading = loading;
+const coursesError = error;
 </script>

@@ -1,11 +1,11 @@
 <template>
   <Card
     :title="title"
-    :description="shortDescription"
+    :description="short_description"
     :image="image || '/placeholder-yoga.jpg'"
     :imageAlt="title"
-    :badge="tags || 'Uncategorized'"
-    :link="`/yoganmeditation/${slug}`"
+    :badge="tags[0] || 'Uncategorized'"
+    :link="`blog/yoganmeditation/${slug}`"
     customClass="yoga-card"
   >
     <template #meta>
@@ -13,15 +13,11 @@
         <LucideIcon icon="mdi:clock-outline" class="icon" />
         <span>{{ duration || 'N/A' }}</span>
       </div>
-      <div class="meta-item">
-        <LucideIcon icon="mdi:tag-outline" class="me-2" />
-        <span>{{ tags || 'N/A' }}</span>
-      </div>
     </template>
     <template #button>
       <NuxtLink 
         v-if="slug"
-        :to="`/yoganmeditation/${slug}`"
+        :to="`blog/yoganmeditation/${slug}`"
         class="btn-smooth-success mt-auto w-100"
       >
         Being Practice
@@ -40,7 +36,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 
 defineProps({
   title: String,
-  shortDescription: String,
+  short_description: String,
   image: String,
   slug: String,
   tags: String,

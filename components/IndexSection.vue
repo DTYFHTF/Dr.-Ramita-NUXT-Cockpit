@@ -5,7 +5,7 @@
     :id="sectionId"
   >
     <div class="container">
-      <h2 class="font-serif text-xl font-bold">{{ title }}</h2>
+      <h1 class="text-center">{{ title }}</h1>
       <p v-if="subtitle" class="sub-heading">{{ subtitle }}</p>
 
       <!-- Loading State -->
@@ -26,10 +26,8 @@
       <!-- Empty State -->
       <div v-else-if="!items.length" class="text-center text-muted py-5">
         <p>{{ emptyText }}</p>
-      </div>
-
-      <!-- Content -->
-      <div v-else class="row">
+      </div>      <!-- Content -->
+      <div v-if="!loading && !error && items.length" class="row">
         <div
           v-for="(item, index) in items"
           :key="item._id || index"
@@ -131,30 +129,22 @@ export default {
 }
 
 section {
-  padding: 5rem 0; /* Increased padding for better spacing between content */
-  margin-bottom: 2rem; /* Added margin between sections */
-}
-
-h2.font-serif {
-  font-size: 2.5rem; /* Larger heading size */
-  margin-bottom: 1.5rem; /* More space below heading */
-  text-align: center;
+  padding: 5rem 0;
+  margin-bottom: 2rem; 
 }
 
 .sub-heading {
   font-size: 1.2rem;
-  color: var(--text-muted-teal-gray);
+  color: var(--text-secondary);
   margin-bottom: 3rem;
   text-align: center;
 }
 
 .bg-sandal-light {
-  background-color: var(--background-green);
   margin: 0px;
 }
 
 .bg-herbal-light {
-  background-color: var(--background-white);
   margin: 0px; 
 }
 
@@ -169,15 +159,15 @@ h2.font-serif {
 }
 
 .alert-danger {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
+  background-color: $background-light;
+  border-color: $border-color;
+  color: $text-error;
   padding: 1rem;
   border-radius: 0.25rem;
 }
 
 .text-muted {
-  color: #6c757d;
+  color: $text-secondary;
 }
 
 .visually-hidden {
@@ -191,4 +181,5 @@ h2.font-serif {
   white-space: nowrap;
   border: 0;
 }
+
 </style>

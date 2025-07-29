@@ -1,80 +1,32 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import type { Product } from '@/types';
+import type { Product, CartItem } from '@/types';
 import { useUserStore } from '@/stores/user';
 
-export type CartItem = {
-  id?: number;
-  product_id: number;
-  variation_id: number | null;
-  name: string;
-  variation_name: string | null;
-  price: number;
-  image: string;
-  stock: number;
-  quantity: number;
-};
-
-const API_BASE = 'http://ayurveda-marketplace.test';
 
 export const useCartStore = defineStore('cart', () => {
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
   const cart = ref<CartItem[]>([]);
   const userStore = useUserStore();
   const isInitialized = ref(false);
 
-  // Save/load cart from localStorage
-  const saveCart = () => {
-    if (!userStore.token && typeof window !== 'undefined') {
-      localStorage.setItem('cart', JSON.stringify(cart.value));
-    }
-  };
-
-  const loadCart = () => {
-    if (!userStore.token && typeof window !== 'undefined') {
-      const initialCart = localStorage.getItem('cart');
-      cart.value = initialCart ? JSON.parse(initialCart) : [];
-    }
-  };
-
-  // Merge carts
-  const mergeCarts = (local: CartItem[], server: CartItem[]): CartItem[] => {
-    const merged: Record<string, CartItem> = {};
-    server.forEach(item => {
-      const key = `${item.product_id}:${item.variation_id}`;
-      merged[key] = {
-        ...item,
-        quantity: Number(item.quantity),
-        price: Number(item.price),
-        stock: Number(item.stock)
-      };
-    });
-    local.forEach(item => {
-      const key = `${item.product_id}:${item.variation_id}`;
-      if (merged[key]) {
-        merged[key].quantity += Number(item.quantity);
-      } else {
-        merged[key] = {
-          ...item,
-          quantity: Number(item.quantity),
-          price: Number(item.price),
-          stock: Number(item.stock)
-        };
-      }
-    });
-    return Object.values(merged);
-  };
+  // Helper to build cart key
+  function cartKey(productId: number, variationId: number | null) {
+    return `${productId}:${variationId === null ? 'null' : variationId}`;
+  }
 
   // API helpers
   const fetchCart = async () => {
+    if (!userStore.token) return;
     try {
-      if (!userStore.token) return;
-      const response = await $fetch<{ cart: any[] }>(`${API_BASE}/api/cart`, {
+      const response = await $fetch<{ cart: any[] }>(`${API_BASE}/cart`, {
         headers: { Authorization: `Bearer ${userStore.token}` }
       });
-      console.log('[fetchCart] Response from backend:', response);
       cart.value = (response.cart || []).map(item => ({
         product_id: item.product_id,
-        variation_id: item.variation_id,
+        variation_id: item.variation_id === null ? null : Number(item.variation_id),
         name: item.name,
         variation_name: item.variation_name ?? null,
         price: item.price,
@@ -82,131 +34,94 @@ export const useCartStore = defineStore('cart', () => {
         stock: item.stock,
         quantity: item.quantity
       }));
-      console.log('[fetchCart] Cart after mapping:', cart.value);
     } catch (e) {
-      console.error('[fetchCart] Error:', e);
       cart.value = [];
     }
   };
 
-  const syncCartToServer = async () => {
-    try {
-      if (!userStore.token) return;
-      const payload = {
-        items: cart.value.map(item => ({
-          product_id: item.product_id,
-          variation_id: item.variation_id,
-          quantity: item.quantity
-        }))
-      };
-      console.log('[syncCartToServer] Sending payload:', payload);
-      await $fetch(`${API_BASE}/api/cart`, {
-        method: 'POST',
-        body: payload,
-        headers: { Authorization: `Bearer ${userStore.token}` }
-      });
-    } catch (e) {
-      console.error('[syncCartToServer] Error:', e);
-    }
-  };
-
-  // Cart operations
   const addToCart = async (product: Product, quantity: number = 1) => {
-    const product_id = product.id;
-    const variation_id = (product as any).variation_id ?? null;
-    const variation_name = (product as any).variation_name ?? (product as any).name !== product.name ? (product as any).name : null;
-    const price = (product as any).sale_price && (product as any).sale_price < (product as any).price ? (product as any).sale_price : (product as any).price;
-    const image = product.image;
-    const stock = (product as any).stock ?? product.stock;
-    const payload: CartItem = {
+    if (!userStore.token) throw new Error('Authentication required');
+    
+    const product_id = (product as any).parent_id ? (product as any).parent_id : product.id;
+    let variation_id: number | null = null;
+    if ('variation_id' in product && product.variation_id !== undefined && product.variation_id !== null) {
+      variation_id = Number(product.variation_id);
+      if (isNaN(variation_id)) variation_id = null;
+    }
+    
+    const payload = {
       product_id,
       variation_id,
-      name: product.name,
-      variation_name,
-      price,
-      image,
-      stock,
       quantity: Math.max(1, Number(quantity))
     };
-    const cartKey = `${product_id}:${variation_id}`;
-    const existing = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
-    if (existing) {
-      existing.quantity += Math.max(1, Number(quantity)); // Increment if exists
-    } else {
-      payload.quantity = Math.max(1, Number(quantity));
-      cart.value.push(payload);
-    }
-    if (userStore.token) {
-      await syncCartToServer();
-    } else {
-      saveCart();
+    
+    console.log('[CART] Adding to cart:', { product: product.name, payload });
+    
+    try {
+      await $fetch(`${API_BASE}/cart`, {
+        method: 'POST',
+        body: payload,
+        headers: { 
+          Authorization: `Bearer ${userStore.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      await fetchCart();
+    } catch (error: any) {
+      console.error('[CART] Add to cart failed:', error);
+      throw error;
     }
   };
 
   const removeFromCart = async (productId: number, variationId: number | null) => {
-    const cartKey = `${productId}:${variationId}`;
-    cart.value = cart.value.filter(item => `${item.product_id}:${item.variation_id}` !== cartKey);
-    if (userStore.token) {
-      try {
-        await $fetch(`${API_BASE}/api/cart/${productId}:${variationId}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${userStore.token}` }
-        });
-        // Immediately sync the updated cart to the backend after removal
-        await syncCartToServer();
-        await fetchCart();
-      } catch (e) {
-        console.error('[removeFromCart] Error:', e);
-      }
-    } else {
-      saveCart();
-    }
+    if (!userStore.token) return;
+    const key = cartKey(productId, variationId);
+    try {
+      await $fetch(`${API_BASE}/cart/${key}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${userStore.token}` }
+      });
+      await fetchCart();
+    } catch {}
   };
 
   const updateQuantity = async (productId: number, variationId: number | null, newQuantity: number) => {
-    const cartKey = `${productId}:${variationId}`;
+    if (!userStore.token) return;
     const numericQuantity = Math.max(1, Number(newQuantity));
-    const item = cart.value.find(item => `${item.product_id}:${item.variation_id}` === cartKey);
-    if (item) {
-      item.quantity = numericQuantity;
-      if (userStore.token) {
-        await syncCartToServer();
-      } else {
-        saveCart();
-      }
-    }
+    await $fetch(`${API_BASE}/cart`, {
+      method: 'POST',
+      body: {
+        product_id: productId,
+        variation_id: variationId,
+        quantity: numericQuantity,
+        replace: true // Ensure backend sets the quantity, not increments
+      },
+      headers: { Authorization: `Bearer ${userStore.token}` }
+    });
+    await fetchCart();
   };
 
   const clearCart = async () => {
     cart.value = [];
     if (userStore.token) {
       try {
-        await $fetch(`${API_BASE}/api/cart/clear`, {
+        await $fetch(`${API_BASE}/cart/clear`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${userStore.token}` }
         });
+        await fetchCart();
       } catch {}
     }
-    saveCart();
   };
 
-  // Auth state watcher
+  // Auth state watcher: just clear cart on logout, fetch on login
   watch(
     () => userStore.token,
     async (newToken, oldToken) => {
       if (newToken) {
-        try {
-          await fetchCart();
-          const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-          if (localCart.length) {
-            cart.value = mergeCarts(localCart, cart.value);
-            await syncCartToServer();
-            localStorage.removeItem('cart');
-          }
-        } catch {}
+        await fetchCart();
       } else {
         cart.value = [];
-        saveCart();
       }
     },
     { immediate: true }
@@ -217,7 +132,7 @@ export const useCartStore = defineStore('cart', () => {
     if (userStore.token) {
       fetchCart();
     } else {
-      loadCart();
+      cart.value = [];
     }
     isInitialized.value = true;
   }

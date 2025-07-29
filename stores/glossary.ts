@@ -1,18 +1,6 @@
 // ~/stores/glossary.ts
 import { defineStore } from 'pinia';
-import { useApi } from '@/composables/useApi';
-
-export interface GlossaryTerm {
-  title: string;
-  slug: string;
-  excerpt: string;
-  category: string;
-  description: string;
-  details: Array<{ title: string; description: string }>;
-  relatedTerms: string[];
-  linkable: boolean;
-  occurrenceLimit: number;
-}
+import type { GlossaryTerm } from '@/types';
 
 interface GlossaryStoreState {
   terms: GlossaryTerm[];
@@ -28,26 +16,26 @@ export const useGlossaryStore = defineStore('glossary', {
       if (this.terms.length > 0) return;
 
       try {
-        const apiUrl = '/api/glossary'; // Use the server-side API endpoint
+        const config = useRuntimeConfig();
+        const apiUrl = `${config.public.apiBase}/glossary`;
 
         const response = await $fetch(apiUrl, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-        });
+        }) as any[];
 
 
         if (!response) {
           throw new Error('Failed to fetch glossary terms');
         }
 
-        const baseUrl = useRuntimeConfig().public.cockpitUrl; // Get the base URL
-
         this.terms = response.map((entry: any) => {
           return {
             title: entry.title,
             slug: entry.slug,
             excerpt: entry.excerpt || '',
-            category: entry.category || 'No Category', // Added category field
+            // Accept category as a tag (array or string)
+            category: Array.isArray(entry.category) ? entry.category.join(', ') : (entry.category || 'No Category'),
             description: entry.description || '',
             details: entry.details.map((detail: any) => ({
               ...detail,

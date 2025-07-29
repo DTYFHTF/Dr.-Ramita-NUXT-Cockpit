@@ -62,15 +62,30 @@ const handlePageChange = (page: number) => {
 };
 </script>
 
-<style scoped>
-.page-link {
-  min-width: 45px;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.page-item.active .page-link {
-  background-color: var(--bs-primary);
-  border-color: var(--bs-primary);
+<style scoped lang="scss">
+.pagination {
+  .page-item {
+    .page-link {
+      min-width: 45px;
+      text-align: center;
+      transition: all 0.2s ease;
+      color: var(--text-primary);
+      background-color: var(--background-white);
+      border-color: var(--border-color);
+      
+      &:hover:not(:disabled) {
+        color: var(--color-primary);
+        background-color: var(--background-light);
+        border-color: var(--color-primary);
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+      }
+    }
+    
+   
+    
+  }
 }
 </style>

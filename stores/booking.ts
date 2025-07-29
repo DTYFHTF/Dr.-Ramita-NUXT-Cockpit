@@ -4,6 +4,7 @@ export const useBookingStore = defineStore('booking', {
   state: () => ({
     currentStep: 1,
     formData: {
+      doctorId: null as number | null,
       date: '',
       time: null as { start: string, end: string } | null,
       name: '',
@@ -21,6 +22,7 @@ export const useBookingStore = defineStore('booking', {
     },
     resetForm() {
       this.formData = {
+        doctorId: null,
         date: '',
         time: null,
         name: '',

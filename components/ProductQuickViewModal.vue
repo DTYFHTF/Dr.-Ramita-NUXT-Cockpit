@@ -51,7 +51,7 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(var(--modal-overlay-rgb), 0.4);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -73,13 +73,13 @@ onBeforeUnmount(() => {
   font-size: 2rem;
   background: none;
   border: none;
-  color: #888;
+  color: var(--text-muted);
   cursor: pointer;
   z-index: 10;
   line-height: 1;
   transition: color 0.2s;
 }
 .close-btn:hover {
-  color: #c00;
+  color: var(--color-error);
 }
 </style>

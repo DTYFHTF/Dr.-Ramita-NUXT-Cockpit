@@ -2,7 +2,12 @@
   <div class="quick-view-content">
     <div class="row g-0">
       <div class="col-12">
-        <NuxtLink v-if="!showViewDetails" to="/products" class="d-inline-flex align-items-center mb-3 back-to-products-btn" title="Back to Products">
+        <NuxtLink
+          v-if="!showViewDetails"
+          to="/products"
+          class="d-inline-flex align-items-center mb-3 back-to-products-btn"
+          title="Back to Products"
+        >
           <LucideIcon icon="mdi:view-grid" />
         </NuxtLink>
       </div>
@@ -67,13 +72,71 @@
         <NuxtLink
           v-if="showViewDetails !== false"
           :to="`/products/${product.slug}`"
-          class="btn btn-smooth-primary view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
+          class="btn btn-smooth-success view-details-btn w-100 position-absolute start-0 end-0 bottom-0 rounded-0"
         >
           View Details
         </NuxtLink>
       </div>
       <div class="col-md-6 p-4">
-        <h2 class="product-title my-3">{{ product.name }}</h2>
+          <div class="product-meta d-flex align-items-center mb-2 gap-2">
+            <span
+              v-if="product.average_rating"
+              class="rating-badge d-inline-flex align-items-center px-2 py-1 rounded bg-success text-white fw-bold me-2"
+            >
+              <LucideIcon
+                icon="mdi:star"
+                size="16"
+                color="white"
+                class="me-1"
+              />
+              {{ product.average_rating.toFixed(1) }}
+            </span>
+            <h2>{{ product.name }}</h2>
+          </div>
+          <div v-if="selectedVariation">
+            <span
+              v-if="
+                selectedVariation.sale_price &&
+                selectedVariation.sale_price < selectedVariation.price
+              "
+              class="d-flex "
+            >
+              <h4 class="text-decoration-line-through text-muted me-3">
+                ₹{{ selectedVariation.price }}
+              </h4>
+              <h4 class="text-success fw-bold">
+                ₹{{ selectedVariation.sale_price }}
+              </h4>
+            </span>
+            <h4 v-else class="fw-bold text-success">
+              ₹{{ selectedVariation.price }}
+            </h4>
+            <span
+              class="badge ms-2"
+              :class="
+                (selectedVariation.stock ?? 0) > 0 ? 'bg-success' : 'bg-danger'
+              "
+            >
+              {{
+                (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock"
+              }}
+            </span>
+            <div v-if="selectedVariation.sku" class="my-1 text-muted small">
+              SKU: {{ selectedVariation.sku }}
+            </div>
+          </div>
+          <!-- Fallback if no variations -->
+        <div v-else class="product-price mb-3 ">
+          <span v-if="product.sale_price && product.sale_price < product.price" class="d-flex">
+            <h4 class="text-decoration-line-through text-muted"
+              >₹{{ product.price }}</h4
+            >
+            <h4 class="ms-2 text-success fw-bold"
+              >₹{{ product.sale_price }}</h4
+            >
+          </span>
+          <span v-else class="fw-bold text-success">₹{{ product.price }}</span>
+        </div>
         <div class="product-description mb-3">
           <span class="clamp-4-lines">{{ product.description }}</span>
         </div>
@@ -82,79 +145,32 @@
           v-if="product.variations && product.variations.length"
           class="mb-3"
         >
-          <label class="fw-semibold mb-1">Choose a variation:</label>
-          <select
-            v-model="selectedVariationId"
-            class="form-select mb-2"
-            @change="updateSelectedVariation"
-          >
-            <option
+          <label class="fw-semibold mb-3">Quantity:</label>
+          <div class="variation-buttons mb-2 d-flex flex-wrap gap-2">
+            <button
               v-for="variation in product.variations"
               :key="variation.id"
-              :value="variation.id"
+              type="button"
+              class="btn btn-outline btn-sm variation-btn py-2"
+              :class="{
+                active: selectedVariationId === variation.id,
+                'out-of-stock': (variation.stock ?? 0) <= 0,
+              }"
+              :disabled="(variation.stock ?? 0) <= 0"
+              @click="
+                selectedVariationId = variation.id;
+                updateSelectedVariation();
+              "
             >
               {{ variation.name }}
-              ({{ variation.stock ?? "Out of stock" }})
-            </option>
-          </select>
-          <div v-if="selectedVariation">
-            <span
-              v-if="
-                selectedVariation.sale_price &&
-                selectedVariation.sale_price < selectedVariation.price
-              "
-            >
-              <span class="text-decoration-line-through text-muted"
-                >₹{{ selectedVariation.price }}</span
-              >
-              <span class="ms-2 text-success fw-bold"
-                >₹{{ selectedVariation.sale_price }}</span
-              >
-            </span>
-            <span v-else class="fw-bold text-success"
-              >₹{{ selectedVariation.price }}</span
-            >
-            <span
-              class="badge ms-2"
-              :class="
-                (selectedVariation.stock ?? 0) > 0
-                  ? 'bg-success'
-                  : 'bg-danger'
-              "
-            >
-              {{ (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock" }}
-            </span>
-            <div
-              v-if="selectedVariation.sku"
-              class="mt-1 text-muted small"
-            >
-              SKU: {{ selectedVariation.sku }}
-            </div>
+            </button>
           </div>
-        </div>
-        <!-- Fallback if no variations -->
-        <div v-else class="product-price mb-3">
-          <span
-            v-if="product.sale_price && product.sale_price < product.price"
-          >
-            <span class="text-decoration-line-through text-muted"
-              >₹{{ product.price }}</span
-            >
-            <span class="ms-2 text-success fw-bold"
-              >₹{{ product.sale_price }}</span
-            >
-          </span>
-          <span v-else class="fw-bold text-success"
-            >₹{{ product.price }}</span
-          >
+          
         </div>
         
-        <div class="d-flex align-items-center mb-3">
-          <button
-            class="btn btn-outline-secondary"
-            @click="decrement"
-            :disabled="quantity <= 1"
-          >
+
+        <div class="d-flex align-items-center">
+          <button class="btn btn-outline" @click="decrement" :disabled="quantity <= 1">
             -
           </button>
           <input
@@ -164,7 +180,7 @@
             v-model.number="quantity"
             min="1"
           />
-          <button class="btn btn-outline-secondary" @click="increment">
+          <button class="btn btn-outline" @click="increment">
             +
           </button>
           <button
@@ -176,10 +192,14 @@
           </button>
         </div>
         <div class="mb-2">
-          <span class="badge" :class="canAddToCart ? 'bg-success' : 'bg-danger'">
-            {{ canAddToCart ? 'In stock' : 'Out of stock' }}
+          <span
+            class="badge"
+            :class="canAddToCart ? 'bg-success' : 'bg-danger'"
+          >
+            {{ canAddToCart ? "In stock" : "Out of stock" }}
           </span>
         </div>
+        
         <div class="share-section mt-3">
           <span class="me-2">Share:</span>
           <a
@@ -187,28 +207,28 @@
             target="_blank"
             rel="noopener"
             title="Share on WhatsApp"
-            ><LucideIcon icon="mdi:whatsapp"
+            ><LucideIcon icon="mdi:whatsapp" color="var(--brand-whatsapp)"
           /></a>
           <a
             :href="shareUrl('facebook')"
             target="_blank"
             rel="noopener"
             title="Share on Facebook"
-            ><LucideIcon icon="mdi:facebook"
+            ><LucideIcon icon="mdi:facebook" color="var(--brand-facebook)"
           /></a>
           <a
             :href="shareUrl('twitter')"
             target="_blank"
             rel="noopener"
             title="Share on Twitter"
-            ><LucideIcon icon="mdi:twitter"
+            ><LucideIcon icon="mdi:twitter" color="var(--brand-twitter)"
           /></a>
           <a
             :href="shareUrl('instagram')"
             target="_blank"
             rel="noopener"
             title="Share on Instagram"
-            ><LucideIcon icon="mdi:instagram"
+            ><LucideIcon icon="mdi:instagram" color="var(--brand-instagram)"
           /></a>
         </div>
       </div>
@@ -219,9 +239,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
+import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from "@/types";
 
-const props = defineProps<{ product: Product, showViewDetails?: boolean }>();
+// --- Props ---
+const props = defineProps<{ product: Product; showViewDetails?: boolean }>();
 const emit = defineEmits(["add-to-cart"]);
 
 const quantity = ref(1);
@@ -231,27 +253,33 @@ const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
 });
 
-// Helper for image fallback
 function imageUrl(img: string) {
+  const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
   if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return `${config.public.baseUrl}/storage/${img}`;
 }
 
+
+// Helper for image fallback
 const images = computed(() => {
   const imgs = [
     props.product.image,
     props.product.image_2,
     props.product.image_3,
-  ].filter(Boolean).map(imageUrl);
+  ]
+    .filter(Boolean)
+    .map(imageUrl);
   return Array.from(new Set(imgs));
+  
 });
 
 const selectedVariation = computed(() => {
   if (!props.product.variations) return null;
   return (
-    props.product.variations.find((v: any) => v.id === selectedVariationId.value) ||
-    props.product.variations[0]
+    props.product.variations.find(
+      (v: any) => v.id === selectedVariationId.value
+    ) || props.product.variations[0]
   );
 });
 const canAddToCart = computed(() => {
@@ -279,11 +307,11 @@ function decrement() {
 }
 function addToCartHandler() {
   if (props.product.variations?.length && selectedVariation.value) {
+    // Only pass parent product info, and set variation_id explicitly
     emit("add-to-cart", {
       ...props.product,
-      ...selectedVariation.value,
       variation_id: selectedVariation.value.id,
-      quantity: quantity.value
+      quantity: quantity.value,
     });
   } else {
     emit("add-to-cart", { ...props.product, quantity: quantity.value });
@@ -300,16 +328,15 @@ function updateSelectedVariation() {
 }
 
 function shareUrl(platform: string) {
-  const url = `https://ayurveda-marketplace.test/products/${props.product.slug}`;
+  const config = useRuntimeConfig();
+  const url = `${config.public.baseUrl}/products/${props.product.slug}`;
   const title = props.product.name;
   const desc = props.product.description || "";
   const message = `${title}\n${desc}\n\n${url}`;
   const encodedMessage = encodeURIComponent(message);
   switch (platform) {
     case "facebook":
-      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
-      )}`;
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     case "twitter":
       return `https://twitter.com/intent/tweet?text=${encodedMessage}`;
     case "whatsapp":
@@ -330,17 +357,17 @@ function shareUrl(platform: string) {
   left: auto;
   z-index: 10;
   font-size: 1rem;
-  background:transparent;
+  background: transparent;
 }
 .quick-view-content {
   position: relative;
-  background: #fff;
+  background: var(--background-light); 
   border-radius: 10px;
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
 }
 .quick-view-image {
   min-width: 280px;
@@ -350,7 +377,7 @@ function shareUrl(platform: string) {
   border-radius: 8px;
   margin: 0 auto;
   display: block;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.04);
 }
 .image-col {
   position: relative;
@@ -380,7 +407,6 @@ function shareUrl(platform: string) {
   display: inline-flex;
 }
 
-
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: none !important;
@@ -393,18 +419,36 @@ function shareUrl(platform: string) {
   mask-image: none !important;
   -webkit-mask-image: none !important;
 }
+
 .carousel-control-prev-icon {
   background-image: none !important;
-  /* Use SVG for left arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 2 5 8l6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  background-color: #226144 !important;
+  border: none;
+  border-left: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(45deg);
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  mask: none !important;
+  -webkit-mask: none !important;
 }
+
 .carousel-control-next-icon {
   background-image: none !important;
-  /* Use SVG for right arrow */
-  mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  -webkit-mask: url('data:image/svg+xml;utf8,<svg fill="%23226144" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 2l6 6-6 6" stroke="%23226144" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/1.5rem 1.5rem no-repeat !important;
-  background-color: #226144 !important;
+  border: none;
+  border-right: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(-45deg);
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  mask: none !important;
+  -webkit-mask: none !important;
+}
+
+.btn.variation-btn.active {
+  background-color: var(--color-success) !important; 
+  color: var(--text-white) !important;
+  border-color: var(--color-success) !important;
 }
 </style>

@@ -9,7 +9,7 @@
       tabindex="0"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <LucideIcon :icon="'mdi:account-circle'" class="fs-4" />
+      <UserAvatar :src="user.profile_image" size="sm" class="mb-1" />
       <span>Hi, {{ user.first_name }}</span>
     </button>
     <transition name="fade">
@@ -24,17 +24,17 @@
         <li>
           <NuxtLink to="/dashboard" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:user" class="me-2" />
-            Profile
+            Dashboard
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+          <NuxtLink to="/orders" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:history" class="me-2" />
             Order History
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/" class="dropdown-item d-flex align-items-center gap-2">
+          <NuxtLink to="/wishlist" class="dropdown-item d-flex align-items-center gap-2">
             <LucideIcon icon="mdi:heart" class="me-2" />
             Wishlist
           </NuxtLink>
@@ -50,6 +50,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
@@ -57,6 +58,7 @@ import { storeToRefs } from 'pinia';
 import LogoutButton from '@/components/LogoutButton.vue';
 import DropDownItems from '@/components/DropDownItems.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
+import UserAvatar from '@/components/UserAvatar.vue';
 import { NuxtLink } from '#components';
 import { useRouter } from 'vue-router';
 
@@ -68,10 +70,11 @@ onMounted(async () => {
   // Always fetch latest user info when dropdown is opened
   if (user.value && user.value.id) {
     try {
-      const API_BASE = 'http://ayurveda-marketplace.test';
+      const config = useRuntimeConfig();
+      const API_BASE = config.public.apiBase;
       const token = localStorage.getItem('auth_token');
       if (token) {
-        const fetchedUser = await $fetch(`${API_BASE}/api/user`, {
+        const fetchedUser = await $fetch(`${API_BASE}/user`, {
           method: 'GET',
           headers: {
             Accept: 'application/json',

@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     // Check slot availability
     const existing = await $fetch(`${config.cockpitUrl}/api/collections/get/consultations`, {
       params: {
-        token: config.cockpitToken,
+        token: config.public.cockpitToken,
         filter: {
           date: body.date,
           '$or': [
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
           ...body,
           status: 'pending'
         },
-        token: config.cockpitToken
+        token: config.public.cockpitToken
       }
     })
   

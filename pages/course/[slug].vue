@@ -15,7 +15,7 @@
         <strong>Error:</strong>
         {{ error.message || "Failed to load course details" }}
       </div>
-      <button class="btn btn-primary mt-3" @click="retryFetch">
+      <button class="btn btn-smooth-success mt-3" @click="retryFetch">
         <LucideIcon icon="mdi:refresh" class="me-2" />Try Again
       </button>
     </div>
@@ -25,18 +25,13 @@
       <!-- Header Section -->
       <header class="course-header text-center mb-5">
         <div class="course-badge mb-3">
-          <span
-            class="badge"
-            :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'"
-          >
+          <span class="badge" :class="course.price === 0 ? 'bg-success' : 'bg-warning text-dark'">
             {{ course.price === 0 ? "Free" : `${course.price}` }}
           </span>
         </div>
         <h1 class="course-title mb-3">{{ course.title }}</h1>
 
-        <div
-          class="course-meta d-flex justify-content-center gap-4 flex-wrap mb-4"
-        >
+        <div class="course-meta d-flex justify-content-center gap-4 flex-wrap mb-4">
           <div class="meta-item d-flex align-items-center">
             <LucideIcon icon="mdi:clock" class="me-2" />
             <span>{{ course.duration || "Approx. 20 hours" }}</span>
@@ -48,19 +43,31 @@
             }}</span>
           </div>
         </div>
-        <img
-          :src="course.imageUrl"
-          :alt="`Cover image for ${course.title}`"
-          class="course-cover img-fluid rounded-3 shadow-lg"
-          loading="lazy"
-        />
+
+        <!-- Course Features -->
+        <div class="course-features d-flex justify-content-center gap-3 flex-wrap mb-4">
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:infinity" class="me-2" />
+            <span>Lifetime Access</span>
+          </div>
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:account-group" class="me-2" />
+            <span>Community Support</span>
+          </div>
+          <div class="feature-badge">
+            <LucideIcon icon="mdi:devices" class="me-2" />
+            <span>Mobile & Desktop Friendly</span>
+          </div>
+        </div>
+        <img :src="course.imageUrl" :alt="`Cover image for ${course.title}`"
+          class="course-cover img-fluid rounded-3 shadow-lg" loading="lazy" />
       </header>
 
       <!-- Main Content -->
       <div class="course-content">
         <!-- About Section -->
         <section class="course-section mb-5">
-          <h2 class="section-title mb-4">About This Course</h2>
+          <h2 class="mb-4">About This Course</h2>
           <div class="section-content">
             <DynamicContent :content="course.description" />
           </div>
@@ -70,18 +77,9 @@
         <div class="row g-4">
           <div class="col-md-6">
             <section class="course-section">
-              <h2 class="section-title mb-4">Skills You'll Gain</h2>
+              <h2 class="mb-4">Skills You'll Gain</h2>
               <ul class="course-list">
-                <li
-                  v-for="skill in course.skills?.skill || []"
-                  :key="skill"
-                  class="course-list-item"
-                >
-                  <LucideIcon
-                    icon="mdi:check-circle"
-                    class="text-success me-2"
-                  />
-
+                <li v-for="skill in course.skills" :key="skill" class="list-before">
                   <DynamicContent :content="skill" />
                 </li>
               </ul>
@@ -90,17 +88,9 @@
 
           <div class="col-md-6">
             <section class="course-section">
-              <h2 class="section-title mb-4">What You'll Learn</h2>
+              <h2 class="mb-4">What You'll Learn</h2>
               <ul class="course-list">
-                <li
-                  v-for="item in course.learningOutcomes"
-                  :key="item"
-                  class="course-list-item"
-                >
-                  <LucideIcon
-                    icon="mdi:check-circle"
-                    class="text-success me-2"
-                  />
+                <li v-for="item in course.learning_outcomes" :key="item" class="list-before">
                   <DynamicContent :content="item" />
                 </li>
               </ul>
@@ -110,20 +100,11 @@
 
         <!-- Instructor Section -->
         <section class="course-section mt-5">
-          <h2 class="section-title mb-4">Course Instructor</h2>
-          <div
-            class="instructor-card card border-0 shadow-sm"
-            v-if="course.instructor"
-          >
+          <h2 class="mb-4">Course Instructor</h2>
+          <div class="instructor-card card border-0 shadow-sm" v-if="course.instructor">
             <div class="card-body d-flex align-items-center gap-4">
-              <img
-                :src="course.instructorImageUrl"
-                :alt="`Instructor ${course.instructor.name}`"
-                class="instructor-avatar rounded-circle"
-                width="100"
-                height="100"
-                loading="lazy"
-              />
+              <img :src="course.instructorImageUrl" :alt="`Instructor ${course.instructor.name}`"
+                class="instructor-avatar rounded-circle" width="100" height="100" loading="lazy" />
               <div>
                 <h3 class="instructor-name mb-1">
                   {{ course.instructor.name }}
@@ -140,23 +121,37 @@
         <!-- CTA Section -->
         <footer class="cta-section mt-5 pt-4 border-top">
           <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
-            <a
-              :href="course.external_link"
-              class="btn-smooth-primary"
-              target="_blank"
-              rel="noopener"
-            >
+            <button class="btn-smooth-primary" @click="showEnrollModal = true">
               {{
                 course.price === 0
                   ? "Enroll for Free"
                   : `Enroll Now - ₹${course.price}`
               }}
-            </a>
+            </button>
             <p class="text-muted text-center small mt-2">
               <LucideIcon icon="mdi:lock" class="me-1" />
               Secure payment processing
             </p>
           </div>
+          <BaseModal :show="showEnrollModal" @close="showEnrollModal = false">
+            <div class="modal-narrow">
+              <CourseRegistrationForm 
+                :course-slug="course.slug" 
+                @enrollment-success="handleEnrollmentSuccess"
+              />
+            </div>
+          </BaseModal>
+          
+          <!-- Success Modal -->
+          <BaseModal :show="enrollmentSuccess" @close="enrollmentSuccess = false">
+            <div class="text-center py-4">
+              <h3 class="mb-3 text-success">Enrollment Successful!</h3>
+              <p>{{ successMessage }}</p>
+              <button class="btn btn-smooth-primary mt-3" @click="enrollmentSuccess = false">
+                Close
+              </button>
+            </div>
+          </BaseModal>
         </footer>
       </div>
     </article>
@@ -167,88 +162,62 @@
 // Import necessary modules and components
 import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
-import { ref, computed, watchEffect } from "vue";
-import { marked } from "marked";
-import { useRoute } from "vue-router";
-import { useApi } from "@/composables/useApi";
+import { useApiLaravel } from '@/composables/useApi.js'
+import { useImageUrl } from '@/composables/useImageUrl.js'
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import BaseModal from '@/components/BaseModal.vue';
+import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
+
+const showEnrollModal = ref(false);
+const enrollmentSuccess = ref(false);
+const successMessage = ref('');
+
+// Handle successful enrollment
+const handleEnrollmentSuccess = (message) => {
+  showEnrollModal.value = false; // Close the enrollment modal
+  enrollmentSuccess.value = true; // Show success modal
+  successMessage.value = message;
+}
 
 // Initialize route and reactive variables
 const route = useRoute();
-const course = ref(null);
-const error = ref(null);
-const isLoading = ref(true); // Add loading state
+const slug = route.params.slug;
+const { data: courseData, error, loading: isLoading } = useApiLaravel(`courses/${slug}`);
+const { getImageUrl } = useImageUrl();
 
-// Fetch course data using useApi composable
-const {
-  data,
-  error: apiError,
-  refetch,
-} = useApi(`items/courses?filter={"slug":"${route.params.slug}"}`);
+// Create computed course object that properly handles the image URL
+const course = computed(() => {
+  if (!courseData.value?.data) {
+    return {
+      title: '',
+      price: 0,
+      duration: '',
+      certification: false,
+      imageUrl: '/placeholder-course.jpg',
+      description: '',
+      skills: [],
+      learning_outcomes: [],
+      instructor: { name: '', position: '' },
+      instructorImageUrl: '/placeholder-instructor.jpg',
+      external_link: '',
+      slug: ''
+    };
+  }
 
-// Markdown rendering utility
-const renderMarkdown = (content) => (content ? marked.parse(content) : "");
-
-// Helper function to map API response property names to component property names
-function mapCourseData(data) {
-  if (!data) return null;
-
+  const data = courseData.value.data;
   return {
     ...data,
-    // Map snake_case properties to camelCase
-    duration: data.duration || "Approx. 20 hours",
-    skills: data.skills || { skill: [] },
-    learningOutcomes: data.learningOutcomes || [],
-    certification: data.certification || false,
-    // Add imageUrl for displaying images
-    imageUrl: data.image?._id
-      ? `http://localhost:9000/assets/link/${data.image._id}`
-      : "/placeholder-course.jpg",
-    instructorImageUrl: data.instructor?.image?._id
-      ? `http://localhost:9000/assets/link/${data.instructor.image._id}`
-      : "/placeholder-course.jpg",
+    imageUrl: data.image ? getImageUrl(data.image, '/placeholder-course.jpg') : '/placeholder-course.jpg',
+    instructorImageUrl: data.instructor?.image ? getImageUrl(data.instructor.image, '/placeholder-instructor.jpg') : '/placeholder-instructor.jpg'
   };
-}
+});
 
 // Retry fetch logic
-const retryFetch = async () => {
-  error.value = null;
-  isLoading.value = true; // Set loading state
-  await refetch();
-  isLoading.value = false; // Clear loading state
+const retryFetch = () => {
+  // Force refresh by navigating to same route
+  window.location.reload();
 };
-
-// Watch for data changes and update course details
-watchEffect(() => {
-  try {
-    isLoading.value = true; // Set loading state
-    if (data.value && Array.isArray(data.value) && data.value.length > 0) {
-      // Using the first item if the API returns an array of matching courses
-      const courseData = data.value[0];
-      course.value = mapCourseData(courseData);
-      error.value = null; // Clear error since we have data
-    } else if (data.value && typeof data.value === "object" && data.value._id) {
-      // Handle if API returns a single object instead of an array
-      course.value = mapCourseData(data.value);
-      error.value = null; // Clear error since we have data
-    } else if (data.value === null || data.value === undefined) {
-      error.value = new Error("No course found with this slug");
-    }
-
-    if (apiError.value) {
-      error.value = apiError.value;
-    }
-  } catch (e) {
-    error.value = e;
-  } finally {
-    isLoading.value = false; // Clear loading state
-  }
-});
-
-// Compute the last skill level for display
-const lastSkillLevel = computed(() => {
-  const levels = course.value?.skills?.level?.[0] || [];
-  return levels[levels.length - 1] || null;
-});
 </script>
 
 <style lang="scss" scoped>
@@ -258,6 +227,7 @@ const lastSkillLevel = computed(() => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  color: var(--text-primary);
 
   .course-header {
     .course-badge {
@@ -269,18 +239,16 @@ const lastSkillLevel = computed(() => {
     }
 
     .course-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: $text-deep-green;
-      line-height: 1.2;
+      color: var(--text-primary);
     }
 
-    .course-description {
-      font-size: 1.25rem;
-      color: $text-medium-gray;
-      max-width: 800px;
-      margin: 0 auto;
+    .course-meta {
+      .meta-item {
+        color: var(--text-secondary);
+      }
     }
+
+    
 
     .course-cover {
       max-height: 500px;
@@ -291,16 +259,13 @@ const lastSkillLevel = computed(() => {
 
   .course-section {
     padding: 2rem;
-    background: white;
+    background: var(--background-white);
     border-radius: 1rem;
-    box-shadow: $card-shadow;
+    box-shadow: var(--card-shadow);
+    color: var(--text-primary);
 
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: $text-deep-green;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid $accent-soft-green;
+    h2 {
+      color: var(--text-primary);
     }
 
     .course-list {
@@ -312,7 +277,8 @@ const lastSkillLevel = computed(() => {
         padding: 0.75rem 0;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
 
         &:last-child {
           border-bottom: none;
@@ -322,19 +288,42 @@ const lastSkillLevel = computed(() => {
   }
 
   .instructor-card {
+    background: var(--background-white);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    
+    &.card {
+      background: var(--background-white);
+      border-color: var(--border-color);
+    }
+    
+    .card-body {
+      color: var(--text-primary);
+    }
+    
     .instructor-avatar {
       object-fit: cover;
-      border: 3px solid $accent-soft-green;
+      border: 3px solid var(--color-secondary);
     }
 
     .instructor-name {
       font-size: 1.25rem;
       font-weight: 600;
-      color: $text-deep-green;
+      color: var(--color-primary);
+    }
+    
+    .instructor-title {
+      color: var(--text-secondary) !important;
+      
+      &.text-muted {
+        color: var(--text-secondary) !important;
+      }
     }
   }
 
   .cta-section {
+    border-top: 1px solid var(--border-color);
+    
     .btn {
       padding: 1rem 2rem;
       border-radius: 2rem;
@@ -343,19 +332,38 @@ const lastSkillLevel = computed(() => {
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: $btn-hover-shadow;
+        box-shadow: var(--btn-hover-shadow, 0 4px 15px rgba(135, 197, 164, 0.3));
       }
     }
+    
+    .text-muted {
+      color: var(--text-secondary) !important;
+    }
+  }
+
+  // Global dark mode overrides for this component
+  .text-muted {
+    color: var(--text-secondary) !important;
+  }
+  
+  .text-center {
+    color: inherit;
+  }
+  
+  .alert {
+    background: var(--background-white);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .spinner-grow {
+    color: var(--color-primary);
   }
 
   @media (max-width: 768px) {
     .course-header {
       .course-title {
         font-size: 2rem;
-      }
-
-      .course-description {
-        font-size: 1.1rem;
       }
     }
 

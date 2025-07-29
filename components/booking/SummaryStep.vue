@@ -1,7 +1,7 @@
 <template>
   <div class="summary-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Review Your Booking</h2>
+      <h2>Review Your Booking</h2>
       <p class="step-subtitle">Confirm your consultation details</p>
     </div>
 
@@ -21,10 +21,10 @@
     </div>
 
     <div class="step-navigation mt-5">
-      <button class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+      <button class="btn btn-smooth-outline" @click="$emit('prev')">
         Back
       </button>
-      <button class="btn btn-success btn-smooth-success" @click="confirmBooking">
+      <button class="btn btn-smooth-success" @click="confirmBooking">
         Confirm Booking
       </button>
     </div>
@@ -35,9 +35,14 @@
 import { computed } from 'vue'
 import { parseISO, format } from 'date-fns'
 import { useBookingStore } from '~/stores/booking'
-import { postContentItem } from '~/composables/useApi'
+import { postBookingLaravel } from '~/composables/useApi'
+import { useApiLaravel } from '~/composables/useApi'
+import { useUserStore } from '~/stores/user'
+import { useDoctorStore } from '~/stores/doctorStore'
 
 const store = useBookingStore()
+const userStore = useUserStore()
+const doctorStore = useDoctorStore()
 
 const formattedDate = computed(() =>
   store.formData.date
@@ -51,29 +56,43 @@ const formattedTime = computed(() =>
     : 'Not selected'
 )
 
-const { data: doctorData } = useApi('items/doctor')
-const doctorName = computed(() =>
-  doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
-)
+const { data: doctorData } = useApiLaravel('doctors')
+const selectedDoctor = computed(() => {
+  if (!store.formData.doctorId) return null
+  return doctorStore.getDoctorById(store.formData.doctorId)
+})
+
+const doctorName = computed(() => {
+  if (selectedDoctor.value) return selectedDoctor.value.name
+  return doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
+})
 
 const formatTime = (time) => {
   const [hours, minutes] = time.split(':')
   const hour = parseInt(hours, 10)
   return `${hour % 12 || 12}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`
 }
+//Currently uses the selected doctor from the booking form
+// This provides better user experience with doctor selection
+const doctor_id = store.formData.doctorId || doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
 
 const postBookingInfo = () => {
   const bookingData = {
+    user_id: userStore.user?.id,
+    doctor_id: doctor_id,
     date: store.formData.date,
-    duration: '45 mins', // Assuming time contains start and end
+    duration: {
+      start: store.formData.time?.start,
+      end: store.formData.time?.end
+    },
     patient_name: store.formData.name,
     patient_email: store.formData.email,
     patient_phone: store.formData.phone,
     notes: store.formData.notes,
-    status: 'pending', // Default status
+    status: 'pending',
   };
 
-  postContentItem('consultations', bookingData)
+  postBookingLaravel(bookingData)
     .then(() => {
       console.log('Booking information posted successfully');
     })
@@ -92,13 +111,27 @@ const confirmBooking = () => {
 .summary-step {
   max-width: 800px;
   margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .booking-summary-card {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
 }
 
 .summary-item {
@@ -114,12 +147,12 @@ const confirmBooking = () => {
 }
 
 .summary-label {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .summary-value {
-  color: var(--text-dark);
+  color: var(--text-primary);
   font-weight: 600;
 }
 

@@ -14,11 +14,22 @@
           <ProductQuickViewContent :product="product" @add-to-cart="handleAddToCartProxy" :show-view-details="false" />
         </div>
       </div>
+
+      <!-- Product Reviews Section -->
+      <ProductReviewSection
+        :product="product"
+        :user="user"
+        :isAdmin="isAdmin"
+        @refresh="fetchProduct(route.params.slug as string)"
+      />
       
     </div>
     <div v-else>
       <p class="visually-hidden">Product not found.</p>
     </div>
+
+    <!-- Toast Notification -->
+    <div v-if="showNotification" class="toast-message">Product added to cart!</div>
   </div>
 </template>
 
@@ -29,36 +40,28 @@ import { onMounted, watch, computed, ref } from "vue";
 import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
 import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
+import ProductReviewSection from '@/components/ProductReviewSection.vue';
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
+import type { User } from '@/types';
+import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const route = useRoute();
 const { product, loading, error, fetchProduct } = useProducts();
 const { addToCart } = useCart();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore) as { user: Ref<User | null> };
 
 let lastSlug = "";
 
-// Helper for image fallback
+// Admin check (customize as needed)
+const isAdmin = computed(() => !!(user.value && user.value.role === 'admin'));
+
+const { getImageUrl } = useImageUrl();
+
 function imageUrl(img: string) {
-  if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
-  return `http://ayurveda-marketplace.test/storage/${img}`;
+  return getImageUrl(img, '/fallback.jpg');
 }
-
-// Helper for star rating (rounded to 1 decimal, up to 5 stars)
-const starArray = computed(() => {
-  const rating = product.value?.rating || 0;
-  const rounded = Math.round(rating * 2) / 2;
-  return Array.from({ length: 5 }, (_, i) => {
-    if (i + 1 <= rounded) return "full";
-    if (i + 0.5 === rounded) return "half";
-    return "empty";
-  });
-});
-
-// Helper for price display
-const isOnSale = computed(
-  () =>
-    product.value?.sale_price && product.value.sale_price < product.value.price
-);
 
 // Helper for stock
 const inStock = computed(
@@ -123,7 +126,8 @@ watch(
   () => product.value,
   (p) => {
     if (!p) return;
-    const url = `https://ayurveda-marketplace.test/products/${p.slug || route.params.slug}`;
+    const config = useRuntimeConfig();
+    const url = `${config.public.baseUrl}/products/${p.slug || route.params.slug}`;
     useHead({
       title: p.name,
       meta: [
@@ -147,17 +151,21 @@ watch(
   { immediate: true }
 );
 
+const showNotification = ref(false);
+
 function handleAddToCartProxy(payload: any) {
-  // Accepts the payload from ProductQuickViewContent and calls addToCart
-  if (payload.variation_id) {
-    addToCart(payload, payload.quantity || 1);
-  } else {
-    addToCart(payload, payload.quantity || 1);
-  }
+  // Always pass parent product, and set variation_id explicitly
+  addToCart({ ...product.value, variation_id: payload.variation_id }, payload.quantity || 1);
+  showNotification.value = true;
+  setTimeout(() => {
+    showNotification.value = false;
+  }, 2000);
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/assets/scss/variables.scss';
+
 .product-detail-page {
   width: 100vw;
   min-height: 100vh;
@@ -190,13 +198,28 @@ function handleAddToCartProxy(payload: any) {
   max-width: 1200px;
   min-height: 500px;
   padding:0px !important;
-  background: #fff;
+  background: $background-white;
   border-radius: 0;
   box-shadow: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 2.5rem 2.5rem 2rem 2.5rem;
+}
+.product-reviews {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+.review-card {
+  background: $background-light;
+  border: 1px solid $border-color;
+  border-radius: 0.375rem;
+  transition: transform 0.2s;
+}
+.review-card:hover {
+  transform: translateY(-2px);
 }
 @media (max-width: 1100px) {
   .product-detail-flex {
@@ -216,8 +239,18 @@ function handleAddToCartProxy(payload: any) {
   }
 }
 .error {
-  color: #c00;
+  color: $text-error;
   text-align: center;
   margin: 2rem 0;
+}
+.discount-badge {
+  background: $color-secondary !important;
+  color: $text-light !important;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.35rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
 }
 </style>

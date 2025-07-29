@@ -1,55 +1,59 @@
 <template>
   <div class="details-step">
     <div class="step-header mb-5">
-      <h2 class="step-title">Your Information</h2>
+      <h2>Your Information</h2>
       <p class="step-subtitle">Please provide your contact details</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="booking-form">
       <div class="form-group">
-        <label>Full Name</label>
+        <label class="form-label">Full Name<span class="required">*</span></label>
         <input
           v-model="form.name"
           type="text"
+          class="form-input"
           required
           placeholder="Enter your full name"
         />
       </div>
 
       <div class="form-group">
-        <label>Email Address</label>
+        <label class="form-label">Email Address<span class="required">*</span></label>
         <input
           v-model="form.email"
           type="email"
+          class="form-input"
           required
           placeholder="your.email@example.com"
         />
       </div>
 
       <div class="form-group">
-        <label>Phone Number</label>
+        <label class="form-label">Phone Number<span class="required">*</span></label>
         <input
           v-model="form.phone"
           type="tel"
+          class="form-input"
           required
           placeholder="+91 12345 67890"
         />
       </div>
 
       <div class="form-group">
-        <label>Additional Notes (optional)</label>
+        <label class="form-label">Share any information that might help us serve you better.</label>
         <textarea
           v-model="form.notes"
+          class="form-textarea"
           rows="3"
           placeholder="Any special requirements or notes..."
         ></textarea>
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-outline-secondary btn-smooth-outline" @click="$emit('prev')">
+        <button type="button" class="btn btn-outline" @click="$emit('prev')">
           Back
         </button>
-        <button type="submit" class="btn btn-primary btn-smooth-primary">
+        <button type="submit" class="btn btn-smooth-success">
           Continue
         </button>
       </div>
@@ -83,13 +87,27 @@ const handleSubmit = () => {
 .details-step {
   max-width: 600px;
   margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  h2 {
+    color: var(--text-primary);
+  }
+  
+  .step-subtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .booking-form {
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
-  /* padding: 1rem; */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
 }
 
 .form-group {
@@ -98,8 +116,12 @@ const handleSubmit = () => {
   label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text-primary);
     font-weight: 500;
+  }
+
+  .required {
+    color: var(--text-error, #ef4444);
   }
 
   input,
@@ -109,11 +131,17 @@ const handleSubmit = () => {
     border: 2px solid var(--border-color);
     border-radius: 8px;
     transition: border-color 0.2s ease;
+    background: var(--background-white);
+    color: var(--text-primary);
 
     &:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary);
     }
   }
 

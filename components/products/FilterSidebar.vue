@@ -25,7 +25,7 @@
       <!-- Price Ranges -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Price:</label>
-        <ul class="list-unstyled">
+        <ul v-if="priceRanges && priceRanges.length" class="list-unstyled">
           <li v-for="range in priceRanges" :key="range.label">
             <a
               href="#"
@@ -37,12 +37,13 @@
             </a>
           </li>
         </ul>
+        <div v-else class="text-muted small ps-1">Loading price ranges...</div>
       </div>
-<hr>
+      <hr>
       <!-- Categories -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Category:</label>
-        <ul class="list-unstyled">
+        <ul v-if="visibleCategories && visibleCategories.length" class="list-unstyled">
           <li v-for="cat in visibleCategories" :key="cat.id">
             <a
               href="#"
@@ -50,21 +51,23 @@
               @click.prevent="$emit('category-change', cat.id)"
               :class="{ active: activeCategory === cat.id }"
             >
+              <LucideIcon :icon="cat.icon" class="me-2" />
               {{ cat.name }} ({{ cat.products_count || 0 }})
             </a>
           </li>
         </ul>
+        <div v-else class="text-muted small ps-1">Loading categories...</div>
         <div class="pb-2">
-        <button
-          v-if="showMoreButton"
-          @click="$emit('toggle-show-more')"
-          class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
-        >
-          {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
-        </button>
+          <button
+            v-if="showMoreButton"
+            @click="$emit('toggle-show-more')"
+            class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
+          >
+            {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
+          </button>
         </div>
       </div>
-<hr>
+      <hr>
       <!-- Stock Status -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Stock Status:</label>
@@ -117,6 +120,7 @@ const props = defineProps({
   priceMax: Number,
   inStock: Boolean,
   onSale: Boolean,
+  icon:String,
 });
 
 // Emits
@@ -143,31 +147,47 @@ const clearAllFilters = () => {
   font-size: 0.9rem;
   padding: 0.25rem 0.75rem;
   transition: all 0.2s ease;
+  background: var(--background-white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 
   &:hover {
-    background-color: var(--bs-light);
+    background-color: var(--background-light);
     transform: translateY(-1px);
+    color: var(--text-primary);
   }
 }
 
 .filter-item {
-  color: $text-deep-green;
+  color: var(--text-primary);
   padding: 0.25rem 0;
   text-decoration: none;
   display: block;
   transition: all 0.2s ease;
 
   &:hover {
-    color: $accent-soft-green;
+    color: var(--color-success);
     transform: translateX(3px);
+    text-decoration: none;
   }
 
   &.active {
-    color: $text-deep-green;
-    font-weight: 500;
+    color: var(--color-success);
+    font-weight: 600;
     text-decoration: underline;
   }
 }
 
+.card {
+  background: var(--background-white);
+  border-color: var(--border-color);
+}
 
+.card-title {
+  color: var(--text-primary);
+}
+
+.form-label {
+  color: var(--text-primary);
+}
 </style>
