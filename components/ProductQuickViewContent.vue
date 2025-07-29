@@ -370,14 +370,26 @@ function shareUrl(platform: string) {
   box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
 }
 .quick-view-image {
-  min-width: 280px;
-  min-height: 340px;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 100%;
   max-height: 420px;
+  width: auto;
+  height: auto;
   object-fit: contain;
   border-radius: 8px;
   margin: 0 auto;
   display: block;
   box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.04);
+}
+
+@media (max-width: 768px) {
+  .quick-view-image {
+    max-width: 100vw;
+    max-height: 40vh;
+    min-width: 120px;
+    min-height: 120px;
+  }
 }
 .image-col {
   position: relative;
