@@ -1,7 +1,7 @@
 <template>
   <div class="product-reviews mt-5">
     <h4 class="mb-2">Customer Reviews</h4>
-    <div v-if="(product.review_count ?? 0) > 0" class="mb-2">
+    <div v-if="(product.review_count ?? 0) > 0 || (product.latest_reviews && product.latest_reviews.length)" class="mb-2">
       <span class="fs-5 fw-bold">{{
         product.average_rating?.toFixed(1) || "0.0"
       }}</span>
@@ -13,7 +13,7 @@
         />
       </span>
       <span class="text-muted ms-2"
-        >({{ product.review_count ?? 0 }} reviews)</span
+        >({{ product.review_count ?? (product.latest_reviews ? product.latest_reviews.length : 0) }} reviews)</span
       >
     </div>
     <div v-else class="text-muted mb-2">No reviews yet.</div>
