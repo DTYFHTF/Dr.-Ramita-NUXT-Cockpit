@@ -347,6 +347,7 @@ function shareUrl(platform: string) {
       return url;
   }
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -462,5 +463,19 @@ function shareUrl(platform: string) {
   background-color: var(--color-success) !important; 
   color: var(--text-white) !important;
   border-color: var(--color-success) !important;
+}
+.carousel-inner {
+  height: auto;
+  min-height: 420px; 
+  display: flex;
+  align-items: center;
+  background: transparent;
+  transition: height 0.3s ease-in-out; 
+}
+
+@media (max-width: 768px) {
+  .carousel-inner {
+    height: 40vh;
+  }
 }
 </style>
