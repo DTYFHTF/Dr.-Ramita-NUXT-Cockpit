@@ -25,8 +25,20 @@
         <div class="footer-column">
           <h4>Newsletter</h4>
           <p>Subscribe to our newsletter for updates.</p>
-          <input type="email" class="form-input newsletter-input" placeholder="Enter your email" />
-          <button class="btn btn-smooth-success newsletter-btn">Subscribe</button>
+          <form @submit.prevent="subscribeNewsletter" class="newsletter-form">
+            <input
+              v-model="newsletterEmail"
+              type="email"
+              class="form-input newsletter-input"
+              placeholder="Enter your email"
+              required
+              :disabled="loading"
+            />
+            <button type="submit" class="btn btn-smooth-success newsletter-btn" :disabled="loading">
+              {{ loading ? 'Subscribing...' : 'Subscribe' }}
+            </button>
+            <div v-if="newsletterMessage" class="mt-2">{{ newsletterMessage }}</div>
+          </form>
         </div>
       </div>
     </div>
@@ -38,6 +50,14 @@
 
 <script setup>
 import SmoothLink from '~/components/SmoothLink.vue'
+import { useNewsletter } from '@/composables/useNewsletter'
+
+const {
+  newsletterEmail,
+  newsletterMessage,
+  loading,
+  subscribeNewsletter,
+} = useNewsletter()
 </script>
 
 <style scoped lang="scss">
