@@ -133,7 +133,14 @@ const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
 const limitedYoganmeditation = computed(() => yoganmeditationWithImages.value.slice(0, 3));
 const limitedRecipies = computed(() => recipesWithImages.value.slice(0, 3));
 const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3));
-const limitedProducts = computed(() => productsWithImages.value.slice(0, 3));
+const limitedProducts = computed(() => {
+  const arr = [...productsWithImages.value];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, 3);
+});
 const limitedEvents = computed(() => eventsWithImages.value.slice(0, 3));
 
 
