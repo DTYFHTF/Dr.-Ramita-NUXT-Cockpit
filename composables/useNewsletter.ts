@@ -1,5 +1,4 @@
 import { ref } from 'vue'
-import { useRuntimeConfig } from '#imports'
 
 export function useNewsletter() {
   const newsletterEmail = ref('')
@@ -10,17 +9,18 @@ export function useNewsletter() {
     newsletterMessage.value = ''
     loading.value = true
     try {
+      // @ts-ignore: Nuxt injects useRuntimeConfig globally
       const config = useRuntimeConfig()
       const apiBase = config.public.apiBase
-      const res = await $fetch(`${apiBase}/newsletter/subscribe`, {
+      const res = await $fetch<{ message?: string }>(`${apiBase}/newsletter/subscribe`, {
         method: 'POST',
         body: { email: newsletterEmail.value },
         headers: { 'Content-Type': 'application/json' },
       })
-      newsletterMessage.value = res.message || 'Subscribed successfully!'
+      newsletterMessage.value = res?.message || 'Subscribed successfully!'
       newsletterEmail.value = ''
-    } catch (err) {
-      newsletterMessage.value = err?.data?.message || 'Subscription failed.'
+    } catch (err: any) {
+      newsletterMessage.value = err?.message || 'Subscription failed.'
     } finally {
       loading.value = false
     }
