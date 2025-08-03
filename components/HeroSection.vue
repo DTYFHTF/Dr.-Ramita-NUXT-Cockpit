@@ -2,7 +2,7 @@
   <section class="hero-section bg-cover bg-center text-center py-16" :style="{ backgroundImage: `url('/iamges.jpg')` }">
     <div class="overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="container mx-auto px-4">
-      <h1>Rishipath Healthcare, Research & Publication International</h1>
+      <h1>Rishipath Healthcare Research & Publication International</h1>
       <h2 class="mb-8">Tap | Swadhyaya | Dhyan</h2>
       <div class=" contact-info text-gray-600 mb-8">
         <p class="flex items-center justify-center mb-2">

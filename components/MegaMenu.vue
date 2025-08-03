@@ -27,13 +27,16 @@
       <div class="category-list">
         <ul>
           <li
-            v-for="(cat, idx) in categories"
+            v-for="(cat, idx) in displayCategories"
             :key="cat.id || cat.slug || idx"
             @mouseenter="filterByCategory(cat.id)"
             :class="{ 'active-category': activeCategory === cat.id }"
           >
             <LucideIcon :icon="cat.icon || 'mdi:tag'" class="me-2" />
             <span class="category-name">{{ cat.name }}</span>
+            <span v-if="cat.children && cat.children.length > 0" class="subcategory-count">
+              {{ cat.children.length }}
+            </span>
           </li>
         </ul>
       </div>
@@ -44,28 +47,35 @@
 
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useProducts } from '@/composables/useProducts';
+import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { NuxtLink } from '#components';
 import { useImageUrl } from '@/composables/useImageUrl.js'
 
-const { categories, fetchCategories, fetchProducts, products } = useProducts();
+const { fetchProducts, products } = useProducts();
+const { hierarchicalCategories, fetchCategories } = useHierarchicalCategories();
 const { getImageUrl } = useImageUrl();
 
 const activeProducts = ref([]);
 const activeCategory = ref(null);
 
+// Display only level 1 categories in mega menu
+const displayCategories = computed(() => {
+  return hierarchicalCategories.value.filter(cat => cat.level === 1);
+});
+
 onMounted(async () => {
   await fetchCategories();
-  if (categories.value && categories.value.length > 0) {
-    activeCategory.value = categories.value[0].id;
+  if (displayCategories.value && displayCategories.value.length > 0) {
+    activeCategory.value = displayCategories.value[0].id;
     filterByCategory(activeCategory.value);
   }
 });
 
 watch(
-  () => categories.value,
+  () => displayCategories.value,
   (newCategories) => {
     if (newCategories && newCategories.length > 0 && !activeCategory.value) {
       activeCategory.value = newCategories[0].id;
@@ -156,6 +166,18 @@ function firstAvailableImage(product) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
+}
+
+.subcategory-count {
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+  margin-left: auto;
 }
 
 .product-grid {

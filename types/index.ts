@@ -64,33 +64,49 @@ export interface Review {
 export interface Product {
   id: number;
   name: string;
-  price: number;
-  sale_price?: number; // Added sale_price as an optional property
-  display_price: number; // Backend-calculated display price (min variation price or regular price)
-  display_sale_price?: number; // Backend-calculated display sale price
-  rating: number;
-  stock: number;
-  on_sale: boolean;
-  image: string;
-  image_2:string;
-  image_3:string;
   slug: string;
   description?: string;
-  in_stock?: boolean; // Optional property to indicate stock availability
+  price: string; // Laravel returns price as string
+  sale_price?: string; // Laravel returns sale_price as string
+  display_price: string; // Backend-calculated display price
+  display_sale_price?: string; // Backend-calculated display sale price
+  stock: number;
+  in_stock: boolean; // Laravel returns boolean
+  has_variations: boolean; // Laravel returns boolean
+  image: string;
+  image_2: string;
+  image_3: string;
+  category_id?: number | null; // From Laravel response
+  is_active: boolean; // From Laravel response
+  created_at?: string; // Laravel timestamp
+  updated_at?: string; // Laravel timestamp
+  categories?: Array<{ // From Laravel response
+    id: number;
+    name: string;
+    slug: string;
+  }>;
   variations?: ProductVariation[];
-  has_variations?: boolean; // Flag to indicate if product has variations
-  quantity?: number; // Optional quantity property
-  review_count?: number;
-  average_rating?: number;
-  latest_reviews?: Review[];
-  // Add other product fields
+  average_rating?: number; // From Laravel response
+  review_count?: number; // From Laravel response
+  latest_reviews?: Review[]; // From Laravel response
+  
+  // Frontend-specific properties
+  rating?: number; // For backward compatibility
+  on_sale?: boolean; // For backward compatibility
+  quantity?: number; // Optional quantity property for cart
 }
 
 export interface Category {
-  id: string;
+  id: string | number; // Support both string and number IDs from backend
   name: string;
+  slug?: string;
   products_count: number;
   icon: string; // Added icon property for category icon support
+  level: 1 | 2 | 3; // Category hierarchy level
+  parent_id?: string | number | null; // Parent category ID
+  children?: Category[]; // Child categories for hierarchical display
+  parent?: Category; // Parent category reference
+  full_path?: string; // Full category path for breadcrumbs
 }
 
 export interface Pagination {
@@ -105,6 +121,7 @@ export interface PriceRange {
   min: number | null;
   max: number | null;
   onSale: boolean;
+  count?: number;
 }
 
 export interface User {

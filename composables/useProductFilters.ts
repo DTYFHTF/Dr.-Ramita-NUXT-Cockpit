@@ -1,43 +1,348 @@
+import { ref, computed, watch } from 'vue';
 
-
-import { computed, ref, watch, onMounted, type Ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useProducts } from './useProducts';
-import type { Product, Pagination } from '@/types';
-
-// Extended types for the optimized backend response
-interface OptimizedPriceRange {
-  label: string;
-  min: number | null;
-  max: number | null;
-  onSale: boolean;
-  count: number;
+// Define interfaces for the Laravel API integration
+interface ProductTag {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-interface PriceStats {
-  min_price: number;
-  max_price: number;
-  avg_price: number;
-  total_products: number;
-  on_sale_count: number;
+interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-interface FilterOptions {
-  priceRanges: OptimizedPriceRange[];
-  categories: any[];
-  priceStats: PriceStats;
+interface ExtendedProduct {
+  id: number;
+  name: string;
+  slug: string;
+  price: string;
+  sale_price?: string | null;
+  display_price: string;
+  image: string;
+  gallery?: string[];
+  description?: string;
+  short_description?: string;
+  in_stock: boolean;
+  stock_quantity?: number;
+  sku?: string;
+  category_id?: number;
+  category?: ProductCategory;
+  tags?: ProductTag[];
+  average_rating?: number;
+  review_count?: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
-interface Filter {
-  label: string;
-  remove: () => void;
+interface CategoryResponse {
+  id: number;
+  name: string;
+  slug: string;
+  products: ExtendedProduct[];
+  children?: CategoryResponse[];
 }
 
-export function useProductFilters(searchQuery?: Ref<string>) {
-  const router = useRouter();
+interface ProductsResponse {
+  data: ExtendedProduct[];
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+}
+
+// Define reactive states
+const products = ref<ExtendedProduct[]>([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const pagination = ref<{
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+} | null>(null);
+
+// Search query
+const searchQuery = ref('');
+
+// Sample data for development fallback
+const getSampleProducts = (categoryFilter?: string): ExtendedProduct[] => {
+  const sampleProducts: ExtendedProduct[] = [
+    {
+      id: 1,
+      name: "Organic Turmeric Capsules",
+      slug: "organic-turmeric-capsules",
+      price: "29.99",
+      sale_price: "24.99",
+      display_price: "24.99",
+      image: "/api/placeholder/300/300",
+      gallery: ["/api/placeholder/300/300"],
+      description: "Premium organic turmeric supplement with 95% curcumin content",
+      short_description: "Anti-inflammatory turmeric supplement",
+      in_stock: true,
+      stock_quantity: 50,
+      sku: "TUR-001",
+      category_id: 1,
+      category: {
+        id: 1,
+        name: "Herbs & Supplements",
+        slug: "herbs-supplements"
+      },
+      tags: [
+        { id: 1, name: "organic", slug: "organic" },
+        { id: 2, name: "anti-inflammatory", slug: "anti-inflammatory" }
+      ],
+      average_rating: 4.5,
+      review_count: 28,
+      created_at: "2024-01-01T00:00:00Z",
+      updated_at: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: 2,
+      name: "Ashwagandha Root Extract",
+      slug: "ashwagandha-root-extract",
+      price: "34.99",
+      sale_price: null,
+      display_price: "34.99",
+      image: "/api/placeholder/300/300",
+      gallery: ["/api/placeholder/300/300"],
+      description: "Pure Ashwagandha root extract for stress relief and vitality",
+      short_description: "Adaptogenic herb for stress management",
+      in_stock: true,
+      stock_quantity: 30,
+      sku: "ASH-001",
+      category_id: 1,
+      category: {
+        id: 1,
+        name: "Herbs & Supplements",
+        slug: "herbs-supplements"
+      },
+      tags: [
+        { id: 3, name: "adaptogen", slug: "adaptogen" },
+        { id: 4, name: "stress-relief", slug: "stress-relief" }
+      ],
+      average_rating: 4.3,
+      review_count: 15,
+      created_at: "2024-01-01T00:00:00Z",
+      updated_at: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: 3,
+      name: "Herbal Tea Blend",
+      slug: "herbal-tea-blend",
+      price: "19.99",
+      sale_price: "16.99",
+      display_price: "16.99",
+      image: "/api/placeholder/300/300",
+      gallery: ["/api/placeholder/300/300"],
+      description: "Calming herbal tea blend with chamomile and lavender",
+      short_description: "Relaxing herbal tea for evening",
+      in_stock: true,
+      stock_quantity: 75,
+      sku: "TEA-001",
+      category_id: 2,
+      category: {
+        id: 2,
+        name: "Teas & Beverages",
+        slug: "teas-beverages"
+      },
+      tags: [
+        { id: 5, name: "relaxing", slug: "relaxing" },
+        { id: 6, name: "herbal", slug: "herbal" }
+      ],
+      average_rating: 4.7,
+      review_count: 42,
+      created_at: "2024-01-01T00:00:00Z",
+      updated_at: "2024-01-01T00:00:00Z"
+    }
+  ];
+
+  if (categoryFilter) {
+    return sampleProducts.filter(product => 
+      product.category?.slug === categoryFilter
+    );
+  }
+
+  return sampleProducts;
+};
+
+export const useProductFilters = () => {
   const route = useRoute();
+  const router = useRouter();
 
-  const { products, loading, error, fetchProducts, pagination } = useProducts();
+  // Fetch products function - simplified for slug-based Laravel API
+  const fetchProducts = async (
+    page: number = 1,
+    perPage: number = 15,
+    sort: string = '',
+    category: string = '',
+    priceMin: number | null = null,
+    priceMax: number | null = null,
+    inStock: boolean = true,
+    onSale: boolean = false,
+    rating: number | null = null
+  ) => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBase; // Laravel API base URL
+      let data: ProductsResponse;
+
+      // If a specific category is selected, use the Laravel category endpoint with slug
+      if (category) {
+        try {
+          // Call the Laravel category endpoint using slug directly
+          const categoryData = await $fetch(`${apiBase}/categories/${category}`, {
+            headers: {
+              'Accept': 'application/json'
+            },
+            timeout: 10000,
+            retry: 1
+          }) as CategoryResponse;
+
+          // Get all products from the category
+          let allProducts = categoryData.products || [];
+          
+          // Apply client-side filtering
+          if (priceMin !== null) {
+            allProducts = allProducts.filter(product => {
+              const price = parseFloat(product.display_price);
+              return price >= priceMin;
+            });
+          }
+          
+          if (priceMax !== null) {
+            allProducts = allProducts.filter(product => {
+              const price = parseFloat(product.display_price);
+              return price <= priceMax;
+            });
+          }
+          
+          if (inStock) {
+            allProducts = allProducts.filter(product => product.in_stock);
+          }
+          
+          if (onSale) {
+            allProducts = allProducts.filter(product => product.sale_price && product.sale_price !== "0");
+          }
+          
+          if (rating !== null) {
+            allProducts = allProducts.filter(product => (product.average_rating || 0) >= rating);
+          }
+
+          // Apply sorting
+          if (sort) {
+            switch (sort) {
+              case 'price_asc':
+                allProducts.sort((a, b) => parseFloat(a.display_price) - parseFloat(b.display_price));
+                break;
+              case 'price_desc':
+                allProducts.sort((a, b) => parseFloat(b.display_price) - parseFloat(a.display_price));
+                break;
+              case 'rating':
+                allProducts.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0));
+                break;
+              case 'newest':
+                allProducts.sort((a, b) => b.id - a.id);
+                break;
+              case 'popular':
+                allProducts.sort((a, b) => (b.review_count || 0) - (a.review_count || 0));
+                break;
+            }
+          }
+
+          // Apply client-side pagination
+          const startIndex = (page - 1) * perPage;
+          const endIndex = startIndex + perPage;
+          const paginatedProducts = allProducts.slice(startIndex, endIndex);
+          const totalProducts = allProducts.length;
+          const lastPage = Math.ceil(totalProducts / perPage);
+
+          // Create paginated response structure
+          data = {
+            data: paginatedProducts,
+            current_page: page,
+            last_page: lastPage,
+            per_page: perPage,
+            total: totalProducts
+          };
+        } catch (categoryError) {
+          console.warn('Category endpoint failed, falling back to products endpoint:', categoryError);
+          // Fallback to products endpoint with category filter
+          data = await $fetch(`${apiBase}/products`, {
+            query: {
+              page,
+              per_page: perPage,
+              sort,
+              category,
+              price_min: priceMin,
+              price_max: priceMax,
+              in_stock: inStock,
+              on_sale: onSale,
+              rating,
+              search: searchQuery.value || ''
+            },
+            headers: {
+              'Accept': 'application/json'
+            }
+          }) as ProductsResponse;
+        }
+      } else {
+        // Use the Laravel products endpoint for all products or search
+        data = await $fetch(`${apiBase}/products`, {
+          query: {
+            page,
+            per_page: perPage,
+            sort,
+            price_min: priceMin,
+            price_max: priceMax,
+            in_stock: inStock,
+            on_sale: onSale,
+            rating,
+            search: searchQuery.value || ''
+          },
+          headers: {
+            'Accept': 'application/json'
+          }
+        }) as ProductsResponse;
+      }
+
+      products.value = data.data || [];
+      
+      if (data.current_page !== undefined) {
+        pagination.value = {
+          current_page: data.current_page || page,
+          last_page: data.last_page || 1,
+          per_page: data.per_page || perPage,
+          total: data.total || 0
+        };
+      }
+      
+    } catch (err) {
+      console.error('Laravel API Error:', err);
+      error.value = err instanceof Error ? err.message : 'Failed to fetch products';
+      
+      // Fallback to sample data for development
+      if (process.dev) {
+        console.warn('Using fallback sample data due to Laravel API unavailability');
+        products.value = getSampleProducts(category);
+        pagination.value = {
+          current_page: page,
+          last_page: 1,
+          per_page: perPage,
+          total: products.value.length
+        };
+      } else {
+        products.value = [];
+        pagination.value = null;
+      }
+    } finally {
+      loading.value = false;
+    }
+  };
 
   // Reactive state
   const sort = ref(route.query.sort?.toString() || '');
@@ -50,189 +355,163 @@ export function useProductFilters(searchQuery?: Ref<string>) {
   const onSale = ref(route.query.onSale?.toString() === 'true');
   const rating = ref(route.query.rating ? Number(route.query.rating) : null);
 
-  // Filter options from backend
-  const filterOptions = ref<FilterOptions | null>(null);
-  const filterOptionsLoading = ref(false);
-  const filterOptionsError = ref<string | null>(null);
-
-  // Computed properties
-  const priceRanges = computed<OptimizedPriceRange[]>(() => 
-    filterOptions.value?.priceRanges || []
-  );
-
-  const categories = computed<any[]>(() => 
-    filterOptions.value?.categories || []
-  );
-
-  const visibleCategories = computed<any[]>(() => 
-    showMoreCategories.value ? categories.value : categories.value.slice(0, 5)
-  );
-
-  const remainingCategories = computed(() => 
-    Math.max(0, categories.value.length - 5)
-  );
-
-  const priceStats = computed(() => filterOptions.value?.priceStats);
-
-  const activeFilters = computed(() => {
-    const filters: Filter[] = [];
-    // Price filter
-    if (priceMin.value !== null || priceMax.value !== null || onSale.value) {
-      let label = "";
-      if (onSale.value) {
-        const onSaleRange = priceRanges.value.find(r => r.onSale);
-        label = onSaleRange ? onSaleRange.label : "On Sale";
-      } else if (priceMin.value !== null && priceMax.value !== null) {
-        const matchingRange = priceRanges.value.find(r => 
-          r.min === priceMin.value && r.max === priceMax.value
-        );
-        label = matchingRange ? matchingRange.label : `₹${priceMin.value} - ₹${priceMax.value}`;
-      } else if (priceMin.value !== null) {
-        label = `₹${priceMin.value}+`;
-      } else if (priceMax.value !== null) {
-        label = `Up to ₹${priceMax.value}`;
-      }
-      filters.push({
-        label,
-        remove: () => {
-          priceMin.value = null;
-          priceMax.value = null;
-          onSale.value = false;
-        }
-      });
+  // Categories for filter sidebar
+  const categories = ref([
+    {
+      id: 1,
+      name: 'Herbs & Supplements',
+      slug: 'herbs-supplements',
+      children: [
+        { id: 11, name: 'Single Herbs', slug: 'single-herbs', parent_id: 1 },
+        { id: 12, name: 'Herbal Blends', slug: 'herbal-blends', parent_id: 1 },
+        { id: 13, name: 'Vitamins', slug: 'vitamins', parent_id: 1 }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Teas & Beverages',
+      slug: 'teas-beverages',
+      children: [
+        { id: 21, name: 'Herbal Teas', slug: 'herbal-teas', parent_id: 2 },
+        { id: 22, name: 'Green Teas', slug: 'green-teas', parent_id: 2 },
+        { id: 23, name: 'Wellness Drinks', slug: 'wellness-drinks', parent_id: 2 }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Beauty & Skincare',
+      slug: 'beauty-skincare',
+      children: [
+        { id: 31, name: 'Face Care', slug: 'face-care', parent_id: 3 },
+        { id: 32, name: 'Body Care', slug: 'body-care', parent_id: 3 },
+        { id: 33, name: 'Hair Care', slug: 'hair-care', parent_id: 3 }
+      ]
+    },
+    {
+      id: 4,
+      name: 'Essential Oils',
+      slug: 'essential-oils',
+      children: [
+        { id: 41, name: 'Pure Oils', slug: 'pure-oils', parent_id: 4 },
+        { id: 42, name: 'Oil Blends', slug: 'oil-blends', parent_id: 4 },
+        { id: 43, name: 'Diffuser Blends', slug: 'diffuser-blends', parent_id: 4 }
+      ]
     }
+  ]);
 
-    if (category.value) {
-      const cat = categories.value.find((c: any) => c.id === category.value);
-      if (cat) {
-        filters.push({
-          label: `${cat.name} (${cat.products_count || 0})`,
-          remove: () => { category.value = ''; }
-        });
-      }
-    }
+  // Update URL when filters change
+  const updateUrl = () => {
+    const query: Record<string, string> = {};
+    
+    if (sort.value) query.sort = sort.value;
+    if (category.value) query.category = category.value;
+    if (priceMin.value !== null) query.price_min = priceMin.value.toString();
+    if (priceMax.value !== null) query.price_max = priceMax.value.toString();
+    if (page.value > 1) query.page = page.value.toString();
+    if (!inStock.value) query.inStock = 'false';
+    if (onSale.value) query.onSale = 'true';
+    if (rating.value !== null) query.rating = rating.value.toString();
+    
+    router.push({ query });
+  };
 
-    if (inStock.value !== true) {
-      filters.push({
-        label: "Out of Stock",
-        remove: () => { inStock.value = true; }
-      });
-    }
-
-    return filters;
+  // Computed values
+  const filteredProducts = computed(() => products.value);
+  const hasFilters = computed(() => {
+    return sort.value || category.value || priceMin.value !== null || 
+           priceMax.value !== null || !inStock.value || onSale.value || 
+           rating.value !== null;
   });
 
   // Methods
-  const fetchFilterOptions = async () => {
-    filterOptionsLoading.value = true;
-    filterOptionsError.value = null;
-    try {
-      const config = useRuntimeConfig();
-      const API_BASE_URL = config.public.apiBase;
-      const params = new URLSearchParams();
-      if (searchQuery?.value) params.append('search', searchQuery.value);
-      if (category.value) params.append('category', category.value);
-      const response = await fetch(`${API_BASE_URL}/product-filters?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      filterOptions.value = data;
-    } catch (err) {
-      filterOptionsError.value = err instanceof Error ? err.message : 'Failed to fetch filter options';
-      console.error('Error fetching filter options:', err);
-    } finally {
-      filterOptionsLoading.value = false;
-    }
-  };
-
-  const updateRouteAndFetch = () => {
-    const query: Record<string, string> = {};
-    if (sort.value) query.sort = sort.value;
-    if (category.value) query.category = category.value;
-    if (priceMin.value !== null) query.priceMin = priceMin.value.toString();
-    if (priceMax.value !== null) query.priceMax = priceMax.value.toString();
-    query.page = page.value.toString();
-    query.inStock = String(inStock.value);
-    if (onSale.value) query.onSale = 'true';
-    if (searchQuery && searchQuery.value) query.search = searchQuery.value;
-    if (rating.value !== null) query.rating = rating.value.toString();
-    router.replace({ query });
-    fetchProducts(
-      page.value,
-      15,
-      sort.value,
-      category.value,
-      priceMin.value,
-      priceMax.value,
-      inStock.value,
-      onSale.value,
-      searchQuery ? searchQuery.value : undefined,
-      rating.value === null ? undefined : rating.value
-    );
-  };
-
-  // Watchers
-  watch(
-    [sort, category, priceMin, priceMax, page, inStock, onSale, searchQuery ?? ref('')],
-    ([_sort, _category, _priceMin, _priceMax, _page, _inStock, _onSale, _search], oldValues) => {
-      if (searchQuery && _search !== oldValues?.[7]) {
-        page.value = 1;
-      }
-      updateRouteAndFetch();
-    }
-  );
-
-  watch(
-    [searchQuery ?? ref(''), category],
-    async () => {
-      await fetchFilterOptions();
-    }
-  );
-
-  const toggleSort = (type: 'display_price' | 'rating') => {
-    sort.value = sort.value === `${type}_asc` ? `${type}_desc` : `${type}_asc`;
-    page.value = 1;
-  };
-
-  const handlePriceRangeChange = (range: OptimizedPriceRange) => {
-    if (range.onSale) {
-      priceMin.value = null;
-      priceMax.value = null;
-      onSale.value = true;
-    } else {
-      priceMin.value = range.min;
-      priceMax.value = range.max;
-      onSale.value = false;
-    }
-    page.value = 1;
-  };
-
-  const clearAllFilters = () => {
+  const clearFilters = () => {
     sort.value = '';
     category.value = '';
     priceMin.value = null;
     priceMax.value = null;
     inStock.value = true;
     onSale.value = false;
+    rating.value = null;
     page.value = 1;
-    if (rating.value !== null) {
-      rating.value = null;
-    }
+    updateUrl();
   };
 
-  // Check if a price range is currently active
-  const isPriceRangeActive = (range: OptimizedPriceRange) => {
-    if (range.onSale) {
-      return onSale.value;
-    }
-    return range.min === priceMin.value && range.max === priceMax.value;
+  const setCategory = (categorySlug: string) => {
+    category.value = categorySlug;
+    page.value = 1; // Reset to first page when changing category
+    updateUrl();
   };
 
-  // Initial fetch
-  onMounted(async () => {
-    await fetchFilterOptions();
-    updateRouteAndFetch();
+  const setSort = (sortValue: string) => {
+    sort.value = sortValue;
+    page.value = 1; // Reset to first page when changing sort
+    updateUrl();
+  };
+
+  const setPriceRange = (min: number | null, max: number | null) => {
+    priceMin.value = min;
+    priceMax.value = max;
+    page.value = 1; // Reset to first page when changing price range
+    updateUrl();
+  };
+
+  const setPage = (pageNumber: number) => {
+    page.value = pageNumber;
+    updateUrl();
+  };
+
+  const setInStock = (value: boolean) => {
+    inStock.value = value;
+    page.value = 1; // Reset to first page when changing stock filter
+    updateUrl();
+  };
+
+  const setOnSale = (value: boolean) => {
+    onSale.value = value;
+    page.value = 1; // Reset to first page when changing sale filter
+    updateUrl();
+  };
+
+  const setRating = (ratingValue: number | null) => {
+    rating.value = ratingValue;
+    page.value = 1; // Reset to first page when changing rating filter
+    updateUrl();
+  };
+
+  const setSearch = (searchValue: string) => {
+    searchQuery.value = searchValue;
+    page.value = 1; // Reset to first page when searching
+  };
+
+  // Watchers for reactive updates
+  watch([sort, category, priceMin, priceMax, inStock, onSale, rating, page], () => {
+    fetchProducts(
+      page.value,
+      15, // perPage
+      sort.value,
+      category.value,
+      priceMin.value,
+      priceMax.value,
+      inStock.value,
+      onSale.value,
+      rating.value
+    );
+  }, { immediate: true });
+
+  watch(searchQuery, (newValue) => {
+    if (newValue) {
+      fetchProducts(
+        1, // Reset to first page for search
+        15,
+        sort.value,
+        category.value,
+        priceMin.value,
+        priceMax.value,
+        inStock.value,
+        onSale.value,
+        rating.value
+      );
+    }
   });
 
   return {
@@ -240,8 +519,11 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     products,
     loading,
     error,
-    categories,
     pagination,
+    searchQuery,
+    categories,
+    
+    // Reactive filters
     sort,
     category,
     priceMin,
@@ -249,31 +531,24 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     page,
     inStock,
     onSale,
-    showMoreCategories,
     rating,
-
-    // Filter options
-    filterOptions,
-    filterOptionsLoading,
-    filterOptionsError,
-    priceRanges,
-    priceStats,
-
+    showMoreCategories,
+    
     // Computed
-    visibleCategories,
-    remainingCategories,
-    activeFilters,
-
+    filteredProducts,
+    hasFilters,
+    
     // Methods
-    toggleSort,
-    toggleShowMoreCategories: () => showMoreCategories.value = !showMoreCategories.value,
-    selectCategory: (id: string) => {
-      category.value = id;
-      page.value = 1;
-    },
-    handlePriceRangeChange,
-    clearAllFilters,
-    fetchFilterOptions,
-    isPriceRangeActive
+    fetchProducts,
+    clearFilters,
+    setCategory,
+    setSort,
+    setPriceRange,
+    setPage,
+    setInStock,
+    setOnSale,
+    setRating,
+    setSearch,
+    updateUrl
   };
-}
+};

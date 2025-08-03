@@ -22,6 +22,55 @@
 
       <hr>
 
+      
+      <!-- Categories -->
+      <div class="mb-3">
+        <label class="form-label mb-1 fw-bold">Category:</label>
+        
+        <!-- Hierarchical Category Tree -->
+        <HierarchicalCategoryTree
+          v-if="hierarchicalCategories && hierarchicalCategories.length"
+          :categories="hierarchicalCategories"
+          :active-category="activeCategory"
+          :loading="false"
+          @category-select="handleCategorySelect"
+        />
+        
+        <!-- Fallback: Simple category list for backward compatibility -->
+        <ul v-else-if="visibleCategories && visibleCategories.length" class="list-unstyled">
+          <li v-for="cat in visibleCategories" :key="cat.id">
+            <a
+              href="#"
+              class="filter-item"
+              @click.prevent="$emit('category-change', String(cat.id))"
+              :class="{ active: activeCategory === String(cat.id) }"
+            >
+              <LucideIcon :icon="cat.icon" class="me-2" />
+              {{ cat.name }}
+              <span class="badge bg-light text-dark ms-2" v-if="getCategoryProductCount(cat) !== null">
+                {{ getCategoryProductCount(cat) }}
+              </span>
+            </a>
+          </li>
+        </ul>
+        <template v-else>
+          <div class="text-muted small ps-1">Loading categories...</div>
+        </template>
+
+        
+        
+        <!-- Show More Button (only for simple list) -->
+        <div v-if="!hierarchicalCategories && showMoreButton" class="pb-2">
+          <button
+            @click="$emit('toggle-show-more')"
+            class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
+          >
+            {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
+          </button>
+        </div>
+      </div>
+      
+      <hr>
       <!-- Price Ranges -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Price:</label>
@@ -33,39 +82,11 @@
               @click.prevent="$emit('price-range-change', range)"
               :class="{ active: isPriceRangeActive(range) }"
             >
-              {{ range.label }}
+              {{ range.label }} <span v-if="range.count">({{ range.count }})</span>
             </a>
           </li>
         </ul>
         <div v-else class="text-muted small ps-1">Loading price ranges...</div>
-      </div>
-      <hr>
-      <!-- Categories -->
-      <div class="mb-3">
-        <label class="form-label mb-1 fw-bold">Category:</label>
-        <ul v-if="visibleCategories && visibleCategories.length" class="list-unstyled">
-          <li v-for="cat in visibleCategories" :key="cat.id">
-            <a
-              href="#"
-              class="filter-item"
-              @click.prevent="$emit('category-change', cat.id)"
-              :class="{ active: activeCategory === cat.id }"
-            >
-              <LucideIcon :icon="cat.icon" class="me-2" />
-              {{ cat.name }} ({{ cat.products_count || 0 }})
-            </a>
-          </li>
-        </ul>
-        <div v-else class="text-muted small ps-1">Loading categories...</div>
-        <div class="pb-2">
-          <button
-            v-if="showMoreButton"
-            @click="$emit('toggle-show-more')"
-            class="btn btn-link filter-item border-success-subtle p-2" style="font-weight: 500;"
-          >
-            {{ showMore ? 'Show Less' : `Show ${remainingCategories} More` }}
-          </button>
-        </div>
       </div>
       <hr>
       <!-- Stock Status -->
@@ -99,7 +120,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PriceRange, Category } from '@/types';
+import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import type { Category } from '@/types';
+import HierarchicalCategoryTree from '@/components/categories/HierarchicalCategoryTree.vue';
+import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories';
+import { useProducts } from '@/composables/useProducts';
 
 // Define Filter type if not already imported
 type Filter = {
@@ -107,11 +133,21 @@ type Filter = {
   remove: () => void;
 };
 
+// Define OptimizedPriceRange locally to match the one in useProductFilters
+interface OptimizedPriceRange {
+  label: string;
+  min: number | null;
+  max: number | null;
+  onSale: boolean;
+  count: number;
+}
+
 // Props
 const props = defineProps({
   activeFilters: Array as () => Filter[],
-  priceRanges: Array as () => PriceRange[],
+  priceRanges: Array as () => OptimizedPriceRange[],
   visibleCategories: Array as () => Category[],
+  hierarchicalCategories: Array as () => Category[],
   activeCategory: String,
   showMore: Boolean,
   showMoreButton: Boolean,
@@ -123,17 +159,124 @@ const props = defineProps({
   icon:String,
 });
 
+// Local state for categories if not provided by parent
+const { hierarchicalCategories: fetchedCategories, fetchCategories } = useHierarchicalCategories();
+const { products, fetchProducts } = useProducts();
+const router = useRouter();
+const loadingCategories = ref(false);
+const loadingPriceRanges = ref(false);
+
+onMounted(async () => {
+  if ((!props.hierarchicalCategories || props.hierarchicalCategories.length === 0) &&
+      (!props.visibleCategories || props.visibleCategories.length === 0)) {
+    loadingCategories.value = true;
+    await fetchCategories();
+    loadingCategories.value = false;
+  }
+  if (!props.priceRanges || props.priceRanges.length === 0) {
+    loadingPriceRanges.value = true;
+    await fetchProducts();
+    loadingPriceRanges.value = false;
+  }
+});
+// Fallback: Compute price ranges from products if not provided
+const fallbackPriceRanges = computed(() => {
+  if (!products.value || products.value.length === 0) return [];
+  // Example: 0-499, 500-999, 1000-1999, 2000+
+  const ranges = [
+    { label: 'Under ₹500', min: 0, max: 499 },
+    { label: '₹500 - ₹999', min: 500, max: 999 },
+    { label: '₹1000 - ₹1999', min: 1000, max: 1999 },
+    { label: '₹2000 & Above', min: 2000, max: null },
+  ];
+  return ranges.map(r => ({
+    ...r,
+    onSale: false,
+    count: products.value.filter(p => {
+      const price = parseFloat(p.display_price || p.price || '0');
+      if (r.max === null) return price >= r.min;
+      return price >= r.min && price <= r.max;
+    }).length
+  }));
+});
+
+const priceRanges = computed(() => {
+  if (props.priceRanges && props.priceRanges.length > 0) {
+    return props.priceRanges;
+  }
+  return fallbackPriceRanges.value;
+});
+
+// Helper to get product count for a category
+function getCategoryProductCount(cat: Category): number | null {
+  if (typeof cat.products_count === 'number') return cat.products_count;
+  // Fallback: count products in this category from products composable
+  if (products.value && products.value.length > 0) {
+    return products.value.filter(p => {
+      // Check if product belongs to this category (by id or slug)
+      if (Array.isArray(p.categories)) {
+        return p.categories.some((c: any) => c.id === cat.id || c.slug === cat.slug);
+      }
+      return false;
+    }).length;
+  }
+  return null;
+}
+
 // Emits
 const emit = defineEmits<{
-  (e: 'price-range-change', range: PriceRange): void;
+  (e: 'price-range-change', range: OptimizedPriceRange): void;
   (e: 'category-change', id: string): void;
   (e: 'stock-change', value: boolean): void;
   (e: 'toggle-show-more'): void;
   (e: 'clear-all-filters'): void;
 }>();
 
+
+// Use categories as-is if they are already nested (with children), otherwise fallback to flat or fetched
+const hierarchicalCategories = computed(() => {
+  // Prioritize explicitly passed hierarchical categories
+  if (props.hierarchicalCategories && props.hierarchicalCategories.length > 0) {
+    return props.hierarchicalCategories;
+  }
+  if (props.visibleCategories && props.visibleCategories.length > 0) {
+    // If at least one category has children, treat as hierarchical
+    const isHierarchical = props.visibleCategories.some(cat => Array.isArray(cat.children) && cat.children.length > 0);
+    if (isHierarchical) {
+      return props.visibleCategories;
+    }
+    // Fallback: treat all as level 1 categories
+    return props.visibleCategories.map(cat => ({
+      ...cat,
+      level: 1 as const,
+      parent_id: null,
+      children: []
+    }));
+  }
+  // Use fetched categories if nothing provided
+  return fetchedCategories.value || [];
+});
+
+// Handle category selection from hierarchical tree
+const handleCategorySelect = (category: Category) => {
+  // Check if category has children
+  if (category.children && category.children.length > 0) {
+    // Category has children - just expand it (let the tree handle expansion)
+    // This will be handled by the HierarchicalCategoryTree component automatically
+    emit('category-change', String(category.id));
+  } else {
+    // Leaf category - navigate to category page
+    if (category.slug) {
+      router.push(`/category/${category.slug}`);
+    } else {
+      // Fallback: emit event for filtering
+      emit('category-change', String(category.id));
+    }
+  }
+};
+
 // Methods
-const isPriceRangeActive = (range: PriceRange) => {
+const isPriceRangeActive = (range: OptimizedPriceRange) => {
   return range.min === props.priceMin && range.max === props.priceMax;
 };
 

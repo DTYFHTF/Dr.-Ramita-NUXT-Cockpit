@@ -21,6 +21,7 @@
               :active-filters="activeFilters"
               :price-ranges="priceRanges"
               :visible-categories="visibleCategories"
+              :hierarchical-categories="hierarchicalCategories"
               :active-category="category"
               :show-more="showMoreCategories"
               :show-more-button="categories.length > 5"
@@ -65,6 +66,7 @@
               :active-filters="activeFilters"
               :price-ranges="priceRanges"
               :visible-categories="visibleCategories"
+              :hierarchical-categories="hierarchicalCategories"
               :active-category="category"
               :show-more="showMoreCategories"
               :show-more-button="categories.length > 5"
@@ -222,6 +224,7 @@ const {
   remainingCategories,
   activeFilters,
   priceRanges,
+  hierarchicalCategories,
   toggleSort,
   toggleShowMoreCategories,
   selectCategory,
