@@ -1,5 +1,8 @@
 <template>
   <div class="category-page">
+    
+
+    <!-- Category Header removed: title and meta are now omitted, breadcrumb provides context -->
     <!-- Breadcrumbs - Moved to top -->
     <div class="breadcrumb-section">
       <div class="container">
@@ -7,35 +10,6 @@
           :categories="categoryPath"
           class="py-3"
         />
-      </div>
-    </div>
-
-    <!-- Category Header -->
-    <div class="category-header">
-      <div class="container">
-        <!-- Category Title & Description -->
-        <div class="category-hero">
-          <div class="row align-items-center">
-            <div class="col-lg-8">
-              <h1 class="category-title">
-                <LucideIcon 
-                  v-if="currentCategory?.icon" 
-                  :icon="currentCategory.icon" 
-                  class="me-3 category-icon"
-                />
-                {{ currentCategory?.name || 'Category' }}
-              </h1>
-              <div class="category-meta">
-                <span class="badge category-badge me-2">
-                  {{ totalProducts }} {{ totalProducts === 1 ? 'Product' : 'Products' }}
-                </span>
-                <span v-if="currentCategory?.level" class="badge category-level-badge">
-                  Level {{ currentCategory.level }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -464,16 +438,14 @@ watch(() => route.params.slug, async (newSlug) => {
 
 .breadcrumb-section {
   background: var(--background-white);
-  border-bottom: 1px solid var(--border-color);
-  padding: 1rem 0;
-  min-height: 60px;
+  /* border-bottom removed */
+  padding: 0.5rem 0 0.5rem 0;
+  min-height: 40px;
 }
 
 .category-header {
   background: var(--background-white);
-  border-bottom: 1px solid var(--border-color);
-  padding: 2rem 0;
-  margin-bottom: 2rem;
+  
 }
 
 .category-hero {
@@ -481,7 +453,6 @@ watch(() => route.params.slug, async (newSlug) => {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     
@@ -496,25 +467,8 @@ watch(() => route.params.slug, async (newSlug) => {
     margin-bottom: 1rem;
     line-height: 1.6;
   }
-  
-  .category-meta {
-    .category-badge {
-      background: var(--color-primary);
-      color: var(--text-white);
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-    }
-    
-    .category-level-badge {
-      background: var(--accent-soft-green);
-      color: var(--text-primary);
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-    }
   }
-}
+
 
 .category-image-wrapper {
   .category-image {
