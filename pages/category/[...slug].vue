@@ -1,15 +1,18 @@
 <template>
   <div class="category-page">
+    <!-- Breadcrumbs - Moved to top -->
+    <div class="breadcrumb-section">
+      <div class="container">
+        <CategoryBreadcrumb 
+          :categories="categoryPath"
+          class="py-3"
+        />
+      </div>
+    </div>
+
     <!-- Category Header -->
     <div class="category-header">
       <div class="container">
-        <!-- Breadcrumbs -->
-        <CategoryBreadcrumb 
-          v-if="categoryPath.length"
-          :categories="categoryPath"
-          class="mb-3"
-        />
-        
         <!-- Category Title & Description -->
         <div class="category-hero">
           <div class="row align-items-center">
@@ -268,8 +271,45 @@ const currentCategory = computed(() => {
   return categoryData.value
 })
 
+// Use the same ancestry logic as HierarchicalCategoryTree for breadcrumbs
 const categoryPath = computed(() => {
-  return getCategoryPath(categorySlug.value)
+  if (!categorySlug.value || !hierarchicalCategories.value) return []
+
+  // Find category by slug in the hierarchical tree
+  const findCategoryBySlug = (categories: Category[], slug: string): Category | null => {
+    for (const category of categories) {
+      if (category.slug === slug) {
+        return category
+      }
+      if (category.children && category.children.length > 0) {
+        const found = findCategoryBySlug(category.children, slug)
+        if (found) return found
+      }
+    }
+    return null
+  }
+
+  // Find the full ancestry path for the current category
+  const findCategoryPath = (categoryId: string, categories: Category[]): Category[] | null => {
+    for (const category of categories) {
+      if (String(category.id) === String(categoryId)) {
+        return [category]
+      }
+      if (category.children && category.children.length > 0) {
+        const childPath = findCategoryPath(categoryId, category.children)
+        if (childPath) {
+          return [category, ...childPath]
+        }
+      }
+    }
+    return null
+  }
+
+  // First, find the category by slug to get its ID
+  const category = findCategoryBySlug(hierarchicalCategories.value, categorySlug.value)
+  if (!category) return []
+  const path = findCategoryPath(String(category.id), hierarchicalCategories.value)
+  return path || []
 })
 
 const subcategories = computed(() => {
@@ -420,6 +460,13 @@ watch(() => route.params.slug, async (newSlug) => {
 .category-page {
   min-height: 100vh;
   background: var(--background-light);
+}
+
+.breadcrumb-section {
+  background: var(--background-white);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  min-height: 60px;
 }
 
 .category-header {

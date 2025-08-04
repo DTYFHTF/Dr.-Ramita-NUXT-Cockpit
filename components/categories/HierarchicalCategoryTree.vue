@@ -136,24 +136,7 @@
       </div>
     </div>
 
-    <!-- Category Breadcrumb -->
-    <div v-if="selectedCategoryPath" class="category-breadcrumb mt-3">
-      <small class="text-muted">
-        <span 
-          v-for="(pathItem, index) in selectedCategoryPath" 
-          :key="pathItem.id"
-          class="breadcrumb-item"
-        >
-          <button 
-            class="btn btn-link btn-sm p-0"
-            @click="handleCategoryClick(pathItem)"
-          >
-            {{ pathItem.name }}
-          </button>
-          <span v-if="index < selectedCategoryPath.length - 1" class="mx-1">›</span>
-        </span>
-      </small>
-    </div>
+    
   </div>
 </template>
 
@@ -427,23 +410,6 @@ onMounted(() => {
     }
   }
 
-  .category-breadcrumb {
-    padding: 0.5rem 0.75rem;
-    background-color: var(--background-light);
-    border-radius: 0.375rem;
-    border: 1px solid var(--border-color);
-    
-    .breadcrumb-item {
-      .btn-link {
-        color: var(--color-primary);
-        text-decoration: none;
-        font-size: 0.8rem;
-        
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
+  
 }
 </style>

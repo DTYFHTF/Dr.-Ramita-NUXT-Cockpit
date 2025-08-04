@@ -51,16 +51,7 @@ defineProps<{
     background: transparent;
     
     .breadcrumb-item {
-      font-size: 0.9rem;
-      
-      &:not(:last-child) {
-        &::after {
-          content: '/';
-          color: var(--text-muted);
-          margin: 0 0.5rem;
-        }
-      }
-      
+      font-size: 0.9rem;      
       &.active {
         .current-category {
           color: var(--text-secondary);

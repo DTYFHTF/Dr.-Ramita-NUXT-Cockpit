@@ -261,15 +261,15 @@ const hierarchicalCategories = computed(() => {
 const handleCategorySelect = (category: Category) => {
   // Check if category has children
   if (category.children && category.children.length > 0) {
-    // Category has children - just expand it (let the tree handle expansion)
-    // This will be handled by the HierarchicalCategoryTree component automatically
-    emit('category-change', String(category.id));
+    // Category has children - just let the tree handle expansion, don't emit anything
+    // The HierarchicalCategoryTree already handles the expansion internally
+    return;
   } else {
     // Leaf category - navigate to category page
     if (category.slug) {
       router.push(`/category/${category.slug}`);
     } else {
-      // Fallback: emit event for filtering
+      // Fallback: emit event for filtering (for backward compatibility)
       emit('category-change', String(category.id));
     }
   }
