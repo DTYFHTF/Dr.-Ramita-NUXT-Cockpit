@@ -219,6 +219,7 @@ const {
   page,
   inStock,
   onSale,
+  rating,
   showMoreCategories,
   visibleCategories,
   remainingCategories,
@@ -238,14 +239,15 @@ import { ref } from "vue";
 
 // Computed properties for active filters
 const hasActiveFilters = computed(() => {
-  return !!(category.value || priceMin.value || priceMax.value || inStock.value || searchQuery.value);
+  return !!(priceMin.value || priceMax.value || !inStock.value || searchQuery.value || onSale.value || rating.value);
 });
 
 const activeFilterCount = computed(() => {
   let count = 0;
-  if (category.value) count++;
   if (priceMin.value || priceMax.value) count++;
-  if (inStock.value) count++;
+  if (!inStock.value) count++;
+  if (onSale.value) count++;
+  if (rating.value) count++;
   if (searchQuery.value) count++;
   return count;
 });
@@ -261,7 +263,7 @@ function handleStockChange(val: boolean) {
 }
 
 function handleClearCategory() {
-  selectCategory('');
+  selectCategory();
 }
 
 function handleClearPriceRange() {
