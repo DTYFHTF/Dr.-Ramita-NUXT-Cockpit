@@ -31,23 +31,12 @@
             :to="`/category/${level1.slug}`"
             class="category-content navigation-link"
           >
-            <LucideIcon 
-              v-if="level1.children && level1.children.length > 0"
-              :icon="expandedCategories.has(normalizeId(level1.id)) ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-              class="expand-icon" 
-              @click.prevent.stop="toggleCategoryExpansion(normalizeId(level1.id))"
-            />
-            <LucideIcon :icon="level1.icon || 'mdi:tag'" class="category-icon" />
+            <span v-if="level1.children && level1.children.length > 0" class="chevron-indicator" :class="{ expanded: expandedCategories.has(normalizeId(level1.id)) }">&#8250;</span>
             <span class="category-name">{{ level1.name }}</span>
             <span class="product-count">({{ getCategoryProductCount(level1) }})</span>
           </NuxtLink>
           <div v-else class="category-content">
-            <LucideIcon 
-              v-if="level1.children && level1.children.length > 0"
-              :icon="expandedCategories.has(normalizeId(level1.id)) ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-              class="expand-icon" 
-            />
-            <LucideIcon :icon="level1.icon || 'mdi:tag'" class="category-icon" />
+            <span v-if="level1.children && level1.children.length > 0" class="chevron-indicator" :class="{ expanded: expandedCategories.has(normalizeId(level1.id)) }">&#8250;</span>
             <span class="category-name">{{ level1.name }}</span>
             <span class="product-count">({{ getCategoryProductCount(level1) }})</span>
           </div>
@@ -77,23 +66,12 @@
                 :to="`/category/${level2.slug}`"
                 class="category-content navigation-link"
               >
-                <LucideIcon 
-                  v-if="level2.children && level2.children.length > 0"
-                  :icon="expandedCategories.has(normalizeId(level2.id)) ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-                  class="expand-icon" 
-                  @click.prevent.stop="toggleCategoryExpansion(normalizeId(level2.id))"
-                />
-                <LucideIcon :icon="level2.icon || 'mdi:tag-outline'" class="category-icon" />
+                <span v-if="level2.children && level2.children.length > 0" class="chevron-indicator" :class="{ expanded: expandedCategories.has(normalizeId(level2.id)) }">&#8250;</span>
                 <span class="category-name">{{ level2.name }}</span>
                 <span class="product-count">({{ getCategoryProductCount(level2) }})</span>
               </NuxtLink>
               <div v-else class="category-content">
-                <LucideIcon 
-                  v-if="level2.children && level2.children.length > 0"
-                  :icon="expandedCategories.has(normalizeId(level2.id)) ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-                  class="expand-icon" 
-                />
-                <LucideIcon :icon="level2.icon || 'mdi:tag-outline'" class="category-icon" />
+                <span v-if="level2.children && level2.children.length > 0" class="chevron-indicator" :class="{ expanded: expandedCategories.has(normalizeId(level2.id)) }">&#8250;</span>
                 <span class="category-name">{{ level2.name }}</span>
                 <span class="product-count">({{ getCategoryProductCount(level2) }})</span>
               </div>
@@ -119,12 +97,12 @@
                     :to="`/category/${level3.slug}`"
                     class="category-content navigation-link"
                   >
-                    <LucideIcon :icon="level3.icon || 'mdi:tag-multiple'" class="category-icon" />
+                    <!-- Icon removed -->
                     <span class="category-name">{{ level3.name }}</span>
                     <span class="product-count">({{ getCategoryProductCount(level3) }})</span>
                   </NuxtLink>
                   <div v-else class="category-content">
-                    <LucideIcon :icon="level3.icon || 'mdi:tag-multiple'" class="category-icon" />
+                    <!-- Icon removed -->
                     <span class="category-name">{{ level3.name }}</span>
                     <span class="product-count">({{ getCategoryProductCount(level3) }})</span>
                   </div>
@@ -144,7 +122,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import type { Category } from '@/types';
-import LucideIcon from '@/components/LucideIcon.vue';
+// import LucideIcon from '@/components/LucideIcon.vue';
 import { useProducts } from '@/composables/useProducts';
 
 // Helper to get product count for a category (must be a function, not const, for template access)
@@ -345,18 +323,20 @@ onMounted(() => {
           }
         }
         
-        .expand-icon {
-          width: 16px;
-          height: 16px;
+        .chevron-indicator {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1em;
+          height: 1em;
           color: var(--text-secondary);
-          opacity: 0.7;
-          transition: transform 0.2s ease;
-        }
-        
-        .category-icon {
-          width: 18px;
-          height: 18px;
-          color: var(--color-primary);
+          font-size: 1.1em;
+          transition: transform 0.2s;
+          margin-right: 0.2em;
+          vertical-align: middle;
+          &.expanded {
+            transform: rotate(90deg);
+          }
         }
         
         .category-name {
