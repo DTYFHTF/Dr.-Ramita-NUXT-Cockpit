@@ -80,46 +80,25 @@
             </div>
 
             <!-- Sort Controls -->
-            <div class="sort-controls">
-              <div class="sort-label">Sort by:</div>
-              <div class="sort-buttons">
-                <button class="sort-btn" :class="{ active: sort.includes('display_price') }"
-                  @click="toggleSort('display_price')">
-                  <LucideIcon icon="mdi:currency-inr" class="me-1" />
-                  Price {{ sortArrow("display_price") }}
-                </button>
-                <button class="sort-btn" :class="{ active: sort.includes('rating') }" @click="toggleSort('rating')">
-                  <LucideIcon icon="mdi:star" class="me-1" />
-                  Rating {{ sortArrow('rating') }}
-                </button>
-              </div>
-            </div>
+            <ProductSortControls :sort="sort" @toggle-sort="toggleSort" />
           </div>
 
           <!-- Active Filters Display -->
-          <div v-if="hasActiveFilters" class="active-filters">
-            <div class="active-filters-label">Active Filters:</div>
-            <div class="filter-tags">
-              <span v-if="category" class="filter-tag">
-                Category: {{ category }}
-                <button @click="handleClearCategory" class="remove-filter">
-                  <LucideIcon icon="mdi:close" />
-                </button>
-              </span>
-              <span v-if="priceMin || priceMax" class="filter-tag">
-                Price: ₹{{ priceMin || 0 }} - ₹{{ priceMax || '∞' }}
-                <button @click="handleClearPriceRange" class="remove-filter">
-                  <LucideIcon icon="mdi:close" />
-                </button>
-              </span>
-              <span v-if="inStock" class="filter-tag">
-                In Stock Only
-                <button @click="handleStockChange(false)" class="remove-filter">
-                  <LucideIcon icon="mdi:close" />
-                </button>
-              </span>
-            </div>
-          </div>
+          <ActiveFilters 
+            :category="category"
+            :price-min="priceMin" 
+            :price-max="priceMax"
+            :search-query="searchQuery"
+            :in-stock="inStock"
+            :on-sale="onSale"
+            :rating="rating"
+            @clear-category="handleClearCategory"
+            @clear-price-range="handleClearPriceRange"
+            @clear-search="() => { searchQuery = ''; page = 1; }"
+            @clear-stock="handleStockChange(true)"
+            @clear-sale="() => { onSale = false; page = 1; }"
+            @clear-rating="() => { rating = null; page = 1; }"
+          />
 
           <!-- Products Grid -->
           <div class="products-content">
@@ -140,8 +119,9 @@
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from "vue";
 import { useProductFilters } from "@/composables/useProductFilters";
-import { useImageUrl } from '@/composables/useImageUrl.js';
 import LucideIcon from '@/components/LucideIcon.vue';
+import ProductSortControls from '@/components/products/ProductSortControls.vue';
+import ActiveFilters from '@/components/products/ActiveFilters.vue';
 
 // Dynamic imports
 const FilterSidebar = defineAsyncComponent(
@@ -186,8 +166,6 @@ const {
   clearAllFilters,
 } = useProductFilters(searchQuery);
 
-const { getImageUrl } = useImageUrl();
-
 import { ref } from "vue";
 
 // Computed properties for active filters
@@ -224,14 +202,6 @@ function handleClearPriceRange() {
   priceMax.value = null;
   onSale.value = false;
 }
-
-const sortArrow = (type: string) => {
-  if (sort.value === `${type}_asc`) return "↑";
-  if (sort.value === `${type}_desc`) return "↓";
-  return "↕";
-};
-
-const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
 </script>
 
 <style scoped>
@@ -489,115 +459,6 @@ const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
   font-size: 0.95rem;
 }
 
-/* Sort Controls */
-.sort-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-@media (max-width: 768px) {
-  .sort-controls {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-.sort-label {
-  font-weight: 500;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-}
-
-.sort-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.sort-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: var(--background-light);
-  border: 2px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.sort-btn:hover {
-  border-color: var(--color-success);
-  color: var(--text-primary);
-}
-
-.sort-btn.active {
-  background: var(--color-success);
-  border-color: var(--color-success);
-  color: var(--text-white);
-}
-
-/* Active Filters */
-.active-filters {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: var(--background-light);
-  border-radius: 12px;
-  flex-wrap: wrap;
-}
-
-.active-filters-label {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  white-space: nowrap;
-}
-
-.filter-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.filter-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.remove-filter {
-  background: none;
-  border: none;
-  color: var(--color-error);
-  cursor: pointer;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.remove-filter:hover {
-  background: rgba(239, 68, 68, 0.1);
-}
-
 /* Products Content */
 .products-content {
   margin-bottom: 2rem;
@@ -628,24 +489,6 @@ const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
   .results-title {
     font-size: 1.5rem;
   }
-
-  .sort-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .sort-btn {
-    justify-content: center;
-  }
-
-  .active-filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .filter-tags {
-    width: 100%;
-  }
 }
 
 @media (max-width: 480px) {
@@ -655,11 +498,6 @@ const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
 
   .products-header {
     gap: 0.75rem;
-  }
-
-  .filter-tag {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
   }
 
   .results-title {

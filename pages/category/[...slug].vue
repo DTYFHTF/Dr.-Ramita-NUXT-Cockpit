@@ -65,9 +65,15 @@
           <!-- Main Content -->
           <div class="col-lg-9">
             <!-- Search & Sort Header -->
+
+
             <div class="products-header">
-              <div class="row align-items-center mb-4">
-                <div class="col-md-6">
+              <div class="title-search-row">
+                <h1 class="results-title">
+                  {{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
+                  <span v-if="filteredProducts.length" class="results-count">({{ filteredProducts.length }})</span>
+                </h1>
+                <div class="inline-search">
                   <ProductSearch 
                     v-model:query="searchQuery"
                     :all-products="categoryProducts"
@@ -76,23 +82,20 @@
                     :placeholder="`Search in ${currentCategory?.name || 'category'}...`"
                   />
                 </div>
-                <div class="col-md-6">
-                  <div class="d-flex align-items-center justify-content-md-end">
-                    <label class="form-label me-2 mb-0">Sort by:</label>
-                    <div class="sort-buttons">
-                      <button class="sort-btn" :class="{ active: sortBy.includes('price') }" @click="toggleSort('price')">
-                        <LucideIcon icon="mdi:currency-inr" class="me-1" />
-                        Price {{ sortArrow('price') }}
-                      </button>
-                      <button class="sort-btn" :class="{ active: sortBy.includes('rating') }" @click="toggleSort('rating')">
-                        <LucideIcon icon="mdi:star" class="me-1" />
-                        Rating {{ sortArrow('rating') }}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <ProductSortControls :sort="sortBy" @toggle-sort="toggleSort" />
               </div>
             </div>
+
+            <!-- Active Filters Display -->
+            <ActiveFilters 
+              :price-min="priceMin" 
+              :price-max="priceMax"
+              :search-query="searchQuery"
+              :in-stock="inStock"
+              @clear-price-range="() => { priceMin = undefined; priceMax = undefined; currentPage = 1; }"
+              @clear-search="() => { searchQuery = ''; currentPage = 1; }"
+              @clear-stock="() => { inStock = true; currentPage = 1; }"
+            />
 
             <!-- Products Grid -->
             <ProductList
@@ -189,6 +192,8 @@ import FilterSidebar from '@/components/products/FilterSidebar.vue'
 import ProductList from '@/components/products/ProductList.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import ProductSearch from '@/components/products/ProductSearch.vue'
+import ProductSortControls from '@/components/products/ProductSortControls.vue'
+import ActiveFilters from '@/components/products/ActiveFilters.vue'
 
 // Meta and SEO
 definePageMeta({
@@ -203,24 +208,21 @@ const {
   error,
   categoryData,
   fetchCategoryProducts,
-  totalProducts,
-  category
+  totalProducts
 } = useCategoryProducts()
 
 const { 
   hierarchicalCategories, 
   fetchCategories, 
-  getCategoryPath,
   findCategoryById
 } = useHierarchicalCategories()
 
 // Get priceRanges from useProductFilters for FilterSidebar
-const searchQueryForFilters = ref('')
-const { priceRanges } = useProductFilters(searchQueryForFilters)
+const { priceRanges } = useProductFilters()
 
 // Local state
 const searchQuery = ref('')
-const sortBy = ref('name')
+const sortBy = ref('')
 const viewMode = ref<'grid' | 'list'>('grid')
 const currentPage = ref(1)
 const itemsPerPage = ref(12)
@@ -338,24 +340,21 @@ const filteredProducts = computed(() => {
   }
   // Sorting
   switch (sortBy.value) {
-    case 'price_asc':
+    case 'display_price_asc':
       filtered.sort((a, b) => parseFloat(a.display_price || a.price) - parseFloat(b.display_price || b.price))
       break
-    case 'price_desc':
+    case 'display_price_desc':
       filtered.sort((a, b) => parseFloat(b.display_price || b.price) - parseFloat(a.display_price || a.price))
       break
-    case 'name':
-      filtered.sort((a, b) => a.name.localeCompare(b.name))
+    case 'rating_asc':
+      filtered.sort((a, b) => (a.average_rating || 0) - (b.average_rating || 0))
       break
-    case 'newest':
-      filtered.sort((a, b) => {
-        const dateA = new Date(a.created_at || 0)
-        const dateB = new Date(b.created_at || 0)
-        return dateB.getTime() - dateA.getTime()
-      })
-      break
-    case 'rating':
+    case 'rating_desc':
       filtered.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
+      break
+    default:
+      // Default sort by name
+      filtered.sort((a, b) => a.name.localeCompare(b.name))
       break
   }
   return filtered
@@ -406,10 +405,6 @@ function handleStockChange(val: boolean | null) {
 const handleSearch = (event: Event) => {
   const target = event.target as HTMLInputElement
   searchQuery.value = target.value
-  currentPage.value = 1
-}
-
-const handleSortChange = () => {
   currentPage.value = 1
 }
 
@@ -467,27 +462,11 @@ watch(() => route.params.slug, async (newSlug) => {
   }
 }, { immediate: true })
 
-function sortArrow(type: string) {
-  if (type === 'price') {
-    if (sortBy.value === 'price_asc') return '↑';
-    if (sortBy.value === 'price_desc') return '↓';
-    return '';
-  }
-  if (type === 'rating') {
-    if (sortBy.value === 'rating') return '↓';
-    if (sortBy.value === 'rating_asc') return '↑';
-    return '';
-  }
-  return '';
-}
-
 function toggleSort(type: string) {
-  if (type === 'price') {
-    if (sortBy.value === 'price_asc') sortBy.value = 'price_desc';
-    else sortBy.value = 'price_asc';
-  } else if (type === 'rating') {
-    if (sortBy.value === 'rating') sortBy.value = 'rating_asc';
-    else sortBy.value = 'rating';
+  if (sortBy.value === `${type}_asc`) {
+    sortBy.value = `${type}_desc`;
+  } else {
+    sortBy.value = `${type}_asc`;
   }
   currentPage.value = 1;
 }
@@ -614,19 +593,83 @@ function toggleSort(type: string) {
 .products-section {
   background: var(--background-white);
   padding: 2rem 0;
-  
+}
+
+/* Products Header */
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--background-light);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
   .products-header {
-    .sort-select {
-      max-width: 200px;
-      border-color: var(--border-color);
-      border-radius: 8px;
-      
-      &:focus {
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
-      }
-    }
+    flex-direction: column;
+    gap: 1rem;
   }
+}
+
+.title-search-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .title-search-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.results-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.results-count {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.inline-search {
+  flex-shrink: 0;
+  min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .inline-search {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+.search-component {
+  background: var(--background-white);
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.search-component:focus-within {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
 }
 
 .empty-state {

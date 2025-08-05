@@ -185,7 +185,7 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     }
   );
 
-  const toggleSort = (type: 'display_price' | 'rating') => {
+  const toggleSort = (type: string) => {
     sort.value = sort.value === `${type}_asc` ? `${type}_desc` : `${type}_asc`;
     page.value = 1;
   };
