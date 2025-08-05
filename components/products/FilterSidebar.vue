@@ -82,7 +82,7 @@
               @click.prevent="$emit('price-range-change', range)"
               :class="{ active: isPriceRangeActive(range) }"
             >
-              {{ range.label }} <span v-if="range.count">({{ range.count }})</span>
+              {{ range.label }}
             </a>
           </li>
         </ul>
@@ -173,39 +173,10 @@ onMounted(async () => {
     await fetchCategories();
     loadingCategories.value = false;
   }
-  if (!props.priceRanges || props.priceRanges.length === 0) {
-    loadingPriceRanges.value = true;
-    await fetchProducts();
-    loadingPriceRanges.value = false;
-  }
-});
-// Fallback: Compute price ranges from products if not provided
-const fallbackPriceRanges = computed(() => {
-  if (!products.value || products.value.length === 0) return [];
-  // Example: 0-499, 500-999, 1000-1999, 2000+
-  const ranges = [
-    { label: 'Under ₹500', min: 0, max: 499 },
-    { label: '₹500 - ₹999', min: 500, max: 999 },
-    { label: '₹1000 - ₹1999', min: 1000, max: 1999 },
-    { label: '₹2000 & Above', min: 2000, max: null },
-  ];
-  return ranges.map(r => ({
-    ...r,
-    onSale: false,
-    count: products.value.filter(p => {
-      const price = parseFloat(p.display_price || p.price || '0');
-      if (r.max === null) return price >= r.min;
-      return price >= r.min && price <= r.max;
-    }).length
-  }));
 });
 
-const priceRanges = computed(() => {
-  if (props.priceRanges && props.priceRanges.length > 0) {
-    return props.priceRanges;
-  }
-  return fallbackPriceRanges.value;
-});
+// Use only the priceRanges prop from parent
+const priceRanges = computed(() => props.priceRanges ?? []);
 
 // Helper to get product count for a category
 function getCategoryProductCount(cat: Category): number | null {

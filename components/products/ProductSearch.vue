@@ -5,7 +5,7 @@
       class="search-input"
       :value="query"
       @input="onInput"
-      placeholder="Search products"
+      :placeholder="props.placeholder || 'Search products'"
       @focus="showSuggestions = true"
       @blur="onBlur"
       aria-label="Search products"
@@ -30,18 +30,44 @@ import type { Product } from '@/types';
 const props = defineProps<{
   query: string;
   allProducts: Product[];
+  placeholder?: string;
 }>();
 
 const emit = defineEmits(['update:query', 'search']);
 
 const internalQuery = ref(props.query);
 const showSuggestions = ref(false);
+const apiSuggestions = ref<Product[]>([]);
+const loadingSuggestions = ref(false);
 
 watch(() => props.query, (newQuery) => {
   internalQuery.value = newQuery;
 });
 
+watch(internalQuery, async (val) => {
+  if (val && val.length >= 2) {
+    loadingSuggestions.value = true;
+    try {
+      const res = await fetch(`/api/products/suggest?q=${encodeURIComponent(val)}`);
+      if (res.ok) {
+        const data = await res.json();
+        apiSuggestions.value = Array.isArray(data) ? data : [];
+      } else {
+        apiSuggestions.value = [];
+      }
+    } catch (e) {
+      apiSuggestions.value = [];
+    } finally {
+      loadingSuggestions.value = false;
+    }
+  } else {
+    apiSuggestions.value = [];
+  }
+});
+
 const suggestions = computed(() => {
+  if (loadingSuggestions.value) return [];
+  if (apiSuggestions.value.length) return apiSuggestions.value;
   if (!internalQuery.value || internalQuery.value.length < 2) {
     showSuggestions.value = false;
     return [];

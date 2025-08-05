@@ -52,7 +52,13 @@
             <FilterSidebar
               :hierarchical-categories="hierarchicalCategories"
               :active-category="activeCategoryId || undefined"
+              :price-min="priceMin"
+              :price-max="priceMax"
+              :in-stock="inStock"
+              :price-ranges="priceRanges"
               @category-change="handleCategoryChange"
+              @price-range-change="handlePriceRangeChange"
+              @stock-change="handleStockChange"
             />
           </div>
 
@@ -62,28 +68,27 @@
             <div class="products-header">
               <div class="row align-items-center mb-4">
                 <div class="col-md-6">
-                  <input
-                    v-model="searchQuery"
-                    type="text"
-                    class="form-input"
+                  <ProductSearch 
+                    v-model:query="searchQuery"
+                    :all-products="categoryProducts"
+                    @search="handleSearch"
+                    class="search-component"
                     :placeholder="`Search in ${currentCategory?.name || 'category'}...`"
-                    @input="handleSearch"
                   />
                 </div>
                 <div class="col-md-6">
                   <div class="d-flex align-items-center justify-content-md-end">
                     <label class="form-label me-2 mb-0">Sort by:</label>
-                    <select 
-                      v-model="sortBy" 
-                      class="form-select sort-select"
-                      @change="handleSortChange"
-                    >
-                      <option value="name">Name</option>
-                      <option value="price_asc">Price: Low to High</option>
-                      <option value="price_desc">Price: High to Low</option>
-                      <option value="newest">Newest First</option>
-                      <option value="rating">Highest Rated</option>
-                    </select>
+                    <div class="sort-buttons">
+                      <button class="sort-btn" :class="{ active: sortBy.includes('price') }" @click="toggleSort('price')">
+                        <LucideIcon icon="mdi:currency-inr" class="me-1" />
+                        Price {{ sortArrow('price') }}
+                      </button>
+                      <button class="sort-btn" :class="{ active: sortBy.includes('rating') }" @click="toggleSort('rating')">
+                        <LucideIcon icon="mdi:star" class="me-1" />
+                        Rating {{ sortArrow('rating') }}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -176,11 +181,14 @@ import { useRoute, useRouter } from 'vue-router'
 import type { Category } from '@/types'
 import { useCategoryProducts } from '@/composables/useCategoryProducts'
 import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories'
+import { useProductFilters } from '@/composables/useProductFilters'
 
 // Components
 import CategoryBreadcrumb from '@/components/categories/CategoryBreadcrumb.vue'
 import FilterSidebar from '@/components/products/FilterSidebar.vue'
 import ProductList from '@/components/products/ProductList.vue'
+import LucideIcon from '@/components/LucideIcon.vue'
+import ProductSearch from '@/components/products/ProductSearch.vue'
 
 // Meta and SEO
 definePageMeta({
@@ -206,12 +214,20 @@ const {
   findCategoryById
 } = useHierarchicalCategories()
 
+// Get priceRanges from useProductFilters for FilterSidebar
+const searchQueryForFilters = ref('')
+const { priceRanges } = useProductFilters(searchQueryForFilters)
+
 // Local state
 const searchQuery = ref('')
 const sortBy = ref('name')
 const viewMode = ref<'grid' | 'list'>('grid')
 const currentPage = ref(1)
 const itemsPerPage = ref(12)
+// Price and stock filters
+const priceMin = ref<number | undefined>(undefined)
+const priceMax = ref<number | undefined>(undefined)
+const inStock = ref<boolean | undefined>(undefined)
 
 // Computed properties
 const categorySlug = computed(() => {
@@ -292,13 +308,14 @@ const subcategories = computed(() => {
 })
 
 const categoryProducts = computed(() => {
-  return currentCategory.value?.products || []
+  if (!currentCategory.value?.products) return []
+  // No mapping needed; backend guarantees display_price, display_sale_price, and average_rating
+  return currentCategory.value.products
 })
 
 const filteredProducts = computed(() => {
   let filtered = [...categoryProducts.value]
-  
-  // Apply search filter
+  // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(product => 
@@ -306,14 +323,26 @@ const filteredProducts = computed(() => {
       product.description?.toLowerCase().includes(query)
     )
   }
-  
-  // Apply sorting
+  // Price filter
+  if (typeof priceMin.value === 'number') {
+    filtered = filtered.filter(product => parseFloat(product.display_price || product.price) >= priceMin.value!)
+  }
+  if (typeof priceMax.value === 'number') {
+    filtered = filtered.filter(product => parseFloat(product.display_price || product.price) <= priceMax.value!)
+  }
+  // Stock filter
+  if (inStock.value === true) {
+    filtered = filtered.filter(product => product.in_stock ?? (product.stock > 0))
+  } else if (inStock.value === false) {
+    filtered = filtered.filter(product => !(product.in_stock ?? (product.stock > 0)))
+  }
+  // Sorting
   switch (sortBy.value) {
     case 'price_asc':
-      filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
+      filtered.sort((a, b) => parseFloat(a.display_price || a.price) - parseFloat(b.display_price || b.price))
       break
     case 'price_desc':
-      filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price))
+      filtered.sort((a, b) => parseFloat(b.display_price || b.price) - parseFloat(a.display_price || a.price))
       break
     case 'name':
       filtered.sort((a, b) => a.name.localeCompare(b.name))
@@ -329,7 +358,6 @@ const filteredProducts = computed(() => {
       filtered.sort((a, b) => (b.average_rating || 0) - (a.average_rating || 0))
       break
   }
-  
   return filtered
 })
 
@@ -363,6 +391,16 @@ const visiblePages = computed(() => {
   
   return pages
 })
+
+// Filter handlers
+function handlePriceRangeChange(range: { min: number | null, max: number | null }) {
+  priceMin.value = typeof range.min === 'number' ? range.min : undefined
+  priceMax.value = typeof range.max === 'number' ? range.max : undefined
+}
+
+function handleStockChange(val: boolean | null) {
+  inStock.value = typeof val === 'boolean' ? val : undefined
+}
 
 // Methods
 const handleSearch = (event: Event) => {
@@ -428,6 +466,31 @@ watch(() => route.params.slug, async (newSlug) => {
     currentPage.value = 1
   }
 }, { immediate: true })
+
+function sortArrow(type: string) {
+  if (type === 'price') {
+    if (sortBy.value === 'price_asc') return '↑';
+    if (sortBy.value === 'price_desc') return '↓';
+    return '';
+  }
+  if (type === 'rating') {
+    if (sortBy.value === 'rating') return '↓';
+    if (sortBy.value === 'rating_asc') return '↑';
+    return '';
+  }
+  return '';
+}
+
+function toggleSort(type: string) {
+  if (type === 'price') {
+    if (sortBy.value === 'price_asc') sortBy.value = 'price_desc';
+    else sortBy.value = 'price_asc';
+  } else if (type === 'rating') {
+    if (sortBy.value === 'rating') sortBy.value = 'rating_asc';
+    else sortBy.value = 'rating';
+  }
+  currentPage.value = 1;
+}
 </script>
 
 <style scoped lang="scss">

@@ -6,46 +6,29 @@
         <aside class="filters-sidebar">
           <div class="filters-card">
             <div class="filters-header">
-              <LucideIcon icon="mdi:filter-variant" class="filter-icon" />
-              <h3 class="filters-title">Filters</h3>
-              <button 
-                v-if="hasActiveFilters" 
-                @click="clearAllFilters" 
-                class="clear-all-btn"
-              >
+              <LucideIcon icon="mdi:filter-variant" class="filter-icon me-2" />
+              <div class="d-flex align-items-center justify-content-center w-100 mb-2">
+                <h3 class="filters-title mb-0">Filters</h3>
+              </div>
+              <button v-if="hasActiveFilters" @click="clearAllFilters" class="clear-all-btn">
                 Clear All
               </button>
             </div>
-            
-            <FilterSidebar
-              :active-filters="activeFilters"
-              :price-ranges="priceRanges"
-              :visible-categories="visibleCategories"
-              :hierarchical-categories="hierarchicalCategories"
-              :active-category="category"
-              :show-more="showMoreCategories"
-              :show-more-button="categories.length > 5"
-              :remaining-categories="remainingCategories"
-              :price-min="priceMin ?? undefined"
-              :price-max="priceMax ?? undefined"
-              :in-stock="inStock"
-              @price-range-change="handlePriceRangeChange"
-              @category-change="selectCategory"
-              @stock-change="handleStockChange"
-              @toggle-show-more="toggleShowMoreCategories"
-              @clear-all-filters="clearAllFilters"
-            />
+
+            <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
+              :visible-categories="visibleCategories" :hierarchical-categories="hierarchicalCategories"
+              :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
+              :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
+              :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
+              @category-change="selectCategory" @stock-change="handleStockChange"
+              @toggle-show-more="toggleShowMoreCategories" @clear-all-filters="clearAllFilters" />
           </div>
         </aside>
 
         <!-- Mobile Filter Button -->
         <div class="mobile-filter-btn">
-          <button
-            class="btn btn-smooth-success filter-toggle"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#filterOffcanvas"
-          >
+          <button class="btn btn-smooth-success filter-toggle" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#filterOffcanvas">
             <LucideIcon icon="mdi:filter-variant" class="me-2" />
             Filters & Sort
             <span v-if="hasActiveFilters" class="filter-badge">{{ activeFilterCount }}</span>
@@ -62,24 +45,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
           </div>
           <div class="offcanvas-body">
-            <FilterSidebar
-              :active-filters="activeFilters"
-              :price-ranges="priceRanges"
-              :visible-categories="visibleCategories"
-              :hierarchical-categories="hierarchicalCategories"
-              :active-category="category"
-              :show-more="showMoreCategories"
-              :show-more-button="categories.length > 5"
-              :remaining-categories="remainingCategories"
-              :price-min="priceMin ?? undefined"
-              :price-max="priceMax ?? undefined"
-              :in-stock="inStock"
-              @price-range-change="handlePriceRangeChange"
-              @category-change="selectCategory"
-              @stock-change="handleStockChange"
-              @toggle-show-more="toggleShowMoreCategories"
-              @clear-all-filters="clearAllFilters"
-            />
+            <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
+              :visible-categories="visibleCategories" :hierarchical-categories="hierarchicalCategories"
+              :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
+              :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
+              :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
+              @category-change="selectCategory" @stock-change="handleStockChange"
+              @toggle-show-more="toggleShowMoreCategories" @clear-all-filters="clearAllFilters" />
           </div>
         </div>
 
@@ -93,18 +65,14 @@
                   {{ category ? `${category} Products` : 'All Products' }}
                   <span v-if="pagination?.total" class="results-count">({{ pagination.total }})</span>
                 </h1>
-                
+
                 <!-- Inline Search Bar -->
                 <div class="inline-search">
-                  <ProductSearch
-                    v-model:query="searchQuery"
-                    :all-products="products"
-                    @search="handleSearch"
-                    class="search-component"
-                  />
+                   <ProductSearch v-model:query="searchQuery" :all-products="products" @search="handleSearch"
+                    class="search-component" />
                 </div>
               </div>
-              
+
               <p v-if="searchQuery" class="search-info">
                 <LucideIcon icon="mdi:magnify" class="me-1" />
                 Results for "<strong>{{ searchQuery }}</strong>"
@@ -115,19 +83,12 @@
             <div class="sort-controls">
               <div class="sort-label">Sort by:</div>
               <div class="sort-buttons">
-                <button
-                  class="sort-btn"
-                  :class="{ active: sort.includes('display_price') }"
-                  @click="toggleSort('display_price')"
-                >
+                <button class="sort-btn" :class="{ active: sort.includes('display_price') }"
+                  @click="toggleSort('display_price')">
                   <LucideIcon icon="mdi:currency-inr" class="me-1" />
                   Price {{ sortArrow("display_price") }}
                 </button>
-                <button
-                  class="sort-btn"
-                  :class="{ active: sort.includes('rating') }"
-                  @click="toggleSort('rating')"
-                >
+                <button class="sort-btn" :class="{ active: sort.includes('rating') }" @click="toggleSort('rating')">
                   <LucideIcon icon="mdi:star" class="me-1" />
                   Rating {{ sortArrow('rating') }}
                 </button>
@@ -162,21 +123,13 @@
 
           <!-- Products Grid -->
           <div class="products-content">
-            <ProductList
-              :products="products"
-              :loading="loading"
-              :error="error"
-              :pagination="pagination"
-            />
+            <ProductList :products="products" :loading="loading" :error="error" :pagination="pagination" />
           </div>
 
           <!-- Pagination -->
           <div v-if="pagination?.last_page > 1" class="pagination-wrapper">
-            <Pagination
-              :current-page="pagination.current_page"
-              :last-page="pagination.last_page"
-              @page-change="page = $event"
-            />
+            <Pagination :current-page="pagination.current_page" :last-page="pagination.last_page"
+              @page-change="page = $event" />
           </div>
         </main>
       </div>
@@ -663,33 +616,33 @@ const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
   .products-page {
     padding: 1rem 0;
   }
-  
+
   .products-container {
     padding: 0 0.5rem;
   }
-  
+
   .products-main {
     padding: 1.5rem;
   }
-  
+
   .results-title {
     font-size: 1.5rem;
   }
-  
+
   .sort-buttons {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .sort-btn {
     justify-content: center;
   }
-  
+
   .active-filters {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .filter-tags {
     width: 100%;
   }
@@ -699,20 +652,20 @@ const imageUrl = (img: string) => getImageUrl(img, '/fallback.jpg');
   .products-main {
     padding: 1rem;
   }
-  
+
   .products-header {
     gap: 0.75rem;
   }
-  
+
   .filter-tag {
     font-size: 0.8rem;
     padding: 0.4rem 0.6rem;
   }
-  
+
   .results-title {
     font-size: 1.25rem;
   }
-  
+
   .inline-search {
     min-width: unset;
   }
