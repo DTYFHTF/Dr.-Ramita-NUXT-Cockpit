@@ -66,12 +66,6 @@
           <li class="nav-item">
             <a class="nav-link" href="/event">Events</a>
           </li>
-          <li class="nav-item">
-            <NuxtLink to="/categories-demo" class="nav-link text-primary fw-bold">
-              <LucideIcon icon="mdi:file-tree" class="me-1" />
-              Category Demo
-            </NuxtLink>
-          </li>
         </ul>
         <!-- User Section -->
         <div
