@@ -1,3 +1,98 @@
+
+ // ====================================
+// GLOBAL DROPDOWN MENU STYLES
+// ====================================
+.custom-dropdown-menu {
+  min-width: 220px;
+  background: var(--background-white);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
+  padding: 0.5rem 0.5rem;
+  border: 1px solid var(--border-color);
+  margin-top: 0.5rem;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s;
+  color: var(--text-primary);
+  z-index: 2000;
+}
+.custom-dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+.custom-dropdown-menu {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+.custom-dropdown-item {
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+.custom-dropdown-item:hover,
+.custom-dropdown-item:focus {
+  background: var(--background-light);
+  color: var(--text-primary);
+  outline: none;
+}
+
+// Bootstrap dropdown item hover fix for consistency
+.dropdown-item {
+  color: var(--text-primary) !important;
+  transition: all 0.15s ease;
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: var(--background-light);
+  color: var(--color-primary) !important;
+  outline: none;
+}
+// ====================================
+// CATEGORY BAR NAV LINK OVERRIDE
+// ====================================
+.category-bar .nav-shared-link {
+  font-size: 0.95rem;
+  font-weight: 400;
+  padding: 0.15rem 0.5rem;
+  margin-right: 0.15rem;
+}
+// ====================================
+// SHARED NAVIGATION LINK STYLE
+// ====================================
+
+.nav-shared-link {
+  color: var(--text-primary);
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0;
+  padding: 0.25rem 0.75rem;
+  margin-right: 0.25rem;
+  transition: color 0.18s, transform 0.18s;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+// Active state for NuxtLink/RouterLink
+.nav-shared-link.router-link-active,
+.nav-shared-link.router-link-exact-active {
+  color: var(--color-primary);
+  font-weight: 600;
+  background: none;
+  box-shadow: none;
+}
+.nav-shared-link:hover,
+.nav-shared-link:focus,
+.nav-shared-link.active {
+  color: var(--color-primary);
+  background: none;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
 // ====================================
 // GLOBAL CSS VARIABLES & THEME SYSTEM
 // ====================================
@@ -43,6 +138,7 @@
   --background-white-rgb: 255, 255, 255;
   --background-light-rgb: 242, 247, 244;
   --color-primary-rgb: 42, 77, 58;
+  --shadow-rgb: 0, 0, 0;
   --shadow-light-rgb: 0, 0, 0;
   --shadow-medium-rgb: 0, 0, 0;
   --shimmer-rgb: 255, 255, 255;
@@ -85,6 +181,7 @@
   --background-white-rgb: 31, 41, 55;
   --background-light-rgb: 17, 24, 39;
   --color-primary-rgb: 74, 222, 128;
+  --shadow-rgb: 0, 0, 0;
 }
 
 // ====================================

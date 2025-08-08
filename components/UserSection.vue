@@ -15,34 +15,25 @@
     <transition name="fade">
       <ul
         v-show="isDropdownOpen && user"
-        class="dropdown-menu dropdown-menu-end shadow-sm show me-3"
-        :class="{ 'd-block': isDropdownOpen }"
-        aria-labelledby="userDropdown"
+        class="dropdown-menu custom-dropdown-menu show"
+        aria-labelledby="userDropdown" 
         @mouseenter="isDropdownOpen = true"
         @mouseleave="isDropdownOpen = false"
+        style="right:0; left:auto; top:100%; position:absolute;"
       >
-        <li>
-          <NuxtLink to="/dashboard" class="dropdown-item d-flex align-items-center gap-2">
-            <LucideIcon icon="mdi:user" class="me-2" />
-            Dashboard
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink to="/orders" class="dropdown-item d-flex align-items-center gap-2">
-            <LucideIcon icon="mdi:history" class="me-2" />
-            Order History
-          </NuxtLink>
-        </li>
-        <li>
-          <NuxtLink to="/wishlist" class="dropdown-item d-flex align-items-center gap-2">
-            <LucideIcon icon="mdi:heart" class="me-2" />
-            Wishlist
-          </NuxtLink>
-        </li>
-        <DropDownItems />
+        <DropDownItems :items="[
+          { type: 'link', to: '/dashboard', icon: 'mdi:user', label: 'Dashboard' },
+          { type: 'link', to: '/orders', icon: 'mdi:history', label: 'Order History' },
+          { type: 'link', to: '/wishlist', icon: 'mdi:heart', label: 'Wishlist' },
+          { type: 'divider' },
+          { type: 'link', to: '/', icon: 'mdi:home', label: 'Home' },
+          { type: 'link', to: '/settings', icon: 'mdi:settings', label: 'Settings' },
+          { type: 'action', href: '#', icon: 'mdi:smartphone', label: 'Download App' },
+          { type: 'divider' }
+        ]" />
         <li>
           <div class="d-flex justify-content-center">
-            <LogoutButton class="btn-smooth-primary text-center fw-semibold mt-3 px-4" />
+            <LogoutButton class="btn-smooth-primary text-center fw-semibold px-4 py-2" />
           </div>
         </li>
       </ul>
@@ -89,10 +80,5 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style scoped>
-.dropdown-menu {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-}
+<style lang="css" scoped>
 </style>

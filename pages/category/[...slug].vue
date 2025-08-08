@@ -4,6 +4,7 @@
 
     <!-- Category Header removed: title and meta are now omitted, breadcrumb provides context -->
     <!-- Breadcrumbs - Moved to top -->
+     <CategoryBar/>
     <div class="breadcrumb-section">
       <div class="container">
         <CategoryBreadcrumb 

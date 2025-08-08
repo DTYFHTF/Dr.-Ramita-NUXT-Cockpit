@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggleTheme"
-    class="theme-toggle-btn"
+    class="nav-shared-link theme-toggle-btn"
     :title="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
     aria-label="Toggle theme"
   >
@@ -19,7 +19,7 @@ import LucideIcon from './LucideIcon.vue'
 const { theme, toggleTheme } = useTheme()
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 
 .theme-toggle-btn {
   background: transparent;
@@ -28,10 +28,10 @@ const { theme, toggleTheme } = useTheme()
   padding: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  // Remove color/font so nav-shared-link can apply
   
   &:hover {
     background: var(--background-light);

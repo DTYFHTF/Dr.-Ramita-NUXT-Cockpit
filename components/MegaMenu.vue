@@ -153,7 +153,7 @@ function firstAvailableImage(product) {
 
 .category-list li:hover {
   background: var(--background-light);
-  color: var(--text-primary);
+  color: var(--color-primary) !important;
 }
 
 .category-list li.active-category {
@@ -201,7 +201,7 @@ function firstAvailableImage(product) {
 
 .product-card:hover {
   transform: translateY(-2px);
-  color: var(--text-primary);
+  color: var(--color-primary);
 }
 
 .product-image {

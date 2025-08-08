@@ -284,6 +284,7 @@ onMounted(() => {
       
       &:hover {
         background-color: var(--background-light);
+        color: var(--color-primary);
       }
       
       &.active {
@@ -319,7 +320,6 @@ onMounted(() => {
           &:hover {
             color: var(--color-primary);
             text-decoration: none;
-            background-color: var(--background-light);
           }
         }
         
