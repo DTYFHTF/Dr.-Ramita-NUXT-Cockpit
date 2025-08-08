@@ -59,7 +59,7 @@
         </ul>
         <!-- User Section -->
         <div
-          class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-3 mt-3 mt-lg-0"
+          class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-2 mt-3 mt-lg-0"
         >
           <template v-if="!hydrated">
             <span class="nav-shared-link"></span>
@@ -72,9 +72,9 @@
               class="btn btn-link nav-shared-link d-flex flex-column align-items-center p-0"
               id="userDropdown"
               tabindex="0"
+              title="Sign In"
             >
               <LucideIcon icon="mdi:login" class="fs-4" />
-              <span>Sign In</span>
             </NuxtLink>
             <div
               class="nav-item position-relative"
@@ -84,9 +84,9 @@
               <NuxtLink
                 to="/products"
                 class="btn btn-link nav-shared-link d-flex flex-column align-items-center p-0 cursor-pointer"
+                title="Shop"
               >
                 <LucideIcon icon="mdi:shop" class="fs-4" />
-                <span>Shop</span>
               </NuxtLink>
               <MegaMenu 
                 v-if="showMegaMenu" 

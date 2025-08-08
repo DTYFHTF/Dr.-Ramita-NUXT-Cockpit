@@ -7,10 +7,10 @@
       id="userDropdown"
       aria-expanded="false"
       tabindex="0"
+      title="Profile"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <UserAvatar :src="user.profile_image" size="sm" class="mb-1" />
-      <span>Hi, {{ user.first_name }}</span>
+      <UserAvatar :src="user.profile_image" size="sm" />
     </button>
     <transition name="fade">
       <ul

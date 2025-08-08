@@ -1,11 +1,11 @@
 <template>
   <div v-if="show" class="category-sidebar-overlay" @click.self="closeSidebar">
-    <aside class="category-sidebar bg-white shadow-lg">
+    <aside class="category-sidebar shadow-lg">
       <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
         <span class="fw-bold text-success">
-          <LucideIcon icon="mdi:view-grid" class="me-2" /> ALL CATEGORIES
+          <LucideIcon icon="mdi:menu" class="me-2" /> ALL CATEGORIES
         </span>
-        <button class="btn btn-sm btn-light" @click="closeSidebar">
+        <button class="btn btn-sm close-btn" @click="closeSidebar">
           <LucideIcon icon="mdi:close" />
         </button>
       </div>
@@ -57,7 +57,7 @@ function handleCategorySelect(category) {
 .category-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.25);
+  background: rgba(var(--modal-overlay-rgb), 0.25);
   z-index: 2000;
   display: flex;
 }
@@ -66,23 +66,35 @@ function handleCategorySelect(category) {
   max-width: 90vw;
   height: 100vh;
   overflow-y: auto;
-  background: #fff;
-  border-right: 1px solid #eee;
+  background: var(--background-white);
+  border-right: 1px solid var(--border-color);
   animation: slideIn 0.2s;
+  color: var(--text-primary);
 }
 @keyframes slideIn {
   from { transform: translateX(-100%); }
   to { transform: translateX(0); }
 }
 .sidebar-header {
-  background: #f6f6f6;
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border-color);
+}
+.close-btn {
+  color: var(--text-primary) !important;
+  background: transparent !important;
+  border: none !important;
+  transition: all 0.15s ease;
+}
+.close-btn:hover {
+  background: transparent !important;
+  color: var(--color-primary) !important;
 }
 .sidebar-category-item {
   cursor: pointer;
   transition: background 0.15s;
 }
 .sidebar-category-item:hover {
-  background: #f0f8f5;
+  background: var(--background-light);
 }
 .sidebar-subcategory-list {
   list-style: none;

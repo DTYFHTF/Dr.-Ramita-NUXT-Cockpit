@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar />
+    <CategoryBar />
     <main class="main-content">
       <NuxtPage />
     </main>
@@ -10,6 +11,7 @@
 
 <script setup>
 import Navbar from '@/components/Navbar.vue';
+import CategoryBar from '@/components/CategoryBar.vue';
 import Footer from '@/components/Footer.vue';
 import { useTheme } from '@/composables/useTheme';
 

@@ -1,8 +1,8 @@
 <template>
-  <nav class="category-bar d-flex align-items-center py-2 bg-light border-bottom">
+  <nav class="category-bar d-flex align-items-center py-2 border-bottom">
     <div class="container d-flex align-items-center p-0" style="max-width: 1200px;">
-      <button class="btn btn-link d-flex align-items-center gap-2 shop-by-btn" @click="showSidebar = true">
-        <LucideIcon icon="mdi:menu" class="fs-4 text-success" />
+      <button class="btn btn-link d-flex align-items-center gap-2 shop-by-btn" @click="showSidebar = !showSidebar">
+        <LucideIcon :icon="showSidebar ? 'mdi:close' : 'mdi:menu'" class="fs-4 text-success" />
         <span class="fw-semibold text-success">Shop by Categories</span>
       </button>
       <div class="category-links ms-auto d-flex align-items-center flex-wrap">
@@ -51,7 +51,8 @@ onMounted(async () => {
   overflow-x: auto;
   white-space: nowrap;
   background: var(--background-white);
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
 }
 
 .category-links {
