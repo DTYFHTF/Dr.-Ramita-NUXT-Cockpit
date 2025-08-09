@@ -1,11 +1,36 @@
+
 <template>
   <div>
+    <BannerCarousel 
+      :banners="banners" 
+      :loading="homepageLoading" 
+      :error="homepageError" 
+    />
     <!-- Add more homepage sections here -->
   </div>
 </template>
 
 <script setup>
-import Navbar from '@/components/Navbar.vue';
+import BannerCarousel from '@/components/BannerCarousel.vue';
+import { useApiLaravel } from '@/composables/useApi.js';
+import { useImageUrl } from '@/composables/useImageUrl.js';
+
+const { data: homepageData, error: homepageError, loading: homepageLoading } = useApiLaravel('homepage');
+const { getImageUrl } = useImageUrl();
+
+const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
+  let img = item.image || '';
+  if (typeof img === 'string' && img.startsWith('http')) {
+    return { ...item, image: img };
+  }
+  return { ...item, image: getImageUrl(img, fallback) };
+};
+
+const banners = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'banner');
+  if (!section || !Array.isArray(section.data?.banners)) return [];
+  return section.data.banners.map(b => addImageUrl(b, '/placeholder-banner.jpg'));
+});
 </script>
 
 <style scoped>
