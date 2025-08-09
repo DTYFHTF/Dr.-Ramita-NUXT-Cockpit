@@ -152,30 +152,24 @@ export function useHierarchicalCategories() {
   const fetchCategories = async () => {
     loading.value = true;
     error.value = null;
-    console.log('useHierarchicalCategories: fetchCategories called');
 
     try {
       const config = useRuntimeConfig();
-      console.log('useHierarchicalCategories: Making API request to:', `${config.public.apiBase}/categories`);
       
       const response = await $fetch(`${config.public.apiBase}/categories`, {
         headers: { Accept: 'application/json' }
       }) as any;
 
-      console.log('useHierarchicalCategories: Raw API response:', response);
 
       // Handle both array and object responses
       const data = Array.isArray(response) ? response : response.data || response.categories || [];
-      console.log('useHierarchicalCategories: Processed data:', data);
       
       // Check if backend already returns nested structure
       const hasNestedChildren = data.some((cat: any) => Array.isArray(cat.children) && cat.children.length > 0);
-      console.log('useHierarchicalCategories: Has nested children?', hasNestedChildren);
       
       if (hasNestedChildren) {
         // Backend returns nested structure - use it directly with normalization
         rawCategories.value = data.map(normalizeCategory);
-        console.log('useHierarchicalCategories: Used nested structure:', rawCategories.value);
       } else {
         // Backend returns flat structure - normalize and let buildCategoryTree handle it
         rawCategories.value = data.map((cat: any) => ({
@@ -189,7 +183,6 @@ export function useHierarchicalCategories() {
           full_path: cat.full_path,
           children: []
         }));
-        console.log('useHierarchicalCategories: Normalized flat structure:', rawCategories.value);
       }
 
     } catch (e: any) {

@@ -1,16 +1,3 @@
-      <!-- Indicators -->
-      <div v-if="banners.length > 1" class="carousel-indicators">
-        <button 
-          v-for="(banner, index) in banners" 
-          :key="index"
-          type="button" 
-          data-bs-target="#bannerCarousel" 
-          :data-bs-slide-to="index" 
-          :class="{ active: index === 0 }"
-          :aria-current="index === 0 ? 'true' : 'false'"
-          :aria-label="`Slide ${index + 1}`"
-        ></button>
-      </div>
 <template>
   <div class="banner-carousel-wrapper">
     <!-- Loading State -->
@@ -156,15 +143,6 @@ onMounted(() => {
   position: relative;
 }
 
-@media (min-width: 768px) {
-  .carousel {
-  }
-}
-
-@media (min-width: 1200px) {
-  .carousel {
-  }
-}
 
 .banner-slide {
   position: relative;

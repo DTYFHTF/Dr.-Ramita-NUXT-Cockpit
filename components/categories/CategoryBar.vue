@@ -23,7 +23,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import LucideIcon from '@/components/LucideIcon.vue';
-import CategorySidebar from '@/components/CategorySidebar.vue';
+import CategorySidebar from '@/components/categories/CategorySidebar.vue';
 import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories';
 
 const showSidebar = ref(false);

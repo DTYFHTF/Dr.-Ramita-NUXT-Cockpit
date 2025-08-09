@@ -6,12 +6,19 @@
       :loading="homepageLoading" 
       :error="homepageError" 
     />
+    
+    <FeaturedCategories 
+      :categories="featuredCategories" 
+      :loading="homepageLoading" 
+    />
+    
     <!-- Add more homepage sections here -->
   </div>
 </template>
 
 <script setup>
 import BannerCarousel from '@/components/BannerCarousel.vue';
+import FeaturedCategories from '@/components/categories/FeaturedCategories.vue';
 import { useApiLaravel } from '@/composables/useApi.js';
 import { useImageUrl } from '@/composables/useImageUrl.js';
 
@@ -30,6 +37,12 @@ const banners = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'banner');
   if (!section || !Array.isArray(section.data?.banners)) return [];
   return section.data.banners.map(b => addImageUrl(b, '/placeholder-banner.jpg'));
+});
+
+const featuredCategories = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'auto_featured_categories');
+  if (!section || !Array.isArray(section.data?.categories)) return [];
+  return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
 });
 </script>
 
