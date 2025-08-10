@@ -1,8 +1,9 @@
 <template>
-  <NuxtLink 
-    :to="category.link" 
+  <div
     class="category-card"
     :aria-label="`Browse ${category.name} category`"
+    style="cursor: pointer;"
+    @click="navigateToCategory"
   >
     <div class="category-image-container">
       <img 
@@ -13,19 +14,26 @@
       />
     </div>
     <h3 class="category-name">{{ category.name }}</h3>
-  </NuxtLink>
+  </div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 const props = defineProps({
   category: {
     type: Object,
     required: true,
-    validator: (category) => {
-      return category && category.name && category.image && category.link;
-    }
   }
 });
+const { category } = props;
+const router = useRouter();
+const navigateToCategory = () => {
+  if (category.link) {
+    router.push(category.link);
+  } else if (category.slug) {
+    router.push(`/category/${category.slug}`);
+  }
+};
 </script>
 
 <style scoped>
