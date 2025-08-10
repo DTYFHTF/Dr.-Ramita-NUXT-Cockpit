@@ -20,7 +20,7 @@
     </div>
 
     <!-- Bootstrap Carousel -->
-    <div v-else-if="banners && banners.length" id="bannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div v-else-if="banners && banners.length" id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
       <!-- Indicators -->
       <div v-if="banners.length > 1" class="carousel-indicators">
         <button 
@@ -42,7 +42,11 @@
           :key="index"
           :class="['carousel-item', { active: index === 0 }]"
         >
-          <div class="banner-slide">
+          <div 
+            class="banner-slide"
+            :style="banner.link ? 'cursor: pointer;' : ''"
+            @click="banner.link ? $router.push(banner.link) : null"
+          >
             <!-- Background Image -->
             <img 
               :src="banner.image" 
@@ -50,27 +54,6 @@
               :alt="banner.title || `Banner ${index + 1}`"
               loading="lazy"
             />
-            
-            <!-- Content Overlay -->
-            <div v-if="banner.link" class="carousel-caption d-flex h-100">
-              <div class="banner-content align-self-center">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-lg-6 col-md-8">
-                      <div data-aos="fade-up" data-aos-delay="400">
-                        <NuxtLink 
-                          :to="banner.link" 
-                          class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg banner-cta"
-                        >
-                          <i class="bi bi-arrow-right me-2"></i>
-                          Shop Now
-                        </NuxtLink>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -299,25 +282,5 @@ onMounted(() => {
 /* Smooth transitions */
 .carousel-item {
   transition: transform 0.8s ease-in-out;
-}
-
-.carousel-fade .carousel-item {
-  opacity: 0;
-  transition-property: opacity;
-  transform: none;
-}
-
-.carousel-fade .carousel-item.active,
-.carousel-fade .carousel-item-next.carousel-item-start,
-.carousel-fade .carousel-item-prev.carousel-item-end {
-  z-index: 1;
-  opacity: 1;
-}
-
-.carousel-fade .active.carousel-item-start,
-.carousel-fade .active.carousel-item-end {
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0s 0.8s;
 }
 </style>
