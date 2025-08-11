@@ -10,7 +10,10 @@
       title="Profile"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <UserAvatar :src="user.profile_image" size="sm" />
+      <div class="d-flex align-items-center">
+        <UserAvatar :src="user.profile_image" size="sm" />
+        <LucideIcon icon="mdi:arrow-down-drop" class="fs-4 ms-n1" style="margin-left: -4px;" />
+      </div>
     </button>
     <transition name="fade">
       <ul

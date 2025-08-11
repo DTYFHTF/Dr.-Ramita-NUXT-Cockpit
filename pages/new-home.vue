@@ -11,8 +11,6 @@
       :categories="featuredCategories" 
       :loading="homepageLoading" 
     />
-    
-    <!-- Add more homepage sections here -->
   </div>
 </template>
 
