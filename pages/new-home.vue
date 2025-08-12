@@ -25,15 +25,21 @@
     </div>
 
     <!-- Top Featured Products -->
-    <TopFeaturedProducts 
+    <ProductSlider 
+      title="Top Featured"
       :products="topFeaturedProducts" 
-      :loading="productsLoading" 
+      :loading="productsLoading"
+      section-class="featured"
+      title-class="featured"
+      view-all-url="/products"
     />
 
     <!-- Best Selling Products -->
-    <BestSellingProducts 
+    <ProductSlider 
+      title="Best Selling Products"
       :products="bestSellingProducts" 
-      :loading="productsLoading" 
+      :loading="productsLoading"
+      view-all-url="/products?sort=best-selling"
     />
 
     <!-- Most Searched -->
@@ -57,8 +63,7 @@
 import BannerCarousel from '@/components/BannerCarousel.vue';
 import FeaturedCategories from '@/components/categories/FeaturedCategories.vue';
 import BannerMidGrid from '@/components/BannerMidGrid.vue';
-import TopFeaturedProducts from '@/components/TopFeaturedProducts.vue';
-import BestSellingProducts from '@/components/BestSellingProducts.vue';
+import ProductSlider from '@/components/ProductSlider.vue';
 import MostSearched from '@/components/MostSearched.vue';
 import DailySeasonalProducts from '@/components/DailySeasonalProducts.vue';
 import TopDealsOffers from '@/components/TopDealsOffers.vue';
@@ -75,13 +80,23 @@ const { getImageUrl } = useImageUrl();
 const { 
   products: productsData, 
   loading: productsLoading,
-  fetchProducts
+  fetchProducts,
+  fetchBestSellingProducts,
+  fetchFeaturedProducts
 } = useProducts();
+
+// State for best selling products
+const bestSellingProductsData = ref([]);
+const featuredProductsData = ref([]);
 
 // Fetch featured and best selling products
 onMounted(async () => {
   try {
-    await fetchProducts(1, 8); // Fetch 8 products for top featured and best selling
+    await fetchProducts(1, 12); // Fetch more products for sliders
+    // Fetch best selling products
+    bestSellingProductsData.value = await fetchBestSellingProducts(12);
+    // Fetch featured products
+    featuredProductsData.value = await fetchFeaturedProducts(12);
   } catch (error) {
     console.error('Error fetching products:', error);
   }
@@ -116,12 +131,12 @@ const bannersMid = computed(() => {
 
 // New computed properties for additional sections
 const topFeaturedProducts = computed(() => {
-  const section = (homepageData.value?.sections || []).find(s => s.type === 'top_featured_products');
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'featured_products' || s.type === 'auto_featured_products');
   if (section && Array.isArray(section.data?.products)) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  // Fallback to fetched products data
-  return (productsData.value || []).slice(0, 4);
+  // Use data from our featured products API endpoint
+  return featuredProductsData.value || [];
 });
 
 const bestSellingProducts = computed(() => {
@@ -129,8 +144,8 @@ const bestSellingProducts = computed(() => {
   if (section && Array.isArray(section.data?.products)) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  // Fallback to fetched products data
-  return (productsData.value || []).slice(4, 8);
+  // Use data from our API endpoint
+  return bestSellingProductsData.value || [];
 });
 
 const mostSearchedTags = computed(() => {

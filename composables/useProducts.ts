@@ -101,6 +101,40 @@ export function useProducts() {
     }
   }
 
+  async function fetchBestSellingProducts(limit = 12) {
+    loading.value = true;
+    error.value = "";
+    try {
+      const response = await $fetch(`${API_BASE}/products/best-selling?limit=${limit}`, {
+        headers: { Accept: "application/json" },
+      }) as any;
+      const bestSellingProducts = Array.isArray(response) ? response : response.data;
+      return bestSellingProducts;
+    } catch (e: any) {
+      error.value = e?.data?.message || e?.message || "Failed to fetch best selling products.";
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function fetchFeaturedProducts(limit = 12) {
+    loading.value = true;
+    error.value = "";
+    try {
+      const response = await $fetch(`${API_BASE}/products/featured?limit=${limit}`, {
+        headers: { Accept: "application/json" },
+      }) as any;
+      const featuredProducts = Array.isArray(response) ? response : response.data;
+      return featuredProducts;
+    } catch (e: any) {
+      error.value = e?.data?.message || e?.message || "Failed to fetch featured products.";
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     products,
     product,
@@ -108,6 +142,8 @@ export function useProducts() {
     error,
     fetchProducts,
     fetchProduct,
+    fetchBestSellingProducts,
+    fetchFeaturedProducts,
     categories,
     fetchCategories,
     pagination,
