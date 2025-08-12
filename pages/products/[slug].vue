@@ -22,6 +22,17 @@
         :isAdmin="isAdmin"
         @refresh="fetchProduct(route.params.slug as string)"
       />
+
+      <!-- Similar Products Section -->
+      <div v-if="similarProducts.length > 0" class="similar-products-section">
+        <ProductSlider 
+          title="Similar Products"
+          :products="similarProducts"
+          :loading="similarProductsLoading"
+          view-all-text="View All"
+          :view-all-url="similarProductsViewAllUrl"
+        />
+      </div>
       
     </div>
     <div v-else>
@@ -41,13 +52,14 @@ import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
 import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
 import ProductReviewSection from '@/components/ProductReviewSection.vue';
+import ProductSlider from '@/components/ProductSlider.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';
 import { useImageUrl } from '@/composables/useImageUrl.js'
 
 const route = useRoute();
-const { product, loading, error, fetchProduct } = useProducts();
+const { product, loading, error, fetchProduct, fetchSimilarProducts } = useProducts();
 const { addToCart } = useCart();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore) as { user: Ref<User | null> };
@@ -81,6 +93,32 @@ const canAddToCart = computed(() => {
   return inStock.value;
 });
 
+// Similar Products Logic
+const similarProducts = ref<any[]>([]);
+const similarProductsLoading = ref(false);
+
+// Generate view all URL for similar products
+const similarProductsViewAllUrl = computed(() => {
+  if (!product.value?.categories?.length) return '/products';
+  const firstCategory = product.value.categories[0];
+  return `/category/${firstCategory.slug || firstCategory.id}`;
+});
+
+// Fetch similar products using the backend API
+async function loadSimilarProducts() {
+  if (!product.value?.slug) return;
+  
+  try {
+    similarProductsLoading.value = true;
+    similarProducts.value = await fetchSimilarProducts(product.value.slug, 8);
+  } catch (error) {
+    console.error('Error fetching similar products:', error);
+    similarProducts.value = [];
+  } finally {
+    similarProductsLoading.value = false;
+  }
+}
+
 async function loadProduct(slug: string) {
   if (slug === lastSlug && error.value) return; // Prevent repeated fetches on error
   lastSlug = slug;
@@ -90,6 +128,9 @@ async function loadProduct(slug: string) {
     if (product.value && product.value.data) {
       product.value = product.value.data;
     }
+    
+    // Fetch similar products once the product is loaded
+    await loadSimilarProducts();
   } catch (e: any) {
     if (e?.status === 404) {
       error.value = "Product not found.";
@@ -237,6 +278,11 @@ function handleAddToCartProxy(payload: any) {
     padding: 1.5rem 0.5rem 1.5rem 0.5rem;
     min-height: 0;
   }
+}
+.similar-products-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid $border-color;
 }
 .error {
   color: $text-error;

@@ -135,6 +135,23 @@ export function useProducts() {
     }
   }
 
+  async function fetchSimilarProducts(productSlug: string, limit = 8) {
+    loading.value = true;
+    error.value = "";
+    try {
+      const response = await $fetch(`${API_BASE}/products/${productSlug}/similar?limit=${limit}`, {
+        headers: { Accept: "application/json" },
+      }) as any;
+      const similarProducts = Array.isArray(response) ? response : response.data;
+      return similarProducts;
+    } catch (e: any) {
+      error.value = e?.data?.message || e?.message || "Failed to fetch similar products.";
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     products,
     product,
@@ -144,6 +161,7 @@ export function useProducts() {
     fetchProduct,
     fetchBestSellingProducts,
     fetchFeaturedProducts,
+    fetchSimilarProducts,
     categories,
     fetchCategories,
     pagination,
