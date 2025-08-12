@@ -1,6 +1,6 @@
 <template>
   <section class="featured-categories-section">
-    <div class="container">
+    
       <!-- Section Header -->
   <!-- Section Header removed as per request -->
 
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-    </div>
+    
   </section>
 </template>
 
@@ -53,7 +53,7 @@ const props = defineProps({
 
 <style scoped>
 .featured-categories-section {
-  padding: 4rem 0;
+  padding: 4rem 0 2rem 0;
   background-color: var(--background-white);
 }
 
