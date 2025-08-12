@@ -1,11 +1,15 @@
 <template>
   <div class="banner-mid-grid">
     <div v-for="(banner, idx) in banners" :key="idx" class="banner-mid-item">
-      <a v-if="banner.link" :href="banner.link" target="_blank" rel="noopener">
+      <NuxtLink
+        v-if="banner.link"
+        :to="getBannerLink(banner.link)"
+        class="banner-mid-link"
+      >
         <div class="banner-mid-img-wrapper">
           <img :src="banner.image" :alt="banner.title || 'Banner'" />
         </div>
-      </a>
+      </NuxtLink>
       <div v-else class="banner-mid-img-wrapper">
         <img :src="banner.image" :alt="banner.title || 'Banner'" />
       </div>
@@ -14,12 +18,20 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   banners: {
     type: Array,
     required: true
   }
 });
+
+// Helper to prepend /category/ if link is a slug (not absolute URL or already a path)
+function getBannerLink(link) {
+  if (!link) return '#';
+  if (link.startsWith('http') || link.startsWith('/')) return link;
+  // If it's a slug (no slash, no http), prepend /category/
+  return `/category/${encodeURIComponent(link)}`;
+}
 </script>
 
 <style scoped>

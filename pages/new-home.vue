@@ -43,7 +43,10 @@
     />
 
     <!-- Most Searched -->
-    <MostSearched :tags="mostSearchedTags" />
+    <MostSearched 
+      :section-data="mostSearchedSection" 
+      :tags="mostSearchedTags" 
+    />
 
     <!-- Daily & Seasonal Products -->
     <DailySeasonalProducts :categories="dailySeasonalCategories" />
@@ -148,22 +151,9 @@ const bestSellingProducts = computed(() => {
   return bestSellingProductsData.value || [];
 });
 
-const mostSearchedTags = computed(() => {
-  const section = (homepageData.value?.sections || []).find(s => s.type === 'most_searched');
-  if (section && Array.isArray(section.data?.tags)) {
-    return section.data.tags;
-  }
-  // Default tags
-  return [
-    { id: 1, name: 'Ghee', color: '#ffc107' },
-    { id: 2, name: 'Giloy', color: '#28a745' },
-    { id: 3, name: 'Arjun', color: '#17a2b8' },
-    { id: 4, name: 'Eye Care', color: '#fd7e14' },
-    { id: 5, name: 'Amla', color: '#6f42c1' },
-    { id: 6, name: 'Honey', color: '#e83e8c' },
-    { id: 7, name: 'Cooking Oil', color: '#20c997' },
-    { id: 8, name: 'Ashwagandha', color: '#dc3545' }
-  ];
+
+const mostSearchedSection = computed(() => {
+  return (homepageData.value?.sections || []).find(s => s.type === 'most_searched');
 });
 
 const dailySeasonalCategories = computed(() => {

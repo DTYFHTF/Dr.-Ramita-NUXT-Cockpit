@@ -2,43 +2,48 @@
   <section class="most-searched py-4">
     <div class="container">
       <h3 class="section-title mb-4">Most Searched</h3>
-      <div class="tags-grid">
-        <div class="row">
-          <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3" v-for="tag in tags" :key="tag.id || tag.name">
-            <NuxtLink 
-              :to="tag.url || `/search?q=${encodeURIComponent(tag.name)}`" 
-              class="search-tag"
-            >
-              <div class="tag-icon" v-if="tag.icon">
-                <i :class="tag.icon"></i>
-              </div>
-              <div class="tag-circle" :style="{ backgroundColor: tag.color || '#28a745' }">
-                {{ tag.name.charAt(0).toUpperCase() }}
-              </div>
-              <span class="tag-name">{{ tag.name }}</span>
-            </NuxtLink>
-          </div>
+      <div class="tags-row">
+        <div class="tag-item" v-for="(category, idx) in categories.slice(0, 8)" :key="category.id || category.title || category.name">
+          <NuxtLink 
+            :to="category.slug ? `/category/${encodeURIComponent(category.slug)}` : (category.url || `/category/${encodeURIComponent(category.title || category.name)}`)" 
+            class="search-tag"
+          >
+            <div class="tag-circle" :style="{ backgroundColor: category.color || '#28a745' }">
+              #{{ idx + 1 }}
+            </div>
+            <span class="tag-name">{{ category.title || category.name }}</span>
+          </NuxtLink>
         </div>
       </div>
-    </div>
+    </div> 
   </section>
 </template>
 
 <script setup>
 const props = defineProps({
+  // Accept section data from parent component (from API)
+  sectionData: {
+    type: Object,
+    default: () => ({
+      data: {
+        categories: []
+      }
+    })
+  },
+  // Fallback for hardcoded data (backwards compatibility)
   tags: {
     type: Array,
-    default: () => [
-      { id: 1, name: 'Ghee', color: '#ffc107' },
-      { id: 2, name: 'Giloy', color: '#28a745' },
-      { id: 3, name: 'Arjun', color: '#17a2b8' },
-      { id: 4, name: 'Eye Care', color: '#fd7e14' },
-      { id: 5, name: 'Amla', color: '#6f42c1' },
-      { id: 6, name: 'Honey', color: '#e83e8c' },
-      { id: 7, name: 'Cooking Oil', color: '#20c997' },
-      { id: 8, name: 'Ashwagandha', color: '#dc3545' }
-    ]
+    default: () => []
   }
+});
+
+// Use categories from API data, fallback to tags prop if no API data
+const categories = computed(() => {
+  if (props.sectionData?.data?.categories?.length > 0) {
+    return props.sectionData.data.categories;
+  }
+  // Fallback to old tags format for backwards compatibility
+  return props.tags;
 });
 </script>
 
@@ -50,8 +55,21 @@ const props = defineProps({
   margin: 0;
 }
 
-.tags-grid {
+
+
+
+.tags-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   margin-top: 1rem;
+}
+
+.tag-item {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .search-tag {
@@ -84,12 +102,6 @@ const props = defineProps({
   font-weight: 600;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-}
-
-.tag-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  color: #28a745;
 }
 
 .tag-name {
