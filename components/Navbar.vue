@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg py-2">
     <div class="container">
       <!-- Brand/Logo -->
-      <NuxtLink to="/" class="navbar-brand d-flex align-items-center">
+      <NuxtLink to="/new-home" class="navbar-brand d-flex align-items-center">
         <img
           src="/rishipath-logo.png"
           alt="Rishipath Logo"

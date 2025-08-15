@@ -25,10 +25,12 @@
 
       <!-- Similar Products Section -->
       <div v-if="similarProducts.length > 0" class="similar-products-section">
-        <ProductSlider 
+        <GenericSlider 
           title="Similar Products"
-          :products="similarProducts"
+          :items="similarProducts"
           :loading="similarProductsLoading"
+          :card-component="ProductCard"
+          card-props-key="product"
           view-all-text="View All"
           :view-all-url="similarProductsViewAllUrl"
         />
@@ -52,7 +54,8 @@ import { useHead } from 'nuxt/app';
 import { useCart } from '@/composables/useCart';
 import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
 import ProductReviewSection from '@/components/ProductReviewSection.vue';
-import ProductSlider from '@/components/ProductSlider.vue';
+import GenericSlider from '@/components/GenericSlider.vue';
+import ProductCard from '@/components/ProductCard.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';

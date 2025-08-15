@@ -1,18 +1,18 @@
 <template>
-  <section class="product-slider-section py-5" :class="sectionClass">
+  <section class="generic-slider-section py-5" :class="sectionClass">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title" :class="titleClass">{{ title }}</h2>
-        <a :href="viewAllUrl" class="view-all-link">{{ viewAllText }} <i class="bi bi-arrow-right"></i></a>
+        <a v-if="viewAllUrl" :href="viewAllUrl" class="view-all-link">{{ viewAllText }} <i class="bi bi-arrow-right"></i></a>
       </div>
       
-      <div class="product-slider-container position-relative">
+      <div class="slider-container position-relative">
         <!-- Navigation Arrows -->
         <button 
           class="slider-arrow slider-arrow-left" 
           @click="scrollLeft"
           :disabled="isAtStart && !loading"
-          v-show="!loading && products.length > 3"
+          v-show="!loading && items.length > 3"
         >
           <LucideIcon icon="mdi:chevron-left" />
         </button>
@@ -21,35 +21,39 @@
           class="slider-arrow slider-arrow-right" 
           @click="scrollRight"
           :disabled="isAtEnd && !loading"
-          v-show="!loading && products.length > 3"
+          v-show="!loading && items.length > 3"
         >
           <LucideIcon icon="mdi:chevron-right" />
         </button>
         
-        <!-- Products Slider -->
+        <!-- Items Slider -->
         <div 
           ref="sliderContainer" 
-          class="products-slider"
+          class="items-slider"
           @scroll="updateArrowStates"
         >
           <div class="slider-track">
             <div 
               v-if="!loading" 
-              class="product-slide" 
-              v-for="product in products" 
-              :key="product.id"
+              class="item-slide" 
+              v-for="item in items" 
+              :key="item.id"
             >
-              <ProductCard :product="product" />
+              <!-- Dynamic Component -->
+              <component 
+                :is="cardComponent" 
+                v-bind="getCardProps(item)"
+              />
             </div>
             
             <!-- Loading Skeletons -->
             <div 
               v-else 
-              class="product-slide" 
+              class="item-slide" 
               v-for="n in skeletonCount" 
               :key="n"
             >
-              <div class="card product-card-skeleton">
+              <div class="card skeleton-card">
                 <div class="skeleton skeleton-image"></div>
                 <div class="card-body">
                   <div class="skeleton skeleton-text"></div>
@@ -66,7 +70,6 @@
 </template>
 
 <script setup>
-import ProductCard from '@/components/ProductCard.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import { ref, onMounted, nextTick, watch } from 'vue';
 
@@ -75,7 +78,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  products: {
+  items: {
     type: Array,
     default: () => []
   },
@@ -93,7 +96,7 @@ const props = defineProps({
   },
   viewAllUrl: {
     type: String,
-    default: '/products'
+    default: ''
   },
   viewAllText: {
     type: String,
@@ -105,7 +108,15 @@ const props = defineProps({
   },
   scrollAmount: {
     type: Number,
-    default: 2 // Number of products to scroll at a time
+    default: 2
+  },
+  cardComponent: {
+    type: [String, Object],
+    required: true
+  },
+  cardPropsKey: {
+    type: String,
+    default: 'item' // Default prop name to pass to the card component
   }
 });
 
@@ -113,26 +124,31 @@ const sliderContainer = ref(null);
 const isAtStart = ref(true);
 const isAtEnd = ref(false);
 
+// Helper function to get the props for the card component
+const getCardProps = (item) => {
+  return {
+    [props.cardPropsKey]: item
+  };
+};
+
 const scrollLeft = () => {
   if (sliderContainer.value) {
-    const slideWidth = sliderContainer.value.querySelector('.product-slide')?.offsetWidth || 300;
+    const slideWidth = sliderContainer.value.querySelector('.item-slide')?.offsetWidth || 300;
     sliderContainer.value.scrollBy({
       left: -slideWidth * props.scrollAmount,
       behavior: 'smooth'
     });
-    // Update states after scroll
     setTimeout(updateArrowStates, 300);
   }
 };
 
 const scrollRight = () => {
   if (sliderContainer.value) {
-    const slideWidth = sliderContainer.value.querySelector('.product-slide')?.offsetWidth || 300;
+    const slideWidth = sliderContainer.value.querySelector('.item-slide')?.offsetWidth || 300;
     sliderContainer.value.scrollBy({
       left: slideWidth * props.scrollAmount,
       behavior: 'smooth'
     });
-    // Update states after scroll
     setTimeout(updateArrowStates, 300);
   }
 };
@@ -145,11 +161,10 @@ const updateArrowStates = () => {
   isAtEnd.value = scrollLeft + clientWidth >= scrollWidth - 10;
 };
 
-// Initialize with right state
 const initializeSlider = () => {
-  if (props.products.length > 0) {
-    isAtStart.value = true;  // Always start at beginning
-    isAtEnd.value = false;   // Right arrow enabled initially
+  if (props.items.length > 0) {
+    isAtStart.value = true;
+    isAtEnd.value = false;
   } else {
     isAtStart.value = true;
     isAtEnd.value = true;
@@ -160,12 +175,10 @@ const initializeSlider = () => {
   });
 };
 
-// Watch for products changes to update arrow states
-watch(() => props.products, () => {
+watch(() => props.items, () => {
   initializeSlider();
 }, { immediate: true });
 
-// Watch for loading changes
 watch(() => props.loading, (newLoading) => {
   if (!newLoading) {
     initializeSlider();
@@ -176,13 +189,11 @@ onMounted(async () => {
   await nextTick();
   initializeSlider();
   
-  // Add resize listener to update arrow states
   const handleResize = () => {
     updateArrowStates();
   };
   window.addEventListener('resize', handleResize);
   
-  // Cleanup on unmount
   onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
   });
@@ -208,34 +219,33 @@ onMounted(async () => {
   color: #1e7e34;
 }
 
-/* Slider Styles */
-.product-slider-container {
+.slider-container {
   position: relative;
-  padding: 0 60px; /* Add padding to ensure arrows don't overlap content */
+  padding: 0 60px;
 }
 
 @media (max-width: 768px) {
-  .product-slider-container {
+  .slider-container {
     padding: 0 50px;
   }
 }
 
 @media (max-width: 576px) {
-  .product-slider-container {
+  .slider-container {
     padding: 0 45px;
   }
 }
 
-.products-slider {
+.items-slider {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.products-slider::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+.items-slider::-webkit-scrollbar {
+  display: none;
 }
 
 .slider-track {
@@ -244,12 +254,11 @@ onMounted(async () => {
   padding: 0.5rem 0;
 }
 
-.product-slide {
-  flex: 0 0 280px; /* Fixed width for each slide */
+.item-slide {
+  flex: 0 0 280px;
   max-width: 280px;
 }
 
-/* Arrow Styles */
 .slider-arrow {
   position: absolute;
   top: 50%;
@@ -294,8 +303,7 @@ onMounted(async () => {
   right: 10px;
 }
 
-/* Skeleton Styles */
-.product-card-skeleton {
+.skeleton-card {
   border: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -337,9 +345,8 @@ onMounted(async () => {
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .product-slide {
+  .item-slide {
     flex: 0 0 250px;
     max-width: 250px;
   }
@@ -360,7 +367,7 @@ onMounted(async () => {
 }
 
 @media (max-width: 576px) {
-  .product-slide {
+  .item-slide {
     flex: 0 0 220px;
     max-width: 220px;
   }
@@ -368,14 +375,5 @@ onMounted(async () => {
   .slider-track {
     gap: 1rem;
   }
-}
-
-/* Special styling for featured section */
-.product-slider-section.featured {
-  background-color: #e8f5e8;
-}
-
-.section-title.featured {
-  color: #2c5530;
 }
 </style>

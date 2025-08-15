@@ -25,31 +25,41 @@
     </div>
 
     <!-- Top Featured Products -->
-    <ProductSlider 
+    <GenericSlider 
       title="Top Featured"
-      :products="topFeaturedProducts" 
+      :items="topFeaturedProducts" 
       :loading="productsLoading"
+      :card-component="ProductCard"
+      card-props-key="product"
       section-class="featured"
       title-class="featured"
       view-all-url="/products"
     />
 
     <!-- Best Selling Products -->
-    <ProductSlider 
+    <GenericSlider 
       title="Best Selling Products"
-      :products="bestSellingProducts" 
+      :items="bestSellingProducts" 
       :loading="productsLoading"
+      :card-component="ProductCard"
+      card-props-key="product"
       view-all-url="/products?sort=best-selling"
     />
 
     <!-- Most Searched -->
     <MostSearched 
-      :section-data="mostSearchedSection" 
-      :tags="mostSearchedTags" 
+      :section-data="mostSearchedSection"
     />
 
     <!-- Daily & Seasonal Products -->
-    <DailySeasonalProducts :categories="dailySeasonalCategories" />
+    <GenericSlider 
+      title="Daily & Seasonal Products"
+      :items="dailySeasonalProducts"
+      :loading="homepageLoading"
+      :card-component="CategoryCard"
+      card-props-key="category"
+      view-all-url="/categories"
+    />
 
     <!-- Top Deals & Offers -->
     <TopDealsOffers :deals="topDeals" />
@@ -66,12 +76,14 @@
 import BannerCarousel from '@/components/BannerCarousel.vue';
 import FeaturedCategories from '@/components/categories/FeaturedCategories.vue';
 import BannerMidGrid from '@/components/BannerMidGrid.vue';
-import ProductSlider from '@/components/ProductSlider.vue';
+import GenericSlider from '@/components/GenericSlider.vue';
+import CategoryCard from '@/components/CategoryCard.vue';
 import MostSearched from '@/components/MostSearched.vue';
-import DailySeasonalProducts from '@/components/DailySeasonalProducts.vue';
+import DailySeasonal from '@/components/DailySeasonal.vue';
 import TopDealsOffers from '@/components/TopDealsOffers.vue';
 import PromotionalBanners from '@/components/PromotionalBanners.vue';
 import SocialMediaFollow from '@/components/SocialMediaFollow.vue';
+import ProductCard from '@/components/ProductCard.vue';
 import { useApiLaravel } from '@/composables/useApi.js';
 import { useImageUrl } from '@/composables/useImageUrl.js';
 import { useProducts } from '@/composables/useProducts.ts';
@@ -156,35 +168,14 @@ const mostSearchedSection = computed(() => {
   return (homepageData.value?.sections || []).find(s => s.type === 'most_searched');
 });
 
-const dailySeasonalCategories = computed(() => {
+const dailySeasonalProducts = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'daily_seasonal');
   if (section && Array.isArray(section.data?.categories)) {
+    console.log('Daily Seasonal Categories:', section.data.categories);
     return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
   }
-  // Default categories
-  return [
-    {
-      id: 1,
-      title: 'Supplements',
-      subtitle: 'For daily nutrition',
-      image: '/images/supplements.jpg',
-      url: '/category/supplements'
-    },
-    {
-      id: 2,
-      title: 'Personal Care',
-      subtitle: 'Natural wellness',
-      image: '/images/personal-care.jpg',
-      url: '/category/personal-care'
-    },
-    {
-      id: 3,
-      title: 'Nutraceuticals',
-      subtitle: 'Health boosters',
-      image: '/images/nutraceuticals.jpg',
-      url: '/category/nutraceuticals'
-    }
-  ];
+  console.log('No daily seasonal data found, returning empty array');
+  return [];
 });
 
 const topDeals = computed(() => {
