@@ -48,11 +48,15 @@ onMounted(async () => {
 <style scoped>
 /* Category Bar Styles */
 .category-bar {
+  position: sticky;
+  top: var(--navbar-height, 60px); /* Fallback to 60px if CSS variable not set */
+  z-index: 1025; /* Below Navbar (1030) but above content */
   overflow-x: auto;
   white-space: nowrap;
   background: var(--background-white);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.05);
 }
 
 .category-links {

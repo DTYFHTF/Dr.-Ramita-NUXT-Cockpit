@@ -55,7 +55,6 @@ export const useCartStore = defineStore('cart', () => {
       quantity: Math.max(1, Number(quantity))
     };
     
-    console.log('[CART] Adding to cart:', { product: product.name, payload });
     
     try {
       await $fetch(`${API_BASE}/cart`, {

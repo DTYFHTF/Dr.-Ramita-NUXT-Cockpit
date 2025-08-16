@@ -79,7 +79,6 @@ import BannerMidGrid from '@/components/BannerMidGrid.vue';
 import GenericSlider from '@/components/GenericSlider.vue';
 import CategoryCard from '@/components/CategoryCard.vue';
 import MostSearched from '@/components/MostSearched.vue';
-import DailySeasonal from '@/components/DailySeasonal.vue';
 import TopDealsOffers from '@/components/TopDealsOffers.vue';
 import PromotionalBanners from '@/components/PromotionalBanners.vue';
 import SocialMediaFollow from '@/components/SocialMediaFollow.vue';
@@ -171,7 +170,6 @@ const mostSearchedSection = computed(() => {
 const dailySeasonalProducts = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'daily_seasonal');
   if (section && Array.isArray(section.data?.categories)) {
-    console.log('Daily Seasonal Categories:', section.data.categories);
     return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
   }
   console.log('No daily seasonal data found, returning empty array');
