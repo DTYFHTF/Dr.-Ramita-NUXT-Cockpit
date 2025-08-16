@@ -70,6 +70,15 @@ export interface Product {
   sale_price?: string; // Laravel returns sale_price as string
   display_price: string; // Backend-calculated display price
   display_sale_price?: string; // Backend-calculated display sale price
+  applied_promotions?: Array<{
+    id?: number;
+    name?: string;
+    type?: 'percentage' | 'fixed' | string;
+    value?: number;
+    source?: string;
+  }>;
+  discount_percentage?: number;
+  total_stock?: number;
   stock: number;
   in_stock: boolean; // Laravel returns boolean
   has_variations: boolean; // Laravel returns boolean

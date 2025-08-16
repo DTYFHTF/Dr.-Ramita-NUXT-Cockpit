@@ -20,39 +20,56 @@
       </div>
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
+        
+        <!-- Promotions badges at top -->
+        <div v-if="product.applied_promotions && product.applied_promotions.length" class="promotion-badges mb-2">
+          <PromotionBadge 
+            v-for="promo in product.applied_promotions" 
+            :key="promo.id || promo.name"
+            :promotion="promo"
+            compact
+          />
+        </div>
+
+        <!-- Simple pricing (back to original logic but enhanced) -->
         <div class="mb-2 d-flex align-items-center gap-2">
-          <!-- Fallback to price/sale_price if display_price/display_sale_price are missing -->
-          <template v-if="(product.display_sale_price ?? product.sale_price) && Number(product.display_sale_price ?? product.sale_price) < Number(product.display_price ?? product.price)">
+          <!-- Show promotion price if available, otherwise fallback to sale_price logic -->
+          <template v-if="product.applied_promotions && product.applied_promotions.length">
+            <!-- Product has active promotions - show promotion pricing -->
             <span class="text-decoration-line-through text-muted">
-              <template v-if="product.has_variations">From </template>₹{{ product.display_price ?? product.price }}
+              <template v-if="product.has_variations">From </template>₹{{ product.price }}
             </span>
             <span class="ms-1 price fw-bold">
-              <template v-if="product.has_variations">From </template>₹{{ product.display_sale_price ?? product.sale_price }}
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
+            </span>
+            <span class="badge bg-success ms-2">
+              {{ product.discount_percentage }}% OFF
+            </span>
+          </template>
+          <template v-else-if="isOnSale">
+            <!-- Fallback to manual sale price -->
+            <span class="text-decoration-line-through text-muted">
+              <template v-if="product.has_variations">From </template>₹{{ product.price }}
+            </span>
+            <span class="ms-1 price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
             </span>
           </template>
           <template v-else>
+            <!-- Regular price -->
             <span class="price fw-bold">
               <template v-if="product.has_variations">From </template>₹{{ product.display_price ?? product.price }}
             </span>
           </template>
-          <span v-if="product.average_rating !== undefined" class="ms-2 d-flex align-items-center">
-            <LucideIcon icon="mdi:star" color="var(--color-warning)" size="18" class="me-1" />
-            <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
-          </span>
         </div>
-        <span
-          class="badge mb-2"
-          :class="
-            product.in_stock ?? ((product.stock ?? 0) > 0)
-              ? 'bg-success'
-              : 'bg-danger'
-          "
-        >
-          {{
-            product.in_stock ?? ((product.stock ?? 0) > 0)
-              ? 'In stock'
-              : 'Out of stock'
-          }}
+        
+        <!-- Rating -->
+        <div v-if="product.average_rating !== undefined" class="mb-2 d-flex align-items-center">
+          <LucideIcon icon="mdi:star" color="var(--color-warning)" size="18" class="me-1" />
+          <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
+        </div>
+        <span class="badge mb-2" :class="(product.in_stock ?? ((product.stock ?? 0) > 0)) ? 'bg-success' : 'bg-danger'">
+          {{ (product.has_variations ? (product.total_stock ?? 0) > 0 : (product.in_stock ?? ((product.stock ?? 0) > 0))) ? 'In stock' : 'Out of stock' }}
         </span>
         <p class="product-description mb-0">
           {{ product.description }}
@@ -113,6 +130,7 @@
 import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
+import PromotionBadge from './PromotionBadge.vue';
 import { useCart } from '@/composables/useCart';
 import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
@@ -132,6 +150,17 @@ const isLoadingProduct = ref(false);
 
 const isAuthenticated = computed(() => !!userStore.token);
 const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id));
+
+// Price calculations for the new components
+const isOnSale = computed(() => {
+  const displaySalePrice = props.product.display_sale_price ?? props.product.sale_price;
+  const displayPrice = props.product.display_price ?? props.product.price;
+  return displaySalePrice && Number(displaySalePrice) < Number(displayPrice);
+});
+
+const originalPrice = computed(() => {
+  return isOnSale.value ? (props.product.price) : (props.product.display_price ?? props.product.price);
+});
 
 const handleWishlistToggle = async () => {
   if (!userStore.hydrated) {
@@ -169,7 +198,7 @@ const handleAddToCart = async (product: Product) => {
   }
   try {
     // If product has variations, always open quick view for selection
-    if (product.variations && product.variations.length > 0) {
+    if (product.has_variations && product.variations && product.variations.length > 0) {
       openQuickView();
       return;
     }
@@ -214,7 +243,7 @@ function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_
 
 const openQuickView = async () => {
   // If product already has variations, just show it
-  if (props.product.variations && props.product.variations.length > 0) {
+  if (props.product.has_variations && props.product.variations && props.product.variations.length > 0) {
     fullProduct.value = props.product;
     showQuickView.value = true;
     return;

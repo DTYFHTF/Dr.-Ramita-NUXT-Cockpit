@@ -93,6 +93,21 @@
             </span>
             <h2>{{ product.name }}</h2>
           </div>
+          
+          <!-- Promotion badges -->
+          <div v-if="product.applied_promotions && product.applied_promotions.length" class="promotions-section mb-3">
+            <div class="d-flex gap-2 flex-wrap">
+              <PromotionBadge 
+                v-for="promo in product.applied_promotions" 
+                :key="promo.id || promo.name"
+                :promotion="promo"
+              />
+            </div>
+            <div v-if="product.discount_percentage" class="savings-text mt-2 text-success fw-semibold">
+              <LucideIcon icon="mdi:tag" size="16" class="me-1" />
+              You save {{ product.discount_percentage }}%
+            </div>
+          </div>
           <div v-if="selectedVariation">
             <span
               v-if="
@@ -126,23 +141,33 @@
             </div>
           </div>
           <!-- Fallback if no variations -->
-        <div v-else class="product-price mb-3 ">
-          <span v-if="product.sale_price && product.sale_price < product.price" class="d-flex">
-            <h4 class="text-decoration-line-through text-muted"
-              >₹{{ product.price }}</h4
-            >
-            <h4 class="ms-2 text-success fw-bold"
-              >₹{{ product.sale_price }}</h4
-            >
-          </span>
-          <span v-else class="fw-bold text-success">₹{{ product.price }}</span>
+        <div v-else class="product-price mb-3">
+          <!-- Show promotion pricing if available -->
+          <template v-if="product.applied_promotions && product.applied_promotions.length">
+            <div class="d-flex align-items-center gap-2">
+              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
+              <h4 class="text-success fw-bold mb-0">₹{{ product.display_price }}</h4>
+              <span class="badge bg-success">{{ product.discount_percentage }}% OFF</span>
+            </div>
+          </template>
+          <!-- Fallback to manual sale price logic -->
+          <template v-else-if="product.display_sale_price && Number(product.display_sale_price) < Number(product.price)">
+            <div class="d-flex align-items-center gap-2">
+              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
+              <h4 class="text-success fw-bold mb-0">₹{{ product.display_sale_price }}</h4>
+            </div>
+          </template>
+          <!-- Regular price -->
+          <template v-else>
+            <h4 class="fw-bold text-success mb-0">₹{{ product.display_price ?? product.price }}</h4>
+          </template>
         </div>
         <div class="product-description mb-3">
           <span class="clamp-4-lines">{{ product.description }}</span>
         </div>
         <!-- Variations Dropdown -->
         <div
-          v-if="product.variations && product.variations.length"
+          v-if="product.has_variations && product.variations && product.variations.length"
           class="mb-3"
         >
           <label class="fw-semibold mb-3">Quantity:</label>
@@ -239,6 +264,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
+import PromotionBadge from "./PromotionBadge.vue";
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from "@/types";
 
@@ -275,7 +301,7 @@ const images = computed(() => {
 });
 
 const selectedVariation = computed(() => {
-  if (!props.product.variations) return null;
+  if (!props.product.has_variations || !props.product.variations) return null;
   return (
     props.product.variations.find(
       (v: any) => v.id === selectedVariationId.value
@@ -283,7 +309,7 @@ const selectedVariation = computed(() => {
   );
 });
 const canAddToCart = computed(() => {
-  if (props.product.variations?.length) {
+  if (props.product.has_variations && props.product.variations?.length) {
     return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
   }
   return inStock.value;
@@ -306,7 +332,7 @@ function decrement() {
   if (quantity.value > 1) quantity.value--;
 }
 function addToCartHandler() {
-  if (props.product.variations?.length && selectedVariation.value) {
+  if (props.product.has_variations && props.product.variations?.length && selectedVariation.value) {
     // Only pass parent product info, and set variation_id explicitly
     emit("add-to-cart", {
       ...props.product,
