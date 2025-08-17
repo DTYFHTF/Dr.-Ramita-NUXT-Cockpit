@@ -76,15 +76,20 @@ export function useCategoryProducts() {
 
     // Price range filter
     if (filters.priceMin !== undefined) {
-      filtered = filtered.filter(product => product.display_price >= filters.priceMin!);
+      filtered = filtered.filter(product => Number(product.display_price ?? product.price) >= filters.priceMin!);
     }
     if (filters.priceMax !== undefined) {
-      filtered = filtered.filter(product => product.display_price <= filters.priceMax!);
+      filtered = filtered.filter(product => Number(product.display_price ?? product.price) <= filters.priceMax!);
     }
 
-    // On sale filter
+    // On sale filter - use backend-provided display_sale_price or price_breakdown
     if (filters.onSale) {
-      filtered = filtered.filter(product => product.on_sale || product.sale_price);
+      filtered = filtered.filter(product => {
+        if (product.price_breakdown?.discount_amount && product.price_breakdown.discount_amount > 0) return true;
+        const ds = (product as any).display_sale_price;
+        if (ds && Number(ds) < Number(product.display_price ?? product.price)) return true;
+        return false;
+      });
     }
 
     // Stock filter
@@ -105,10 +110,10 @@ export function useCategoryProducts() {
     if (filters.sort) {
       const [field, direction] = filters.sort.split('_');
       const multiplier = direction === 'desc' ? -1 : 1;
-      
+
       filtered.sort((a, b) => {
         if (field === 'display_price') {
-          return (a.display_price - b.display_price) * multiplier;
+          return (Number(a.display_price ?? a.price) - Number(b.display_price ?? b.price)) * multiplier;
         } else if (field === 'rating') {
           const aRating = a.average_rating || 0;
           const bRating = b.average_rating || 0;

@@ -94,37 +94,34 @@
             <h2>{{ product.name }}</h2>
           </div>
           
-          <!-- Promotion badges -->
-          <div v-if="product.applied_promotions && product.applied_promotions.length" class="promotions-section mb-3">
+          <!-- Promotion badges - use price_breakdown if available -->
+          <div v-if="getPromotions().length" class="promotions-section mb-3">
             <div class="d-flex gap-2 flex-wrap">
               <PromotionBadge 
-                v-for="promo in product.applied_promotions" 
+                v-for="promo in getPromotions()" 
                 :key="promo.id || promo.name"
                 :promotion="promo"
               />
             </div>
-            <div v-if="product.discount_percentage" class="savings-text mt-2 text-success fw-semibold">
+            <div v-if="getDiscountPercentage()" class="savings-text mt-2 text-success fw-semibold">
               <LucideIcon icon="mdi:tag" size="16" class="me-1" />
-              You save {{ product.discount_percentage }}%
+              You save {{ getDiscountPercentage() }}%
             </div>
           </div>
           <div v-if="selectedVariation">
             <span
-              v-if="
-                selectedVariation.sale_price &&
-                selectedVariation.sale_price < selectedVariation.price
-              "
-              class="d-flex "
+              v-if="selectedVariationDisplaySalePrice && Number(selectedVariationDisplaySalePrice) < Number(selectedVariationPrice)"
+              class="d-flex"
             >
               <h4 class="text-decoration-line-through text-muted me-3">
-                ₹{{ selectedVariation.price }}
+                ₹{{ selectedVariationPrice }}
               </h4>
               <h4 class="text-success fw-bold">
-                ₹{{ selectedVariation.sale_price }}
+                ₹{{ selectedVariationDisplaySalePrice }}
               </h4>
             </span>
             <h4 v-else class="fw-bold text-success">
-              ₹{{ selectedVariation.price }}
+              ₹{{ selectedVariationPrice }}
             </h4>
             <span
               class="badge ms-2"
@@ -142,8 +139,19 @@
           </div>
           <!-- Fallback if no variations -->
         <div v-else class="product-price mb-3">
-          <!-- Show promotion pricing if available -->
-          <template v-if="product.applied_promotions && product.applied_promotions.length">
+          <!-- Use price_breakdown if available for more accurate pricing -->
+          <template v-if="product.price_breakdown">
+            <div v-if="product.price_breakdown.discount_amount > 0" class="d-flex align-items-center gap-2">
+              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price_breakdown.original_price }}</h4>
+              <h4 class="text-success fw-bold mb-0">₹{{ product.price_breakdown.final_price }}</h4>
+              <span v-if="product.price_breakdown.discount_percentage" class="badge bg-success">{{ product.price_breakdown.discount_percentage }}% OFF</span>
+            </div>
+            <div v-else>
+              <h4 class="fw-bold text-success mb-0">₹{{ product.price_breakdown.final_price }}</h4>
+            </div>
+          </template>
+          <!-- Fallback to applied_promotions logic -->
+          <template v-else-if="product.applied_promotions && product.applied_promotions.length">
             <div class="d-flex align-items-center gap-2">
               <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
               <h4 class="text-success fw-bold mb-0">₹{{ product.display_price }}</h4>
@@ -151,10 +159,10 @@
             </div>
           </template>
           <!-- Fallback to manual sale price logic -->
-          <template v-else-if="product.display_sale_price && Number(product.display_sale_price) < Number(product.price)">
+      <template v-else-if="productDisplaySalePrice && Number(productDisplaySalePrice) < Number(product.price)">
             <div class="d-flex align-items-center gap-2">
               <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
-              <h4 class="text-success fw-bold mb-0">₹{{ product.display_sale_price }}</h4>
+        <h4 class="text-success fw-bold mb-0">₹{{ productDisplaySalePrice }}</h4>
             </div>
           </template>
           <!-- Regular price -->
@@ -308,6 +316,30 @@ const selectedVariation = computed(() => {
     ) || props.product.variations[0]
   );
 });
+// Computed helpers to avoid direct template access to possibly-missing properties
+const selectedVariationPrice = computed(() => {
+  const v: any = selectedVariation.value;
+  if (!v) return 0;
+  // If this variation has a discount, show the original price (for strike-through)
+  if (v.price_breakdown && (v.price_breakdown.discount_amount ?? 0) > 0) {
+    return (v.price_breakdown.original_price ?? v.price ?? 0);
+  }
+  // Otherwise show the normal/display price (server-provided preferred)
+  return (v.display_price ?? v.price_breakdown?.final_price ?? v.price ?? 0);
+});
+
+const selectedVariationDisplaySalePrice = computed(() => {
+  const v: any = selectedVariation.value;
+  if (!v) return null;
+  // Prefer price_breakdown final_price when a discount exists (more authoritative)
+  if (v.price_breakdown && (v.price_breakdown.discount_amount ?? 0) > 0) {
+    return v.price_breakdown.final_price;
+  }
+  // Fallback to server-provided explicit sale price if present
+  if (v.display_sale_price !== undefined && v.display_sale_price !== null) return v.display_sale_price;
+  return null;
+});
+const productDisplaySalePrice = computed(() => (props.product as any)?.display_sale_price ?? null);
 const canAddToCart = computed(() => {
   if (props.product.has_variations && props.product.variations?.length) {
     return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
@@ -372,6 +404,22 @@ function shareUrl(platform: string) {
     default:
       return url;
   }
+}
+
+// Get promotions from price_breakdown if available, otherwise fallback to applied_promotions
+function getPromotions() {
+  if (props.product.price_breakdown?.applied_promotions?.length) {
+    return props.product.price_breakdown.applied_promotions;
+  }
+  return props.product.applied_promotions ?? [];
+}
+
+// Get discount percentage from price_breakdown if available, otherwise fallback to discount_percentage
+function getDiscountPercentage() {
+  if (props.product.price_breakdown?.discount_percentage) {
+    return props.product.price_breakdown.discount_percentage;
+  }
+  return props.product.discount_percentage ?? null;
 }
 
 </script>

@@ -41,9 +41,19 @@ export interface ProductVariation {
   name: string;
   price: number;
   stock?: number;
-  sale_price?: number;
   sku?: string;
   quantity?: number; // Optional quantity property
+  // Computed pricing fields from backend
+  final_price?: number;
+  discount_amount?: number;
+  discount_percentage?: number;
+  applied_promotions?: Array<{
+    id?: number;
+    name?: string;
+    type?: 'percentage' | 'fixed' | string;
+    value?: number;
+    source?: string;
+  }>;
 }
 
 export interface ReviewUser {
@@ -67,9 +77,7 @@ export interface Product {
   slug: string;
   description?: string;
   price: string; // Laravel returns price as string
-  sale_price?: string; // Laravel returns sale_price as string
-  display_price: string; // Backend-calculated display price
-  display_sale_price?: string; // Backend-calculated display sale price
+  display_price: string; // Backend-calculated display price (via PriceEngine)
   applied_promotions?: Array<{
     id?: number;
     name?: string;
@@ -98,6 +106,21 @@ export interface Product {
   average_rating?: number; // From Laravel response
   review_count?: number; // From Laravel response
   latest_reviews?: Review[]; // From Laravel response
+  
+  // Price breakdown from PriceEngine
+  price_breakdown?: {
+    original_price: number;
+    final_price: number;
+    discount_amount: number;
+    discount_percentage?: number;
+    applied_promotions: Array<{
+      id?: number;
+      name?: string;
+      type?: 'percentage' | 'fixed' | string;
+      value?: number;
+      source?: string;
+    }>;
+  };
   
   // Frontend-specific properties
   rating?: number; // For backward compatibility

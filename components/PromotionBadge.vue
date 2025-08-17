@@ -2,7 +2,7 @@
   <span 
     class="promotion-badge" 
     :class="`promotion-${promotion.type}`"
-    :title="promotion.name"
+    :title="getBadgeTooltip()"
   >
     <LucideIcon icon="mdi:tag" size="12" class="me-1" />
     <span class="promotion-text">
@@ -38,6 +38,14 @@ const formatDiscount = computed(() => {
   }
   return `${props.promotion.value} OFF`;
 });
+
+const getBadgeTooltip = () => {
+  let tooltip = props.promotion.name || 'Promotion';
+  if (props.promotion.source) {
+    tooltip += ` (${props.promotion.source})`;
+  }
+  return tooltip;
+};
 </script>
 
 <style scoped lang="scss">

@@ -21,20 +21,22 @@
       <div class="card-body d-flex flex-column align-items-start p-3">
         <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
         
-        <!-- Promotions badges at top -->
-        <div v-if="product.applied_promotions && product.applied_promotions.length" class="promotion-badges mb-2">
-          <PromotionBadge 
-            v-for="promo in product.applied_promotions" 
-            :key="promo.id || promo.name"
-            :promotion="promo"
-            compact
-          />
-        </div>
+        <!-- Stock badge at top: show availability clearly -->
+        
 
-        <!-- Simple pricing (back to original logic but enhanced) -->
+        <!-- Simple pricing using price_breakdown if available, otherwise fallback to existing logic -->
         <div class="mb-2 d-flex align-items-center gap-2">
-          <!-- Show promotion price if available, otherwise fallback to sale_price logic -->
-          <template v-if="product.applied_promotions && product.applied_promotions.length">
+          <!-- Use price_breakdown if available for more accurate pricing -->
+          <template v-if="product.price_breakdown">
+            <span v-if="product.price_breakdown.discount_amount > 0" class="text-decoration-line-through text-muted">
+              <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.original_price }}
+            </span>
+            <span class="ms-1 price fw-bold">
+              <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.final_price }}
+            </span>
+          </template>
+          <!-- Fallback to applied_promotions logic -->
+          <template v-else-if="product.applied_promotions && product.applied_promotions.length">
             <!-- Product has active promotions - show promotion pricing -->
             <span class="text-decoration-line-through text-muted">
               <template v-if="product.has_variations">From </template>₹{{ product.price }}
@@ -62,15 +64,25 @@
             </span>
           </template>
         </div>
-        
+        <!-- Promotions (moved below price) -->
+        <div v-if="getPromotions().length" class="promotion-badges mb-2">
+          <PromotionBadge 
+            v-for="promo in getPromotions()" 
+            :key="promo.id || promo.name"
+            :promotion="promo"
+            compact
+          />
+        </div>
         <!-- Rating -->
         <div v-if="product.average_rating !== undefined" class="mb-2 d-flex align-items-center">
           <LucideIcon icon="mdi:star" color="var(--color-warning)" size="18" class="me-1" />
           <span class="fw-semibold">{{ product.average_rating?.toFixed(1) || '0.0' }}</span>
         </div>
-        <span class="badge mb-2" :class="(product.in_stock ?? ((product.stock ?? 0) > 0)) ? 'bg-success' : 'bg-danger'">
-          {{ (product.has_variations ? (product.total_stock ?? 0) > 0 : (product.in_stock ?? ((product.stock ?? 0) > 0))) ? 'In stock' : 'Out of stock' }}
-        </span>
+        <div class="mb-2">
+          <span class="badge stock-badge" :class="isInStock ? 'bg-success' : 'bg-danger'">
+            {{ isInStock ? 'In stock' : 'Out of stock' }}
+          </span>
+        </div>
         <p class="product-description mb-0">
           {{ product.description }}
         </p>
@@ -93,7 +105,7 @@
       <template v-if="!hideActions">
         <button
           class="btn btn-smooth-success add-to-cart-btn"
-          :disabled="!(product.in_stock ?? ((product.stock ?? 0) > 0))"
+          :disabled="!isInStock"
           @click.stop="handleAddToCart(product)"
         >
           <span class="add-to-cart-text">Add to Cart</span>
@@ -153,7 +165,7 @@ const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id)
 
 // Price calculations for the new components
 const isOnSale = computed(() => {
-  const displaySalePrice = props.product.display_sale_price ?? props.product.sale_price;
+  const displaySalePrice = props.product.display_sale_price;
   const displayPrice = props.product.display_price ?? props.product.price;
   return displaySalePrice && Number(displaySalePrice) < Number(displayPrice);
 });
@@ -161,6 +173,26 @@ const isOnSale = computed(() => {
 const originalPrice = computed(() => {
   return isOnSale.value ? (props.product.price) : (props.product.display_price ?? props.product.price);
 });
+
+// Simple and reliable stock checking - back to basics
+
+
+const isInStock = computed(() => {
+  if (props.product.has_variations) {
+    return (props.product.total_stock ?? 0) > 0;
+  } else {
+    // Use the original logic that was working
+    return props.product.in_stock ?? ((props.product.stock ?? 0) > 0);
+  }
+});
+
+// Get promotions from price_breakdown if available, otherwise fallback to applied_promotions
+const getPromotions = () => {
+  if (props.product.price_breakdown?.applied_promotions?.length) {
+    return props.product.price_breakdown.applied_promotions;
+  }
+  return props.product.applied_promotions ?? [];
+};
 
 const handleWishlistToggle = async () => {
   if (!userStore.hydrated) {

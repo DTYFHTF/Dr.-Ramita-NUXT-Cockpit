@@ -403,12 +403,12 @@ useHead(() => ({
 
 
 
-<style lang="scss" scoped>
+<style scoped>
 
 /* === GENERAL LAYOUT === */
 .event-detail {
   min-height: 100vh;
-  background: $background-light;
+  background: var(--background-light);
 }
 
 .loading-state,
@@ -437,7 +437,7 @@ useHead(() => ({
 .event-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: $text-secondary;
+  color: var(--text-secondary);
 }
 
 /* Removed unused .event-meta and .meta-item classes */
@@ -493,7 +493,7 @@ useHead(() => ({
 .content-body {
   font-size: 1rem;
   line-height: 1.6;
-  color: $text-secondary;
+  color: var(--text-secondary);
 }
 
 /* === SPEAKERS === */
@@ -528,18 +528,18 @@ useHead(() => ({
 .speaker-name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: $color-primary;
+  color: var(--color-primary);
   margin-bottom: 0.25rem;
 }
 
 .speaker-title {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.75rem;
 }
 
 .speaker-bio {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -555,14 +555,14 @@ useHead(() => ({
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: $background-light;
+  background: var(--background-light);
   border-radius: 8px;
 }
 
 .agenda-time {
   flex-shrink: 0;
   font-weight: 600;
-  color: $color-primary;
+  color: var(--color-primary);
   min-width: 80px;
 }
 
@@ -572,18 +572,18 @@ useHead(() => ({
 
 .agenda-title {
   font-weight: 600;
-  color: $color-primary;
+  color: var(--color-primary);
   margin-bottom: 0.25rem;
 }
 
 .agenda-description {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
 
 .agenda-speaker {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -599,12 +599,12 @@ useHead(() => ({
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: $background-light;
+  background: var(--background-light);
   border-radius: 6px;
 }
 
 .check-icon {
-  color: $accent-soft-green;
+  color: var(--accent-soft-green);
   font-size: 1rem;
 }
 
@@ -634,9 +634,9 @@ useHead(() => ({
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid var(--border-color);
   font-size: 0.9rem;
-  color: $text-secondary;
+  color: var(--text-secondary);
 }
 
 .detail-item:last-child {
@@ -644,7 +644,7 @@ useHead(() => ({
 }
 
 .detail-icon {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: 1rem;
   width: 20px;
   flex-shrink: 0;
@@ -656,7 +656,7 @@ useHead(() => ({
 
 
 .venue-link {
-  color: $color-secondary;
+  color: var(--color-secondary);
   text-decoration: none;
   font-size: 0.85rem;
 }
@@ -669,8 +669,8 @@ useHead(() => ({
 
 .booking-section {
   padding: 1.5rem;
-  border-top: 1px solid $border-color;
-  background: $background-light;
+  border-top: 1px solid var(--border-color);
+  background: var(--background-light);
 }
 
 .price-section {
@@ -684,12 +684,12 @@ useHead(() => ({
 .price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: $color-primary;
+  color: var(--color-primary);
 }
 
 
 .filling-fast {
-  color: $accent-soft-green;
+  color: var(--accent-soft-green);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -697,14 +697,38 @@ useHead(() => ({
 
 .book-now-btn {
   width: 100%;
-  @include primary-button;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
   border-radius: 6px;
   font-size: 1rem;
+  padding: 12px 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  background-color: var(--button-bg);
+  color: var(--text-white);
+}
+
+.book-now-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--primary-dark);
+  color: var(--text-white);
+}
+
+.book-now-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .book-now-btn.disabled {
-  background: $border-color;
-  color: $text-secondary;
+  background: var(--border-color);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 
