@@ -1,82 +1,11 @@
 <template>
   <div class="checkout-page container py-5">
-    <div class="checkout-header text-center mb-5">
+    <div v-if="!orderSuccess" class="checkout-header text-center mb-5">
       <h1 class="checkout-title">Checkout</h1>
       <p class="checkout-subtitle text-muted">Complete your order in just a few steps</p>
     </div>
-    <div v-if="orderSuccess">
-      <div class="success-card">
-        <div class="success-icon">
-          <LucideIcon icon="mdi:check-circle" class="text-success" size="3em" />
-        </div>
-        <h2 class="success-title">Order Placed Successfully!</h2>
-        <p class="success-message">Thank you for your purchase. We'll send you a confirmation email shortly.</p>
-        
-        <div class="order-details">
-          <div class="order-info-grid">
-            <div class="order-info-item">
-              <span class="label">Order ID</span>
-              <span class="value">{{ orderData?.id }}</span>
-            </div>
-            <div class="order-info-item">
-              <span class="label">Status</span>
-              <span class="badge bg-success">{{ orderData?.status }}</span>
-            </div>
-            <div class="order-info-item">
-              <span class="label">Order Date</span>
-              <span class="value">{{ orderData?.created_at ? new Date(orderData.created_at).toLocaleDateString() : '' }}</span>
-            </div>
-          </div>
-
-          <div class="order-items">
-            <h5 class="section-title">Items Ordered</h5>
-            <div class="items-list">
-              <div v-for="item in orderData?.cart" :key="`${item.product_id}:${item.variation_id}`" class="item-row">
-                <div class="item-image">
-                  <img :src="item.image || (cart.find(c => c.product_id === item.product_id && c.variation_id === item.variation_id)?.image) || '/placeholder-product.jpg'" :alt="item.name" class="product-img" />
-                </div>
-                <div class="item-details">
-                  <span class="item-name">{{ item.name }}</span>
-                  <span v-if="item.variation_name" class="item-variation">{{ item.variation_name }}</span>
-                  <span class="item-quantity">Qty: {{ item.quantity }}</span>
-                </div>
-                <span class="item-price">₹{{ (item.price * item.quantity).toFixed(2) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="order-summary-final">
-            <div class="summary-row">
-              <span>Shipping</span>
-              <span>₹{{ orderData?.shipping_cost || shippingCost }}</span>
-            </div>
-            <div class="summary-row">
-              <span>Estimated Delivery</span>
-              <span>{{ orderData?.estimated_delivery || estimatedDelivery }}</span>
-            </div>
-            <div class="summary-row total-row">
-              <span>Total</span>
-              <span>₹{{ orderData?.total?.toFixed(2) }}</span>
-            </div>
-          </div>
-
-          <div class="shipping-info">
-            <h5 class="section-title">Delivery Address</h5>
-            <div v-if="orderData?.shipping" class="address-details">
-              <p class="recipient-name">{{ orderData.shipping.name }}</p>
-              <p class="address-line">{{ orderData.shipping.area }}</p>
-              <p class="address-line">{{ orderData.shipping.address }}</p>
-              <p class="address-line">{{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }}</p>
-              <p class="address-line">{{ orderData.shipping.country }}</p>
-              <p class="phone-number">📞 {{ orderData.shipping.phone }}</p>
-              <p v-if="orderData.shipping.landmark" class="address-line">Near {{ orderData.shipping.landmark }}</p>
-
-            </div>
-          </div>
-        </div>
-        
-        <router-link to="/" class="continue-shopping-btn">Continue Shopping</router-link>
-      </div>
+    <div v-if="orderSuccess && orderData">
+      <OrderConfirmation :orderData="orderData" />
     </div>
     <div v-else>
       <div v-if="errorMessage" class="error-alert">
@@ -233,6 +162,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import type { Order, OrderItem, ShippingInfo, PaymentMethod } from '@/types';
 import LucideIcon from '@/components/LucideIcon.vue';
+import OrderConfirmation from '@/components/OrderConfirmation.vue';
 
 const cartStore = useCart();
 const { cart, totalPrice } = cartStore;
@@ -826,7 +756,7 @@ const submitOrder = async () => {
     font-size: 2rem;
   }
   
-  .form-container, .summary-card, .success-card {
+  .form-container, .summary-card {
     padding: 1.5rem;
   }
   
@@ -836,10 +766,6 @@ const submitOrder = async () => {
   
   .form-actions {
     flex-direction: column;
-  }
-  
-  .success-card {
-    padding: 2rem 1.5rem;
   }
   
   .order-info-grid {
