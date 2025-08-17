@@ -41,8 +41,8 @@
       <p class="visually-hidden">Product not found.</p>
     </div>
 
-    <!-- Toast Notification -->
-    <div v-if="showNotification" class="toast-message">Product added to cart!</div>
+  <!-- Toast Notification -->
+  <CartToast :show="showNotification" message="Product added to cart!" link-href="/CartPage" link-text="View Cart" />
   </div>
 </template>
 
@@ -56,6 +56,7 @@ import ProductQuickViewContent from '@/components/ProductQuickViewContent.vue';
 import ProductReviewSection from '@/components/ProductReviewSection.vue';
 import GenericSlider from '@/components/GenericSlider.vue';
 import ProductCard from '@/components/ProductCard.vue';
+import CartToast from '@/components/CartToast.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';

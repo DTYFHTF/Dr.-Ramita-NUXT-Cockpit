@@ -125,13 +125,7 @@
     </div>
     <ProductQuickView v-if="showQuickView && fullProduct" :product="fullProduct" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
-  <div v-if="showNotification" class="toast-message">
-    Product added to cart!
-    <NuxtLink to="/CartPage" class="ms-2 text-white text-decoration-underline d-inline-flex align-items-center">
-      <LucideIcon icon="mdi:cart" class="me-1" size="16" />
-      View Cart
-    </NuxtLink>
-  </div>
+  <CartToast :show="showNotification" message="Product added to cart!" link-href="/CartPage" link-text="View Cart" />
   <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
     Product added to wishlist! 
     <NuxtLink to="/wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
@@ -143,6 +137,7 @@ import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
 import PromotionBadge from './PromotionBadge.vue';
+import CartToast from './CartToast.vue';
 import { useCart } from '@/composables/useCart';
 import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
@@ -165,7 +160,7 @@ const isInWishlist = computed(() => wishlistStore.isInWishlist(props.product.id)
 
 // Price calculations for the new components
 const isOnSale = computed(() => {
-  const displaySalePrice = props.product.display_sale_price;
+  const displaySalePrice = (props.product as any).display_sale_price ?? null;
   const displayPrice = props.product.display_price ?? props.product.price;
   return displaySalePrice && Number(displaySalePrice) < Number(displayPrice);
 });
