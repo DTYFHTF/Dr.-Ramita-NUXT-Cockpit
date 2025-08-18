@@ -79,8 +79,7 @@
                 <p class="section-subtitle mb-4">Meet our expert presenters</p>
 
                 <div class="speakers-grid">
-                  <div v-for="speaker in event.speakers" :key="speaker.id" class="speaker-card">
-
+                  <div v-for="speaker in event.speakers" :key="speaker.id" class="speaker-tile">
                     <div class="speaker-avatar">
                       <img
                         :src="getImageUrl(speaker.avatar, '/placeholder-speaker.jpg')"
@@ -135,7 +134,7 @@
                 <p class="section-subtitle mb-4">Everything you get with your registration</p>
 
                 <div class="features-list">
-                  <div v-for="facility in event.facilities" :key="facility" class="feature-item">
+                  <div v-for="facility in event.facilities" :key="facility" class="feature-chip">
                     <LucideIcon icon="mdi:check" class="check-icon" />
                     <span>{{ facility }}</span>
                   </div>
@@ -403,12 +402,12 @@ useHead(() => ({
 
 
 
-<style scoped>
+<style lang="scss" scoped>
 
 /* === GENERAL LAYOUT === */
 .event-detail {
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--background-white, #f7f9fb);
 }
 
 .loading-state,
@@ -424,7 +423,6 @@ useHead(() => ({
 /* === EVENT HEADER === */
 
 .event-header {
-  background: var(--background-white);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -437,7 +435,7 @@ useHead(() => ({
 .event-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
 }
 
 /* Removed unused .event-meta and .meta-item classes */
@@ -466,11 +464,12 @@ useHead(() => ({
 
 
 .section-card {
-  background: var(--background-white);
-  border-radius: 12px;
-  padding: .5rem;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  /* Flattened card: remove heavy fill and shadow for primary content */
+  background: transparent;
+  border-radius: 6px;
+  padding: 0.5rem 0 0 0;
+  box-shadow: none;
+  border: none;
 }
 
 
@@ -493,29 +492,32 @@ useHead(() => ({
 .content-body {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
 }
 
 /* === SPEAKERS === */
+
 .speakers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
-.speaker-card {
-  background: var(--background-white);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
-  text-align: center;
+/* Compact speaker tile for better scanability */
+.speaker-tile {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 .speaker-avatar {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1rem;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
 }
 
 .avatar-image {
@@ -526,20 +528,20 @@ useHead(() => ({
 }
 
 .speaker-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #e6eef8);
   margin-bottom: 0.25rem;
 }
 
 .speaker-title {
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
   font-size: 0.9rem;
   margin-bottom: 0.75rem;
 }
 
 .speaker-bio {
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -555,14 +557,14 @@ useHead(() => ({
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: var(--background-light);
+  background: rgba(255,255,255,0.01);
   border-radius: 8px;
 }
 
 .agenda-time {
   flex-shrink: 0;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary, #0d6efd);
   min-width: 80px;
 }
 
@@ -572,39 +574,41 @@ useHead(() => ({
 
 .agenda-title {
   font-weight: 600;
-  color: var(--color-primary);
+  color: $color-primary;
   margin-bottom: 0.25rem;
 }
 
 .agenda-description {
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
 
 .agenda-speaker {
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
   font-size: 0.85rem;
 }
 
 /* Removed unused agenda-type and progress bar classes */
+
 .features-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.feature-item {
-  display: flex;
+.feature-chip {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--background-light);
-  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  background: rgba(255,255,255,0.025);
+  border-radius: 999px;
+  font-size: 0.9rem;
 }
 
 .check-icon {
-  color: var(--accent-soft-green);
+  color: var(--accent-soft-green, #10b981);
   font-size: 1rem;
 }
 
@@ -615,7 +619,7 @@ useHead(() => ({
 
 
 .registration-card {
-  background: var(--background-white);
+  background: var(--background-light);
   border-radius: 12px;
   border: 1px solid var(--border-color);
   overflow: hidden;
@@ -634,9 +638,9 @@ useHead(() => ({
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
 }
 
 .detail-item:last-child {
@@ -644,7 +648,7 @@ useHead(() => ({
 }
 
 .detail-icon {
-  color: var(--text-secondary);
+  color: var(--text-secondary, #6b7280);
   font-size: 1rem;
   width: 20px;
   flex-shrink: 0;
@@ -656,7 +660,7 @@ useHead(() => ({
 
 
 .venue-link {
-  color: var(--color-secondary);
+  color: $color-secondary;
   text-decoration: none;
   font-size: 0.85rem;
 }
@@ -669,8 +673,8 @@ useHead(() => ({
 
 .booking-section {
   padding: 1.5rem;
-  border-top: 1px solid var(--border-color);
-  background: var(--background-light);
+  border-top: 1px solid var(--border-color, #e5e7eb);
+  background: var(--background-light, #f7f9fb);
 }
 
 .price-section {
@@ -684,12 +688,12 @@ useHead(() => ({
 .price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary, #0d6efd);
 }
 
 
 .filling-fast {
-  color: var(--accent-soft-green);
+  color: var(--accent-soft-green, #10b981);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -697,38 +701,14 @@ useHead(() => ({
 
 .book-now-btn {
   width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
+  @include primary-button;
   border-radius: 6px;
   font-size: 1rem;
-  padding: 12px 14px;
-  font-weight: 500;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  background-color: var(--button-bg);
-  color: var(--text-white);
-}
-
-.book-now-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background-color: var(--primary-dark);
-  color: var(--text-white);
-}
-
-.book-now-btn:active {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .book-now-btn.disabled {
-  background: var(--border-color);
-  color: var(--text-secondary);
+  background: var(--border-color, #e5e7eb);
+  color: var(--text-secondary, #6b7280);
   cursor: not-allowed;
 }
 
