@@ -149,28 +149,27 @@
   --color-primary: #4ade80;
   --primary-dark: #22c55e; // Darker shade for dark theme
   --color-secondary: #8bc9a8;
+  --color-success: #10b981;
   --accent-soft-green: #a7d5c4;
   --background-light: #111827;
   --background-white: #1f2937;
   --text-primary: #f9fafb;
   --text-secondary: #d1d5db;
-  --text-light: #1a1a1a;
+  --text-light: #f3f4f6;
   --text-error: #ef4444;
   --border-color: #4b5563;
   --button-bg: #10b981;
   --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   --badge-color: #374151;
   --badge-free-color: #22c55e;
-  --text-white: #000000;
+  --text-white: #ffffff;
 
   
   // Additional dark theme variables
-  --text-white: #ffffff;
-  --text-muted: #d1d5db;
+  --text-muted: #9ca3af;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
-  --color-success: #10b981;
-  --color-muted: #9ca3af;
+  --color-muted: #6b7280;
   --card-background: #374151;
   --modal-overlay-rgb: 0, 0, 0;
   --shadow-rgb: 0, 0, 0;
@@ -182,6 +181,9 @@
   --background-light-rgb: 17, 24, 39;
   --color-primary-rgb: 74, 222, 128;
   --shadow-rgb: 0, 0, 0;
+  --shadow-light-rgb: 0, 0, 0;
+  --shadow-medium-rgb: 0, 0, 0;
+  --shimmer-rgb: 255, 255, 255;
 }
 
 // ====================================
@@ -616,6 +618,25 @@ h2{
   margin-bottom: 1.5rem;
   color: var(--text-primary);
   position: relative;
+}
+
+h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+// Section-specific theme support
+section {
+  color: var(--text-primary);
+  
+  &.py-4, &.py-5 {
+    &:nth-child(even) {
+      background-color: var(--background-light);
+    }
+    
+    &:nth-child(odd) {
+      background-color: var(--background-white);
+    }
+  }
 }
 .list-before{
     padding: 0.6rem 1.2rem;

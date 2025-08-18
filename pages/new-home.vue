@@ -280,6 +280,5 @@ const socialMediaLinks = computed(() => {
 });
 </script>
 
-<style scoped>
-/* Add page-specific styles here if needed */
+<style scoped lang="scss">
 </style>

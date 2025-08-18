@@ -1,5 +1,5 @@
 <template>
-  <section class="top-deals-offers py-5 bg-light">
+  <section class="top-deals-offers py-5">
     <div class="container">
       <h2 class="section-title mb-4">Top Deals & Offers</h2>
       <div class="row">
@@ -49,21 +49,27 @@ const props = defineProps({
 </script>
 
 <style scoped>
+.top-deals-offers {
+  background-color: var(--background-light);
+  color: var(--text-primary);
+}
+
 .section-title {
   font-size: 2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .deal-card {
   position: relative;
-  background: white;
+  background: var(--background-white);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: var(--card-shadow);
   transition: transform 0.3s ease;
   height: 100%;
+  border: 1px solid var(--border-color);
 }
 
 .category-card {
@@ -115,14 +121,14 @@ const props = defineProps({
 .deal-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   line-height: 1.3;
 }
 
 .deal-description {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   line-height: 1.4;
 }
@@ -133,7 +139,7 @@ const props = defineProps({
 
 .original-price {
   font-size: 0.9rem;
-  color: #999;
+  color: var(--text-muted);
   text-decoration: line-through;
   margin-right: 0.5rem;
 }
@@ -141,20 +147,20 @@ const props = defineProps({
 .discounted-price {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #28a745;
+  color: var(--color-success);
 }
 
 .btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: var(--color-success);
+  border-color: var(--color-success);
   font-weight: 500;
   padding: 0.6rem 1rem;
   border-radius: 8px;
 }
 
 .btn-success:hover {
-  background-color: #1e7e34;
-  border-color: #1e7e34;
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
 }
 
 @media (max-width: 768px) {

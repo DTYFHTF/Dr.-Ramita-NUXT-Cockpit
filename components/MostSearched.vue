@@ -48,10 +48,15 @@ const categories = computed(() => {
 </script>
 
 <style scoped>
+.most-searched {
+  background-color: var(--background-white);
+  color: var(--text-primary);
+}
+
 .section-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -77,7 +82,7 @@ const categories = computed(() => {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #333;
+  color: var(--text-primary);
   padding: 1rem 0.5rem;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -85,9 +90,9 @@ const categories = computed(() => {
 }
 
 .search-tag:hover {
-  background-color: #f8f9fa;
+  background-color: var(--background-light);
   transform: translateY(-2px);
-  color: #333;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -108,6 +113,7 @@ const categories = computed(() => {
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 @media (max-width: 576px) {

@@ -62,15 +62,18 @@ const target = computed(() => {
   overflow: hidden;
   border-radius: 12px;
   min-height: 200px; /* use min-height so layout can adapt */
+  background-color: var(--background-white);
+  border-color: var(--border-color);
+  box-shadow: var(--card-shadow);
 }
 
 .category-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(var(--shadow-rgb), 0.15);
 }
 
 .category-link {
-  color: inherit;
+  color: var(--text-primary);
   height: 100%;
 }
 

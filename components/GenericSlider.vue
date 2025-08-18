@@ -201,22 +201,27 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.generic-slider-section {
+  background-color: var(--background-white);
+  color: var(--text-primary);
+}
+
 .section-title {
   font-size: 2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .view-all-link {
-  color: #28a745;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .view-all-link:hover {
-  color: #1e7e34;
+  color: var(--primary-dark);
 }
 
 .slider-container {
@@ -304,12 +309,13 @@ onMounted(async () => {
 }
 
 .skeleton-card {
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-white);
+  box-shadow: var(--card-shadow);
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--background-light) 25%, var(--border-color) 50%, var(--background-light) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
