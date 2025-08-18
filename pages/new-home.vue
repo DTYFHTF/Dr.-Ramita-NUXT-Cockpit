@@ -64,11 +64,7 @@
     <!-- Top Deals & Offers -->
     <TopDealsOffers :deals="topDeals" />
 
-    <!-- Promotional Banners -->
-    <PromotionalBanners :banners="promotionalBanners" />
-
-    <!-- Social Media Follow -->
-    <SocialMediaFollow :socialLinks="socialMediaLinks" />
+  <!-- Promotional Banners removed -->
   </div>
 </template>
 
@@ -80,8 +76,6 @@ import GenericSlider from '@/components/GenericSlider.vue';
 import CategoryCard from '@/components/CategoryCard.vue';
 import MostSearched from '@/components/MostSearched.vue';
 import TopDealsOffers from '@/components/TopDealsOffers.vue';
-import PromotionalBanners from '@/components/PromotionalBanners.vue';
-import SocialMediaFollow from '@/components/SocialMediaFollow.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import { useApiLaravel } from '@/composables/useApi.js';
 import { useImageUrl } from '@/composables/useImageUrl.js';
@@ -217,67 +211,7 @@ const topDeals = computed(() => {
   return [];
 });
 
-const promotionalBanners = computed(() => {
-  const section = (homepageData.value?.sections || []).find(s => s.type === 'promotional_banners');
-  if (section && Array.isArray(section.data?.banners)) {
-    return section.data.banners.map(banner => addImageUrl(banner, '/placeholder-banner.jpg'));
-  }
-  // Default promotional banners
-  return [
-    {
-      id: 1,
-      title: 'Devotional Pooja Essentials',
-      subtitle: 'Sacred items for your daily prayers',
-      image: '/images/pooja-essentials.jpg',
-      url: '/category/pooja-essentials',
-      buttonText: 'Explore',
-      overlay: true
-    },
-    {
-      id: 2,
-      title: 'Namkeen & Snacks',
-      subtitle: 'Healthy and tasty snacks',
-      image: '/images/namkeen-snacks.jpg',
-      url: '/category/namkeen-snacks',
-      buttonText: 'Shop Now',
-      overlay: true
-    }
-  ];
-});
-
-const socialMediaLinks = computed(() => {
-  const section = (homepageData.value?.sections || []).find(s => s.type === 'social_media');
-  if (section && Array.isArray(section.data?.links)) {
-    return section.data.links;
-  }
-  // Default social media links
-  return [
-    {
-      name: 'Instagram',
-      url: 'https://instagram.com/patanjaliayurved',
-      icon: 'bi bi-instagram',
-      class: 'instagram'
-    },
-    {
-      name: 'Facebook',
-      url: 'https://facebook.com/patanjaliayurved',
-      icon: 'bi bi-facebook',
-      class: 'facebook'
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/patanjaliayurved',
-      icon: 'bi bi-twitter',
-      class: 'twitter'
-    },
-    {
-      name: 'YouTube',
-      url: 'https://youtube.com/patanjaliayurved',
-      icon: 'bi bi-youtube',
-      class: 'youtube'
-    }
-  ];
-});
+// promotional and social sections removed from homepage
 </script>
 
 <style scoped lang="scss">
