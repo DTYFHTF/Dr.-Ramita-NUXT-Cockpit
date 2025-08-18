@@ -4,23 +4,33 @@
       <h2 class="section-title mb-4">Top Deals & Offers</h2>
       <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4" v-for="deal in deals" :key="deal.id">
-          <div class="deal-card">
-            <div class="deal-badge" v-if="deal.discount">
-              <span>{{ deal.discount }}% OFF</span>
-            </div>
+          <!-- Category promotion card -->
+          <div v-if="deal.kind === 'category'" class="deal-card category-card text-center">
             <div class="deal-image">
-              <img :src="deal.image" :alt="deal.title" class="img-fluid">
+              <img :src="deal.image" :alt="deal.title || deal.title || 'Category'" class="img-fluid" loading="lazy">
             </div>
             <div class="deal-content">
               <h5 class="deal-title">{{ deal.title }}</h5>
               <p class="deal-description">{{ deal.description }}</p>
+              <NuxtLink :to="deal.url" class="btn btn-success btn-sm w-100 mt-2">Shop Category</NuxtLink>
+            </div>
+          </div>
+
+          <!-- Product promotion card -->
+          <div v-else class="deal-card">
+            <div class="deal-badge" v-if="deal.price_breakdown && deal.price_breakdown.discount_percentage">
+              <span>{{ deal.price_breakdown.discount_percentage }}% OFF</span>
+            </div>
+            <div class="deal-image">
+              <img :src="deal.image" :alt="deal.title || 'Deal image'" class="img-fluid" loading="lazy">
+            </div>
+            <div class="deal-content">
+              <h5 class="deal-title">{{ deal.title }}</h5>
               <div class="deal-price">
-                <span class="original-price" v-if="deal.originalPrice">₹{{ deal.originalPrice }}</span>
-                <span class="discounted-price">₹{{ deal.price }}</span>
+                <span class="original-price" v-if="deal.price_breakdown && deal.price_breakdown.original_price">₹{{ deal.price_breakdown.original_price }}</span>
+                <span class="discounted-price">₹{{ deal.price_breakdown ? deal.price_breakdown.final_price : deal.price }}</span>
               </div>
-              <NuxtLink :to="deal.url" class="btn btn-success btn-sm w-100 mt-2">
-                Shop Now
-              </NuxtLink>
+              <NuxtLink :to="deal.url" class="btn btn-success btn-sm w-100 mt-2">Shop Now</NuxtLink>
             </div>
           </div>
         </div>
@@ -33,48 +43,7 @@
 const props = defineProps({
   deals: {
     type: Array,
-    default: () => [
-      {
-        id: 1,
-        title: 'Herbal Tea Collection',
-        description: 'Premium quality herbal teas',
-        price: 299,
-        originalPrice: 399,
-        discount: 25,
-        image: '/images/herbal-tea.jpg',
-        url: '/products/herbal-tea-collection'
-      },
-      {
-        id: 2,
-        title: 'Ayurvedic Supplements',
-        description: 'Natural health boosters',
-        price: 599,
-        originalPrice: 799,
-        discount: 25,
-        image: '/images/supplements.jpg',
-        url: '/products/ayurvedic-supplements'
-      },
-      {
-        id: 3,
-        title: 'Organic Honey',
-        description: 'Pure and natural honey',
-        price: 449,
-        originalPrice: 599,
-        discount: 25,
-        image: '/images/honey.jpg',
-        url: '/products/organic-honey'
-      },
-      {
-        id: 4,
-        title: 'Skincare Essentials',
-        description: 'Natural skincare products',
-        price: 799,
-        originalPrice: 999,
-        discount: 20,
-        image: '/images/skincare.jpg',
-        url: '/products/skincare-essentials'
-      }
-    ]
+    default: () => []
   }
 });
 </script>
@@ -95,6 +64,14 @@ const props = defineProps({
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
   height: 100%;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.25rem;
 }
 
 .deal-card:hover {

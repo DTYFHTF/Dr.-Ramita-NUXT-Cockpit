@@ -86,6 +86,7 @@ import ProductCard from '@/components/ProductCard.vue';
 import { useApiLaravel } from '@/composables/useApi.js';
 import { useImageUrl } from '@/composables/useImageUrl.js';
 import { useProducts } from '@/composables/useProducts.ts';
+import { computed, ref, onMounted } from 'vue';
 
 const { data: homepageData, error: homepageError, loading: homepageLoading } = useApiLaravel('homepage');
 const { getImageUrl } = useImageUrl();
@@ -117,7 +118,8 @@ onMounted(async () => {
 });
 
 const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
-  let img = item.image || '';
+  // Prefer explicit promotion_image when provided by backend
+  const img = item.promotion_image ?? item.image ?? '';
   if (typeof img === 'string' && img.startsWith('http')) {
     return { ...item, image: img };
   }
@@ -176,54 +178,43 @@ const dailySeasonalProducts = computed(() => {
   return [];
 });
 
+// Normalize incoming deal objects (API or CMS section) to a common shape
+function normalizeDeal(deal) {
+  // If API returns a product-like object with price_breakdown
+  const pb = deal.price_breakdown || deal.priceBreakdown || null;
+  const originalPrice = pb?.original_price ?? deal.originalPrice ?? deal.regular_price ?? deal.price_original ?? null;
+  const finalPrice = pb?.final_price ?? deal.price ?? deal.discounted_price ?? deal.price_final ?? null;
+  const computedDiscount = (originalPrice && finalPrice)
+    ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
+    : deal.discount ?? deal.discount_percentage ?? null;
+
+    return {
+      id: deal.id ?? deal.product_id ?? deal.sku ?? Math.random(),
+      title: deal.title ?? deal.name ?? (deal.product?.name) ?? '',
+      description: deal.description ?? deal.short_description ?? deal.product?.short_description ?? '',
+      // prefer explicit promotion_image set by backend
+      image: deal.promotion_image ?? deal.image ?? deal.product?.image ?? deal.thumbnail ?? '',
+      url: deal.url ?? (deal.product ? `/products/${deal.product?.slug || deal.product?.id}` : (deal.path ?? '#')),
+      price: finalPrice,
+      originalPrice: originalPrice,
+      discount: computedDiscount
+    };
+}
+
 const topDeals = computed(() => {
+  // Use homepage section data instead of separate API call
   const section = (homepageData.value?.sections || []).find(s => s.type === 'top_deals');
   if (section && Array.isArray(section.data?.deals)) {
-    return section.data.deals.map(deal => addImageUrl(deal, '/placeholder-product.jpg'));
+    return section.data.deals.map(d => {
+      // If the backend marked this as a category promotion, keep its shape and only ensure image URL
+      if (d.kind === 'category') {
+        return addImageUrl(d, '/placeholder-banner.jpg');
+      }
+      // Otherwise treat it as a product deal
+      return addImageUrl(normalizeDeal(d), '/placeholder-product.jpg');
+    });
   }
-  // Default deals
-  return [
-    {
-      id: 1,
-      title: 'Herbal Tea Collection',
-      description: 'Premium quality herbal teas',
-      price: 299,
-      originalPrice: 399,
-      discount: 25,
-      image: '/images/herbal-tea.jpg',
-      url: '/products/herbal-tea-collection'
-    },
-    {
-      id: 2,
-      title: 'Ayurvedic Supplements',
-      description: 'Natural health boosters',
-      price: 599,
-      originalPrice: 799,
-      discount: 25,
-      image: '/images/supplements.jpg',
-      url: '/products/ayurvedic-supplements'
-    },
-    {
-      id: 3,
-      title: 'Organic Honey',
-      description: 'Pure and natural honey',
-      price: 449,
-      originalPrice: 599,
-      discount: 25,
-      image: '/images/honey.jpg',
-      url: '/products/organic-honey'
-    },
-    {
-      id: 4,
-      title: 'Skincare Essentials',
-      description: 'Natural skincare products',
-      price: 799,
-      originalPrice: 999,
-      discount: 20,
-      image: '/images/skincare.jpg',
-      url: '/products/skincare-essentials'
-    }
-  ];
+  return [];
 });
 
 const promotionalBanners = computed(() => {
