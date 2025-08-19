@@ -13,35 +13,7 @@
       </div>
     </div>
 
-    <!-- Subcategories (if any) -->
-    <div v-if="subcategories.length > 0" class="subcategories-section">
-      <div class="container">
-        <h2 class="section-title">Browse Subcategories</h2>
-        <div class="row">
-          <div 
-            v-for="subcategory in subcategories" 
-            :key="subcategory.id"
-            class="col-lg-3 col-md-4 col-sm-6 mb-4"
-          >
-            <NuxtLink 
-              :to="`/category/${subcategory.slug}`"
-              class="subcategory-card"
-            >
-              <div class="subcategory-icon">
-                <LucideIcon 
-                  :icon="subcategory.icon || 'Package'" 
-                  size="24"
-                />
-              </div>
-              <h3 class="subcategory-name">{{ subcategory.name }}</h3>
-              <div class="subcategory-count">
-                {{ subcategory.products_count || 0 }} products
-              </div>
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Subcategories removed: using Filter/Sort instead -->
 
     <!-- Products Section -->
     <div v-if="categoryProducts.length > 0" class="products-section">
@@ -522,73 +494,7 @@ function toggleSort(type: string) {
   }
 }
 
-.subcategories-section {
-  background: var(--background-white);
-  padding: 3rem 0;
-  margin-bottom: 2rem;
-  
-  .section-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-  
-  .subcategory-card {
-    display: block;
-    background: var(--background-white);
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    height: 100%;
-    
-    &:hover {
-      border-color: var(--color-primary);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(var(--color-primary-rgb), 0.15);
-      text-decoration: none;
-    }
-    
-    .subcategory-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--background-light);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      color: var(--color-primary);
-    }
-    
-    .subcategory-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .subcategory-description {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    .subcategory-count {
-      font-size: 0.875rem;
-      color: var(--color-primary);
-      font-weight: 600;
-    }
-  }
-}
+/* Subcategories UI removed - rely on FilterSidebar and ProductSortControls */
 
 .products-section {
   background: var(--background-white);
