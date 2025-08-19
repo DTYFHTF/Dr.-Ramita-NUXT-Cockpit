@@ -219,6 +219,8 @@ function handleAddToCartProxy(payload: any) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  background-color: var(--background-white);
+  color: var(--text-primary);
 }
 .product-detail-flex {
   display: flex;
@@ -243,7 +245,7 @@ function handleAddToCartProxy(payload: any) {
   max-width: 1200px;
   min-height: 500px;
   padding:0px !important;
-  background: $background-white;
+  background: var(--background-white);
   border-radius: 0;
   box-shadow: none;
   display: flex;
@@ -258,8 +260,8 @@ function handleAddToCartProxy(payload: any) {
   padding: 0 2.5rem;
 }
 .review-card {
-  background: $background-light;
-  border: 1px solid $border-color;
+  background: var(--background-light);
+  border: 1px solid var(--border-color);
   border-radius: 0.375rem;
   transition: transform 0.2s;
 }
@@ -286,16 +288,17 @@ function handleAddToCartProxy(payload: any) {
 .similar-products-section {
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--background-light);
 }
 .error {
-  color: $text-error;
+  color: var(--text-error);
   text-align: center;
   margin: 2rem 0;
 }
 .discount-badge {
-  background: $color-secondary !important;
-  color: $text-light !important;
+  background: var(--color-secondary) !important;
+  color: var(--text-white) !important;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 0.35rem;

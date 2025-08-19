@@ -113,7 +113,7 @@
               v-if="selectedVariationDisplaySalePrice && Number(selectedVariationDisplaySalePrice) < Number(selectedVariationPrice)"
               class="d-flex"
             >
-              <h4 class="text-decoration-line-through text-muted me-3">
+              <h4 class="text-decoration-line-through text-secondary me-3">
                 ₹{{ selectedVariationPrice }}
               </h4>
               <h4 class="text-success fw-bold">
@@ -133,7 +133,7 @@
                 (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock"
               }}
             </span>
-            <div v-if="selectedVariation.sku" class="my-1 text-muted small">
+            <div v-if="selectedVariation.sku" class="my-1 text-secondary small">
               SKU: {{ selectedVariation.sku }}
             </div>
           </div>
@@ -142,7 +142,7 @@
           <!-- Use price_breakdown if available for more accurate pricing -->
           <template v-if="product.price_breakdown">
             <div v-if="product.price_breakdown.discount_amount > 0" class="d-flex align-items-center gap-2">
-              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price_breakdown.original_price }}</h4>
+              <h4 class="text-decoration-line-through text-secondary mb-0">₹{{ product.price_breakdown.original_price }}</h4>
               <h4 class="text-success fw-bold mb-0">₹{{ product.price_breakdown.final_price }}</h4>
               <span v-if="product.price_breakdown.discount_percentage" class="badge bg-success">{{ product.price_breakdown.discount_percentage }}% OFF</span>
             </div>
@@ -153,7 +153,7 @@
           <!-- Fallback to applied_promotions logic -->
           <template v-else-if="product.applied_promotions && product.applied_promotions.length">
             <div class="d-flex align-items-center gap-2">
-              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
+              <h4 class="text-decoration-line-through text-secondary mb-0">₹{{ product.price }}</h4>
               <h4 class="text-success fw-bold mb-0">₹{{ product.display_price }}</h4>
               <span class="badge bg-success">{{ product.discount_percentage }}% OFF</span>
             </div>
@@ -161,7 +161,7 @@
           <!-- Fallback to manual sale price logic -->
       <template v-else-if="productDisplaySalePrice && Number(productDisplaySalePrice) < Number(product.price)">
             <div class="d-flex align-items-center gap-2">
-              <h4 class="text-decoration-line-through text-muted mb-0">₹{{ product.price }}</h4>
+              <h4 class="text-decoration-line-through text-secondary mb-0">₹{{ product.price }}</h4>
         <h4 class="text-success fw-bold mb-0">₹{{ productDisplaySalePrice }}</h4>
             </div>
           </template>

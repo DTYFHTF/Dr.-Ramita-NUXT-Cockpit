@@ -28,7 +28,7 @@
         <div class="mb-2 d-flex align-items-center gap-2">
           <!-- Use price_breakdown if available for more accurate pricing -->
           <template v-if="product.price_breakdown">
-            <span v-if="product.price_breakdown.discount_amount > 0" class="text-decoration-line-through text-muted">
+            <span v-if="product.price_breakdown.discount_amount > 0" class="text-decoration-line-through text-secondary">
               <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.original_price }}
             </span>
             <span class="ms-1 price fw-bold">
@@ -38,7 +38,7 @@
           <!-- Fallback to applied_promotions logic -->
           <template v-else-if="product.applied_promotions && product.applied_promotions.length">
             <!-- Product has active promotions - show promotion pricing -->
-            <span class="text-decoration-line-through text-muted">
+            <span class="text-decoration-line-through text-secondary">
               <template v-if="product.has_variations">From </template>₹{{ product.price }}
             </span>
             <span class="ms-1 price fw-bold">
@@ -50,7 +50,7 @@
           </template>
           <template v-else-if="isOnSale">
             <!-- Fallback to manual sale price -->
-            <span class="text-decoration-line-through text-muted">
+            <span class="text-decoration-line-through text-secondary">
               <template v-if="product.has_variations">From </template>₹{{ product.price }}
             </span>
             <span class="ms-1 price fw-bold">
