@@ -86,7 +86,10 @@
             </a>
           </li>
         </ul>
-        <div v-else class="text-muted small ps-1">Loading price ranges...</div>
+        <div v-else class="text-muted small ps-1">
+          <template v-if="priceRangesLoading">Loading price ranges...</template>
+          <template v-else>No price ranges available</template>
+        </div>
       </div>
       <hr>
       <!-- Stock Status -->
@@ -146,6 +149,7 @@ interface OptimizedPriceRange {
 const props = defineProps({
   activeFilters: Array as () => Filter[],
   priceRanges: Array as () => OptimizedPriceRange[],
+  priceRangesLoading: Boolean,
   visibleCategories: Array as () => Category[],
   hierarchicalCategories: Array as () => Category[],
   activeCategory: String,
@@ -177,6 +181,9 @@ onMounted(async () => {
 
 // Use only the priceRanges prop from parent
 const priceRanges = computed(() => props.priceRanges ?? []);
+
+// Expose a simple loading flag for template logic
+const priceRangesLoading = computed(() => props.priceRangesLoading ?? false);
 
 // Helper to get product count for a category
 function getCategoryProductCount(cat: Category): number | null {

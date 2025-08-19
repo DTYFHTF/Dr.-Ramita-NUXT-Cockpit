@@ -28,6 +28,7 @@
               :price-max="priceMax"
               :in-stock="inStock"
               :price-ranges="priceRanges"
+              :price-ranges-loading="filterOptionsLoading"
               @category-change="handleCategoryChange"
               @price-range-change="handlePriceRangeChange"
               @stock-change="handleStockChange"
@@ -189,8 +190,8 @@ const {
   findCategoryById
 } = useHierarchicalCategories()
 
-// Get priceRanges from useProductFilters for FilterSidebar
-const { priceRanges } = useProductFilters()
+// Get priceRanges and loading state from useProductFilters for FilterSidebar
+const { priceRanges, filterOptionsLoading } = useProductFilters()
 
 // Local state
 const searchQuery = ref('')
