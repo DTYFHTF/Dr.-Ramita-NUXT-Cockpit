@@ -27,6 +27,7 @@
               :price-min="priceMin"
               :price-max="priceMax"
               :in-stock="inStock"
+              :on-sale="onSale"
               :price-ranges="priceRanges"
               :price-ranges-loading="filterOptionsLoading"
               @category-change="handleCategoryChange"
@@ -65,9 +66,11 @@
               :price-max="priceMax"
               :search-query="searchQuery"
               :in-stock="inStock"
+              :on-sale="onSale"
               @clear-price-range="() => { priceMin = undefined; priceMax = undefined; currentPage = 1; }"
               @clear-search="() => { searchQuery = ''; currentPage = 1; }"
               @clear-stock="() => { inStock = true; currentPage = 1; }"
+              @clear-sale="() => { onSale = false; currentPage = 1; }"
             />
 
             <!-- Products Grid -->
@@ -203,6 +206,12 @@ const itemsPerPage = ref(12)
 const priceMin = ref<number | undefined>(undefined)
 const priceMax = ref<number | undefined>(undefined)
 const inStock = ref<boolean | undefined>(undefined)
+// On Sale filter (initialize from route query for deep-linking)
+const onSale = ref<boolean>(
+  (route?.query?.onSale && String(route.query.onSale) === 'true') ||
+  (route?.query?.on_sale && String(route.query.on_sale) === 'true') ||
+  false
+)
 
 // Computed properties
 const categorySlug = computed(() => {
@@ -305,6 +314,16 @@ const filteredProducts = computed(() => {
   if (typeof priceMax.value === 'number') {
     filtered = filtered.filter(product => parseFloat(product.display_price || product.price) <= priceMax.value!)
   }
+
+  // On Sale filter
+  if (onSale.value) {
+    filtered = filtered.filter(product => {
+      if (product.price_breakdown?.discount_amount && product.price_breakdown.discount_amount > 0) return true
+      const ds = (product as any).display_sale_price
+      if (ds && Number(ds) < Number(product.display_price ?? product.price)) return true
+      return false
+    })
+  }
   // Stock filter
   if (inStock.value === true) {
     filtered = filtered.filter(product => product.in_stock ?? (product.stock > 0))
@@ -365,9 +384,17 @@ const visiblePages = computed(() => {
 })
 
 // Filter handlers
-function handlePriceRangeChange(range: { min: number | null, max: number | null }) {
-  priceMin.value = typeof range.min === 'number' ? range.min : undefined
-  priceMax.value = typeof range.max === 'number' ? range.max : undefined
+function handlePriceRangeChange(range: { min: number | null, max: number | null, onSale?: boolean }) {
+  if (range.onSale) {
+    priceMin.value = undefined
+    priceMax.value = undefined
+    onSale.value = true
+  } else {
+    priceMin.value = typeof range.min === 'number' ? range.min : undefined
+    priceMax.value = typeof range.max === 'number' ? range.max : undefined
+    onSale.value = false
+  }
+  currentPage.value = 1
 }
 
 function handleStockChange(val: boolean | null) {
