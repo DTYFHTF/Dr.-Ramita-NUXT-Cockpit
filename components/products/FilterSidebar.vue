@@ -187,7 +187,11 @@ const priceRangesLoading = computed(() => props.priceRangesLoading ?? false);
 
 // Helper to get product count for a category
 function getCategoryProductCount(cat: Category): number | null {
-  if (typeof cat.products_count === 'number') return cat.products_count;
+  // Use the products_count from API if available (this should be the primary source)
+  if (typeof cat.products_count === 'number') {
+    return cat.products_count;
+  }
+  
   // Fallback: count products in this category from products composable
   if (products.value && products.value.length > 0) {
     return products.value.filter(p => {
@@ -198,7 +202,8 @@ function getCategoryProductCount(cat: Category): number | null {
       return false;
     }).length;
   }
-  return null;
+  
+  return 0;
 }
 
 // Emits
@@ -211,29 +216,67 @@ const emit = defineEmits<{
 }>();
 
 
-// Use categories as-is if they are already nested (with children), otherwise fallback to flat or fetched
+// Use categories from backend (which now includes proper hierarchical counts)
 const hierarchicalCategories = computed(() => {
-  // Prioritize explicitly passed hierarchical categories
+  // Prioritize explicitly passed categories with counts from product-filters endpoint
+  if (props.visibleCategories && props.visibleCategories.length > 0) {
+    // Check if it's already hierarchical
+    const isAlreadyHierarchical = props.visibleCategories.some(cat => 
+      Array.isArray(cat.children) && cat.children.length > 0
+    );
+    
+    if (isAlreadyHierarchical) {
+      // Already hierarchical - use as-is
+      return props.visibleCategories;
+    }
+    
+    // Build hierarchical structure from flat array (counts already calculated by backend)
+    return buildHierarchicalStructure(props.visibleCategories);
+  }
+  
+  // Fallback to hierarchicalCategories prop
   if (props.hierarchicalCategories && props.hierarchicalCategories.length > 0) {
     return props.hierarchicalCategories;
   }
-  if (props.visibleCategories && props.visibleCategories.length > 0) {
-    // If at least one category has children, treat as hierarchical
-    const isHierarchical = props.visibleCategories.some(cat => Array.isArray(cat.children) && cat.children.length > 0);
-    if (isHierarchical) {
-      return props.visibleCategories;
-    }
-    // Fallback: treat all as level 1 categories
-    return props.visibleCategories.map(cat => ({
-      ...cat,
-      level: 1 as const,
-      parent_id: null,
-      children: []
-    }));
-  }
+  
   // Use fetched categories if nothing provided
   return fetchedCategories.value || [];
 });
+
+// Helper function to build hierarchical structure (without count calculation)
+const buildHierarchicalStructure = (flatCategories: Category[]) => {
+  const categoryMap = new Map<string, Category & { children: Category[] }>();
+  const rootCategories: (Category & { children: Category[] })[] = [];
+
+  // First pass: create map of all categories
+  flatCategories.forEach(cat => {
+    const categoryWithChildren = {
+      ...cat,
+      id: String(cat.id),
+      parent_id: cat.parent_id ? String(cat.parent_id) : null,
+      children: [] as Category[],
+      // Use products_count as-is from backend (already includes hierarchical calculation)
+      products_count: cat.products_count || 0
+    };
+    categoryMap.set(String(cat.id), categoryWithChildren);
+  });
+
+  // Second pass: build tree structure
+  flatCategories.forEach(cat => {
+    const categoryId = String(cat.id);
+    const parentId = cat.parent_id ? String(cat.parent_id) : null;
+    const categoryItem = categoryMap.get(categoryId)!;
+    
+    if (parentId && categoryMap.has(parentId)) {
+      const parent = categoryMap.get(parentId)!;
+      parent.children.push(categoryItem);
+    } else {
+      rootCategories.push(categoryItem);
+    }
+  });
+
+  return rootCategories;
+};
 
 // Handle category selection from hierarchical tree
 const handleCategorySelect = (category: Category) => {

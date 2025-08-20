@@ -23,6 +23,7 @@ interface PriceStats {
 interface FilterOptions {
   priceRanges: OptimizedPriceRange[];
   priceStats: PriceStats;
+  categories: any[];
 }
 
 interface Filter {
@@ -56,6 +57,10 @@ export function useProductFilters(searchQuery?: Ref<string>) {
   );
 
   const priceStats = computed(() => filterOptions.value?.priceStats);
+
+  const categoriesWithCounts = computed(() => 
+    filterOptions.value?.categories || []
+  );
 
   const activeFilters = computed(() => {
     // Add safety checks for undefined refs
@@ -260,6 +265,9 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     visibleCategories: computed(() => []),
     remainingCategories: computed(() => 0),
     hierarchicalCategories: computed(() => []),
+
+    // Categories with product counts from product-filters endpoint
+    categoriesWithCounts,
 
     // Filter options
     filterOptions,

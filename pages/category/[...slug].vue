@@ -22,7 +22,7 @@
           <!-- Sidebar Filters -->
           <div class="col-lg-3 mb-4">
             <FilterSidebar
-              :hierarchical-categories="hierarchicalCategories"
+              :visible-categories="categoriesWithCounts"
               :active-category="activeCategoryId || undefined"
               :price-min="priceMin"
               :price-max="priceMax"
@@ -191,7 +191,7 @@ const {
 } = useHierarchicalCategories()
 
 // Get priceRanges and loading state from useProductFilters for FilterSidebar
-const { priceRanges, filterOptionsLoading } = useProductFilters()
+const { priceRanges, filterOptionsLoading, categoriesWithCounts } = useProductFilters()
 
 // Local state
 const searchQuery = ref('')

@@ -24,10 +24,47 @@
 import { ref, onMounted, computed } from 'vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import CategorySidebar from '@/components/categories/CategorySidebar.vue';
-import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories';
+import { useProductFilters } from '@/composables/useProductFilters';
 
 const showSidebar = ref(false);
-const { hierarchicalCategories, fetchCategories, loading, error } = useHierarchicalCategories();
+const { categoriesWithCounts, loadFilters, loading, error } = useProductFilters();
+
+// Build hierarchical structure from flat categories with correct counts
+const hierarchicalCategories = computed(() => {
+  if (!categoriesWithCounts.value.length) return [];
+  
+  // Build hierarchical structure from flat array (counts already correct from backend)
+  const categoryMap = new Map();
+  const rootCategories = [];
+
+  // First pass: create map of all categories
+  categoriesWithCounts.value.forEach(cat => {
+    const categoryWithChildren = {
+      ...cat,
+      id: String(cat.id),
+      parent_id: cat.parent_id ? String(cat.parent_id) : null,
+      children: [],
+      products_count: cat.products_count || 0 // Use backend calculated hierarchical counts
+    };
+    categoryMap.set(String(cat.id), categoryWithChildren);
+  });
+
+  // Second pass: build tree structure
+  categoriesWithCounts.value.forEach(cat => {
+    const categoryId = String(cat.id);
+    const parentId = cat.parent_id ? String(cat.parent_id) : null;
+    const categoryItem = categoryMap.get(categoryId);
+    
+    if (parentId && categoryMap.has(parentId)) {
+      const parent = categoryMap.get(parentId);
+      parent.children.push(categoryItem);
+    } else {
+      rootCategories.push(categoryItem);
+    }
+  });
+
+  return rootCategories;
+});
 
 // Flat categories for the bar (top-level only)
 const categories = computed(() => {
@@ -41,7 +78,7 @@ const categories = computed(() => {
 });
 
 onMounted(async () => {
-  await fetchCategories();
+  await loadFilters();
 });
 </script>
 

@@ -16,8 +16,7 @@
             </div>
 
             <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
-              :visible-categories="visibleCategories" :hierarchical-categories="hierarchicalCategories"
-              :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
+              :visible-categories="categoriesWithCounts" :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
               :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
               :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
               @category-change="selectCategory" @stock-change="handleStockChange"
@@ -46,8 +45,7 @@
           </div>
           <div class="offcanvas-body">
             <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
-              :visible-categories="visibleCategories" :hierarchical-categories="hierarchicalCategories"
-              :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
+              :visible-categories="categoriesWithCounts" :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
               :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
               :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
               @category-change="selectCategory" @stock-change="handleStockChange"
@@ -68,7 +66,7 @@
 
                 <!-- Inline Search Bar -->
                 <div class="inline-search">
-                   <ProductSearch v-model:query="searchQuery" :all-products="products" @search="handleSearch"
+                  <ProductSearch v-model:query="searchQuery" :all-products="products" @search="handleSearch"
                     class="search-component" />
                 </div>
               </div>
@@ -84,21 +82,11 @@
           </div>
 
           <!-- Active Filters Display -->
-          <ActiveFilters 
-            :category="category"
-            :price-min="priceMin" 
-            :price-max="priceMax"
-            :search-query="searchQuery"
-            :in-stock="inStock"
-            :on-sale="onSale"
-            :rating="rating"
-            @clear-category="handleClearCategory"
-            @clear-price-range="handleClearPriceRange"
-            @clear-search="() => { searchQuery = ''; page = 1; }"
-            @clear-stock="handleStockChange(true)"
-            @clear-sale="() => { onSale = false; page = 1; }"
-            @clear-rating="() => { rating = null; page = 1; }"
-          />
+          <ActiveFilters :category="category" :price-min="priceMin" :price-max="priceMax" :search-query="searchQuery"
+            :in-stock="inStock" :on-sale="onSale" :rating="rating" @clear-category="handleClearCategory"
+            @clear-price-range="handleClearPriceRange" @clear-search="() => { searchQuery = ''; page = 1; }"
+            @clear-stock="handleStockChange(true)" @clear-sale="() => { onSale = false; page = 1; }"
+            @clear-rating="() => { rating = null; page = 1; }" />
 
           <!-- Products Grid -->
           <div class="products-content">
@@ -159,6 +147,7 @@ const {
   activeFilters,
   priceRanges,
   hierarchicalCategories,
+  categoriesWithCounts,
   toggleSort,
   toggleShowMoreCategories,
   selectCategory,

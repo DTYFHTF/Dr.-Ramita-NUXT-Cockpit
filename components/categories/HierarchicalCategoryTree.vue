@@ -288,8 +288,8 @@ onMounted(() => {
       }
       
       &.active {
-        background-color: var(--color-primary);
-        color: white;
+        background-color: var(--background-light);
+        color: var(--color-primary);
         
         .category-icon, .expand-icon {
           color: white;
