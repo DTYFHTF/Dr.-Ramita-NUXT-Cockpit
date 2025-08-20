@@ -33,7 +33,7 @@
       card-props-key="product"
       section-class="featured"
       title-class="featured"
-      view-all-url="/products"
+      view-all-url="/products?collection=featured"
     />
 
     <!-- Best Selling Products -->
@@ -43,7 +43,7 @@
       :loading="productsLoading"
       :card-component="ProductCard"
       card-props-key="product"
-      view-all-url="/products?sort=best-selling"
+      view-all-url="/products?collection=bestselling"
     />
 
     <!-- Most Searched -->

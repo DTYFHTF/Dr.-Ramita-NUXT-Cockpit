@@ -298,7 +298,11 @@ const handleCategorySelect = (category: Category) => {
 
 // Methods
 const isPriceRangeActive = (range: OptimizedPriceRange) => {
-  return range.min === props.priceMin && range.max === props.priceMax;
+      // If this is the special "On Sale" range, use the onSale prop for active state
+      if (range.onSale) {
+        return Boolean(props.onSale);
+      }
+      return range.min === props.priceMin && range.max === props.priceMax;
 };
 
 const clearAllFilters = () => {

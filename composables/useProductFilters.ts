@@ -45,6 +45,9 @@ export function useProductFilters(searchQuery?: Ref<string>) {
   const inStock = ref(route?.query?.inStock?.toString() === 'false' ? false : true);
   const onSale = ref(route?.query?.onSale?.toString() === 'true');
   const rating = ref(route?.query?.rating ? Number(route.query.rating) : null);
+  
+  // Collection support for featured/bestselling
+  const collection = ref(route?.query?.collection?.toString() || '');
 
   // Filter options from backend
   const filterOptions = ref<FilterOptions | null>(null);
@@ -61,6 +64,14 @@ export function useProductFilters(searchQuery?: Ref<string>) {
   const categoriesWithCounts = computed(() => 
     filterOptions.value?.categories || []
   );
+
+  // Collection-based page titles
+  const pageTitle = computed(() => {
+    if (collection.value === 'featured') return 'Top Featured Products';
+    if (collection.value === 'bestselling') return 'Best Selling Products';
+    if (collection.value === 'onsale') return 'On Sale Products';
+    return 'All Products';
+  });
 
   const activeFilters = computed(() => {
     // Add safety checks for undefined refs
@@ -142,17 +153,29 @@ export function useProductFilters(searchQuery?: Ref<string>) {
   const updateRouteAndFetch = () => {
     // Add safety check for router
     if (!router) return;
-    
-    const query: Record<string, string> = {};
-    if (sort.value) query.sort = sort.value;
-    if (priceMin.value !== null) query.price_min = priceMin.value.toString();
-    if (priceMax.value !== null) query.price_max = priceMax.value.toString();
+
+    // Merge with current route query to avoid overwriting unrelated keys
+    const currentQuery = { ...route.query } as Record<string, any>;
+    const query: Record<string, string> = { ...Object.fromEntries(Object.entries(currentQuery).map(([k, v]) => [k, String(v)]) ) };
+    if (sort.value) query.sort = sort.value; else delete query.sort;
+    if (priceMin.value !== null) query.price_min = priceMin.value.toString(); else delete query.price_min;
+    if (priceMax.value !== null) query.price_max = priceMax.value.toString(); else delete query.price_max;
     query.page = page.value.toString();
     query.inStock = String(inStock.value);
-    if (onSale.value) query.onSale = 'true';
-    if (searchQuery && searchQuery.value) query.search = searchQuery.value;
-    if (rating.value !== null) query.rating = rating.value.toString();
-    
+    // Write both camelCase and snake_case to keep route + API compatible
+    if (onSale.value) {
+      query.onSale = 'true';
+      query.on_sale = 'true';
+    } else {
+      delete query.onSale;
+      delete query.on_sale;
+    }
+    if (searchQuery && searchQuery.value) query.search = searchQuery.value; else delete query.search;
+    if (rating.value !== null) query.rating = rating.value.toString(); else delete query.rating;
+    if (collection.value) query.collection = collection.value; else delete query.collection;
+
+    // Debug: log composed query before replacing route
+    try { console.debug('[useProductFilters] updateRouteAndFetch - merged query', query); } catch (e) {}
     router.replace({ query });
     
     // Get category from route params if on category page
@@ -168,15 +191,16 @@ export function useProductFilters(searchQuery?: Ref<string>) {
       inStock.value,
       onSale.value,
       searchQuery ? searchQuery.value : undefined,
-      rating.value === null ? undefined : rating.value
+      rating.value === null ? undefined : rating.value,
+      collection.value || undefined // Pass collection parameter
     );
   };
 
   // Watchers
   watch(
-    [sort, priceMin, priceMax, page, inStock, onSale, rating, searchQuery ?? ref('')],
-    ([_sort, _priceMin, _priceMax, _page, _inStock, _onSale, _rating, _search], oldValues) => {
-      if (searchQuery && _search !== oldValues?.[7]) {
+    [sort, priceMin, priceMax, page, inStock, onSale, rating, collection, searchQuery ?? ref('')],
+    ([_sort, _priceMin, _priceMax, _page, _inStock, _onSale, _rating, _collection, _search], oldValues) => {
+      if (searchQuery && _search !== oldValues?.[8]) {
         page.value = 1;
       }
       updateRouteAndFetch();
@@ -206,6 +230,7 @@ export function useProductFilters(searchQuery?: Ref<string>) {
       onSale.value = false;
     }
     page.value = 1;
+  try { console.debug('[useProductFilters] handlePriceRangeChange', { range, priceMin: priceMin.value, priceMax: priceMax.value, onSale: onSale.value }); } catch (e) {}
   };
 
   const handleRatingChange = (ratingValue: number | null) => {
@@ -257,6 +282,7 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     inStock,
     onSale,
     rating,
+    collection,
 
     // Legacy compatibility - add empty/default values for removed category features
     categories: computed(() => []),
@@ -278,6 +304,7 @@ export function useProductFilters(searchQuery?: Ref<string>) {
 
     // Computed
     activeFilters,
+    pageTitle,
 
     // Methods
     toggleSort,

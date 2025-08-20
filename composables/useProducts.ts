@@ -22,7 +22,8 @@ export function useProducts() {
     inStock = true,
     onSale = false,
     searchQuery?: string, // <-- add searchQuery param
-    rating?: number // <-- add rating param
+    rating?: number, // <-- add rating param
+    collection?: string // <-- add collection param for featured/bestselling
   ) {
     loading.value = true;
     error.value = "";
@@ -50,6 +51,7 @@ export function useProducts() {
       if (onSale) params.append("on_sale", "true");
       if (searchQuery) params.append("search", searchQuery); // <-- add search param
       if (rating !== undefined && rating !== null) params.append("rating", String(rating));
+      if (collection) params.append("collection", collection); // <-- add collection param
 
       const response = (await $fetch(
         `${API_BASE}/products?${params.toString()}`,

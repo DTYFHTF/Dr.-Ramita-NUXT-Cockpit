@@ -60,7 +60,7 @@
             <div class="results-info">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  {{ category ? `${category} Products` : 'All Products' }}
+                  {{ category ? `${category} Products` : pageTitle }}
                   <span v-if="pagination?.total" class="results-count">({{ pagination.total }})</span>
                 </h1>
 
@@ -141,6 +141,7 @@ const {
   inStock,
   onSale,
   rating,
+  collection,
   showMoreCategories,
   visibleCategories,
   remainingCategories,
@@ -148,6 +149,7 @@ const {
   priceRanges,
   hierarchicalCategories,
   categoriesWithCounts,
+  pageTitle,
   toggleSort,
   toggleShowMoreCategories,
   selectCategory,
