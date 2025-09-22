@@ -147,7 +147,17 @@ const { user, hydrated } = storeToRefs(userStore)
 const authApi = useAuthApi()
 
 // Debug: Log user data on mount (remove in production)
-const activeTab = ref('profile')
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
+const activeTab = ref(route.query.tab === 'orders' || route.query.tab === 'wishlist' ? route.query.tab : 'profile')
+
+// Watch for tab query changes (e.g., when navigating from dropdown)
+watch(() => route.query.tab, (newTab) => {
+  if (newTab === 'orders' || newTab === 'wishlist' || newTab === 'profile') {
+    activeTab.value = newTab
+  }
+})
 const dashboardLoadError = ref('')
 
 onMounted(async () => {

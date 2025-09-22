@@ -75,7 +75,6 @@
               title="Sign In"
             >
               <LucideIcon icon="mdi:login" class="fs-4" />
-              <LucideIcon icon="mdi:arrow-down-drop" class="fs-4" />
 
             </NuxtLink>
             <div
