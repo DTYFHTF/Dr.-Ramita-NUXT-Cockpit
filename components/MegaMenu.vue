@@ -1,8 +1,6 @@
 <template>
   <div class="mega-menu-container">
-
     <div class="mega-menu-content">
-      <!-- Product Grid -->
       <div class="product-grid">
         <div v-if="activeProducts.length === 0" class="empty-state">
           Select a category to view products
@@ -23,75 +21,108 @@
           </NuxtLink>
         </div>
       </div>
-      <!-- Category List -->
-      <div class="category-list">
-        <ul>
-          <li
-            v-for="(cat, idx) in displayCategories"
-            :key="cat.id || cat.slug || idx"
-            @mouseenter="filterByCategory(cat.id)"
-            :class="{ 'active-category': activeCategory === cat.id }"
-          >
-            <LucideIcon :icon="cat.icon || 'mdi:tag'" class="me-2" />
-            <span class="category-name">{{ cat.name }}</span>
-            <span v-if="cat.children && cat.children.length > 0" class="subcategory-count">
-              {{ cat.children.length }}
-            </span>
-          </li>
-        </ul>
+      <div class="category-tree-megamenu">
+        <HierarchicalCategoryTree
+          :categories="hierarchicalCategories"
+          :activeCategory="activeCategory"
+          @category-select="handleCategorySelect"
+        />
       </div>
-
     </div>
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useProducts } from '@/composables/useProducts';
-import { useHierarchicalCategories } from '@/composables/useHierarchicalCategories';
-import LucideIcon from '@/components/LucideIcon.vue';
+import { useProductFilters } from '@/composables/useProductFilters';
+import HierarchicalCategoryTree from '@/components/categories/HierarchicalCategoryTree.vue';
 import { NuxtLink } from '#components';
-import { useImageUrl } from '@/composables/useImageUrl.js'
+import { useImageUrl } from '@/composables/useImageUrl.js';
 
 const { fetchProducts, products } = useProducts();
-const { hierarchicalCategories, fetchCategories } = useHierarchicalCategories();
+const { categoriesWithCounts, fetchFilterOptions } = useProductFilters();
 const { getImageUrl } = useImageUrl();
 
 const activeProducts = ref([]);
 const activeCategory = ref(null);
 
-// Display only level 1 categories in mega menu
-const displayCategories = computed(() => {
-  return hierarchicalCategories.value.filter(cat => cat.level === 1);
+// Build hierarchical structure from flat categories with correct counts
+const hierarchicalCategories = computed(() => {
+  if (!categoriesWithCounts.value.length) return [];
+  const categoryMap = new Map();
+  const rootCategories = [];
+  categoriesWithCounts.value.forEach(cat => {
+    const categoryWithChildren = {
+      ...cat,
+      id: String(cat.id),
+      parent_id: cat.parent_id ? String(cat.parent_id) : null,
+      children: [],
+      products_count: cat.products_count || 0
+    };
+    categoryMap.set(String(cat.id), categoryWithChildren);
+  });
+  categoriesWithCounts.value.forEach(cat => {
+    const categoryId = String(cat.id);
+    const parentId = cat.parent_id ? String(cat.parent_id) : null;
+    const categoryItem = categoryMap.get(categoryId);
+    if (parentId && categoryMap.has(parentId)) {
+      const parent = categoryMap.get(parentId);
+      parent.children.push(categoryItem);
+    } else {
+      rootCategories.push(categoryItem);
+    }
+  });
+  return rootCategories;
 });
 
-onMounted(async () => {
-  await fetchCategories();
-  if (displayCategories.value && displayCategories.value.length > 0) {
-    activeCategory.value = displayCategories.value[0].id;
-    filterByCategory(activeCategory.value);
-  }
-});
 
-watch(
-  () => displayCategories.value,
-  (newCategories) => {
-    if (newCategories && newCategories.length > 0 && !activeCategory.value) {
-      activeCategory.value = newCategories[0].id;
-      filterByCategory(activeCategory.value);
+// Helper: recursively find first category with products_count > 0
+function findFirstCategoryWithProducts(categories) {
+  for (const cat of categories) {
+    if (cat.products_count > 0) return cat;
+    if (cat.children && cat.children.length > 0) {
+      const found = findFirstCategoryWithProducts(cat.children);
+      if (found) return found;
     }
   }
-);
-
-function filterByCategory(categoryId) {
-  activeCategory.value = categoryId;
-  fetchProducts(1, 30, '', categoryId).then(() => {
-    activeProducts.value = products.value;
-  });
+  return null;
 }
 
-// Helper for image fallback
+
+// Recursively try categories with products_count > 0 until products are found
+async function selectFirstCategoryWithProducts(categories) {
+  for (const cat of categories) {
+    if (cat.products_count > 0) {
+      await fetchProducts(1, 30, '', cat.id);
+      if (products.value && products.value.length > 0) {
+        activeCategory.value = cat.id;
+        activeProducts.value = products.value;
+        return true;
+      }
+    }
+    if (cat.children && cat.children.length > 0) {
+      const found = await selectFirstCategoryWithProducts(cat.children);
+      if (found) return true;
+    }
+  }
+  return false;
+}
+
+onMounted(async () => {
+  await fetchFilterOptions();
+  await selectFirstCategoryWithProducts(hierarchicalCategories.value);
+});
+
+function handleCategorySelect(category) {
+  if (category && category.id) {
+    activeCategory.value = category.id;
+    fetchProducts(1, 30, '', category.id).then(() => {
+      activeProducts.value = products.value;
+    });
+  }
+}
+
 function firstAvailableImage(product) {
   const imgs = [product.image, product.image_2, product.image_3].filter(Boolean);
   return getImageUrl(imgs[0]);
@@ -124,60 +155,14 @@ function firstAvailableImage(product) {
   min-height: 300px;
 }
 
-.category-list {
-  width: 200px;
+
+.category-tree-megamenu {
+  width: 260px;
   background: var(--background-white);
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
-  max-height: 368px; /* Adjust as needed to fit inside the menu */
+  max-height: 368px;
   padding: 12px 0;
-}
-
-.category-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.category-list li {
-  padding: 10px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-  border-radius: 6px;
-  margin: 2px 8px;
-}
-
-.category-list li:hover {
-  background: var(--background-light);
-  color: var(--color-primary) !important;
-}
-
-.category-list li.active-category {
-  background: var(--background-light);
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.category-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-}
-
-.subcategory-count {
-  background: var(--color-primary);
-  color: white;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
-  margin-left: auto;
 }
 
 .product-grid {
