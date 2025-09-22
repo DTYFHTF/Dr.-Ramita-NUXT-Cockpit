@@ -39,7 +39,7 @@
 
       <!-- Products Grid -->
       <div class="row">
-        <div v-for="item in wishlist" :key="item.id" class="col-lg-4 col-md-6 col-sm-12 mb-4">
+  <div v-for="item in wishlist" :key="item.id" class="col-lg-3 col-md-6 col-sm-12 mb-4">
           <ProductCard 
             :product="item.product"
           />
