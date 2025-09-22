@@ -27,7 +27,7 @@ import CategorySidebar from '@/components/categories/CategorySidebar.vue';
 import { useProductFilters } from '@/composables/useProductFilters';
 
 const showSidebar = ref(false);
-const { categoriesWithCounts, loadFilters, loading, error } = useProductFilters();
+const { categoriesWithCounts, fetchFilterOptions, filterOptionsLoading, filterOptionsError } = useProductFilters();
 
 // Build hierarchical structure from flat categories with correct counts
 const hierarchicalCategories = computed(() => {
@@ -78,7 +78,7 @@ const categories = computed(() => {
 });
 
 onMounted(async () => {
-  await loadFilters();
+  await fetchFilterOptions();
 });
 </script>
 

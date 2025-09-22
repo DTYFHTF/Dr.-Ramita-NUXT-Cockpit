@@ -135,7 +135,13 @@ export function useProductFilters(searchQuery?: Ref<string>) {
       const API_BASE_URL = config.public.apiBase;
       const params = new URLSearchParams();
       if (searchQuery?.value) params.append('search', searchQuery.value);
-      
+      // Pass current non-price contextual filters for accurate counts
+      if (inStock.value !== undefined) params.append('inStock', String(inStock.value));
+      if (onSale.value) params.append('onSale', 'true');
+      // If on a category page, include category id from route param (slug not known here)
+      const categoryId = (route.query.category as string) || '';
+      if (categoryId) params.append('category', categoryId);
+
       const response = await fetch(`${API_BASE_URL}/product-filters?${params.toString()}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

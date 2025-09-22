@@ -22,7 +22,7 @@
           <!-- Sidebar Filters -->
           <div class="col-lg-3 mb-4">
             <FilterSidebar
-              :visible-categories="categoriesWithCounts"
+b               :visible-categories="categoriesWithCounts"
               :active-category="activeCategoryId || undefined"
               :price-min="priceMin"
               :price-max="priceMax"
@@ -459,6 +459,10 @@ watch(() => route.params.slug, async (newSlug) => {
     const slug = Array.isArray(newSlug) ? newSlug[newSlug.length - 1] : newSlug
     await fetchCategoryProducts(slug)
     currentPage.value = 1
+    // Update route query with active category id (for contextual price range counts)
+    if (activeCategoryId.value) {
+      router.replace({ query: { ...route.query, category: activeCategoryId.value } })
+    }
   }
 }, { immediate: true })
 
