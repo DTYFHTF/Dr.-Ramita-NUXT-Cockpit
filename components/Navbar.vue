@@ -25,38 +25,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
-          <li class="nav-item">
-            <SmoothLink to="courses" fallbackRoute="/course" class="nav-shared-link"
-              >Courses</SmoothLink
-            >
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/doctors" class="nav-shared-link">Doctors</NuxtLink>
-          </li>
-          <li class="nav-item dropdown blog-dropdown"
-              @mouseenter="handleBlogDropdownEnter"
-              @mouseleave="handleBlogDropdownLeave">
-            <a class="nav-shared-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="blogDropdown" role="button"
-              :aria-expanded="showBlogDropdown ? 'true' : 'false'">
-              Blogs
-            </a>
-            <ul class="dropdown-menu custom-dropdown-menu"
-                :class="{ show: showBlogDropdown }"
-                aria-labelledby="blogDropdown"
-                @mouseenter="cancelBlogDropdownClose"
-                @mouseleave="handleBlogDropdownLeave">
-              <DropDownItems :items="[
-                { type: 'link', routeName: 'ynm', fallbackRoute: '/yoganmeditation', icon: 'mdi:meditation', label: 'Yoga & Meditation' },
-                { type: 'link', routeName: 'recipes', fallbackRoute: '/recipe', icon: 'mdi:chef-hat', label: 'Recipes' },
-                { type: 'link', routeName: 'home-remedies', fallbackRoute: '/homeremedy', icon: 'mdi:leaf', label: 'Home Remedies' }
-              ]" />
-            </ul>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/event" class="nav-shared-link">Events</NuxtLink>
-          </li>
-        </ul>
+  <NavbarContentSwitcher />
         <!-- User Section -->
         <div
           class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-1 mt-3 mt-lg-0"
@@ -116,6 +85,7 @@ import { storeToRefs } from "pinia";
 import MegaMenu from "./MegaMenu.vue";
 import UserSection from '@/components/UserSection.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
+import NavbarContentSwitcher from '@/components/NavbarContentSwitcher.vue';
 import { ref } from "vue";
 import LucideIcon from '@/components/LucideIcon.vue';
 

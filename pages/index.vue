@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <HeroSection />
 
     <!-- Courses Section --> 
@@ -74,6 +73,7 @@
 </template>
 
 <script setup>
+import NavbarContentSwitcher from '@/components/NavbarContentSwitcher.vue';
 import { computed, onMounted } from "vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useBookingStore } from "~/stores/booking";
