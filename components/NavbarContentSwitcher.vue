@@ -147,7 +147,7 @@ function cancelBlogDropdownClose() {
 const route = useRoute();
 // Define which routes should show the search bar
 const searchBarRoutes = [
-  '/', '/products', '/shop', '/new-home', '/product/[slug]', '/category', '/category/[...slug]'
+  '/', '/products', '/shop', '/new-home', '/product/[slug]', '/category', '/category/[...slug]', '/CartPage', '/checkout', '/dashboard'
 ];
 const showSearchBar = computed(() => {
   // Always show search bar on product detail and category pages

@@ -1,11 +1,11 @@
 <template>
   <nav class="category-bar d-flex align-items-center py-2 border-bottom">
-    <div class="container d-flex align-items-center p-0" style="max-width: 1200px;">
+    <div class="container d-flex align-items-center justify-content-between p-0" style="max-width: 1200px;">
       <button class="btn btn-link d-flex align-items-center gap-2 shop-by-btn" @click="showSidebar = !showSidebar">
         <LucideIcon :icon="showSidebar ? 'mdi:close' : 'mdi:menu'" class="fs-4 text-success" />
         <span class="fw-semibold text-success">Shop by Categories</span>
       </button>
-      <div class="category-links ms-auto d-flex align-items-center flex-wrap">
+      <div v-if="!isMobile" class="category-links ms-auto d-flex align-items-center flex-wrap">
         <NuxtLink
           v-for="category in categories"
           :key="category.id"
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import CategorySidebar from '@/components/categories/CategorySidebar.vue';
 import { useProductFilters } from '@/composables/useProductFilters';
@@ -80,6 +80,22 @@ const categories = computed(() => {
 onMounted(async () => {
   await fetchFilterOptions();
 });
+
+// Track mobile viewport to hide level-1 links on small screens
+const isMobile = ref(false);
+function updateIsMobile() {
+  if (typeof window === 'undefined') return;
+  isMobile.value = window.innerWidth <= 991.98;
+}
+
+onMounted(() => {
+  updateIsMobile();
+  window.addEventListener('resize', updateIsMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile);
+});
 </script>
 
 <style scoped>
@@ -101,6 +117,12 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+@media (max-width: 991.98px) {
+  .category-links {
+    display: none;
+  }
 }
 
 /* Shop by Categories button */
