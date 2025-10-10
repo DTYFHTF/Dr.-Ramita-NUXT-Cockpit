@@ -196,17 +196,15 @@ function normalizeDeal(deal) {
 }
 
 const topDeals = computed(() => {
-  // Use homepage section data instead of separate API call
+  // Use homepage section data
   const section = (homepageData.value?.sections || []).find(s => s.type === 'top_deals');
+  
   if (section && Array.isArray(section.data?.deals)) {
-    return section.data.deals.map(d => {
-      // If the backend marked this as a category promotion, keep its shape and only ensure image URL
-      if (d.kind === 'category') {
-        return addImageUrl(d, '/placeholder-banner.jpg');
-      }
-      // Otherwise treat it as a product deal
-      return addImageUrl(normalizeDeal(d), '/placeholder-product.jpg');
-    });
+    // Data is already formatted from backend, just ensure image URLs
+    return section.data.deals.map(d => ({
+      ...d,
+      image: d.image || '/placeholder-banner.jpg'
+    }));
   }
   return [];
 });

@@ -5,8 +5,7 @@
     :title="getBadgeTooltip()"
   >
     <LucideIcon icon="mdi:tag" size="12" class="me-1" />
-    <span class="promotion-text">
-      {{ promotion.name }} - {{ formatDiscount }}
+    <span class="promotion-text"> {{ formatDiscount }}
     </span>
   </span>
 </template>

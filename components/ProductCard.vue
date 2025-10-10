@@ -25,53 +25,55 @@
         
 
         <!-- Simple pricing using price_breakdown if available, otherwise fallback to existing logic -->
-        <div class="mb-2 d-flex align-items-center gap-2">
-          <!-- Use price_breakdown if available for more accurate pricing -->
-          <template v-if="product.price_breakdown">
-            <span v-if="product.price_breakdown.discount_amount > 0" class="text-decoration-line-through text-secondary">
-              <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.original_price }}
-            </span>
-            <span class="ms-1 price fw-bold">
-              <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.final_price }}
-            </span>
-          </template>
-          <!-- Fallback to applied_promotions logic -->
-          <template v-else-if="product.applied_promotions && product.applied_promotions.length">
-            <!-- Product has active promotions - show promotion pricing -->
-            <span class="text-decoration-line-through text-secondary">
-              <template v-if="product.has_variations">From </template>₹{{ product.price }}
-            </span>
-            <span class="ms-1 price fw-bold">
-              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
-            </span>
-            <span class="badge bg-success ms-2">
-              {{ product.discount_percentage }}% OFF
-            </span>
-          </template>
-          <template v-else-if="isOnSale">
+        <div class="mb-2 d-flex align-items-center gap-2 price-and-badges">
+          <div class="price-block d-flex align-items-center gap-2">
+            <!-- Show discounted (final) price first, then original struck price when a discount exists -->
+            <template v-if="product.price_breakdown">
+              <span class="ms-1 price fw-bold">
+                <template v-if="product.has_variations">From </template>₹{{ product.price_breakdown.final_price }}
+              </span>
+              <span v-if="product.price_breakdown.discount_amount > 0" class="text-decoration-line-through text-secondary ms-2 small">
+                ₹{{ product.price_breakdown.original_price }}
+              </span>
+            </template>
+
+            <!-- Fallback to applied_promotions logic -->
+            <template v-else-if="product.applied_promotions && product.applied_promotions.length">
+              <span class="ms-1 price fw-bold">
+                <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
+              </span>
+              <span v-if="product.discount_percentage" class="text-decoration-line-through text-secondary ms-2 small">
+                ₹{{ product.price }}
+              </span>
+            </template>
+
             <!-- Fallback to manual sale price -->
-            <span class="text-decoration-line-through text-secondary">
-              <template v-if="product.has_variations">From </template>₹{{ product.price }}
-            </span>
-            <span class="ms-1 price fw-bold">
-              <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
-            </span>
-          </template>
-          <template v-else>
+            <template v-else-if="isOnSale">
+              <span class="ms-1 price fw-bold">
+                <template v-if="product.has_variations">From </template>₹{{ product.display_price }}
+              </span>
+              <span class="text-decoration-line-through text-secondary ms-2 small">
+                ₹{{ product.price }}
+              </span>
+            </template>
+
             <!-- Regular price -->
-            <span class="price fw-bold">
-              <template v-if="product.has_variations">From </template>₹{{ product.display_price ?? product.price }}
-            </span>
-          </template>
-        </div>
-        <!-- Promotions (moved below price) -->
-        <div v-if="getPromotions().length" class="promotion-badges mb-2">
-          <PromotionBadge 
-            v-for="promo in getPromotions()" 
-            :key="promo.id || promo.name"
-            :promotion="promo"
-            compact
-          />
+            <template v-else>
+              <span class="price fw-bold">
+                <template v-if="product.has_variations">From </template>₹{{ product.display_price ?? product.price }}
+              </span>
+            </template>
+          </div>
+
+          <!-- Inline promotion badges aligned to the right on wide screens -->
+          <div v-if="getPromotions().length" class="promotion-badges ms-auto d-flex gap-2 align-items-center">
+            <PromotionBadge 
+              v-for="promo in getPromotions()" 
+              :key="promo.id || promo.name"
+              :promotion="promo"
+              compact
+            />
+          </div>
         </div>
         <!-- Rating -->
         <div v-if="product.average_rating !== undefined" class="mb-2 d-flex align-items-center">
@@ -430,6 +432,30 @@ function imageUrl(img: string) {
 .price{
   color: var(--color-success);
   font-weight: 500;
+}
+
+/* Layout tweaks: put promotion badges beside price on larger screens */
+.price-and-badges {
+  width: 100%;
+}
+
+.promotion-badges {
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .price-and-badges {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .promotion-badges {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
 }
 
 .wishlist-toast {
