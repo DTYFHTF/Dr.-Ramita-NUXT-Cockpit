@@ -44,7 +44,7 @@ b               :visible-categories="categoriesWithCounts"
             <div class="products-header">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  {{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
+                  {{ promotionInfo ? `${promotionInfo.name} - ` : '' }}{{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
                   <span v-if="filteredProducts.length" class="results-count">({{ filteredProducts.length }})</span>
                 </h1>
                 <div class="inline-search">
@@ -213,6 +213,11 @@ const onSale = ref<boolean>(
   false
 )
 
+// Promotion filter (initialize from route query)
+const promotion = ref<string>(
+  (route?.query?.promotion && String(route.query.promotion)) || ''
+)
+
 // Computed properties
 const categorySlug = computed(() => {
   const slugArray = route.params.slug as string[]
@@ -243,6 +248,15 @@ const activeCategoryId = computed(() => {
 
 const currentCategory = computed(() => {
   return categoryData.value
+})
+
+// Show promotion info if filtering by promotion
+const promotionInfo = computed(() => {
+  if (!promotion.value) return null
+  return {
+    name: promotion.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+    slug: promotion.value
+  }
 })
 
 // Use the same ancestry logic as HierarchicalCategoryTree for breadcrumbs

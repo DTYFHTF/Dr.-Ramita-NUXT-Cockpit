@@ -2,14 +2,14 @@
   <section class="top-deals-offers py-5">
     <div class="container">
       <div class="section-header d-flex justify-content-between align-items-center mb-4">
-        <h2 class="section-title mb-0">Top Deals & Offers</h2>
+        <h2 class="section-title mb-0">Top Deals</h2>
       </div>
       
       <!-- Small Deals Grid (First Row - 4 columns) -->
       <div class="row g-4 mb-4" v-if="smallDeals.length > 0">
         <div class="col-lg-3 col-md-6 col-sm-6" v-for="deal in smallDeals" :key="deal.id">
-          <template v-if="deal.url">
-            <NuxtLink :to="deal.url" class="deal-card-link text-decoration-none">
+          <template v-if="hasValidUrl(deal)">
+            <NuxtLink :to="getPromotionUrl(deal)" class="deal-card-link text-decoration-none">
               <div class="deal-card">
                 <!-- Deal Image -->
                 <div class="deal-image-wrapper">
@@ -78,8 +78,8 @@
       <!-- Large Banner Deals (Second Row - 2 columns) -->
       <div class="row g-4" v-if="largeDeals.length > 0">
         <div class="col-lg-6 col-md-6" v-for="deal in largeDeals" :key="deal.id">
-          <template v-if="deal.url">
-            <NuxtLink :to="deal.url" class="deal-card-link text-decoration-none">
+          <template v-if="hasValidUrl(deal)">
+            <NuxtLink :to="getPromotionUrl(deal)" class="deal-card-link text-decoration-none">
               <div class="deal-card banner-card" :style="getBannerStyle(deal)">
                 <!-- Simple banner with just background image -->
               </div>
@@ -137,6 +137,42 @@ const getBannerStyle = (deal) => {
   return {
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   };
+};
+
+// Generate promotion-based URLs using our DRY approach
+const getPromotionUrl = (deal) => {
+  // If we have promotion data, use the DRY approach (Priority 1)
+  if (deal.promotion_slug) {
+    // Smart routing based on promotion scope and category count
+    if (deal.promotion_scope === 'category') {
+      // If single category promotion, use /category/{slug}?promotion={slug}
+      if (deal.category_count === 1 && deal.first_category_slug) {
+        return `/category/${deal.first_category_slug}?promotion=${deal.promotion_slug}`;
+      }
+      // If multiple categories, use /products?promotion={slug} to show all
+      else {
+        return `/products?promotion=${deal.promotion_slug}`;
+      }
+    } 
+    // Product or global scope always goes to /products
+    else {
+      return `/products?promotion=${deal.promotion_slug}`;
+    }
+  }
+  
+  // Fallback to custom URL if no promotion data (Priority 2)
+  if (deal.url) {
+    // Normalize URLs that might be missing a leading slash
+    return deal.url.startsWith('/') ? deal.url : `/${deal.url}`;
+  }
+  
+  // No link available (Priority 3)
+  return null;
+};
+
+// Check if deal has any valid URL
+const hasValidUrl = (deal) => {
+  return !!(deal.promotion_slug || deal.url);
 };
 
 // Handle image loading errors

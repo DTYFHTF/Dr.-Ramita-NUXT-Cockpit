@@ -60,7 +60,7 @@
             <div class="results-info">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  {{ category ? `${category} Products` : pageTitle }}
+                  {{ promotionTitle || (category ? `${category} Products` : pageTitle) }}
                   <span v-if="pagination?.total" class="results-count">({{ pagination.total }})</span>
                 </h1>
 
@@ -142,6 +142,7 @@ const {
   onSale,
   rating,
   collection,
+  promotion,
   showMoreCategories,
   visibleCategories,
   remainingCategories,
@@ -172,6 +173,17 @@ const activeFilterCount = computed(() => {
   if (rating.value) count++;
   if (searchQuery.value) count++;
   return count;
+});
+
+// Computed property for promotion title (clean, user-friendly)
+const promotionTitle = computed(() => {
+  if (!promotion.value) return '';
+  
+  // Convert slug to title case (e.g., "herbal-supplements-special" -> "Herbal Supplements Special")
+  return promotion.value
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 });
 
 function handleSearch(query: string) {

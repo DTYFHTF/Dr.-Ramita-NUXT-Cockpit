@@ -103,10 +103,7 @@
                 :promotion="promo"
               />
             </div>
-            <div v-if="getDiscountPercentage()" class="savings-text mt-2 text-success fw-semibold">
-              <LucideIcon icon="mdi:tag" size="16" class="me-1" />
-              You save {{ getDiscountPercentage() }}%
-            </div>
+            
           </div>
           <div v-if="selectedVariation">
             <span
@@ -133,10 +130,12 @@
                 (selectedVariation.stock ?? 0) > 0 ? "In stock" : "Out of stock"
               }}
             </span>
+            
             <div v-if="selectedVariation.sku" class="my-1 text-secondary small">
               SKU: {{ selectedVariation.sku }}
             </div>
           </div>
+          
           <!-- Fallback if no variations -->
         <div v-else class="product-price mb-3">
           <!-- Use price_breakdown if available for more accurate pricing -->
@@ -145,6 +144,10 @@
               <h4 class="text-decoration-line-through text-secondary mb-0">₹{{ product.price_breakdown.original_price }}</h4>
               <h4 class="text-success fw-bold mb-0">₹{{ product.price_breakdown.final_price }}</h4>
               <span v-if="product.price_breakdown.discount_percentage" class="badge bg-success">{{ product.price_breakdown.discount_percentage }}% OFF</span>
+            <div v-if="getDiscountPercentage()" class="savings-text mt-2 text-success fw-semibold ">
+              <LucideIcon icon="mdi:tag" size="16" class="me-1" />
+              You save {{ getDiscountPercentage() }}%
+            </div>
             </div>
             <div v-else>
               <h4 class="fw-bold text-success mb-0">₹{{ product.price_breakdown.final_price }}</h4>

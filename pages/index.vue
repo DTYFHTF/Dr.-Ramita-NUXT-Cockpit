@@ -73,7 +73,6 @@
 </template>
 
 <script setup>
-import NavbarContentSwitcher from '@/components/NavbarContentSwitcher.vue';
 import { computed, onMounted } from "vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useBookingStore } from "~/stores/booking";
@@ -85,8 +84,6 @@ import ProductCard from '@/components/ProductCard.vue'
 import EventCard from '@/components/EventCard.vue'
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import { useProducts } from '@/composables/useProducts.ts'
-
-
 
 const store = useBookingStore();
 

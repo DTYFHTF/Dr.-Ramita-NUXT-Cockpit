@@ -23,7 +23,8 @@ export function useProducts() {
     onSale = false,
     searchQuery?: string, // <-- add searchQuery param
     rating?: number, // <-- add rating param
-    collection?: string // <-- add collection param for featured/bestselling
+    collection?: string, // <-- add collection param for featured/bestselling
+    promotion?: string // <-- add promotion param for promotion filtering
   ) {
     loading.value = true;
     error.value = "";
@@ -52,6 +53,7 @@ export function useProducts() {
       if (searchQuery) params.append("search", searchQuery); // <-- add search param
       if (rating !== undefined && rating !== null) params.append("rating", String(rating));
       if (collection) params.append("collection", collection); // <-- add collection param
+      if (promotion) params.append("promotion", promotion); // <-- add promotion param
 
       const response = (await $fetch(
         `${API_BASE}/products?${params.toString()}`,

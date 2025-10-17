@@ -126,14 +126,13 @@ const target = computed(() => {
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  color: white;
 }
 
 .category-subtitle {
   font-size: 1rem;
   opacity: 0.9;
   margin: 0 0 1rem 0;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 @media (max-width: 768px) {

@@ -62,6 +62,7 @@
     />
 
     <!-- Top Deals & Offers -->
+    
     <TopDealsOffers :deals="topDeals" />
 
   <!-- Promotional Banners removed -->
