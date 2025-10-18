@@ -272,6 +272,20 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
     }
   );
 
+  // Watch currentCategoryId to refresh filter options when navigating between categories
+  if (currentCategoryId) {
+    watch(
+      currentCategoryId,
+      async (newCategoryId, oldCategoryId) => {
+        // Fetch whenever category changes
+        if (newCategoryId && newCategoryId !== oldCategoryId) {
+          await fetchFilterOptions();
+        }
+      },
+      { immediate: false } // Don't run on mount, let onMounted handle first fetch
+    );
+  }
+
   const toggleSort = (type: string) => {
     sort.value = sort.value === `${type}_asc` ? `${type}_desc` : `${type}_asc`;
     page.value = 1;
@@ -323,8 +337,19 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
 
   // Initial fetch
   onMounted(async () => {
-    // Add delay to ensure route is fully initialized
     await nextTick();
+    
+    // If we're on a category page, wait for the category ID to be computed
+    // This prevents race condition where filter API is called without category parameter
+    if (currentCategoryId) {
+      // Wait for currentCategoryId to have a value (max 500ms)
+      let retries = 0;
+      while (currentCategoryId.value === null && retries < 10) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+        retries++;
+      }
+    }
+    
     await fetchFilterOptions();
     updateRouteAndFetch();
   });
