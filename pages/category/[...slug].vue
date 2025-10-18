@@ -22,13 +22,14 @@
           <!-- Sidebar Filters -->
           <div class="col-lg-3 mb-4">
             <FilterSidebar
-b               :visible-categories="categoriesWithCounts"
+              :visible-categories="categoriesWithCounts"
               :active-category="activeCategoryId || undefined"
               :price-min="priceMin"
               :price-max="priceMax"
               :in-stock="inStock"
               :on-sale="onSale"
               :price-ranges="priceRanges"
+              :stock-status="stockStatus"
               :price-ranges-loading="filterOptionsLoading"
               @category-change="handleCategoryChange"
               @price-range-change="handlePriceRangeChange"
@@ -245,7 +246,7 @@ const activeCategoryId = computed(() => {
 
 // Get priceRanges and loading state from useProductFilters for FilterSidebar
 // Pass activeCategoryId so filter API knows the category context
-const { priceRanges, filterOptionsLoading, categoriesWithCounts } = useProductFilters(undefined, activeCategoryId)
+const { priceRanges, stockStatus, filterOptionsLoading, categoriesWithCounts } = useProductFilters(undefined, activeCategoryId)
 
 const currentCategory = computed(() => {
   return categoryData.value

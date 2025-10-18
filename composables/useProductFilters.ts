@@ -20,10 +20,17 @@ interface PriceStats {
   on_sale_count: number;
 }
 
+interface StockStatusOption {
+  label: string;
+  value: boolean;
+  count: number;
+}
+
 interface FilterOptions {
   priceRanges: OptimizedPriceRange[];
   priceStats: PriceStats;
   categories: any[];
+  stockStatus?: StockStatusOption[];
 }
 
 interface Filter {
@@ -63,6 +70,10 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
   );
 
   const priceStats = computed(() => filterOptions.value?.priceStats);
+
+  const stockStatus = computed<StockStatusOption[]>(() =>
+    filterOptions.value?.stockStatus || []
+  );
 
   const categoriesWithCounts = computed(() => 
     filterOptions.value?.categories || []
@@ -387,6 +398,7 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
     filterOptionsError,
     priceRanges,
     priceStats,
+    stockStatus,
 
     // Computed
     activeFilters,

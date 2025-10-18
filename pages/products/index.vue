@@ -16,6 +16,7 @@
             </div>
 
             <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
+              :stock-status="stockStatus"
               :visible-categories="categoriesWithCounts" :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
               :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
               :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
@@ -45,6 +46,7 @@
           </div>
           <div class="offcanvas-body">
             <FilterSidebar :active-filters="activeFilters" :price-ranges="priceRanges"
+              :stock-status="stockStatus"
               :visible-categories="categoriesWithCounts" :active-category="category" :show-more="showMoreCategories" :show-more-button="categories.length > 5"
               :remaining-categories="remainingCategories" :price-min="priceMin ?? undefined"
               :price-max="priceMax ?? undefined" :in-stock="inStock" @price-range-change="handlePriceRangeChange"
@@ -148,6 +150,7 @@ const {
   remainingCategories,
   activeFilters,
   priceRanges,
+  stockStatus,
   hierarchicalCategories,
   categoriesWithCounts,
   pageTitle,

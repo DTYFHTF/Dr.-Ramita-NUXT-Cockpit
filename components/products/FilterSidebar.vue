@@ -95,28 +95,22 @@
       <!-- Stock Status -->
       <div class="mb-3">
         <label class="form-label mb-1 fw-bold">Stock Status:</label>
-        <ul class="list-unstyled">
-          <li>
+        <ul v-if="stockStatus && stockStatus.length > 0" class="list-unstyled">
+          <li v-for="option in stockStatus" :key="option.label">
             <a
               href="#"
               class="filter-item"
-              @click.prevent="$emit('stock-change', true)"
-              :class="{ active: inStock === true }"
+              @click.prevent="$emit('stock-change', option.value)"
+              :class="{ active: inStock === option.value }"
             >
-              In Stock
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="filter-item"
-              @click.prevent="$emit('stock-change', false)"
-              :class="{ active: inStock === false }"
-            >
-              Out of Stock
+              {{ option.label }}
             </a>
           </li>
         </ul>
+        <div v-else class="text-muted small ps-1">
+          <template v-if="priceRangesLoading">Loading stock status...</template>
+          <template v-else>No stock status available</template>
+        </div>
       </div>
     </div>
   </div>
@@ -145,11 +139,18 @@ interface OptimizedPriceRange {
   count: number;
 }
 
+interface StockStatusOption {
+  label: string;
+  value: boolean;
+  count: number;
+}
+
 // Props
 const props = defineProps({
   activeFilters: Array as () => Filter[],
   priceRanges: Array as () => OptimizedPriceRange[],
   priceRangesLoading: Boolean,
+  stockStatus: Array as () => StockStatusOption[],
   visibleCategories: Array as () => Category[],
   hierarchicalCategories: Array as () => Category[],
   activeCategory: String,
