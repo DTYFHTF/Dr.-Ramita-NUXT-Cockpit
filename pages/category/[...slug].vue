@@ -193,9 +193,6 @@ const {
   findCategoryById
 } = useHierarchicalCategories()
 
-// Get priceRanges and loading state from useProductFilters for FilterSidebar
-const { priceRanges, filterOptionsLoading, categoriesWithCounts } = useProductFilters()
-
 // Local state
 const searchQuery = ref('')
 const sortBy = ref('')
@@ -245,6 +242,10 @@ const activeCategoryId = computed(() => {
   const category = findCategoryBySlug(hierarchicalCategories.value, categorySlug.value)
   return category ? String(category.id) : null
 })
+
+// Get priceRanges and loading state from useProductFilters for FilterSidebar
+// Pass activeCategoryId so filter API knows the category context
+const { priceRanges, filterOptionsLoading, categoriesWithCounts } = useProductFilters(undefined, activeCategoryId)
 
 const currentCategory = computed(() => {
   return categoryData.value
@@ -437,7 +438,19 @@ const handlePageChange = (page: number) => {
 const handleCategoryChange = (categoryId: string) => {
   const category = findCategoryById(categoryId)
   if (category?.slug) {
-    router.push(`/category/${category.slug}`)
+    // Preserve active filters when navigating to a different category
+    const query: Record<string, string> = {}
+    if (priceMin.value !== undefined) query.priceMin = String(priceMin.value)
+    if (priceMax.value !== undefined) query.priceMax = String(priceMax.value)
+    if (inStock.value !== undefined) query.inStock = String(inStock.value)
+    if (onSale.value) query.onSale = 'true'
+    if (searchQuery.value) query.search = searchQuery.value
+    if (promotion.value) query.promotion = promotion.value
+    
+    router.push({
+      path: `/category/${category.slug}`,
+      query: Object.keys(query).length > 0 ? query : undefined
+    })
   }
 }
 

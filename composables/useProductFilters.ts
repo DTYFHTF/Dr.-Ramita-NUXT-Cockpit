@@ -31,7 +31,7 @@ interface Filter {
   remove: () => void;
 }
 
-export function useProductFilters(searchQuery?: Ref<string>) {
+export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?: Ref<string | null>) {
   const router = useRouter();
   const route = useRoute();
 
@@ -142,8 +142,13 @@ export function useProductFilters(searchQuery?: Ref<string>) {
       // Pass current non-price contextual filters for accurate counts
       if (inStock.value !== undefined) params.append('inStock', String(inStock.value));
       if (onSale.value) params.append('onSale', 'true');
-      // If on a category page, include category id from route param (slug not known here)
-      const categoryId = (route.query.category as string) || '';
+      // Pass price range filters for context-aware category counts
+      if (priceMin.value !== null) params.append('priceMin', String(priceMin.value));
+      if (priceMax.value !== null) params.append('priceMax', String(priceMax.value));
+      
+      // Category context: prioritize currentCategoryId prop, then route.query.category
+      // This ensures category pages pass their context correctly
+      const categoryId = currentCategoryId?.value || (route.query.category as string) || '';
       if (categoryId) params.append('category', categoryId);
 
       const response = await fetch(`${API_BASE_URL}/product-filters?${params.toString()}`);
@@ -259,12 +264,20 @@ export function useProductFilters(searchQuery?: Ref<string>) {
     }
   );
 
+  // Watch price filters to refresh category counts when they change
+  watch(
+    [priceMin, priceMax, inStock, onSale],
+    async () => {
+      await fetchFilterOptions();
+    }
+  );
+
   const toggleSort = (type: string) => {
     sort.value = sort.value === `${type}_asc` ? `${type}_desc` : `${type}_asc`;
     page.value = 1;
   };
 
-  const handlePriceRangeChange = (range: OptimizedPriceRange) => {
+  const handlePriceRangeChange = async (range: OptimizedPriceRange) => {
     if (range.onSale) {
       priceMin.value = null;
       priceMax.value = null;
@@ -275,6 +288,8 @@ export function useProductFilters(searchQuery?: Ref<string>) {
       onSale.value = false;
     }
     page.value = 1;
+    // Refresh filter options to get updated category counts
+    await fetchFilterOptions();
   };
 
   const handleRatingChange = (ratingValue: number | null) => {
