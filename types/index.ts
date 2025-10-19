@@ -90,6 +90,9 @@ export interface Product {
   stock: number;
   in_stock: boolean; // Laravel returns boolean
   has_variations: boolean; // Laravel returns boolean
+  is_featured?: boolean; // Featured product flag
+  homepage_order?: number; // Custom ordering for featured products
+  total_sold?: number; // Total quantity sold (from best-selling scope)
   image: string;
   image_2: string;
   image_3: string;

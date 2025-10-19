@@ -19,7 +19,13 @@
         />
       </div>
       <div class="card-body d-flex flex-column align-items-start p-3">
-        <h3 class="card-title fs-6 fw-semibold mb-2">{{ product.name }}</h3>
+        <!-- Product name with badges on the right -->
+        <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+          <h3 class="card-title fs-6 fw-semibold mb-0 flex-grow-1">{{ product.name }}</h3>
+          
+          <!-- Product type badges - reusable component -->
+          <ProductBadges :product="product" :size="20" />
+        </div>
         
         <!-- Stock badge at top: show availability clearly -->
         
@@ -138,6 +144,7 @@
 import { defineProps, ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
+import ProductBadges from './ProductBadges.vue';
 import PromotionBadge from './PromotionBadge.vue';
 import CartToast from './CartToast.vue';
 import { useCart } from '@/composables/useCart';
@@ -499,5 +506,5 @@ function imageUrl(img: string) {
   }
 }
 
-
 </style>
+

@@ -91,7 +91,14 @@
               />
               {{ product.average_rating.toFixed(1) }}
             </span>
-            <h2>{{ product.name }}</h2>
+            
+            <!-- Product name with badges -->
+            <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+              <h2 class="mb-0 flex-grow-1">{{ product.name }}</h2>
+              
+              <!-- Product type badges - reusable component -->
+              <ProductBadges :product="product" :size="24" gap="6px" />
+            </div>
           </div>
           
           <!-- Promotion badges - use price_breakdown if available -->
@@ -275,6 +282,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import LucideIcon from "./LucideIcon.vue";
+import ProductBadges from "./ProductBadges.vue";
 import PromotionBadge from "./PromotionBadge.vue";
 import { useImageUrl } from '@/composables/useImageUrl.js'
 import type { Product } from "@/types";
@@ -556,3 +564,4 @@ function getDiscountPercentage() {
   }
 }
 </style>
+
