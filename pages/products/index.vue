@@ -108,6 +108,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from "vue";
+import { useRoute } from 'vue-router';
 import { useProductFilters } from "@/composables/useProductFilters";
 import LucideIcon from '@/components/LucideIcon.vue';
 import ProductSortControls from '@/components/products/ProductSortControls.vue';
@@ -127,7 +128,8 @@ const ProductSearch = defineAsyncComponent(
   () => import("@/components/products/ProductSearch.vue")
 );
 
-const searchQuery = ref("");
+const route = useRoute();
+const searchQuery = ref(route.query.search?.toString() || "");
 
 const {
   products,
@@ -429,6 +431,8 @@ function handleClearPriceRange() {
 .inline-search {
   flex-shrink: 0;
   min-width: 300px;
+  position: relative;
+  z-index: 100;
 }
 
 @media (max-width: 768px) {

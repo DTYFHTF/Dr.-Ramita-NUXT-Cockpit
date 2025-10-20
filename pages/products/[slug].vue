@@ -287,8 +287,8 @@ function handleAddToCartProxy(payload: any) {
   }
 }
 .similar-products-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
+  // margin-top: 3rem;
+  // padding-top: 2rem;
   border-top: 1px solid var(--border-color);
   background-color: var(--background-light);
 }

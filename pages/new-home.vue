@@ -152,15 +152,11 @@ const topFeaturedProducts = computed(() => {
 
 const bestSellingProducts = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'best_selling_products');
-  console.log('Best selling section from CMS:', section);
-  console.log('Best selling data from API:', bestSellingProductsData.value);
   
   if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
-    console.log('Using CMS data for best selling');
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
   // Use data from our API endpoint
-  console.log('Using API data for best selling');
   return bestSellingProductsData.value || [];
 });
 

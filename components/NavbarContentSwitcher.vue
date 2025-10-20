@@ -6,6 +6,7 @@
       :allProducts="allProducts"
       :placeholder="rotatingPlaceholder"
       class="navbar-product-search"
+      @search="handleSearch"
     />
     <template v-else>
       <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
@@ -43,7 +44,7 @@ import { computed, ref } from 'vue';
 import ProductSearch from '@/components/products/ProductSearch.vue';
 import DropDownItems from '@/components/DropDownItems.vue';
 import SmoothLink from '@/components/SmoothLink.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 
 import { onMounted, onUnmounted } from 'vue';
@@ -145,6 +146,8 @@ function cancelBlogDropdownClose() {
 }
 
 const route = useRoute();
+const router = useRouter();
+
 // Define which routes should show the search bar
 const searchBarRoutes = [
   '/', '/products', '/shop', '/new-home', '/product/[slug]', '/category', '/category/[...slug]', '/CartPage', '/checkout', '/dashboard'
@@ -155,4 +158,14 @@ const showSearchBar = computed(() => {
       route.path.startsWith('/category')) return true;
   return searchBarRoutes.includes(route.path);
 });
+
+// Handle search submission
+function handleSearch(searchQuery) {
+  if (searchQuery && searchQuery.trim()) {
+    router.push({
+      path: '/products',
+      query: { search: searchQuery.trim() }
+    });
+  }
+}
 </script>

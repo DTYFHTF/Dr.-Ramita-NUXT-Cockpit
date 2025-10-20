@@ -58,13 +58,14 @@
               @mouseenter="handleMouseEnter"
               @mouseleave="handleMouseLeave"
             >
-              <NuxtLink
-                to="/products"
+              <a
+                @click.prevent="navigateToShop"
                 class="btn btn-link nav-shared-link d-flex flex-column align-items-center p-0 cursor-pointer"
                 title="Shop"
+                href="/products"
               >
                 <LucideIcon icon="mdi:shop" class="fs-4" />
-              </NuxtLink>
+              </a>
               <MegaMenu 
                 v-if="showMegaMenu && !isMobileView" 
                 class="mega-menu-wrapper"
@@ -89,6 +90,7 @@
 import SmoothLink from "~/components/SmoothLink.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 import MegaMenu from "./MegaMenu.vue";
 import UserSection from '@/components/UserSection.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
@@ -116,8 +118,15 @@ if (typeof window !== 'undefined') {
 const userStore = useUserStore();
 const { user, hydrated } = storeToRefs(userStore);
 
+const router = useRouter();
+
 let closeTimeout = null;
 const showMegaMenu = ref(false);
+
+// Navigate to shop and clear all filters
+const navigateToShop = () => {
+  router.push('/products');
+};
 
 const handleMouseLeave = () => {
   closeTimeout = setTimeout(() => {

@@ -110,6 +110,13 @@ export interface Product {
   review_count?: number; // From Laravel response
   latest_reviews?: Review[]; // From Laravel response
   
+  // Enhanced suggestion fields
+  original_price?: number; // For product suggestions
+  final_price?: number; // For product suggestions
+  has_discount?: boolean; // For product suggestions
+  category_name?: string; // For product suggestions
+  short_description?: string; // For product suggestions
+  
   // Price breakdown from PriceEngine
   price_breakdown?: {
     original_price: number;
