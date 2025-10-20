@@ -35,8 +35,8 @@
               <span class="suggestion-name">{{ suggestion.name }}</span>
               <!-- Price on the right -->
               <div v-if="suggestion.final_price" class="suggestion-price-right">
-                <span v-if="suggestion.has_discount && suggestion.original_price" class="price-original">${{ suggestion.original_price }}</span>
-                <span class="price-final">${{ suggestion.final_price }}</span>
+                <span v-if="suggestion.has_discount && suggestion.original_price" class="price-original">{{ formatCurrency(suggestion.original_price) }}</span>
+                <span class="price-final">{{ formatCurrency(suggestion.final_price) }}</span>
               </div>
             </div>
             <div class="suggestion-meta">
@@ -69,6 +69,7 @@
 <script setup lang="ts">
 import type { Product } from '@/types';
 import { useRuntimeConfig } from 'nuxt/app';
+import { useCurrency } from '@/composables/useCurrency';
 
 const props = defineProps<{
   query: string;
@@ -78,6 +79,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:query', 'search']);
 
+const { formatCurrency } = useCurrency();
 const internalQuery = ref(props.query);
 const showSuggestions = ref(false);
 const apiSuggestions = ref<Product[]>([]);

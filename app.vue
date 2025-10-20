@@ -24,6 +24,9 @@ initTheme();
 :root {
   --text-deep-green: #3f5947;
   
+  /* Font stack with Noto Sans for proper Rupee symbol (₹) support */
+  --font-primary: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-secondary: 'Noto Sans', Arial, 'Helvetica Neue', sans-serif;
   
   font-family: var(--font-primary), var(--font-secondary);
 
@@ -44,6 +47,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  font-family: var(--font-primary);
 }
 
 #app {
