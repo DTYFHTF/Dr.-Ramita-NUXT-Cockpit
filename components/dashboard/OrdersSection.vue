@@ -26,60 +26,13 @@
                             <td>₹{{ order.total }}</td>
                             <td>{{ order.cart.length }}</td>
                             <td>
-                                <button class="btn btn-sm btn-smooth-outline p-2 " @click="selectOrder(order)">
-                                    View
-                                </button>
+                                <NuxtLink :to="`/order/${order.id}`" class="btn btn-sm btn-smooth-outline p-2">
+                                    View Details
+                                </NuxtLink>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div v-if="selectedOrder" class="modal fade show d-block" tabindex="-1"
-                style="background:rgba(var(--modal-overlay-rgb), 0.2);">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Order #{{ selectedOrder.id }} Details</h5>
-                            <button type="button" class="btn-close" @click="selectedOrder = null"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-2 fw-bold">Status: <span class="">{{ selectedOrder.status }}</span></div>
-                            <div class="mb-2">Order Date: {{ selectedOrder.created_at ? new
-                                Date(selectedOrder.created_at).toLocaleString() : '' }}</div>
-                            <div class="mb-2">Shipping: ₹{{ selectedOrder.shipping_cost }}</div>
-                            <div class="mb-2">Estimated Delivery: {{ selectedOrder.estimated_delivery }}</div>
-                            <div class="mb-2">Total: ₹{{ selectedOrder.total }}</div>
-                            <div class="mb-3">
-                                <h6>Shipping Details</h6>
-                                <div>{{ selectedOrder.shipping.name }}</div>
-                                <div>{{ selectedOrder.shipping.address }}</div>
-                                <div v-if="selectedOrder.shipping.area">{{ selectedOrder.shipping.area }}</div>
-                                <div v-if="selectedOrder.shipping.landmark">{{ selectedOrder.shipping.landmark }}</div>
-                                <div>{{ selectedOrder.shipping.city }}, {{ selectedOrder.shipping.state }} {{
-                                    selectedOrder.shipping.pincode }}</div>
-                                <div>{{ selectedOrder.shipping.country }}</div>
-                                <div>Phone: {{ selectedOrder.shipping.phone }}</div>
-                                <div>Email: {{ selectedOrder.shipping.email }}</div>
-
-                            </div>
-                            <h6>Items</h6>
-                            <ul class="list-group mb-3">
-                                <li v-for="item in selectedOrder.cart" :key="`${item.product_id}:${item.variation_id}`"
-                                    class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>
-                                        {{ item.name }}<span v-if="item.variation_name"> - {{ item.variation_name
-                                            }}</span>
-                                        <span class="text-muted small ms-2">x{{ item.quantity }}</span>
-                                    </span>
-                                    <span>₹{{ item.price * item.quantity }}</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" @click="selectedOrder = null">Close</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -96,7 +49,6 @@ const apiBase = config.public.apiBase;
 const orders = ref<Order[]>([]);
 const loading = ref(true);
 const error = ref('');
-const selectedOrder = ref<Order | null>(null);
 
 const fetchOrders = async () => {
     loading.value = true;
@@ -113,19 +65,11 @@ const fetchOrders = async () => {
     }
 };
 
-const selectOrder = (order: Order) => {
-    selectedOrder.value = order;
-};
-
 onMounted(fetchOrders);
 </script>
 
 <style scoped>
 .table {
     background: white;
-}
-
-.modal {
-    z-index: 2000;
 }
 </style>

@@ -126,10 +126,10 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="confirmation-actions">
+    <div v-if="showActions" class="confirmation-actions">
       <NuxtLink to="/dashboard?tab=orders" class="btn btn-outline">
         <LucideIcon icon="mdi:view-dashboard" class="me-2" />
-        View Orders
+        {{ isFromDashboard ? 'Back to Orders' : 'View Orders' }}
       </NuxtLink>
       <NuxtLink to="/products" class="btn btn-smooth-success">
         <LucideIcon icon="mdi:shopping" class="me-2" />
@@ -141,15 +141,27 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import LucideIcon from './LucideIcon.vue';
 import type { Order } from '@/types';
 import { useImageUrl } from '@/composables/useImageUrl';
 
 interface Props {
   orderData: Order;
+  showActions?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  showActions: true
+});
+
+const route = useRoute();
+
+// If we're on the order details page (/order/[id]), show "Back to Orders"
+// If we're on checkout success, show "View Orders"
+const isFromDashboard = computed(() => {
+  return route.path.startsWith('/order/');
+});
 
 const formatStatus = (status: string): string => {
   const statusMap: Record<string, string> = {
