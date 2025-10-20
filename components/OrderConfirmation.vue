@@ -127,7 +127,7 @@
 
     <!-- Action Buttons -->
     <div class="confirmation-actions">
-  <NuxtLink to="/dashboard#orders" class="btn btn-outline">
+      <NuxtLink to="/dashboard?tab=orders" class="btn btn-outline">
         <LucideIcon icon="mdi:view-dashboard" class="me-2" />
         View Orders
       </NuxtLink>
