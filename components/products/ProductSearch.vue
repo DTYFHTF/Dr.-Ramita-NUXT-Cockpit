@@ -328,6 +328,11 @@ const onBlur = () => {
   z-index: 1040;
 }
 
+.product-search {
+  position: relative;
+  z-index: 100;
+}
+
 .navbar-search-form {
   display: flex;
   align-items: center;
@@ -416,7 +421,7 @@ const onBlur = () => {
   max-height: 320px;
   overflow-y: auto;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.12);
-  z-index: 1050;
+  z-index: 9999;
   list-style: none;
   padding: 0.25rem 0;
   margin: 0;

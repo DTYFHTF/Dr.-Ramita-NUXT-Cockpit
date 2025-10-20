@@ -418,10 +418,15 @@ function handleStockChange(val: boolean | null) {
 }
 
 // Methods
-const handleSearch = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  searchQuery.value = target.value
-  currentPage.value = 1
+const handleSearch = (query: string) => {
+  // Navigate to global products search instead of filtering locally
+  // This ensures users see all matching products, not just within the category
+  if (query && query.trim()) {
+    router.push({
+      path: '/products',
+      query: { search: query.trim() }
+    })
+  }
 }
 
 const handleViewChange = (mode: 'grid' | 'list') => {
@@ -616,6 +621,8 @@ function toggleSort(type: string) {
 .inline-search {
   flex-shrink: 0;
   min-width: 300px;
+  position: relative;
+  z-index: 100;
 }
 
 @media (max-width: 768px) {
