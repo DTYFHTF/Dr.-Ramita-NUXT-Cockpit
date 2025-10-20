@@ -12,7 +12,7 @@
         <LucideIcon icon="mdi:alert-circle" size="3rem" color="var(--color-error)" class="mb-3" />
         <h3 class="text-danger">Order Not Found</h3>
         <p class="text-muted">{{ error }}</p>
-  <NuxtLink to="/dashboard#orders" class="btn btn-smooth-primary">
+        <NuxtLink to="/dashboard?tab=orders" class="btn btn-smooth-primary">
           <LucideIcon icon="mdi:view-dashboard" class="me-2" />
           View All Orders
         </NuxtLink>

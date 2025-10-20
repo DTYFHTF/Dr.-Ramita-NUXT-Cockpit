@@ -136,7 +136,7 @@
   <CartToast :show="showNotification" message="Product added to cart!" link-href="/CartPage" link-text="View Cart" />
   <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
     Product added to wishlist! 
-    <NuxtLink to="/wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
+    <NuxtLink to="/dashboard?tab=wishlist" class="ms-2 text-white text-decoration-underline">View wishlist</NuxtLink>
   </div>
 </template>
 
