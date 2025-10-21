@@ -58,7 +58,7 @@
       :loading="homepageLoading"
       :card-component="CategoryCard"
       card-props-key="category"
-      view-all-url="/categories"
+  view-all-url="/category"
     />
 
     <!-- Top Deals & Offers -->

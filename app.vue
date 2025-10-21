@@ -3,7 +3,9 @@
     <Navbar />
     <CategoryBar />
     <main class="main-content">
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </main>
     <Footer />
   </div>
