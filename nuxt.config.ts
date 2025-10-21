@@ -64,6 +64,12 @@ export default defineNuxtConfig({
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap' }
       ],
+      script: [
+        {
+          src: 'https://checkout.razorpay.com/v1/checkout.js',
+          defer: true
+        }
+      ]
     }
   },
   modules: [
@@ -81,7 +87,8 @@ export default defineNuxtConfig({
       cockpitUrl: process.env.NUXT_COCKPIT_URL,
       apiBase: process.env.NUXT_LARAVEL_API_URL,
       baseUrl: process.env.NUXT_LARAVEL_BASE_URL,
-      cockpitToken: process.env.NUXT_COCKPIT_TOKEN
+      cockpitToken: process.env.NUXT_COCKPIT_TOKEN,
+      razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID
     }
   }
 });

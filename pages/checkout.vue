@@ -44,8 +44,8 @@
                   <input v-model="shipping.area" type="text" class="form-input" required placeholder="Area, Street, Sector" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Landmark</label>
-                  <input v-model="shipping.landmark" type="text" class="form-input" placeholder="Nearby landmark" />
+                  <label class="form-label">Landmark <span class="required">*</span></label>
+                  <input v-model="shipping.landmark" type="text" class="form-input" placeholder="Nearby landmark" required />
                 </div>
                 <div class="form-group">
                   <label class="form-label">City <span class="required">*</span></label>
@@ -170,6 +170,7 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 const userStore = useUserStore();
+const { initiatePayment, verifyPayment } = useRazorpay();
 
 const shipping = ref<ShippingInfo>({
   name: '',
@@ -186,9 +187,9 @@ const specialInstructions = ref('');
 const paymentMethod = ref<PaymentMethod>('cod');
 const paymentMethods = [
   { value: 'cod', label: 'Cash on Delivery' },
-  { value: 'card', label: 'Credit/Debit Card' },
-  { value: 'upi', label: 'UPI' },
-  { value: 'paypal', label: 'PayPal' }
+  { value: 'card', label: 'Card / UPI / Wallet (via Razorpay)' },
+  { value: 'upi', label: 'UPI (via Razorpay)' },
+  { value: 'paypal', label: 'International Cards (Razorpay)' }
 ];
 const shippingCost = 85;
 const estimatedDelivery = '3-7 business days';
@@ -212,11 +213,22 @@ const submitOrder = async () => {
     errorMessage.value = 'Please fill all required fields.';
     return;
   }
+  
+  // Check if user is authenticated
+  if (!userStore.token) {
+    errorMessage.value = 'You must be logged in to place an order. Redirecting to login...';
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
+    return;
+  }
+  
   isSubmitting.value = true;
   errorMessage.value = '';
+  
   const payload = {
     shipping: shipping.value,
-    payment_method: paymentMethod.value,
+    payment_method: paymentMethod.value === 'cod' ? 'cod' : 'razorpay',
     cart: cart.map((item) => ({
       product_id: item.product_id,
       variation_id: item.variation_id,
@@ -226,23 +238,78 @@ const submitOrder = async () => {
       price: item.price,
       image: item.image
     })),
-    shipping_cost: shippingCost,
-    estimated_delivery: estimatedDelivery,
     special_instructions: specialInstructions.value
   };
+
   try {
-    const response = await $fetch<{ order: Order }>(`${apiBase}/orders`, {
+    // Call the new payment endpoint instead of old orders endpoint
+    const response = await $fetch<any>(`${apiBase}/payments/create-order`, {
       method: 'POST',
       body: payload,
-      headers: { Authorization: `Bearer ${userStore.token}` }
+      headers: { 
+        Authorization: `Bearer ${userStore.token}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
-    orderData.value = response.order;
-    orderSuccess.value = true;
-    cartStore.clearCart();
+
+    if (response.payment_method === 'cod') {
+      // COD order - directly show success
+      orderData.value = response.order;
+      orderSuccess.value = true;
+      cartStore.clearCart();
+    } else if (response.payment_method === 'razorpay') {
+      // Razorpay payment - open payment modal
+      initiatePayment(
+        response,
+        async (razorpayResponse: any) => {
+          // Payment successful - verify on backend
+          isSubmitting.value = true;
+          const verificationResult = await verifyPayment(
+            response.order_id,
+            razorpayResponse,
+            userStore.token || ''
+          );
+
+          if (verificationResult.success) {
+            orderData.value = verificationResult.order;
+            orderSuccess.value = true;
+            cartStore.clearCart();
+            isSubmitting.value = false;
+          } else {
+            errorMessage.value = verificationResult.error || 'Payment verification failed';
+            isSubmitting.value = false;
+          }
+        },
+        (error: any) => {
+          // Payment failed or cancelled
+          errorMessage.value = error?.message || 'Payment failed or cancelled';
+          isSubmitting.value = false;
+        }
+      );
+    }
   } catch (e: any) {
-    errorMessage.value = e?.data?.error || e?.data?.message || e?.message || 'Failed to place order.';
-  } finally {
+    console.error('Payment error:', e);
+    
+    // Provide detailed error messages
+    if (e?.status === 401 || e?.status === 419) {
+      errorMessage.value = 'Authentication failed. Please log in again.';
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } else if (e?.status === 422) {
+      errorMessage.value = e?.data?.message || 'Validation error. Please check your input.';
+    } else if (e?.status === 500) {
+      errorMessage.value = 'Server error. Please try again later.';
+    } else {
+      errorMessage.value = e?.data?.error || e?.data?.message || e?.message || 'Failed to place order. Please try again.';
+    }
     isSubmitting.value = false;
+  } finally {
+    if (paymentMethod.value === 'cod') {
+      isSubmitting.value = false;
+    }
+    // For Razorpay, isSubmitting is managed in callbacks
   }
 };
 </script>

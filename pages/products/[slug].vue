@@ -210,7 +210,6 @@ function handleAddToCartProxy(payload: any) {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/variables.scss';
 
 .product-detail-page {
   width: 100vw;
