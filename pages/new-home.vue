@@ -35,7 +35,21 @@
       title-class="featured"
       view-all-url="/products?collection=featured"
     />
+<!-- Daily & Seasonal Products -->
+    <GenericSlider 
+      :title="dailySeasonalTitle"
+      :items="dailySeasonalItems"
+      :loading="homepageLoading"
+      :card-component="dailySeasonalCardComponent"
+      :card-props-key="dailySeasonalCardPropsKey"
+      :view-all-url="dailySeasonalViewAllUrl"
+    />
+    <!-- Most Searched -->
+    <MostSearched 
+      :section-data="mostSearchedSection"
+    />
 
+    
     <!-- Best Selling Products -->
     <GenericSlider 
       title="Best Selling Products"
@@ -46,20 +60,6 @@
       view-all-url="/products?collection=bestselling"
     />
 
-    <!-- Most Searched -->
-    <MostSearched 
-      :section-data="mostSearchedSection"
-    />
-
-    <!-- Daily & Seasonal Products -->
-    <GenericSlider 
-      :title="dailySeasonalTitle"
-      :items="dailySeasonalItems"
-      :loading="homepageLoading"
-      :card-component="dailySeasonalCardComponent"
-      :card-props-key="dailySeasonalCardPropsKey"
-      :view-all-url="dailySeasonalViewAllUrl"
-    />
 
     <!-- Top Deals & Offers -->
     
