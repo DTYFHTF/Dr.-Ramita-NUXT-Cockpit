@@ -90,37 +90,13 @@
             />
 
             <!-- Pagination -->
-            <nav v-if="totalPages > 1" class="mt-4">
-              <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <button class="page-link" @click="handlePageChange(currentPage - 1)">
-                    &laquo; Previous
-                  </button>
-                </li>
-                
-                <li
-                  v-for="page in visiblePages"
-                  :key="page"
-                  class="page-item"
-                  :class="{ active: page === currentPage }"
-                >
-                  <button 
-                    v-if="typeof page === 'number'"
-                    class="page-link" 
-                    @click="handlePageChange(page)"
-                  >
-                    {{ page }}
-                  </button>
-                  <span v-else class="page-link disabled">{{ page }}</span>
-                </li>
-
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <button class="page-link" @click="handlePageChange(currentPage + 1)">
-                    Next &raquo;
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <div v-if="totalPages > 1" class="pagination-wrapper">
+              <Pagination 
+                :current-page="currentPage" 
+                :last-page="totalPages"
+                @page-change="handlePageChange"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -173,6 +149,7 @@ import { useProductFilters } from '@/composables/useProductFilters'
 import CategoryBreadcrumb from '@/components/categories/CategoryBreadcrumb.vue'
 import FilterSidebar from '@/components/products/FilterSidebar.vue'
 import ProductList from '@/components/products/ProductList.vue'
+import Pagination from '@/components/products/Pagination.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import ProductSearch from '@/components/products/ProductSearch.vue'
 import ProductSortControls from '@/components/products/ProductSortControls.vue'
@@ -204,7 +181,8 @@ const {
 const searchQuery = ref('')
 const sortBy = ref('')
 const viewMode = ref<'grid' | 'list'>('grid')
-const currentPage = ref(1)
+// Initialize currentPage from the URL (if present) so deep links work
+const currentPage = ref(Number(Array.isArray(route.query.page) ? route.query.page[0] : route.query.page) || 1)
 const itemsPerPage = ref(12)
 // Price and stock filters
 const priceMin = ref<number | undefined>(undefined)
@@ -404,27 +382,6 @@ const totalPages = computed(() => {
   return Math.ceil(filteredProducts.value.length / itemsPerPage.value)
 })
 
-const visiblePages = computed(() => {
-  const current = currentPage.value
-  const total = totalPages.value
-  const pages = []
-  
-  // Always show first page
-  if (current > 3) pages.push(1)
-  if (current > 4) pages.push('...')
-  
-  // Show pages around current
-  for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
-    pages.push(i)
-  }
-  
-  // Always show last page
-  if (current < total - 3) pages.push('...')
-  if (current < total - 2) pages.push(total)
-  
-  return pages
-})
-
 // Filter handlers
 function handlePriceRangeChange(range: { min: number | null, max: number | null, onSale?: boolean }) {
   if (range.onSale) {
@@ -462,6 +419,13 @@ const handleViewChange = (mode: 'grid' | 'list') => {
 const handlePageChange = (page: number) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
+    // Update URL query parameter
+    router.push({
+      query: {
+        ...route.query,
+        page: String(page)
+      }
+    })
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -489,9 +453,9 @@ const handleCategoryChange = (categoryId: string) => {
 // SEO and meta
 const seoTitle = computed(() => {
   if (currentCategory.value) {
-    return `${currentCategory.value.name} - Ayurveda Products | Dr. Ramita`
+    return `${currentCategory.value.name} - Rishi Store | Rishipath `
   }
-  return 'Category - Dr. Ramita Ayurveda'
+  return 'Category - Rishi Store'
 })
 
 const seoDescription = computed(() => {
@@ -512,18 +476,36 @@ onMounted(async () => {
   await fetchCategoryProducts(categorySlug.value)
 })
 
-// Watch for route changes
-watch(() => route.params.slug, async (newSlug) => {
+// Watch for route changes - only reset page when category actually changes
+watch(() => route.params.slug, async (newSlug, oldSlug) => {
   if (newSlug) {
     const slug = Array.isArray(newSlug) ? newSlug[newSlug.length - 1] : newSlug
-    await fetchCategoryProducts(slug)
-    currentPage.value = 1
-    // Update route query with active category id (for contextual price range counts)
-    if (activeCategoryId.value) {
-      router.replace({ query: { ...route.query, category: activeCategoryId.value } })
+    const oldSlugValue = oldSlug ? (Array.isArray(oldSlug) ? oldSlug[oldSlug.length - 1] : oldSlug) : null
+    
+    // Only fetch and reset page if the category slug actually changed
+    if (slug !== oldSlugValue) {
+      await fetchCategoryProducts(slug)
+      currentPage.value = 1
+      // Update route query with active category id (for contextual price range counts)
+      if (activeCategoryId.value) {
+        router.replace({ query: { ...route.query, category: activeCategoryId.value } })
+      }
     }
   }
 }, { immediate: true })
+
+// Keep currentPage in sync with the page query param for deep linking
+watch(
+  () => route.query.page,
+  (newPage) => {
+    const p = Number(Array.isArray(newPage) ? newPage[0] : newPage) || 1
+    if (p !== currentPage.value) {
+      currentPage.value = p
+      // Scroll to top when page changes from URL
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+)
 
 function toggleSort(type: string) {
   if (sortBy.value === `${type}_asc`) {

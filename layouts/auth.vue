@@ -14,6 +14,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f7f7;
+  background: var(--background-light);
 }
 </style>  
