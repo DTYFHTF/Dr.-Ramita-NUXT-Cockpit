@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, computed } from "vue";
+import { defineAsyncComponent, computed, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useProductFilters } from "@/composables/useProductFilters";
 import LucideIcon from '@/components/LucideIcon.vue';
@@ -180,16 +180,27 @@ const activeFilterCount = computed(() => {
   return count;
 });
 
-// Computed property for promotion title (clean, user-friendly)
+// Fetch promotion data
+const { promotion: promotionData, fetchPromotion } = usePromotion()
+
+// Computed property for promotion title
 const promotionTitle = computed(() => {
   if (!promotion.value) return '';
   
-  // Convert slug to title case (e.g., "herbal-supplements-special" -> "Herbal Supplements Special")
-  return promotion.value
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  // Use fetched promotion data (required - no fallback)
+  if (promotionData.value) {
+    return promotionData.value.name;
+  }
+  
+  return '';
 });
+
+// Fetch promotion data when promotion slug changes
+watch(() => promotion.value, async (newPromotion) => {
+  if (newPromotion) {
+    await fetchPromotion(newPromotion)
+  }
+}, { immediate: true })
 
 function handleSearch(query: string) {
   searchQuery.value = query;

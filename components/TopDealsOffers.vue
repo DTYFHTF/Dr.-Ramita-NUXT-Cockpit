@@ -145,18 +145,18 @@ const getPromotionUrl = (deal) => {
   if (deal.promotion_slug) {
     // Smart routing based on promotion scope and category count
     if (deal.promotion_scope === 'category') {
-      // If single category promotion, use /category/{slug}?promotion={slug}
+      // If single category promotion, use /category/{slug}?promotion={slug}&source=top-deals
       if (deal.category_count === 1 && deal.first_category_slug) {
-        return `/category/${deal.first_category_slug}?promotion=${deal.promotion_slug}`;
+        return `/category/${deal.first_category_slug}?promotion=${deal.promotion_slug}&source=top-deals`;
       }
-      // If multiple categories, use /products?promotion={slug} to show all
+      // If multiple categories, use /products?promotion={slug}&source=top-deals to show all
       else {
-        return `/products?promotion=${deal.promotion_slug}`;
+        return `/products?promotion=${deal.promotion_slug}&source=top-deals`;
       }
     } 
-    // Product or global scope always goes to /products
+    // Product or global scope always goes to /products (mark the source)
     else {
-      return `/products?promotion=${deal.promotion_slug}`;
+      return `/products?promotion=${deal.promotion_slug}&source=top-deals`;
     }
   }
   

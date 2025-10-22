@@ -71,7 +71,7 @@
 
 <script setup>
 import LucideIcon from '@/components/LucideIcon.vue';
-import { ref, onMounted, nextTick, watch } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 
 const props = defineProps({
   title: {
@@ -185,18 +185,18 @@ watch(() => props.loading, (newLoading) => {
   }
 });
 
+const handleResize = () => {
+  updateArrowStates();
+};
+
 onMounted(async () => {
   await nextTick();
   initializeSlider();
-  
-  const handleResize = () => {
-    updateArrowStates();
-  };
   window.addEventListener('resize', handleResize);
-  
-  onUnmounted(() => {
-    window.removeEventListener('resize', handleResize);
-  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
 });
 </script>
 

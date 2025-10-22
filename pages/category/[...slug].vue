@@ -45,7 +45,13 @@
             <div class="products-header">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  {{ promotionInfo ? `${promotionInfo.name} - ` : '' }}{{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
+                  <!-- If coming from Top Deals, show only the promotion name -->
+                  <template v-if="promotionInfo && promotionInfo.fromTopDeals">
+                    {{ promotionInfo.name }}
+                  </template>
+                  <template v-else>
+                    {{ promotionInfo ? `${promotionInfo.name} - ` : '' }}{{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
+                  </template>
                   <span v-if="filteredProducts.length" class="results-count">({{ filteredProducts.length }})</span>
                 </h1>
                 <div class="inline-search">
@@ -252,14 +258,34 @@ const currentCategory = computed(() => {
   return categoryData.value
 })
 
+// Fetch promotion data
+const { promotion: promotionData, fetchPromotion } = usePromotion()
+
 // Show promotion info if filtering by promotion
 const promotionInfo = computed(() => {
   if (!promotion.value) return null
-  return {
-    name: promotion.value.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    slug: promotion.value
+  
+  // Check if user came from Top Deals
+  const fromTopDeals = String(route.query.source || '').toLowerCase() === 'top-deals'
+
+  // Use fetched promotion data (required - no fallback)
+  if (promotionData.value) {
+    return {
+      name: promotionData.value.name,
+      slug: promotionData.value.slug,
+      fromTopDeals
+    }
   }
+
+  return null
 })
+
+// Fetch promotion data when promotion slug changes
+watch(() => promotion.value, async (newPromotion) => {
+  if (newPromotion) {
+    await fetchPromotion(newPromotion)
+  }
+}, { immediate: true })
 
 // Use the same ancestry logic as HierarchicalCategoryTree for breadcrumbs
 const categoryPath = computed(() => {
