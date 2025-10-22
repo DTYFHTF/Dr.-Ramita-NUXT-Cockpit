@@ -1,9 +1,6 @@
 <template>
   <div class="category-page">
-    
-
-    <!-- Category Header removed: title and meta are now omitted, breadcrumb provides context -->
-    <!-- Breadcrumbs - Moved to top -->
+    <!-- Breadcrumbs -->
     <div class="breadcrumb-section">
       <div class="container">
         <CategoryBreadcrumb 
@@ -13,14 +10,19 @@
       </div>
     </div>
 
-  <!-- Subcategories removed: using Filter/Sort instead -->
+    <!-- Main Content -->
+    <div class="container products-container">
+      <div class="products-layout">
+        <!-- Desktop Filters Sidebar -->
+        <aside class="filters-sidebar">
+          <div class="filters-card">
+            <div class="filters-header">
+              <LucideIcon icon="mdi:filter-variant" class="filter-icon me-2" />
+              <div class="d-flex align-items-center justify-content-center w-100 mb-2">
+                <h3 class="filters-title mb-0">Filters</h3>
+              </div>
+            </div>
 
-    <!-- Products Section -->
-    <div v-if="categoryProducts.length > 0" class="products-section">
-      <div class="container">
-        <div class="row">
-          <!-- Sidebar Filters -->
-          <div class="col-lg-3 mb-4">
             <FilterSidebar
               :visible-categories="categoriesWithCounts"
               :active-category="activeCategoryId || undefined"
@@ -36,24 +38,61 @@
               @stock-change="handleStockChange"
             />
           </div>
+        </aside>
 
-          <!-- Main Content -->
-          <div class="col-lg-9">
-            <!-- Search & Sort Header -->
+        <!-- Mobile Filter Button -->
+        <div class="mobile-filter-btn">
+          <button class="btn btn-smooth-success filter-toggle" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#filterOffcanvas">
+            <LucideIcon icon="mdi:filter-variant" class="me-2" />
+            Filters & Sort
+          </button>
+        </div>
 
+        <!-- Mobile Filter Offcanvas -->
+        <div class="offcanvas offcanvas-start filter-offcanvas" tabindex="-1" id="filterOffcanvas">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title">
+              <LucideIcon icon="mdi:filter-variant" class="me-2" />
+              Filters & Sort
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+          </div>
+          <div class="offcanvas-body">
+            <FilterSidebar
+              :visible-categories="categoriesWithCounts"
+              :active-category="activeCategoryId || undefined"
+              :price-min="priceMin"
+              :price-max="priceMax"
+              :in-stock="inStock"
+              :on-sale="onSale"
+              :price-ranges="priceRanges"
+              :stock-status="stockStatus"
+              :price-ranges-loading="filterOptionsLoading"
+              @category-change="handleCategoryChange"
+              @price-range-change="handlePriceRangeChange"
+              @stock-change="handleStockChange"
+            />
+          </div>
+        </div>
 
-            <div class="products-header">
+        <!-- Main Products Content -->
+        <main class="products-main">
+          <!-- Products Header -->
+          <div class="products-header">
+            <div class="results-info">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  <!-- If coming from Top Deals, show only the promotion name -->
                   <template v-if="promotionInfo && promotionInfo.fromTopDeals">
                     {{ promotionInfo.name }}
                   </template>
                   <template v-else>
-                    {{ promotionInfo ? `${promotionInfo.name} - ` : '' }}{{ currentCategory?.name ? `${currentCategory.name}` : 'All Products' }}
+                    {{ promotionInfo ? `${promotionInfo.name} - ` : '' }}{{ currentCategory?.name || 'Category' }}
                   </template>
                   <span v-if="filteredProducts.length" class="results-count">({{ filteredProducts.length }})</span>
                 </h1>
+
+                <!-- Inline Search Bar -->
                 <div class="inline-search">
                   <ProductSearch 
                     v-model:query="searchQuery"
@@ -63,24 +102,28 @@
                     :placeholder="`Search in ${currentCategory?.name || 'category'}...`"
                   />
                 </div>
-                <ProductSortControls :sort="sortBy" @toggle-sort="toggleSort" />
               </div>
             </div>
 
-            <!-- Active Filters Display -->
-            <ActiveFilters 
-              :price-min="priceMin" 
-              :price-max="priceMax"
-              :search-query="searchQuery"
-              :in-stock="inStock"
-              :on-sale="onSale"
-              @clear-price-range="() => { priceMin = undefined; priceMax = undefined; currentPage = 1; }"
-              @clear-search="() => { searchQuery = ''; currentPage = 1; }"
-              @clear-stock="() => { inStock = true; currentPage = 1; }"
-              @clear-sale="() => { onSale = false; currentPage = 1; }"
-            />
+            <!-- Sort Controls -->
+            <ProductSortControls :sort="sortBy" @toggle-sort="toggleSort" />
+          </div>
 
-            <!-- Products Grid -->
+          <!-- Active Filters Display -->
+          <ActiveFilters 
+            :price-min="priceMin" 
+            :price-max="priceMax"
+            :search-query="searchQuery"
+            :in-stock="inStock"
+            :on-sale="onSale"
+            @clear-price-range="() => { priceMin = undefined; priceMax = undefined; currentPage = 1; }"
+            @clear-search="() => { searchQuery = ''; currentPage = 1; }"
+            @clear-stock="() => { inStock = true; currentPage = 1; }"
+            @clear-sale="() => { onSale = false; currentPage = 1; }"
+          />
+
+          <!-- Products Grid -->
+          <div class="products-content">
             <ProductList
               :products="displayProducts"
               :loading="loading"
@@ -88,50 +131,32 @@
               :show-view-toggle="true"
               @view-change="handleViewChange"
             />
-
-            <!-- Pagination -->
-            <div v-if="totalPages > 1" class="pagination-wrapper">
-              <Pagination 
-                :current-page="currentPage" 
-                :last-page="totalPages"
-                @page-change="handlePageChange"
-              />
-            </div>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Empty State -->
-    <div v-else-if="!loading" class="empty-state">
-      <div class="container text-center py-5">
-        <LucideIcon icon="Package" size="64" class="text-muted mb-3" />
-        <h3 class="empty-title">No Products Found</h3>
-        <p class="empty-description">
-          {{ searchQuery 
-            ? `No products found matching "${searchQuery}" in this category.`
-            : 'This category doesn\'t have any products yet.'
-          }}
-        </p>
-        <div class="empty-actions">
-          <NuxtLink to="/products" class="btn btn-outline-primary">
-            Browse All Products
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
+          <!-- Empty State -->
+          <div v-if="!loading && categoryProducts.length === 0" class="empty-state-inline">
+            <LucideIcon icon="Package" size="64" class="text-muted mb-3" />
+            <h3 class="empty-title">No Products Found</h3>
+            <p class="empty-description">
+              {{ searchQuery 
+                ? `No products found matching "${searchQuery}" in this category.`
+                : 'This category doesn\'t have any products yet.'
+              }}
+            </p>
+            <NuxtLink to="/products" class="btn btn-outline-primary">
+              Browse All Products
+            </NuxtLink>
+          </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="loading-state">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="skeleton-sidebar"></div>
+          <!-- Pagination -->
+          <div v-if="totalPages > 1" class="pagination-wrapper">
+            <Pagination 
+              :current-page="currentPage" 
+              :last-page="totalPages"
+              @page-change="handlePageChange"
+            />
           </div>
-          <div class="col-lg-9">
-            <div class="skeleton-products"></div>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   </div>
@@ -518,6 +543,7 @@ function toggleSort(type: string) {
 </script>
 
 <style scoped lang="scss">
+/* Main Layout */
 .category-page {
   min-height: 100vh;
   background: var(--background-light);
@@ -525,53 +551,141 @@ function toggleSort(type: string) {
 
 .breadcrumb-section {
   background: var(--background-white);
-  /* border-bottom removed */
-  padding: 0.5rem 0 0.5rem 0;
+  padding: 0.5rem 0;
   min-height: 40px;
 }
 
-.category-header {
-  background: var(--background-white);
-  
+/* Container */
+.products-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-.category-hero {
-  .category-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    
-    .category-icon {
-      color: var(--color-primary);
-    }
-  }
-  
-  .category-description {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-    line-height: 1.6;
-  }
-  }
+.products-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
 
-
-.category-image-wrapper {
-  .category-image {
-    width: 100%;
-    max-width: 200px;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
+@media (max-width: 1024px) {
+  .products-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 
-/* Subcategories UI removed - rely on FilterSidebar and ProductSortControls */
+/* Filters Sidebar */
+.filters-sidebar {
+  position: sticky;
+  top: 2rem;
+}
 
-.products-section {
+@media (max-width: 1024px) {
+  .filters-sidebar {
+    display: none;
+  }
+}
+
+.filters-card {
   background: var(--background-white);
-  padding: 2rem 0;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--background-light);
+}
+
+.filters-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.filter-icon {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+/* Mobile Filter Button */
+.mobile-filter-btn {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .mobile-filter-btn {
+    display: block;
+  }
+}
+
+.filter-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  position: relative;
+}
+
+.filter-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--color-danger);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Mobile Offcanvas */
+.filter-offcanvas {
+  width: 320px !important;
+}
+
+.offcanvas-header {
+  background: var(--color-primary);
+  color: white;
+  padding: 1.5rem;
+}
+
+.offcanvas-title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.offcanvas-body {
+  background: var(--background-white);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* Products Main */
+.products-main {
+  background: var(--background-white);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+  min-height: 500px;
 }
 
 /* Products Header */
@@ -592,13 +706,16 @@ function toggleSort(type: string) {
   }
 }
 
+.results-info {
+  flex: 1;
+}
+
 .title-search-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   margin-bottom: 0.5rem;
-  flex: 1;
 }
 
 @media (max-width: 768px) {
@@ -653,9 +770,15 @@ function toggleSort(type: string) {
   box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
 }
 
-.empty-state {
-  background: var(--background-white);
-  padding: 4rem 0;
+/* Products Content */
+.products-content {
+  min-height: 400px;
+}
+
+/* Empty State */
+.empty-state-inline {
+  text-align: center;
+  padding: 4rem 2rem;
   
   .empty-title {
     font-size: 1.5rem;
@@ -670,67 +793,33 @@ function toggleSort(type: string) {
     margin-bottom: 2rem;
   }
   
-  .empty-actions {
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-    }
-  }
-}
-
-.loading-state {
-  padding: 2rem 0;
-  
-  .skeleton-sidebar {
-    height: 400px;
-    background: linear-gradient(90deg, var(--background-light) 0%, var(--border-color) 50%, var(--background-light) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+  .btn {
+    padding: 0.75rem 1.5rem;
     border-radius: 8px;
-  }
-  
-  .skeleton-products {
-    height: 600px;
-    background: linear-gradient(90deg, var(--background-light) 0%, var(--border-color) 50%, var(--background-light) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 8px;
+    font-weight: 600;
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+/* Pagination */
+.pagination-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
-// Responsive design
+/* Responsive Design */
 @media (max-width: 768px) {
-  .category-hero {
-    text-align: center;
-    
-    .category-title {
-      font-size: 2rem;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+  .products-container {
+    padding: 1rem 0.5rem;
   }
   
-  .subcategories-section {
-    .subcategory-card {
-      margin-bottom: 1rem;
-    }
+  .products-main {
+    padding: 1rem;
+    border-radius: 12px;
   }
   
-  .products-header {
-    .row {
-      flex-direction: column;
-      gap: 1rem;
-    }
+  .results-title {
+    font-size: 1.5rem;
   }
 }
 </style>
