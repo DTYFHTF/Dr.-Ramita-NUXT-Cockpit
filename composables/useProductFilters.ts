@@ -58,6 +58,9 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
   
   // Promotion support - IMPORTANT: Initialize from route query immediately
   const promotion = ref(route?.query?.promotion?.toString() || '');
+  
+  // Multiple promotions support (comma-separated slugs)
+  const promotions = ref(route?.query?.promotions?.toString() || '');
 
   // Filter options from backend
   const filterOptions = ref<FilterOptions | null>(null);
@@ -81,6 +84,7 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
 
   // Collection-based page titles
   const pageTitle = computed(() => {
+    if (promotions.value) return `${collection.value || 'Seasonal Products'}`;
     if (promotion.value) return `${promotion.value} - Promotion Products`;
     if (collection.value === 'featured') return 'Top Featured Products';
     if (collection.value === 'bestselling') return 'Best Selling Products';
@@ -191,13 +195,19 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
     // Preserve promotion parameter from either the current route or the local ref.
     const promotionFromRoute = route?.query?.promotion ? String(route.query.promotion) : '';
     const mergedPromotion = promotionFromRoute || (promotion.value ? String(promotion.value) : '');
+    
+    // Preserve promotions (plural) parameter
+    const promotionsFromRoute = route?.query?.promotions ? String(route.query.promotions) : '';
+    const mergedPromotions = promotionsFromRoute || (promotions.value ? String(promotions.value) : '');
 
-    // When navigating with a promotion parameter, clear category filters to show ALL products in the promotion
+    // When navigating with a promotion/promotions parameter, clear category filters to show ALL products in the promotion
     const query: Record<string, string> = {};
     
-    if (mergedPromotion) {
-      // Promotion mode: only preserve promotion and page, clear other filters
-      query.promotion = mergedPromotion;
+    if (mergedPromotions || mergedPromotion) {
+      // Promotion mode: only preserve promotion/promotions, collection, and page, clear other filters
+      if (mergedPromotions) query.promotions = mergedPromotions;
+      if (mergedPromotion) query.promotion = mergedPromotion;
+      if (collection.value) query.collection = collection.value;
       query.page = page.value.toString();
     } else {
       // Normal mode: preserve all filters
@@ -240,15 +250,16 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
       searchQuery ? searchQuery.value : undefined,
       rating.value === null ? undefined : rating.value,
       collection.value || undefined, // Pass collection parameter
-      promotion.value || undefined // Pass promotion parameter
+      promotion.value || undefined, // Pass promotion parameter
+      promotions.value || undefined // Pass promotions parameter
     );
   };
 
   // Watchers
   watch(
-    [sort, priceMin, priceMax, page, inStock, onSale, rating, collection, promotion, searchQuery ?? ref('')],
-    ([_sort, _priceMin, _priceMax, _page, _inStock, _onSale, _rating, _collection, _promotion, _search], oldValues) => {
-      if (searchQuery && _search !== oldValues?.[9]) {
+    [sort, priceMin, priceMax, page, inStock, onSale, rating, collection, promotion, promotions, searchQuery ?? ref('')],
+    ([_sort, _priceMin, _priceMax, _page, _inStock, _onSale, _rating, _collection, _promotion, _promotions, _search], oldValues) => {
+      if (searchQuery && _search !== oldValues?.[10]) {
         page.value = 1;
       }
       updateRouteAndFetch();
@@ -263,6 +274,19 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
       if (promotionStr !== promotion.value) {
         promotion.value = promotionStr;
         console.log('[useProductFilters] Synced promotion from route:', promotionStr);
+      }
+    },
+    { immediate: true }
+  );
+  
+  // Watch route.query.promotions (plural) and sync to local ref
+  watch(
+    () => route?.query?.promotions,
+    (newPromotions) => {
+      const promotionsStr = newPromotions ? String(newPromotions) : '';
+      if (promotionsStr !== promotions.value) {
+        promotions.value = promotionsStr;
+        console.log('[useProductFilters] Synced promotions from route:', promotionsStr);
       }
     },
     { immediate: true }
@@ -335,6 +359,7 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
     onSale.value = false;
     rating.value = null;
     promotion.value = '';
+    promotions.value = '';
     page.value = 1;
   };
 
@@ -380,6 +405,7 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
     rating,
     collection,
     promotion,
+    promotions,
 
     // Legacy compatibility - add empty/default values for removed category features
     categories: computed(() => []),

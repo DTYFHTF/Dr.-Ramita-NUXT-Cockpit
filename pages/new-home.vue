@@ -53,12 +53,12 @@
 
     <!-- Daily & Seasonal Products -->
     <GenericSlider 
-      title="Daily & Seasonal Products"
-      :items="dailySeasonalProducts"
+      :title="dailySeasonalTitle"
+      :items="dailySeasonalItems"
       :loading="homepageLoading"
-      :card-component="CategoryCard"
-      card-props-key="category"
-  view-all-url="/category"
+      :card-component="dailySeasonalCardComponent"
+      :card-props-key="dailySeasonalCardPropsKey"
+      :view-all-url="dailySeasonalViewAllUrl"
     />
 
     <!-- Top Deals & Offers -->
@@ -86,26 +86,20 @@ import { computed, ref, onMounted } from 'vue';
 const { data: homepageData, error: homepageError, loading: homepageLoading } = useApiLaravel('homepage');
 const { getImageUrl } = useImageUrl();
 
-// Fetch products data
 const { 
-  products: productsData, 
   loading: productsLoading,
   fetchProducts,
   fetchBestSellingProducts,
   fetchFeaturedProducts
 } = useProducts();
 
-// State for best selling products
 const bestSellingProductsData = ref([]);
 const featuredProductsData = ref([]);
 
-// Fetch featured and best selling products
 onMounted(async () => {
   try {
-    await fetchProducts(1, 12); // Fetch more products for sliders
-    // Fetch best selling products
+    await fetchProducts(1, 12);
     bestSellingProductsData.value = await fetchBestSellingProducts(12);
-    // Fetch featured products
     featuredProductsData.value = await fetchFeaturedProducts(12);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -113,7 +107,6 @@ onMounted(async () => {
 });
 
 const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
-  // Prefer explicit promotion_image when provided by backend
   const img = item.promotion_image ?? item.image ?? '';
   if (typeof img === 'string' && img.startsWith('http')) {
     return { ...item, image: img };
@@ -121,7 +114,6 @@ const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
   return { ...item, image: getImageUrl(img, fallback) };
 };
 
-// Existing computed properties
 const banners = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'banner_main');
   if (!section || !Array.isArray(section.data?.banners)) return [];
@@ -140,13 +132,11 @@ const bannersMid = computed(() => {
   return section.data.banners.map(b => addImageUrl(b, '/placeholder-banner.jpg'));
 });
 
-// New computed properties for additional sections
 const topFeaturedProducts = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'featured_products' || s.type === 'auto_featured_products');
   if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  // Use data from our featured products API endpoint
   return featuredProductsData.value || [];
 });
 
@@ -156,53 +146,61 @@ const bestSellingProducts = computed(() => {
   if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  // Use data from our API endpoint
   return bestSellingProductsData.value || [];
 });
-
 
 const mostSearchedSection = computed(() => {
   return (homepageData.value?.sections || []).find(s => s.type === 'most_searched');
 });
 
-const dailySeasonalProducts = computed(() => {
-  const section = (homepageData.value?.sections || []).find(s => s.type === 'daily_seasonal');
-  if (section && Array.isArray(section.data?.categories)) {
-    return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
+const dailySeasonalSection = computed(() => {
+  return (homepageData.value?.sections || []).find(s => s.type === 'daily_seasonal');
+});
+
+const dailySeasonalTitle = computed(() => {
+  return dailySeasonalSection.value?.data?.title || 'Daily & Seasonal Products';
+});
+
+const dailySeasonalItems = computed(() => {
+  if (!dailySeasonalSection.value) return [];
+  
+  if (Array.isArray(dailySeasonalSection.value.data?.deals) && dailySeasonalSection.value.data.deals.length) {
+    return dailySeasonalSection.value.data.deals.map(promo => {
+      const card = addImageUrl(promo, '/placeholder-banner.jpg');
+      return {
+        ...card,
+        subtitle: card.description || '',
+        link: card.url || '/promotions'
+      };
+    });
   }
-  console.log('No daily seasonal data found, returning empty array');
+  
   return [];
 });
 
-// Normalize incoming deal objects (API or CMS section) to a common shape
-function normalizeDeal(deal) {
-  // If API returns a product-like object with price_breakdown
-  const pb = deal.price_breakdown || deal.priceBreakdown || null;
-  const originalPrice = pb?.original_price ?? deal.originalPrice ?? deal.regular_price ?? deal.price_original ?? null;
-  const finalPrice = pb?.final_price ?? deal.price ?? deal.discounted_price ?? deal.price_final ?? null;
-  const computedDiscount = (originalPrice && finalPrice)
-    ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
-    : deal.discount ?? deal.discount_percentage ?? null;
+const dailySeasonalCardComponent = computed(() => CategoryCard);
 
-    return {
-      id: deal.id ?? deal.product_id ?? deal.sku ?? Math.random(),
-      title: deal.title ?? deal.name ?? (deal.product?.name) ?? '',
-      description: deal.description ?? deal.short_description ?? deal.product?.short_description ?? '',
-      // prefer explicit promotion_image set by backend
-      image: deal.promotion_image ?? deal.image ?? deal.product?.image ?? deal.thumbnail ?? '',
-      url: deal.url ?? (deal.product ? `/products/${deal.product?.slug || deal.product?.id}` : (deal.path ?? '#')),
-      price: finalPrice,
-      originalPrice: originalPrice,
-      discount: computedDiscount
-    };
-}
+const dailySeasonalCardPropsKey = computed(() => 'category');
+
+const dailySeasonalViewAllUrl = computed(() => {
+  const section = dailySeasonalSection.value;
+  if (!section || !section.data) return null;
+
+  const deals = Array.isArray(section.data.deals) ? section.data.deals : [];
+  const promotionSlugs = deals.map(d => d.promotion_slug).filter(Boolean);
+
+  if (promotionSlugs.length === 0) return null;
+
+  const promotionsParam = promotionSlugs.join(',');
+  const collectionName = encodeURIComponent(section.data.title || 'Seasonal Products');
+  
+  return `/products?promotions=${promotionsParam}&collection=${collectionName}&source=seasonal`;
+});
 
 const topDeals = computed(() => {
-  // Use homepage section data
   const section = (homepageData.value?.sections || []).find(s => s.type === 'top_deals');
   
   if (section && Array.isArray(section.data?.deals)) {
-    // Data is already formatted from backend, just ensure image URLs
     return section.data.deals.map(d => ({
       ...d,
       image: d.image || '/placeholder-banner.jpg'
@@ -210,8 +208,6 @@ const topDeals = computed(() => {
   }
   return [];
 });
-
-// promotional and social sections removed from homepage
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,9 @@
 <template>
   <span 
     class="promotion-badge" 
-    :class="`promotion-${promotion.type}`"
+    :class="[
+      shouldShowDiscount ? `promotion-${promotion.type}` : `promotion-${promotion.purpose || 'curation'}`,
+    ]"
     :title="getBadgeTooltip()"
   >
     <LucideIcon icon="mdi:tag" size="12" class="me-1" />
@@ -19,6 +21,7 @@ interface Promotion {
   name?: string;
   type?: 'percentage' | 'fixed' | string;
   value?: number;
+  purpose?: 'discount' | 'curation' | 'seasonal' | string;
   source?: string;
 }
 
@@ -27,7 +30,21 @@ const props = defineProps<{
   compact?: boolean;
 }>();
 
+// Only show discount badge for actual discounts with value > 0
+const shouldShowDiscount = computed(() => {
+  const purpose = props.promotion.purpose || 'discount';
+  const value = props.promotion.value || 0;
+  
+  // Only show discount for 'discount' purpose with value > 0
+  return purpose === 'discount' && value > 0;
+});
+
 const formatDiscount = computed(() => {
+  // For curation/seasonal promotions or 0 value, show promotion name or "Featured"
+  if (!shouldShowDiscount.value) {
+    return props.promotion.name || 'Featured';
+  }
+  
   if (!props.promotion.value || !props.promotion.type) return '';
   
   if (props.promotion.type === 'percentage') {
@@ -43,6 +60,12 @@ const getBadgeTooltip = () => {
   if (props.promotion.source) {
     tooltip += ` (${props.promotion.source})`;
   }
+  
+  // Add purpose info for non-discount promotions
+  if (props.promotion.purpose && props.promotion.purpose !== 'discount') {
+    tooltip += ` - ${props.promotion.purpose}`;
+  }
+  
   return tooltip;
 };
 </script>
@@ -68,6 +91,13 @@ const getBadgeTooltip = () => {
   
   &.promotion-fixed {
     background: linear-gradient(135deg, var(--color-warning) 0%, #f59e0b 100%);
+  }
+  
+  // Special styling for curation/seasonal (non-discount) promotions
+  &.promotion-curation,
+  &.promotion-seasonal {
+    background: linear-gradient(135deg, var(--color-success) 0%, #10b981 100%);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
   }
 
   .promotion-text {

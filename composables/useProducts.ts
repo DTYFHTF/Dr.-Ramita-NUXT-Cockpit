@@ -21,10 +21,11 @@ export function useProducts() {
     priceMax: number | null = null,
     inStock = true,
     onSale = false,
-    searchQuery?: string, // <-- add searchQuery param
-    rating?: number, // <-- add rating param
-    collection?: string, // <-- add collection param for featured/bestselling
-    promotion?: string // <-- add promotion param for promotion filtering
+    searchQuery?: string,
+    rating?: number,
+    collection?: string,
+    promotion?: string,
+    promotions?: string // Add support for multiple promotions (comma-separated)
   ) {
     loading.value = true;
     error.value = "";
@@ -52,8 +53,9 @@ export function useProducts() {
       if (onSale) params.append("on_sale", "true");
       if (searchQuery) params.append("search", searchQuery); // <-- add search param
       if (rating !== undefined && rating !== null) params.append("rating", String(rating));
-      if (collection) params.append("collection", collection); // <-- add collection param
-      if (promotion) params.append("promotion", promotion); // <-- add promotion param
+      if (collection) params.append("collection", collection);
+      if (promotion) params.append("promotion", promotion);
+      if (promotions) params.append("promotions", promotions); // Add promotions param
 
       const response = (await $fetch(
         `${API_BASE}/products?${params.toString()}`,

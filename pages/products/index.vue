@@ -62,7 +62,7 @@
             <div class="results-info">
               <div class="title-search-row">
                 <h1 class="results-title">
-                  {{ promotionTitle || (category ? `${category} Products` : pageTitle) }}
+                  {{ displayTitle }}
                   <span v-if="pagination?.total" class="results-count">({{ pagination.total }})</span>
                 </h1>
 
@@ -193,6 +193,28 @@ const promotionTitle = computed(() => {
   }
   
   return '';
+});
+
+// Computed property for page title - prioritize collection param over promotion
+const displayTitle = computed(() => {
+  // 1. If we have a 'collection' query param (from View All), use it
+  const collectionParam = route.query.collection?.toString();
+  if (collectionParam) {
+    return decodeURIComponent(collectionParam);
+  }
+  
+  // 2. If we have a single promotion (from promotion filter), use promotion title
+  if (promotionTitle.value) {
+    return promotionTitle.value;
+  }
+  
+  // 3. If we have a category filter, show category products
+  if (category.value) {
+    return `${category.value} Products`;
+  }
+  
+  // 4. Default to the standard page title (All Products, Featured, etc.)
+  return pageTitle.value;
 });
 
 // Fetch promotion data when promotion slug changes
