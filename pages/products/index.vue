@@ -197,10 +197,15 @@ const promotionTitle = computed(() => {
 
 // Computed property for page title - prioritize collection param over promotion
 const displayTitle = computed(() => {
-  // 1. If we have a 'collection' query param (from View All), use it
+  // 1. If we have a 'collection' query param (from View All), use proper title
   const collectionParam = route.query.collection?.toString();
   if (collectionParam) {
-    return decodeURIComponent(collectionParam);
+    const collectionTitles: Record<string, string> = {
+      'featured': 'Top Featured',
+      'bestselling': 'Best Selling',
+      'onsale': 'On Sale Products'
+    };
+    return collectionTitles[collectionParam] || decodeURIComponent(collectionParam);
   }
   
   // 2. If we have a single promotion (from promotion filter), use promotion title
