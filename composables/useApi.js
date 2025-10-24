@@ -95,10 +95,31 @@ export function useAuthApi() {
   }
 }
 
-// Google Auth: Redirect to backend for Google login
-export function loginWithGoogle() {
+// Google Auth: Redirect to Google OAuth
+export async function loginWithGoogle() {
   const config = useRuntimeConfig();
-  // Adjust this URL to match your Laravel backend's Google auth route
-  const googleAuthUrl = `${config.public.apiBase}/auth/google/redirect`;
-  window.location.href = googleAuthUrl;
+
+  try {
+    // Call the API to get the Google authorization URL
+    const url = `${config.public.apiBase}/auth/google/redirect`;
+
+    const response = await $fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        // Bypass ngrok interstitial on free tunnels
+        'ngrok-skip-browser-warning': 'true'
+      }
+    });
+
+    // Redirect to Google's authorization page if backend returned the URL
+    if (response?.url) {
+      window.location.href = response.url;
+    } else {
+      // If backend returned HTML (ngrok warning or error), surface it in console
+      console.error('loginWithGoogle: expected JSON with url but got:', response);
+    }
+  } catch (error) {
+    console.error('loginWithGoogle failed:', error);
+  }
 }
