@@ -10,6 +10,7 @@ export interface Doctor {
   bio?: string;
   languages: string[];
   location?: string;
+  timezone?: string;
   consultation_fee?: number;
   available_days: string[];
   working_hours: Array<{

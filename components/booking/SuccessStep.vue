@@ -15,9 +15,13 @@
         <span class="detail-label">Date:</span>
         <span class="detail-value">{{ formattedDate }}</span>
       </div>
-      <div class="detail-item">
-        <span class="detail-label">Time:</span>
-        <span class="detail-value">{{ formattedTime }}</span>
+      <div class="detail-item timezone-section">
+        <span class="detail-label">Your Time ({{ formattedUserTimezone }}):</span>
+        <span class="detail-value">{{ formattedUserTime }}</span>
+      </div>
+      <div class="detail-item timezone-section">
+        <span class="detail-label">Doctor's Time ({{ formattedDoctorTimezone }}):</span>
+        <span class="detail-value">{{ formattedDoctorTime }}</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">With:</span>
@@ -34,22 +38,45 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { parseISO, format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 import { useBookingStore } from '~/stores/booking'
 import { useDoctorStore } from '~/stores/doctorStore'
 import { useApiLaravel } from '~/composables/useApi'
 
 const store = useBookingStore()
 const doctorStore = useDoctorStore()
+const { formatTimezoneName, getUserTimezone } = useTimezone()
 
-const formattedDate = computed(() =>
-  format(parseISO(store.formData.date), 'EEE, d MMM yyyy')
-)
+const userTimezone = ref(getUserTimezone())
 
-const formattedTime = computed(() => {
+// Calculate the actual date in patient's timezone from UTC
+const formattedDate = computed(() => {
+  if (!store.formData.time?.utc?.start) {
+    return format(parseISO(store.formData.date), 'EEE, d MMM yyyy')
+  }
+  
+  try {
+    const utcDate = new Date(store.formData.time.utc.start)
+    const patientDate = toZonedTime(utcDate, userTimezone.value)
+    return format(patientDate, 'EEE, d MMM yyyy')
+  } catch (error) {
+    console.error('Error formatting patient date:', error)
+    return format(parseISO(store.formData.date), 'EEE, d MMM yyyy')
+  }
+})
+
+const formattedUserTime = computed(() => {
   const time = store.formData.time
-  return time ? `${formatTime(time.start)} - ${formatTime(time.end)}` : ''
+  if (!time?.userTime) return ''
+  return `${formatTime(time.userTime.start)} - ${formatTime(time.userTime.end)}`
+})
+
+const formattedDoctorTime = computed(() => {
+  const time = store.formData.time
+  if (!time?.doctorTime) return ''
+  return `${formatTime(time.doctorTime.start)} - ${formatTime(time.doctorTime.end)}`
 })
 
 const { data: doctorData } = useApiLaravel('doctors')
@@ -62,6 +89,13 @@ const doctorName = computed(() => {
   if (selectedDoctor.value) return selectedDoctor.value.name
   return doctorData.value?.length ? doctorData.value[0].name : 'Dr. Ramita Maharjan'
 })
+
+const doctorTimezone = computed(() => {
+  return selectedDoctor.value?.timezone || 'Asia/Kolkata'
+})
+
+const formattedUserTimezone = computed(() => formatTimezoneName(userTimezone.value))
+const formattedDoctorTimezone = computed(() => formatTimezoneName(doctorTimezone.value))
 
 const formatTime = (time) => {
   const [hours, minutes] = time.split(':')
