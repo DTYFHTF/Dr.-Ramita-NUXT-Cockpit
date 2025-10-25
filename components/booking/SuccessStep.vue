@@ -6,11 +6,15 @@
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
         </svg>
       </div>
-      <h2>Booking Confirmed!</h2>
-      <p class="step-subtitle">Your consultation is scheduled</p>
+      <h2>Payment Successful!</h2>
+      <p class="step-subtitle">Your consultation is confirmed</p>
     </div>
 
-    <div class="confirmation-details">
+    <div v-if="store.consultationId" class="confirmation-details">
+      <div class="detail-item">
+        <span class="detail-label">Confirmation #:</span>
+        <span class="detail-value">{{ store.consultationId }}</span>
+      </div>
       <div class="detail-item">
         <span class="detail-label">Date:</span>
         <span class="detail-value">{{ formattedDate }}</span>
@@ -27,9 +31,29 @@
         <span class="detail-label">With:</span>
         <span class="detail-value">{{ doctorName }}</span>
       </div>
+      <div v-if="store.paymentId" class="detail-item">
+        <span class="detail-label">Payment ID:</span>
+        <span class="detail-value">#{{ store.paymentId }}</span>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <LucideIcon icon="mdi:information-outline" />
+      <div>
+        <p><strong>What happens next?</strong></p>
+        <ul>
+          <li>You'll receive a confirmation email shortly</li>
+          <li>A calendar invite will be sent to your email</li>
+          <li>The doctor will reach out at the scheduled time</li>
+          <li>Check your dashboard for consultation details</li>
+        </ul>
+      </div>
     </div>
 
     <div class="confirmation-actions">
+      <NuxtLink to="/dashboard?tab=consultations" class="btn btn-smooth-outline">
+        View My Consultations
+      </NuxtLink>
       <button class="btn btn-smooth-success" @click="resetBooking">
         Book Another Consultation
       </button>
@@ -174,10 +198,49 @@ const resetBooking = () => {
   font-weight: 600;
 }
 
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primary);
+  margin: 2rem 0;
+  text-align: left;
+  
+  svg {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    margin-top: 0.25rem;
+  }
+  
+  p {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    
+    li {
+      margin-bottom: 0.5rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
 .confirmation-actions {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .step-title {

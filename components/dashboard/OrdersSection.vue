@@ -6,7 +6,7 @@
         <div v-else-if="error" class="alert alert-danger text-center">{{ error }}</div>
         <div v-else-if="orders.length === 0" class="alert alert-info text-center">No orders found.</div>
         <div v-else>
-            <div class="table-responsive rounded-4 shadow-sm p-3" style="background-color: var(--background-white);">
+            <div class="table-responsive rounded-4 shadow-sm p-3 dashboard-panel dashboard-table">
                 <table class="table align-middle">
                     <thead>
                         <tr>
@@ -68,8 +68,22 @@ const fetchOrders = async () => {
 onMounted(fetchOrders);
 </script>
 
-<style scoped>
-.table {
-    background: white;
+<style scoped lang="scss">
+/* Keep only small component-specific overrides; shared table/panel styles are in `main.scss` */
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+
+  &.alert-danger {
+    background: var(--error-bg);
+    color: var(--text-error);
+    border: 1px solid var(--text-error);
+  }
+
+  &.alert-info {
+    background: rgba(var(--color-primary-rgb), 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
 }
 </style>

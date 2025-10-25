@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { useUserStore } from '@/stores/user'
 
 export interface PaymentOrderData {
   payment_id: number
@@ -31,6 +32,7 @@ export interface UsePaymentOptions {
 
 export const usePayment = (options: UsePaymentOptions = {}) => {
   const config = useRuntimeConfig()
+  const userStore = useUserStore()
   const isProcessing = ref(false)
   const error = ref<string | null>(null)
   const currentPaymentId = ref<number | null>(null)
@@ -68,12 +70,13 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
       error.value = null
 
       const response = await $fetch<{ success: boolean; data: PaymentOrderData }>(
-        `${config.public.apiBaseUrl}/payments/create`,
+        `${config.public.apiBase}/payments/create`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': `Bearer ${userStore.token}`,
           },
           credentials: 'include',
           body: {
@@ -96,9 +99,70 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
     } catch (err: any) {
       const errorMessage = err?.data?.message || err.message || 'Failed to create payment order'
       error.value = errorMessage
+      
+      // If error is about existing pending payment, try to fetch it
+      if (errorMessage.includes('pending payment already exists')) {
+        throw new Error('PENDING_PAYMENT_EXISTS')
+      }
+      
       throw new Error(errorMessage)
     } finally {
       isProcessing.value = false
+    }
+  }
+
+  /**
+   * Get existing pending payment for a resource.
+   */
+  const getPendingPayment = async (
+    payableType: string,
+    payableId: number
+  ): Promise<PaymentOrderData | null> => {
+    try {
+      const response = await $fetch<{ success: boolean; data: PaymentOrderData }>(
+        `${config.public.apiBase}/payments/pending/${encodeURIComponent(payableType)}/${payableId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${userStore.token}`,
+          },
+          credentials: 'include',
+        }
+      )
+
+      if (response.success && response.data) {
+        currentPaymentId.value = response.data.payment_id
+        return response.data
+      }
+
+      return null
+    } catch (err: any) {
+      // No pending payment found is not an error
+      return null
+    }
+  }
+
+  /**
+   * Cancel a pending payment.
+   */
+  const cancelPayment = async (paymentId: number): Promise<boolean> => {
+    try {
+      const response = await $fetch<{ success: boolean }>(
+        `${config.public.apiBase}/payments/${paymentId}/cancel`,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${userStore.token}`,
+          },
+          credentials: 'include',
+        }
+      )
+
+      return response.success
+    } catch (err: any) {
+      return false
     }
   }
 
@@ -114,12 +178,13 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
       error.value = null
 
       const response = await $fetch<{ success: boolean; data?: any; message?: string }>(
-        `${config.public.apiBaseUrl}/payments/${paymentId}/verify`,
+        `${config.public.apiBase}/payments/${paymentId}/verify`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': `Bearer ${userStore.token}`,
           },
           credentials: 'include',
           body: verificationData,
@@ -178,19 +243,46 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
       // Load Razorpay script
       await loadRazorpayScript()
 
-      // Create order on server
-      const orderData = await createPaymentOrder(
-        payableType,
-        payableId,
-        amountCents,
-        metadata,
-        ttlMinutes
-      )
+      // Try to create order on server
+      let orderData: PaymentOrderData
+      try {
+        orderData = await createPaymentOrder(
+          payableType,
+          payableId,
+          amountCents,
+          metadata,
+          ttlMinutes
+        )
+      } catch (err: any) {
+        // If pending payment exists, try to fetch and reuse it
+        if (err.message === 'PENDING_PAYMENT_EXISTS') {
+          const existingPayment = await getPendingPayment(payableType, payableId)
+          if (existingPayment) {
+            orderData = existingPayment
+          } else {
+            throw new Error('Unable to retrieve existing payment')
+          }
+        } else {
+          throw err
+        }
+      }
 
       // Open Razorpay checkout
       return new Promise((resolve) => {
+        // Ensure key_id is available, fallback to config if not in orderData
+        const razorpayKey = orderData.key_id || config.public.razorpayKeyId
+        
+        if (!razorpayKey) {
+          const keyError = 'Razorpay key not configured'
+          error.value = keyError
+          options.onError?.(keyError)
+          isProcessing.value = false
+          resolve({ success: false, error: keyError })
+          return
+        }
+
         const razorpayOptions = {
-          key: orderData.key_id,
+          key: razorpayKey,
           amount: orderData.amount,
           currency: orderData.currency,
           order_id: orderData.order_id,
@@ -257,6 +349,8 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
     processPayment,
     createPaymentOrder,
     verifyPayment,
+    getPendingPayment,
+    cancelPayment,
     loadRazorpayScript,
   }
 }

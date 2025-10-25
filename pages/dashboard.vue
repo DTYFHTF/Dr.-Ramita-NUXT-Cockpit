@@ -26,6 +26,13 @@
                   My Account
                 </button>
                 <button 
+                  @click="activeTab = 'consultations'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'consultations' }]"
+                >
+                  <LucideIcon icon="mdi:calendar-check" class="me-2" />
+                  My Consultations
+                </button>
+                <button 
                   @click="activeTab = 'orders'" 
                   :class="['sidebar-nav-item', { active: activeTab === 'orders' }]"
                 >
@@ -88,6 +95,11 @@
               <h3 class="content-title mb-4">My Orders</h3>
               <OrdersSection />
             </div>
+            <!-- My Consultations Tab -->
+            <div v-if="activeTab === 'consultations'" class="content-card">
+              <h3 class="content-title mb-4">My Consultations</h3>
+              <ConsultationsSection />
+            </div>
             <!-- My Wishlist Tab -->
             <div v-if="activeTab === 'wishlist'" class="content-card">
               <h3 class="content-title mb-4">My Wishlist</h3>
@@ -128,6 +140,7 @@ import LucideIcon from '@/components/LucideIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import AccountSection from '@/components/dashboard/AccountSection.vue'
 import OrdersSection from '@/components/dashboard/OrdersSection.vue'
+import ConsultationsSection from '@/components/dashboard/ConsultationsSection.vue'
 import WishlistSection from '@/components/dashboard/WishlistSection.vue'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
@@ -150,11 +163,11 @@ const authApi = useAuthApi()
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
-const activeTab = ref(route.query.tab === 'orders' || route.query.tab === 'wishlist' ? route.query.tab : 'profile')
+const activeTab = ref(route.query.tab || 'profile')
 
 // Watch for tab query changes (e.g., when navigating from dropdown)
 watch(() => route.query.tab, (newTab) => {
-  if (newTab === 'orders' || newTab === 'wishlist' || newTab === 'profile') {
+  if (newTab) {
     activeTab.value = newTab
   }
 })

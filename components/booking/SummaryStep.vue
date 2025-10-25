@@ -29,12 +29,18 @@
       </div>
     </div>
 
+    <div v-if="errorMessage" class="error-message mt-3">
+      <LucideIcon icon="mdi:alert-circle" />
+      <span>{{ errorMessage }}</span>
+    </div>
+
     <div class="step-navigation mt-5">
-      <button class="btn btn-smooth-outline" @click="$emit('prev')">
+      <button class="btn btn-smooth-outline" @click="$emit('prev')" :disabled="isSubmitting">
         Back
       </button>
-      <button class="btn btn-smooth-success" @click="confirmBooking">
-        Confirm Booking
+      <button class="btn btn-smooth-success" @click="confirmBooking" :disabled="isSubmitting">
+        <span v-if="isSubmitting">Creating Consultation...</span>
+        <span v-else>Proceed to Payment</span>
       </button>
     </div>
   </div>
@@ -107,37 +113,65 @@ const formatTime = (time) => {
 
 const doctor_id = store.formData.doctorId || doctorStore.doctors[0]?.id || doctorData.value?.[0]?.id;
 
-const postBookingInfo = () => {
-  const bookingData = {
-    user_id: userStore.user?.id,
-    doctor_id: doctor_id,
-    date: store.formData.date,
-    duration: {
-      start: store.formData.time?.userTime?.start,
-      end: store.formData.time?.userTime?.end
-    },
-    patient_name: store.formData.name,
-    patient_email: store.formData.email,
-    patient_phone: store.formData.phone,
-    patient_timezone: userTimezone.value,
-    doctor_timezone: doctorTimezone.value,
-    scheduled_at_utc: store.formData.time?.utc?.start, // Store UTC time
-    notes: store.formData.notes,
-    status: 'pending',
-  };
+const isSubmitting = ref(false)
+const errorMessage = ref('')
 
-  postBookingLaravel(bookingData)
-    .then(() => {
-      console.log('Booking information posted successfully');
-    })
-    .catch((error) => {
-      console.error('Error posting booking information:', error);
-    });
-};
+const confirmBooking = async () => {
+  if (isSubmitting.value) return
+  
+  isSubmitting.value = true
+  errorMessage.value = ''
 
-const confirmBooking = () => {
-  postBookingInfo();
-  store.nextStep();
+  try {
+    const bookingData = {
+      user_id: userStore.user?.id,
+      doctor_id: doctor_id,
+      date: store.formData.date,
+      duration: {
+        start: store.formData.time?.userTime?.start,
+        end: store.formData.time?.userTime?.end
+      },
+      patient_name: store.formData.name,
+      patient_email: store.formData.email,
+      patient_phone: store.formData.phone,
+      patient_timezone: userTimezone.value,
+      doctor_timezone: doctorTimezone.value,
+      scheduled_at_utc: store.formData.time?.utc?.start,
+      notes: store.formData.notes,
+      status: 'pending_payment', // Start as pending payment
+    }
+
+    // useFetch returns { data, error, pending }
+    const { data: responseData, error: fetchError } = await postBookingLaravel(bookingData)
+    
+    // Check for fetch error
+    if (fetchError.value) {
+      console.error('Fetch error:', fetchError.value)
+      throw new Error(fetchError.value?.message || 'Failed to create consultation')
+    }
+    
+    // responseData.value contains the actual API response
+    // API returns { data: { id: 11, ... } }
+    const consultation = responseData.value?.data || responseData.value
+    const consultationId = consultation?.id
+    
+    if (consultationId) {
+      store.setConsultationId(consultationId)
+      console.log('Consultation created with ID:', consultationId)
+      console.log('Consultation details:', consultation)
+      
+      // Move to payment step
+      store.nextStep()
+    } else {
+      console.error('Unexpected response structure:', responseData.value)
+      throw new Error('Failed to create consultation - no ID returned')
+    }
+  } catch (error) {
+    console.error('Error creating consultation:', error)
+    errorMessage.value = error?.message || 'Failed to create consultation. Please try again.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -205,6 +239,22 @@ const confirmBooking = () => {
   svg {
     flex-shrink: 0;
     color: var(--color-primary);
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #dc2626;
+  color: #dc2626;
+  font-size: 0.9rem;
+  
+  svg {
+    flex-shrink: 0;
   }
 }
 

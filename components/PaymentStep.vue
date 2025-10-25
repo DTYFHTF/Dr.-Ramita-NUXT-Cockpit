@@ -1,99 +1,86 @@
 <template>
   <div class="payment-step">
-    <!-- Header -->
-    <div class="payment-header">
-      <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ title }}</h3>
-      <p v-if="description" class="text-gray-600 mb-6">{{ description }}</p>
-    </div>
+    <!-- Payment Summary Card -->
+    <div class="payment-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <LucideIcon icon="mdi:credit-card-outline" :size="32" />
+        </div>
+        <h3>{{ title }}</h3>
+        <p v-if="description">{{ description }}</p>
+      </div>
 
-    <!-- Payment Summary -->
-    <div class="payment-summary bg-gray-50 rounded-lg p-6 mb-6">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-gray-700 font-medium">Amount to Pay:</span>
-        <span class="text-2xl font-bold text-green-600">{{ formattedAmount }}</span>
+      <!-- Amount Display -->
+      <div class="amount-section">
+        <span class="amount-label">Total Amount</span>
+        <span class="amount-value">{{ formattedAmount }}</span>
       </div>
 
       <!-- Additional details slot -->
-      <slot name="details"></slot>
+      <div v-if="$slots.details" class="details-section">
+        <slot name="details"></slot>
+      </div>
 
-      <!-- TTL Timer -->
-      <div v-if="expiresAt && !isPaid" class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-        <div class="flex items-center gap-2 text-sm text-yellow-800">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-          </svg>
-          <span>Time remaining: {{ timeRemaining }}</span>
-        </div>
+      <!-- Timer -->
+      <div v-if="expiresAt && !isPaid" class="timer-section">
+        <LucideIcon icon="mdi:clock-outline" :size="18" />
+        <span>Complete payment within {{ timeRemaining }}</span>
       </div>
     </div>
 
-    <!-- Payment Status -->
-    <div v-if="paymentStatus === 'processing'" class="mb-6">
-      <div class="flex items-center justify-center gap-3 p-4 bg-blue-50 rounded-lg">
-        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-        <span class="text-blue-700 font-medium">Processing payment...</span>
-      </div>
+    <!-- Payment Status Messages -->
+    <div v-if="paymentStatus === 'processing'" class="status-message processing">
+      <div class="spinner"></div>
+      <span>Processing your payment...</span>
     </div>
 
-    <div v-if="paymentStatus === 'success'" class="mb-6">
-      <div class="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-        <span class="text-green-700 font-medium">Payment successful!</span>
-      </div>
+    <div v-if="paymentStatus === 'success'" class="status-message success">
+      <LucideIcon icon="mdi:check-circle" :size="24" />
+      <span>Payment completed successfully!</span>
     </div>
 
-    <div v-if="paymentStatus === 'failed'" class="mb-6">
-      <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
-        <div class="flex items-center gap-3 mb-2">
-          <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-          </svg>
-          <span class="text-red-700 font-medium">Payment failed</span>
-        </div>
-        <p v-if="errorMessage" class="text-sm text-red-600 ml-9">{{ errorMessage }}</p>
+    <div v-if="paymentStatus === 'failed'" class="status-message error">
+      <LucideIcon icon="mdi:alert-circle" :size="24" />
+      <div class="error-content">
+        <span class="error-title">Payment Failed</span>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
     </div>
 
     <!-- Action Buttons -->
-    <div class="payment-actions flex gap-4">
-      <button
-        v-if="!isPaid && paymentStatus !== 'processing'"
-        @click="initiatePayment"
-        :disabled="isProcessing || isPaid"
-        class="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-      >
-        <svg v-if="!isProcessing" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        <div v-else class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-        <span>{{ isProcessing ? 'Processing...' : 'Pay Now' }}</span>
-      </button>
-
+    <div class="step-navigation">
       <button
         v-if="showBackButton && !isPaid"
         @click="$emit('back')"
         :disabled="isProcessing"
-        class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+        class="btn btn-smooth-outline"
       >
         Back
       </button>
+
+      <button
+        v-if="!isPaid && paymentStatus !== 'processing'"
+        @click="initiatePayment"
+        :disabled="isProcessing || isPaid"
+        class="btn btn-smooth-success"
+      >
+        <LucideIcon v-if="!isProcessing" icon="mdi:lock-check" :size="18" />
+        <div v-else class="spinner-small"></div>
+        <span>{{ isProcessing ? 'Processing...' : 'Proceed to Pay' }}</span>
+      </button>
     </div>
 
-    <!-- Secure Payment Notice -->
-    <div class="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500">
-      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-      </svg>
-      <span>Secured by Razorpay | All transactions are encrypted</span>
+    <!-- Security Notice -->
+    <div class="security-notice">
+      <LucideIcon icon="mdi:shield-check" :size="16" />
+      <span>Secured by Razorpay • 256-bit SSL encryption</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { usePayment, type PaymentResult } from '~/composables/usePayment'
+import { usePayment, type PaymentResult } from '@/composables/usePayment'
 
 interface Props {
   payableType: string
@@ -209,8 +196,218 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .payment-step {
-  @apply max-w-2xl mx-auto;
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--text-primary);
+}
+
+.payment-card {
+  background: var(--background-white);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  .header-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+}
+
+.amount-section {
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-secondary-rgb), 0.05));
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  
+  .amount-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  
+  .amount-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-family: $font-primary;
+  }
+}
+
+.details-section {
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.timer-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  :deep(svg) {
+    color: #f59e0b;
+  }
+}
+
+.status-message {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  
+  &.processing {
+    background: #dbeafe;
+    border: 1px solid #60a5fa;
+    color: #1e40af;
+  }
+  
+  &.success {
+    background: #d1fae5;
+    border: 1px solid #34d399;
+    color: #065f46;
+    
+    :deep(svg) {
+      color: #10b981;
+    }
+  }
+  
+  &.error {
+    background: #fee2e2;
+    border: 1px solid #f87171;
+    color: #991b1b;
+    
+    :deep(svg) {
+      color: #dc2626;
+      flex-shrink: 0;
+    }
+    
+    .error-content {
+      flex: 1;
+      
+      .error-title {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #7f1d1d;
+      }
+    }
+  }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(30, 64, 175, 0.3);
+  border-top-color: #1e40af;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-small {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.security-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.813rem;
+  
+  :deep(svg) {
+    color: var(--color-primary);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .payment-card {
+    padding: 1.5rem;
+  }
+  
+  .amount-section {
+    .amount-value {
+      font-size: 2rem;
+    }
+  }
+  
+  .step-navigation {
+    flex-direction: column;
+    
+    .btn {
+      width: 100%;
+    }
+  }
 }
 </style>

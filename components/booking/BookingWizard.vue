@@ -37,19 +37,29 @@ import DateStep from './DateStep.vue'
 import TimeStep from './TimeStep.vue'
 import DetailsStep from './DetailsStep.vue'
 import SummaryStep from './SummaryStep.vue'
+import ConsultationPaymentStep from './ConsultationPaymentStep.vue'
 import SuccessStep from './SuccessStep.vue'
 
 const store = useBookingStore()
 
 const steps = [
-  { number: 1, label: 'Choose Doctor' },
+  { number: 1, label: 'Choose Expert' },
   { number: 2, label: 'Select Date' },
   { number: 3, label: 'Choose Time' },
   { number: 4, label: 'Your Details' },
-  { number: 5, label: 'Confirmation' }
+  { number: 5, label: 'Review' },
+  { number: 6, label: 'Payment' }
 ]
 
-const stepComponents = [DoctorSelectionStep, DateStep, TimeStep, DetailsStep, SummaryStep, SuccessStep]
+const stepComponents = [
+  DoctorSelectionStep,
+  DateStep,
+  TimeStep,
+  DetailsStep,
+  SummaryStep,
+  ConsultationPaymentStep,
+  SuccessStep
+]
 
 const currentStepComponent = computed(() => {
   return stepComponents[store.currentStep - 1] || DateStep
