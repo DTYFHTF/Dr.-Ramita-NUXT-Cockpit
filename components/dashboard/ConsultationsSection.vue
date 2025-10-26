@@ -271,6 +271,7 @@ onMounted(fetchConsultations)
   }
 }
 
+
 .consultation-details {
   .detail-row {
     display: flex;
@@ -297,21 +298,9 @@ onMounted(fetchConsultations)
   }
 }
 
-@media (max-width: 768px) {
-  .table {
-    font-size: 0.875rem;
-    background: var(--background-white) !important;
-  }
 
-  .consultation-details {
-    .detail-row {
-      flex-direction: column;
-      gap: 0.25rem;
-
-      .detail-value {
-        text-align: left;
-      }
-    }
-  }
+.btn{
+    color: var(--text-primary);
 }
+
 </style>

@@ -27,6 +27,7 @@
                             <td>{{ order.cart.length }}</td>
                             <td>
                                 <NuxtLink :to="`/order/${order.id}`" class="btn btn-sm btn-smooth-outline p-2">
+                                    <LucideIcon icon="mdi:eye" :size="16" class="me-1" />
                                     View Details
                                 </NuxtLink>
                             </td>
@@ -85,5 +86,8 @@ onMounted(fetchOrders);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
   }
+}
+.btn{
+    color: var(--text-primary);
 }
 </style>
