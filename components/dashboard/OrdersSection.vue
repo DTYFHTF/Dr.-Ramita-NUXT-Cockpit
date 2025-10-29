@@ -89,5 +89,5 @@ onMounted(fetchOrders);
 }
 .btn-smooth-outline{
   color: var(--color-primary);
-}
+} 
 </style>

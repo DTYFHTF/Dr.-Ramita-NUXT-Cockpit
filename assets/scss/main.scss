@@ -240,6 +240,8 @@ select {
   border-radius: 12px;
   font-size: 1rem;
   color: var(--text-primary);
+  /* Ensure input background follows the current theme (light/dark) so text remains readable */
+  background: var(--background-white);
   transition: all 0.2s ease;
   font-family: inherit;
   
@@ -250,8 +252,9 @@ select {
   }
   
   &::placeholder {
-    color: var(--text-primary);
-    opacity: 0.8;
+    /* Use a less prominent color for placeholders that adapts to theme */
+    color: var(--text-secondary);
+    opacity: 0.9;
   }
   
   &:disabled {

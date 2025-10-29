@@ -552,7 +552,6 @@ watch(showProfileEdit, (newVal) => {
 .form-input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease;
@@ -566,9 +565,22 @@ watch(showProfileEdit, (newVal) => {
   }
 }
 
-.text-muted {
-  color: var(--text-muted, #6c757d) !important;
+
+
+/* Ensure date inputs in the modal keep native appearance and have space for the icon */
+.modal-content input[type="date"],
+input[type="date"].form-input {
 }
+
+/* Center the Select/Change Image buttons under the avatar preview */
+.modal-body .text-center > .mt-2 {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 
 .spinner-border {
   width: 2rem;
@@ -585,15 +597,4 @@ watch(showProfileEdit, (newVal) => {
   }
 }
 
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
 </style>
