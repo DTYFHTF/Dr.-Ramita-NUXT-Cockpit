@@ -72,7 +72,7 @@
                 style="max-height: 600px; object-fit: cover" />
             </div>
             <div class="col-lg-4">
-              <SimilarReads :posts="latestPosts" />
+                            <SimilarReads :posts="latestPosts" basePath="/blog/yoganmeditation" />
             </div>
           </div>
         </div>

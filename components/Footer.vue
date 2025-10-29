@@ -9,7 +9,7 @@
               <SmoothLink to="courses" fallbackRoute="/courses">Courses</SmoothLink>
             </li>
             <li>
-              <SmoothLink to="ynm" fallbackRoute="/yoganmeditation">Yoga & Meditation</SmoothLink>
+              <SmoothLink to="ynm" fallbackRoute="/blog/yoganmeditation">Yoga & Meditation</SmoothLink>
             </li>
             <li>
               <NuxtLink to="/glossary">Glossary</NuxtLink>

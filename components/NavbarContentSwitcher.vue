@@ -124,9 +124,9 @@ onUnmounted(() => {
 });
 
 const blogDropdownItems = [
-  { type: 'link', routeName: 'ynm', fallbackRoute: '/yoganmeditation', icon: 'mdi:meditation', label: 'Yoga & Meditation' },
-  { type: 'link', routeName: 'recipes', fallbackRoute: '/recipe', icon: 'mdi:chef-hat', label: 'Recipes' },
-  { type: 'link', routeName: 'home-remedies', fallbackRoute: '/homeremedy', icon: 'mdi:leaf', label: 'Home Remedies' }
+  { type: 'link', routeName: 'ynm', fallbackRoute: '/blog/yoganmeditation', icon: 'mdi:meditation', label: 'Yoga & Meditation' },
+  { type: 'link', routeName: 'recipes', fallbackRoute: '/blog/recipe', icon: 'mdi:chef-hat', label: 'Recipes' },
+  { type: 'link', routeName: 'home-remedies', fallbackRoute: '/blog/homeremedy', icon: 'mdi:leaf', label: 'Home Remedies' }
 ];
 
 const showBlogDropdown = ref(false);

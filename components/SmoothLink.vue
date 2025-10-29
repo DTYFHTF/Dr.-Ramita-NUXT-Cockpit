@@ -21,10 +21,12 @@ function handleClick(e) {
   e.preventDefault();
   if (!isClient.value) return; // Prevent logic from firing during SSR
 
-  if (route.path === '/') {
+  // Check if we're on the main page (either / or /info)
+  if (route.path === '/' || route.path === '/info') {
     scrollToId();
   } else {
-    router.push('/').then(() => {
+    // Navigate to /info (the page with sections) then scroll
+    router.push('/info').then(() => {
       setTimeout(scrollToId, 300);
     });
   }

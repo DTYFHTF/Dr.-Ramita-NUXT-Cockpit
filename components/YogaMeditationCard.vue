@@ -5,7 +5,7 @@
     :image="image || '/placeholder-yoga.jpg'"
     :imageAlt="title"
     :badge="tags[0] || 'Uncategorized'"
-    :link="`blog/yoganmeditation/${slug}`"
+    :link="`/blog/yoganmeditation/${slug}`"
     customClass="yoga-card"
   >
     <template #meta>
@@ -17,7 +17,7 @@
     <template #button>
       <NuxtLink 
         v-if="slug"
-        :to="`blog/yoganmeditation/${slug}`"
+        :to="`/blog/yoganmeditation/${slug}`"
         class="btn-smooth-success mt-auto w-100"
       >
         Being Practice

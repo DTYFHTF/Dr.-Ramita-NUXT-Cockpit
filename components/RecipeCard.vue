@@ -5,7 +5,7 @@
     :image="image || '/placeholder-recipe.jpg'"
     :imageAlt="title"
     :badge="category || 'Uncategorized'"
-    :link="slug ? `blog/recipe/${slug}` : null"
+    :link="slug ? `/blog/recipe/${slug}` : null"
     customClass="recipe-card"
   >
     <template #meta>
@@ -21,7 +21,7 @@
     <template #button>
       <NuxtLink
         v-if="slug"
-        :to="`blog/recipe/${slug}`"
+        :to="`/blog/recipe/${slug}`"
         class="btn-smooth-success mt-auto w-100"
       >
         Explore Recipe

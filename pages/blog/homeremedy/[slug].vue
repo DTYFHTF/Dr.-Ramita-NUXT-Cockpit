@@ -63,7 +63,7 @@
             <!-- Similar Reads Column (Temporarily Commented Out) -->
             
             <div class="col-lg-4">
-              <SimilarReads :posts="latestPosts" basePath="/homeremedy" />
+              <SimilarReads :posts="latestPosts" basePath="/blog/homeremedy" />
             </div>
            
           </div>

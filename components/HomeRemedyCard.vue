@@ -5,13 +5,13 @@
     :image="image || '/placeholder-remedy.jpg'"
     :imageAlt="diseaseName"
     :badge="dosha[0] || 'Uncategorized'"
-    :link="slug ? `blog/homeremedy/${slug}` : null"
+    :link="slug ? `/blog/homeremedy/${slug}` : null"
     customClass="home-remedy-card"
   >
     <template #button>
       <NuxtLink 
         v-if="slug"
-        :to="`blog/homeremedy/${slug}`"
+        :to="`/blog/homeremedy/${slug}`"
         class="btn-smooth-success mt-auto w-100"
       >
         Explore Remedy
