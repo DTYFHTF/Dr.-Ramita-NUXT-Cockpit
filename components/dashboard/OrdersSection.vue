@@ -87,7 +87,7 @@ onMounted(fetchOrders);
     border: 1px solid var(--border-color);
   }
 }
-.btn{
-    color: var(--text-primary);
+.btn-smooth-outline{
+  color: var(--color-primary);
 }
 </style>

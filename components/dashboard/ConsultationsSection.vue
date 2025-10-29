@@ -300,7 +300,7 @@ onMounted(fetchConsultations)
 
 
 .btn{
-    color: var(--text-primary);
+  color: var(--color-primary);
 }
 
 </style>

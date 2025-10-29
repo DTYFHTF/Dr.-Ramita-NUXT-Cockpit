@@ -241,6 +241,10 @@ const resetBooking = () => {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+  color: white;
+}
+.btn-smooth-outline{
+  color: var(--color-primary);
 }
 
 .step-title {
