@@ -143,15 +143,13 @@
           </BaseModal>
           
           <!-- Success Modal -->
-          <BaseModal :show="enrollmentSuccess" @close="enrollmentSuccess = false">
-            <div class="text-center py-4">
-              <h3 class="mb-3 text-success">Enrollment Successful!</h3>
-              <p>{{ successMessage }}</p>
-              <button class="btn btn-smooth-primary mt-3" @click="enrollmentSuccess = false">
-                Close
-              </button>
-            </div>
-          </BaseModal>
+          <SuccessModal
+            :show="enrollmentSuccess"
+            type="enrollment"
+            :message="successMessage"
+            action-text="Start Learning"
+            @close="enrollmentSuccess = false"
+          />
         </footer>
       </div>
     </article>
@@ -168,6 +166,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import BaseModal from '@/components/BaseModal.vue';
 import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
+import SuccessModal from '@/components/SuccessModal.vue';
 
 const showEnrollModal = ref(false);
 const enrollmentSuccess = ref(false);

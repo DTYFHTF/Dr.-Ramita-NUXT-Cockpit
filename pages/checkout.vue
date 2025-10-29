@@ -123,7 +123,7 @@
             <div class="summary-items">
               <div v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="summary-item">
                 <div class="summary-item-image">
-                  <img :src="item.image || '/placeholder-product.jpg'" :alt="item.name" class="summary-img" />
+                  <img :src="getImageUrl(item.image)" :alt="item.name" class="summary-img" />
                 </div>
                 <div class="item-info">
                   <span class="item-name">{{ item.name }}</span>
@@ -169,8 +169,20 @@ const { cart, totalPrice } = cartStore;
 const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const baseUrl = config.public.baseUrl;
 const userStore = useUserStore();
 const { initiatePayment, verifyPayment } = useRazorpay();
+
+// Helper function to get full image URL
+const getImageUrl = (imagePath: string | null | undefined) => {
+  if (!imagePath) return '/placeholder-product.jpg';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  // Construct full URL from base URL (ensure no double slashes)
+  const base = baseUrl?.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  return `${base}/storage/${imagePath}`;
+};
 
 const shipping = ref<ShippingInfo>({
   name: '',
@@ -298,7 +310,15 @@ const submitOrder = async () => {
         router.push('/login');
       }, 2000);
     } else if (e?.status === 422) {
-      errorMessage.value = e?.data?.message || 'Validation error. Please check your input.';
+      // Show validation errors if available
+      if (e?.data?.errors) {
+        const errors = e.data.errors;
+        const errorMessages = Object.keys(errors).map(key => `${key}: ${errors[key].join(', ')}`);
+        errorMessage.value = 'Validation errors:\n' + errorMessages.join('\n');
+        console.error('Validation errors:', errors);
+      } else {
+        errorMessage.value = e?.data?.message || 'Validation error. Please check your input.';
+      }
     } else if (e?.status === 500) {
       errorMessage.value = 'Server error. Please try again later.';
     } else {

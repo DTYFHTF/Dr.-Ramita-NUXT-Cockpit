@@ -44,5 +44,10 @@ const close = () => emit('close')
   font-size: 2rem;
   color: var(--text-muted);
   cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--text-primary);
+  }
 }
 </style>

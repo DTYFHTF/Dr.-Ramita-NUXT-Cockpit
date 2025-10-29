@@ -3,7 +3,7 @@
     <div class="container">
       <div class="d-flex align-items-center w-100">
         <!-- Brand/Logo -->
-        <NuxtLink to="/new-home" class="navbar-brand d-flex align-items-center flex-shrink-0">
+        <NuxtLink to="/" class="navbar-brand d-flex align-items-center flex-shrink-0">
           <img
             src="/rishipath-logo.png"
             alt="Rishipath Logo"

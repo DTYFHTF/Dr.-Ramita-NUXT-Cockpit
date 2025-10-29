@@ -211,15 +211,13 @@
                     </BaseModal>
                     
                     <!-- Success Modal -->
-                    <BaseModal :show="registrationSuccess" @close="registrationSuccess = false">
-                      <div class="text-center py-4">
-                        <h3 class="mb-3 text-success">Registration Successful!</h3>
-                        <p>{{ successMessage }}</p>
-                        <button class="btn btn-smooth-primary mt-3" @click="registrationSuccess = false">
-                          Close
-                        </button>
-                      </div>
-                    </BaseModal>
+                    <SuccessModal
+                      :show="registrationSuccess"
+                      type="registration"
+                      :message="successMessage"
+                      action-text="View Event Details"
+                      @close="registrationSuccess = false"
+                    />
                   </template>
 
                   <button v-else-if="isEventFull" class="book-now-btn disabled" disabled>
@@ -249,6 +247,7 @@ import DynamicContent from '@/components/DynamicContent.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import EventRegistrationForm from '@/components/EventRegistrationForm.vue'
 import BaseModal from '@/components/BaseModal.vue'
+import SuccessModal from '@/components/SuccessModal.vue'
 
 const showRegistration = ref(false)
 const registrationSuccess = ref(false)

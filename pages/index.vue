@@ -1,158 +1,214 @@
+
 <template>
   <div>
-    <HeroSection />
+    <!-- Main Banner Carousel -->
+    <BannerCarousel 
+      v-if="banners.length > 0"
+      :banners="banners" 
+      :loading="homepageLoading" 
+      :error="homepageError" 
+    />
 
-    <!-- Courses Section --> 
-    <IndexSection
-    section-id="courses"
-    bg-class="bg-herbal-light"
-    title="Our Courses"
-    subtitle="Learn ancient wisdom and modern wellness practices"
-    :items="limitedCourses"
-    :card-component="CourseCard"
-    :view-more-handler="goToCoursesPage"
-  />
+    <div class="container">
+      <!-- Featured Categories -->
+      <FeaturedCategories 
+        v-if="featuredCategories.length > 0"
+        :categories="featuredCategories" 
+        :loading="homepageLoading" 
+      />
 
-    <!-- Yoga & Meditation Section -->
-    <IndexSection
-    section-id="ynm"
-    bg-class="bg-sandal-light"
-    title="Yoga and Meditation"
-    subtitle="Transform your mind and body through ancient practices"
-    :items="limitedYoganmeditation"
-    :card-component="YogaMeditationCard"
-    :view-more-handler="goToYoganMeditationPage"
-  />
+      <!-- Mid Banners -->
+      <BannerMidGrid 
+        v-if="bannersMid.length > 0"
+        :banners="bannersMid" 
+      />
+    </div>
 
-    <!-- Recipes Section -->
-    <IndexSection
-    section-id="recipes"
-    bg-class="bg-herbal-light"
-    title="Our Recipes"
-    subtitle="Discover ancient recipes and modern wellness practices"
-    :items="limitedRecipies"
-    :card-component="RecipeCard"
-    :view-more-handler="goToRecipesPage"
-  />
+    <!-- Top Featured Products -->
+    <GenericSlider 
+      title="Top Featured"
+      :items="topFeaturedProducts" 
+      :loading="productsLoading"
+      :card-component="ProductCard"
+      card-props-key="product"
+      section-class="featured"
+      title-class="featured"
+      view-all-url="/products?collection=featured"
+    />
+<!-- Daily & Seasonal Products -->
+    <GenericSlider 
+      :title="dailySeasonalTitle"
+      :items="dailySeasonalItems"
+      :loading="homepageLoading"
+      :card-component="dailySeasonalCardComponent"
+      :card-props-key="dailySeasonalCardPropsKey"
+      :view-all-url="dailySeasonalViewAllUrl"
+    />
+    <!-- Most Searched -->
+    <MostSearched 
+      :section-data="mostSearchedSection"
+    />
 
-    <!-- Home Remedies Section -->
-    <IndexSection
-    section-id="home-remedies"
-    bg-class="bg-sandal-light"
-    title="Home Remedies"
-    subtitle="Explore natural remedies for holistic health"
-    :items="limitedHomeRemedy"
-    :card-component="HomeRemedyCard"
-    :view-more-handler="goToHomeRemediesPage"
-  />
+    
+    <!-- Best Selling Products -->
+    <GenericSlider 
+      title="Best Selling Products"
+      :items="bestSellingProducts" 
+      :loading="productsLoading"
+      :card-component="ProductCard"
+      card-props-key="product"
+      view-all-url="/products?collection=bestselling"
+    />
 
-    <!-- Products Section -->
-    <IndexSection
-    section-id="products"
-    bg-class="bg-herbal-light"
-    title="Featured Products"
-    subtitle="Discover authentic Ayurvedic products for your wellness journey"
-    :items="limitedProducts"
-    :card-component="ProductCard"
-    :view-more-handler="goToProductsPage"
-  />
 
-    <!-- Events Section -->
-    <IndexSection
-    section-id="events"
-    bg-class="bg-sandal-light"
-    title="Upcoming Events"
-    subtitle="Join us for workshops, seminars, and wellness gatherings"
-    :items="limitedEvents"
-    :card-component="EventCard"
-    :view-more-handler="goToEventsPage"
-  />
+    <!-- Top Deals & Offers -->
+    
+    <TopDealsOffers :deals="topDeals" />
 
-  <BookingWizard />
+  <!-- Promotional Banners removed -->
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
-import { useApiLaravel } from '@/composables/useApi.js'
-import { useBookingStore } from "~/stores/booking";
-import HomeRemedyCard from '@/components/HomeRemedyCard.vue'
-import RecipeCard from '@/components/RecipeCard.vue'
-import YogaMeditationCard from '@/components/YogaMeditationCard.vue'
-import CourseCard from '@/components/CourseCard.vue'
-import ProductCard from '@/components/ProductCard.vue'
-import EventCard from '@/components/EventCard.vue'
-import { useImageUrl } from '@/composables/useImageUrl.js'
-import { useProducts } from '@/composables/useProducts.ts'
+import BannerCarousel from '@/components/BannerCarousel.vue';
+import FeaturedCategories from '@/components/categories/FeaturedCategories.vue';
+import BannerMidGrid from '@/components/BannerMidGrid.vue';
+import GenericSlider from '@/components/GenericSlider.vue';
+import CategoryCard from '@/components/CategoryCard.vue';
+import MostSearched from '@/components/MostSearched.vue';
+import TopDealsOffers from '@/components/TopDealsOffers.vue';
+import ProductCard from '@/components/ProductCard.vue';
+import { useApiLaravel } from '@/composables/useApi.js';
+import { useImageUrl } from '@/composables/useImageUrl.js';
+import { useProducts } from '@/composables/useProducts.ts';
+import { computed, ref, onMounted } from 'vue';
 
-const store = useBookingStore();
-
-// API data fetching
-const { data: coursesData, error: coursesError, loading: coursesLoading } = useApiLaravel('courses');
-const { data: yoganmeditationData, error: yoganmeditationError, loading: yoganmeditationLoading } = useApiLaravel('yoga-meditations');
-const { data: recipesData, error: recipesError, loading: recipesLoading } = useApiLaravel('recipes');
-const { data: homeRemediesData, error: homeRemediesError, loading: homeRemediesLoading } = useApiLaravel('home-remedies');
-
-// Products and Events
-const { products, fetchProducts } = useProducts();
-const { data: eventsData, error: eventsError, loading: eventsLoading } = useApiLaravel('events');
-
-
+const { data: homepageData, error: homepageError, loading: homepageLoading } = useApiLaravel('homepage');
 const { getImageUrl } = useImageUrl();
 
+const { 
+  loading: productsLoading,
+  fetchProducts,
+  fetchBestSellingProducts,
+  fetchFeaturedProducts
+} = useProducts();
 
-const addImageUrl = (item, fallback = '/placeholder-remedy.jpg') => {
-  // For events, ensure 'image' is always a valid URL
-  let img = item.image || item.event_image || item.img || '';
-  // If already a full URL, use as is
+const bestSellingProductsData = ref([]);
+const featuredProductsData = ref([]);
+
+onMounted(async () => {
+  try {
+    await fetchProducts(1, 12);
+    bestSellingProductsData.value = await fetchBestSellingProducts(12);
+    featuredProductsData.value = await fetchFeaturedProducts(12);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
+});
+
+const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
+  const img = item.promotion_image ?? item.image ?? '';
   if (typeof img === 'string' && img.startsWith('http')) {
     return { ...item, image: img };
   }
-  // Otherwise, use getImageUrl to resolve relative paths or fallback
   return { ...item, image: getImageUrl(img, fallback) };
 };
 
-const coursesWithImages = computed(() => coursesData.value?.data?.map(i => addImageUrl(i, '/placeholder-course.jpg')) || []);
-const yoganmeditationWithImages = computed(() => yoganmeditationData.value?.data?.map(i => addImageUrl(i, '/placeholder-yoga.jpg')) || []);
-const recipesWithImages = computed(() => recipesData.value?.data?.map(i => addImageUrl(i, '/placeholder-recipe.jpg')) || []);
-const homeRemediesWithImages = computed(() => homeRemediesData.value?.data?.map(i => addImageUrl(i, '/placeholder-remedy.jpg')) || []);
-const productsWithImages = computed(() => {
-  if (!products.value || !Array.isArray(products.value)) return [];
-  return products.value.map(i => ({ product: addImageUrl(i, '/placeholder-product.jpg') }));
-});
-const eventsWithImages = computed(() => {
-  if (!eventsData.value?.data || !Array.isArray(eventsData.value.data)) return [];
-  return eventsData.value.data.map(i => addImageUrl(i, '/placeholder-event.jpg'));
+const banners = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'banner_main');
+  if (!section || !Array.isArray(section.data?.banners)) return [];
+  return section.data.banners.map(b => addImageUrl(b, '/placeholder-banner.jpg'));
 });
 
+const featuredCategories = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'auto_featured_categories');
+  if (!section || !Array.isArray(section.data?.categories)) return [];
+  return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
+});
 
-const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
-const limitedYoganmeditation = computed(() => yoganmeditationWithImages.value.slice(0, 3));
-const limitedRecipies = computed(() => recipesWithImages.value.slice(0, 3));
-const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3));
-const limitedProducts = computed(() => {
-  const arr = [...productsWithImages.value];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+const bannersMid = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'banner_mid');
+  if (!section || !Array.isArray(section.data?.banners)) return [];
+  return section.data.banners.map(b => addImageUrl(b, '/placeholder-banner.jpg'));
+});
+
+const topFeaturedProducts = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'featured_products' || s.type === 'auto_featured_products');
+  if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
+    return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  return arr.slice(0, 3);
-});
-const limitedEvents = computed(() => eventsWithImages.value.slice(0, 3));
-
-
-const goToCoursesPage = () => navigateTo("/course");
-const goToYoganMeditationPage = () => navigateTo("blog/yoganmeditation");
-const goToRecipesPage = () => navigateTo("blog/recipe");
-const goToHomeRemediesPage = () => navigateTo("blog/homeremedy");
-const goToProductsPage = () => navigateTo("/products");
-const goToEventsPage = () => navigateTo("/event");
-
-// Fetch products and events on component mount
-onMounted(async () => {
-  await fetchProducts(1, 6); // Fetch first 6 products
-  // Events are automatically fetched by useApiLaravel
+  return featuredProductsData.value || [];
 });
 
+const bestSellingProducts = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'best_selling_products');
+  
+  if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
+    return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
+  }
+  return bestSellingProductsData.value || [];
+});
+
+const mostSearchedSection = computed(() => {
+  return (homepageData.value?.sections || []).find(s => s.type === 'most_searched');
+});
+
+const dailySeasonalSection = computed(() => {
+  return (homepageData.value?.sections || []).find(s => s.type === 'daily_seasonal');
+});
+
+const dailySeasonalTitle = computed(() => {
+  return dailySeasonalSection.value?.data?.title || 'Daily & Seasonal Products';
+});
+
+const dailySeasonalItems = computed(() => {
+  if (!dailySeasonalSection.value) return [];
+  
+  if (Array.isArray(dailySeasonalSection.value.data?.deals) && dailySeasonalSection.value.data.deals.length) {
+    return dailySeasonalSection.value.data.deals.map(promo => {
+      const card = addImageUrl(promo, '/placeholder-banner.jpg');
+      return {
+        ...card,
+        subtitle: card.description || '',
+        link: card.url || '/promotions'
+      };
+    });
+  }
+  
+  return [];
+});
+
+const dailySeasonalCardComponent = computed(() => CategoryCard);
+
+const dailySeasonalCardPropsKey = computed(() => 'category');
+
+const dailySeasonalViewAllUrl = computed(() => {
+  const section = dailySeasonalSection.value;
+  if (!section || !section.data) return null;
+
+  const deals = Array.isArray(section.data.deals) ? section.data.deals : [];
+  const promotionSlugs = deals.map(d => d.promotion_slug).filter(Boolean);
+
+  if (promotionSlugs.length === 0) return null;
+
+  const promotionsParam = promotionSlugs.join(',');
+  const collectionName = encodeURIComponent(section.data.title || 'Seasonal Products');
+  
+  return `/products?promotions=${promotionsParam}&collection=${collectionName}&source=seasonal`;
+});
+
+const topDeals = computed(() => {
+  const section = (homepageData.value?.sections || []).find(s => s.type === 'top_deals');
+  
+  if (section && Array.isArray(section.data?.deals)) {
+    return section.data.deals.map(d => ({
+      ...d,
+      image: d.image || '/placeholder-banner.jpg'
+    }));
+  }
+  return [];
+});
 </script>
 
+<style scoped lang="scss">
+</style>
