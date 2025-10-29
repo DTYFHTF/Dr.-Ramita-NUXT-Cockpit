@@ -27,6 +27,7 @@
         <DropDownItems :items="[
           { type: 'link', to: '/dashboard', icon: 'mdi:user', label: 'Dashboard' },
           { type: 'link', to: { path: '/dashboard', query: { tab: 'orders' } }, icon: 'mdi:history', label: 'Order History' },
+          { type: 'link', to: { path: '/dashboard', query: { tab: 'consultations' } }, icon: 'mdi:stethoscope', label: 'My Consultations' },
           { type: 'link', to: { path: '/dashboard', query: { tab: 'wishlist' } }, icon: 'mdi:heart', label: 'Wishlist' },
           { type: 'divider' },
           { type: 'link', to: '/', icon: 'mdi:home', label: 'Home' },
