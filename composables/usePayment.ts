@@ -285,8 +285,8 @@ export const usePayment = (options: UsePaymentOptions = {}) => {
           key: razorpayKey,
           amount: orderData.amount,
           currency: orderData.currency,
-          order_id: orderData.order_id,
-          name: 'Dr. Ramita Ayurveda',
+          order_id: orderData.order_id, 
+          name: 'Rishi Store',
           description: description || 'Payment',
           prefill: {
             name: customerName,

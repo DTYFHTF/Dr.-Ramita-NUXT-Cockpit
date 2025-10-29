@@ -141,12 +141,12 @@ const limitedProducts = computed(() => {
 const limitedEvents = computed(() => eventsWithImages.value.slice(0, 3));
 
 
-const goToCoursesPage = () => navigateTo("/course");
+const goToCoursesPage = () => navigateTo("/courses");
 const goToYoganMeditationPage = () => navigateTo("blog/yoganmeditation");
 const goToRecipesPage = () => navigateTo("blog/recipe");
 const goToHomeRemediesPage = () => navigateTo("blog/homeremedy");
 const goToProductsPage = () => navigateTo("/products");
-const goToEventsPage = () => navigateTo("/event");
+const goToEventsPage = () => navigateTo("/events");
 
 // Fetch products and events on component mount
 onMounted(async () => {

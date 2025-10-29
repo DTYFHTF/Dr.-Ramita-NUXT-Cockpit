@@ -11,7 +11,7 @@
     <template v-else>
       <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
         <li class="nav-item">
-          <SmoothLink to="courses" fallbackRoute="/course" class="nav-shared-link">Courses</SmoothLink>
+          <SmoothLink to="courses" fallbackRoute="/courses" class="nav-shared-link">Courses</SmoothLink>
         </li>
         <li class="nav-item">
           <NuxtLink to="/doctors" class="nav-shared-link">Doctors</NuxtLink>
@@ -32,7 +32,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <NuxtLink to="/event" class="nav-shared-link">Events</NuxtLink>
+          <NuxtLink to="/events" class="nav-shared-link">Events</NuxtLink>
         </li>
       </ul>
     </template>

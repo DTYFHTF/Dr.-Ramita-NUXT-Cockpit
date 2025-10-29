@@ -5,27 +5,31 @@
     :image="image || '/placeholder-course.jpg'"
     :imageAlt="title"
     :badge="price === 0 ? 'Free' : `₹ ${price}`"
-    :link="`/course/${slug}`"
+    :link="`/courses/${slug}`"
     customClass="course-card"
   >
     <template #meta>
-      <div class="meta-item">
-        <LucideIcon icon="mdi:book-open" class="icon" />
-        <span>{{ duration }}</span>
-      </div>
-      <div class="meta-item" v-if="level">
-        <LucideIcon icon="mdi:star" class="icon" />
-        <span>{{ level }}</span>
-      </div>
+      <slot name="meta">
+        <div class="meta-item">
+          <LucideIcon icon="mdi:book-open" class="icon" />
+          <span>{{ duration }}</span>
+        </div>
+        <div class="meta-item" v-if="level">
+          <LucideIcon icon="mdi:star" class="icon" />
+          <span>{{ level }}</span>
+        </div>
+      </slot>
     </template>
     <template #button>
-      <NuxtLink 
-        :to="`/course/${slug}`"
-        class="enroll-btn btn-smooth-primary"
-      >
-        Learn More
-        <LucideIcon icon="mdi:arrow-right-circle" color="white" class="btn-icon" />
-      </NuxtLink>
+      <slot name="button">
+        <NuxtLink 
+          :to="`/courses/${slug}`"
+          class="enroll-btn btn-smooth-primary"
+        >
+          Learn More
+          <LucideIcon icon="mdi:arrow-right-circle" color="white" class="btn-icon" />
+        </NuxtLink>
+      </slot>
     </template>
   </Card>
 </template>

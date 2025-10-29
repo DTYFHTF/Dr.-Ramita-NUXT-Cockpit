@@ -5,32 +5,35 @@
     :image="image || '/placeholder-event.jpg'"
     :imageAlt="title"
     :badge="getEventBadge()"
-    :link="slug ? `/event/${slug}` : null"
+    :link="slug ? `/events/${slug}` : null"
     customClass="event-card"
   >
     <template #meta>
-      <div class="meta-item">
-        <LucideIcon icon="mdi:currency-dollar" class="icon" />
-        <span>{{ price ? `$${price}` : 'Free' }}</span>
-      </div>
-      <div class="meta-item">
-        <LucideIcon icon="mdi:clock-outline" class="icon" />
-        <span>{{ time || 'TBA' }}</span>
-      </div>
-           
+      <slot name="meta">
+        <div class="meta-item">
+          <LucideIcon icon="mdi:currency-dollar" class="icon" />
+          <span>{{ price ? `$${price}` : 'Free' }}</span>
+        </div>
+        <div class="meta-item">
+          <LucideIcon icon="mdi:clock-outline" class="icon" />
+          <span>{{ time || 'TBA' }}</span>
+        </div>
+      </slot>
     </template>
     <template #button>
-      <NuxtLink
-        v-if="slug || id"
-        :to="`/event/${slug || id}`"
-        class="btn-smooth-primary mt-auto w-100"
-      >
-        View Event
-        <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon" />
-      </NuxtLink>
-      <div v-else class="btn-smooth disabled mt-auto w-100">
-        Event Link Unavailable
-      </div>
+      <slot name="button">
+        <NuxtLink
+          v-if="slug || id"
+          :to="`/events/${slug || id}`"
+          class="btn-smooth-primary mt-auto w-100"
+        >
+          View Event
+          <LucideIcon icon="mdi:arrow-right" color="white" class="btn-icon" />
+        </NuxtLink>
+        <div v-else class="btn-smooth disabled mt-auto w-100">
+          Event Link Unavailable
+        </div>
+      </slot>
     </template>
   </Card>
 </template>

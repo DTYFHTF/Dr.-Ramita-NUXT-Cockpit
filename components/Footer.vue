@@ -6,7 +6,7 @@
           <h4>Quick Links</h4>
           <ul>
             <li>            
-              <SmoothLink to="courses" fallbackRoute="/course">Courses</SmoothLink>
+              <SmoothLink to="courses" fallbackRoute="/courses">Courses</SmoothLink>
             </li>
             <li>
               <SmoothLink to="ynm" fallbackRoute="/yoganmeditation">Yoga & Meditation</SmoothLink>

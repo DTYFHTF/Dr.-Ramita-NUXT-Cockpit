@@ -140,9 +140,9 @@ const level1Categories = computed(() => {
 
 // SEO
 useSeoMeta({
-  title: 'Browse Categories - Dr. Ramita Ayurveda',
+  title: 'Browse Categories - Rishi Store',
   description: 'Explore our comprehensive collection of authentic Ayurvedic products organized by categories.',
-  ogTitle: 'Browse Categories - Dr. Ramita Ayurveda',
+  ogTitle: 'Browse Categories - Rishi Store',
   ogDescription: 'Explore our comprehensive collection of authentic Ayurvedic products organized by categories.',
   ogType: 'website',
 })

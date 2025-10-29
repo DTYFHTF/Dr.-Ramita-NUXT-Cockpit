@@ -46,8 +46,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useApiLaravel } from '@/composables/useApi.js'
+import { useUserStore } from '@/stores/user'
 
 const props = defineProps({
   courseSlug: {
@@ -57,6 +58,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['enrollment-success'])
+const userStore = useUserStore()
 
 const form = ref({
   name: '',
@@ -65,6 +67,15 @@ const form = ref({
 })
 const loading = ref(false)
 const error = ref('')
+
+// Pre-fill form with user data if logged in
+onMounted(() => {
+  if (userStore.user) {
+    form.value.name = `${userStore.user.first_name || ''} ${userStore.user.last_name || ''}`.trim() || userStore.user.name || ''
+    form.value.email = userStore.user.email || ''
+    form.value.phone = userStore.user.phone || ''
+  }
+})
 
 const submitForm = async () => {
   error.value = ''
@@ -78,11 +89,12 @@ const submitForm = async () => {
       body: { ...form.value },
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(userStore.token && { 'Authorization': `Bearer ${userStore.token}` })
       }
     });
     if (response?.message) {
-      form.value = { name: '', email: '', phone: '' };
+      // Don't reset form - keep user data for potential future enrollments
       // Emit success event to parent component
       emit('enrollment-success', response.message);
     }

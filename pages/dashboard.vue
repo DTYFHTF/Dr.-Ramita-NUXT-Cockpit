@@ -26,6 +26,20 @@
                   My Account
                 </button>
                 <button 
+                  @click="activeTab = 'courses'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'courses' }]"
+                >
+                  <LucideIcon icon="mdi:school" class="me-2" />
+                  My Courses
+                </button>
+                <button 
+                  @click="activeTab = 'events'" 
+                  :class="['sidebar-nav-item', { active: activeTab === 'events' }]"
+                >
+                  <LucideIcon icon="mdi:calendar-star" class="me-2" />
+                  My Events
+                </button>
+                <button 
                   @click="activeTab = 'consultations'" 
                   :class="['sidebar-nav-item', { active: activeTab === 'consultations' }]"
                 >
@@ -61,6 +75,14 @@
             <!-- Profile Information Tab -->
             <div v-if="activeTab === 'profile'" class="content-card">
               <AccountSection />
+            </div>
+            <!-- My Courses Tab -->
+            <div v-if="activeTab === 'courses'" class="content-card">
+              <MyCoursesSection />
+            </div>
+            <!-- My Events Tab -->
+            <div v-if="activeTab === 'events'" class="content-card">
+              <MyEventsSection />
             </div>
             <!-- Change Password Tab -->
             <div v-if="activeTab === 'password'" class="content-card">
@@ -142,6 +164,8 @@ import AccountSection from '@/components/dashboard/AccountSection.vue'
 import OrdersSection from '@/components/dashboard/OrdersSection.vue'
 import ConsultationsSection from '@/components/dashboard/ConsultationsSection.vue'
 import WishlistSection from '@/components/dashboard/WishlistSection.vue'
+import MyCoursesSection from '@/components/MyCoursesSection.vue'
+import MyEventsSection from '@/components/MyEventsSection.vue'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
