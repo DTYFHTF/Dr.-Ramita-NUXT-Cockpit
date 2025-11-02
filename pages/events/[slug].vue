@@ -215,7 +215,7 @@
                       :show="registrationSuccess"
                       type="registration"
                       :message="successMessage"
-                      action-text="View Event Details"
+                      action-text="Manage Your Events"
                       @close="registrationSuccess = false"
                     />
                   </template>
