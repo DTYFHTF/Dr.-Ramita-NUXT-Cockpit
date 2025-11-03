@@ -55,13 +55,13 @@
                   <label class="form-label">State <span class="required">*</span></label>
                   <input v-model="shipping.state" type="text" class="form-input" required placeholder="Your state" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group full-width mb-4">
                   <label class="form-label">Country <span class="required">*</span></label>
                   <input v-model="shipping.country" type="text" class="form-input" required placeholder="India" />
                 </div>
               </div>
               
-              <div class="form-group">
+              <div class="form-group mt-4">
                 <label class="form-label">Special Instructions</label>
                 <textarea v-model="specialInstructions" class="form-textarea" rows="3" placeholder="Any special delivery instructions..."></textarea>
               </div>
@@ -252,12 +252,6 @@ const submitOrder = async () => {
     })),
     special_instructions: specialInstructions.value
   };
-  
-  console.log('Sending payment request:', {
-    url: `${apiBase}/payments/create-order`,
-    payload,
-    hasToken: !!userStore.token
-  });
 
   try {
     // Call the new payment endpoint instead of old orders endpoint
