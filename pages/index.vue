@@ -123,7 +123,7 @@ const banners = computed(() => {
 const featuredCategories = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'auto_featured_categories');
   if (!section || !Array.isArray(section.data?.categories)) return [];
-  return section.data.categories.map(category => addImageUrl(category, '/placeholder-category.jpg'));
+  return section.data.categories.map(category => addImageUrl(category, '/rishipath-logo.png'));
 });
 
 const bannersMid = computed(() => {

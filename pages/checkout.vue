@@ -252,6 +252,12 @@ const submitOrder = async () => {
     })),
     special_instructions: specialInstructions.value
   };
+  
+  console.log('Sending payment request:', {
+    url: `${apiBase}/payments/create-order`,
+    payload,
+    hasToken: !!userStore.token
+  });
 
   try {
     // Call the new payment endpoint instead of old orders endpoint
@@ -321,7 +327,11 @@ const submitOrder = async () => {
         errorMessage.value = e?.data?.message || 'Validation error. Please check your input.';
       }
     } else if (e?.status === 500) {
-      errorMessage.value = 'Server error. Please try again later.';
+      // Show detailed error in development
+      const errorDetail = e?.data?.error || e?.data?.message || 'Unknown error';
+      const debugInfo = e?.data?.debug ? `\n\nDebug: ${e.data.debug.file}:${e.data.debug.line}` : '';
+      errorMessage.value = `Server error: ${errorDetail}${debugInfo}`;
+      console.error('Server error details:', e?.data);
     } else {
       errorMessage.value = e?.data?.error || e?.data?.message || e?.message || 'Failed to place order. Please try again.';
     }
