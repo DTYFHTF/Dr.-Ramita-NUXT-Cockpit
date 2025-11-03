@@ -105,7 +105,7 @@ const addImageUrl = (item, fallback = '/placeholder-remedy.jpg') => {
   // For events, ensure 'image' is always a valid URL
   let img = item.image || item.event_image || item.img || '';
   // If already a full URL, use as is
-  if (typeof img === 'string' && img.startsWith('http')) {
+  if (typeof img === 'string' && img.startsWith('https')) {
     return { ...item, image: img };
   }
   // Otherwise, use getImageUrl to resolve relative paths or fallback

@@ -15,6 +15,7 @@ export function useApiLaravel(endpoint) {
 
   const { data, error, pending } = useFetch(`${baseUrl}/${endpoint}`, {
     headers,
+    credentials: 'include', // Include cookies for session/CSRF
     onResponseError({ response }) {
       console.error('API Error:', response.status, response._data)
     }

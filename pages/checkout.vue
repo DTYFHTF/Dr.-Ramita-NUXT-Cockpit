@@ -262,7 +262,8 @@ const submitOrder = async () => {
         Authorization: `Bearer ${userStore.token}`,
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      credentials: 'include' // CRITICAL: Include cookies for session/CSRF
     });
 
     if (response.payment_method === 'cod') {

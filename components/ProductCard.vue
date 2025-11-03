@@ -322,7 +322,7 @@ const images = computed(() => {
 function imageUrl(img: string) {
   const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
-  if (img.startsWith("http")) return img;
+  if (img.startsWith("https")) return img;
   return `${config.public.baseUrl}/storage/${img}`;
 }
 

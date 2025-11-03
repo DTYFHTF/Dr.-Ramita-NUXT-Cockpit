@@ -6,7 +6,8 @@ export function useImageUrl() {
 
   function getImageUrl(img, fallback = '/fallback.jpg', storagePrefix = '/storage/') {
     if (!img) return fallback;
-    if (img.startsWith('http')) return img;
+
+    if (img.startsWith('https')) return img;
     if (img.startsWith('/')) return img;
     return `${config.public.baseUrl}${storagePrefix}${img}`;
   }

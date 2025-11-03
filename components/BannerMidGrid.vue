@@ -28,8 +28,9 @@ const props = defineProps({
 // Helper to prepend /category/ if link is a slug (not absolute URL or already a path)
 function getBannerLink(link) {
   if (!link) return '#';
-  if (link.startsWith('http') || link.startsWith('/')) return link;
-  // If it's a slug (no slash, no http), prepend /category/
+  //Production
+  if (link.startsWith('https') || link.startsWith('/')) return link;
+  // If it's a slug (no slash, no https), prepend /category/
   return `/category/${encodeURIComponent(link)}`;
 }
 </script>

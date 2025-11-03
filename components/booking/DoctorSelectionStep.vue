@@ -138,7 +138,7 @@ const selectDoctor = (doctor: Doctor) => {
 const getDoctorImage = (doctor: Doctor) => {
   if (doctor.photo) {
     // If photo is a full URL, use it directly
-    if (doctor.photo.startsWith('http')) {
+    if (doctor.photo.startsWith('https')) {
       return doctor.photo;
     }
     // If it's a relative path, construct the full URL

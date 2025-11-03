@@ -27,7 +27,7 @@ export default function useSimilarPosts(apiEndpoint, options = {}) {
           const config = useRuntimeConfig();
           const image = post[imageField];
           const imageUrl = image
-            ? (image.startsWith('http') ? image : `${config.public.baseUrl}/storage/${image}`)
+            ? (image.startsWith('https') ? image : `${config.public.baseUrl}/storage/${image}`)
             : fallbackImage;
           return {
             ...post,
