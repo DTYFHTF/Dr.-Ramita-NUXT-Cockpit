@@ -108,7 +108,7 @@ onMounted(async () => {
 
 const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
   const img = item.promotion_image ?? item.image ?? '';
-  if (typeof img === 'string' && img.startsWith('https')) {
+  if (typeof img === 'string' && (img.startsWith('http://') || img.startsWith('https://'))) {
     return { ...item, image: img };
   }
   return { ...item, image: getImageUrl(img, fallback) };
