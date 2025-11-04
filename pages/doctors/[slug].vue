@@ -54,7 +54,7 @@
 
               <!-- About Section -->
               <div class="content-section">
-                <h2>About Dr. {{ doctor.name }}</h2>
+                <h2>About {{ doctor.name }}</h2>
                 <div class="about-content">
                   <p v-if="doctor.bio">{{ doctor.bio }}</p>
                   <p v-else>
