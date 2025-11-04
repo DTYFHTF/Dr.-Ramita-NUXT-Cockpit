@@ -35,18 +35,21 @@ function sortArrow(type: string) {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .sort-label {
   font-weight: 500;
   color: var(--text-secondary);
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .sort-buttons {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .sort-btn {
@@ -62,6 +65,7 @@ function sortArrow(type: string) {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .sort-btn:hover {
@@ -73,6 +77,22 @@ function sortArrow(type: string) {
   background: var(--color-success);
   border-color: var(--color-success);
   color: var(--text-white);
+}
+
+/* Intermediate screens: reduce padding and font size */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .sort-controls {
+    gap: 0.5rem;
+  }
+  
+  .sort-label {
+    font-size: 0.8rem;
+  }
+  
+  .sort-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 768px) {

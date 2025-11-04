@@ -553,6 +553,7 @@ function toggleSort(type: string) {
   background: var(--background-white);
   padding: 0.5rem 0;
   min-height: 40px;
+  border-radius: 0 0 12px 12px;
 }
 
 /* Container */

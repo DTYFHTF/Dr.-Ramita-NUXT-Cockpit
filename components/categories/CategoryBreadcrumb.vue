@@ -40,6 +40,25 @@ defineProps<{
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+  }
 
   .breadcrumb {
     display: flex;
@@ -48,9 +67,13 @@ defineProps<{
     padding: 0;
     margin: 0;
     background: transparent;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 
     .breadcrumb-item {
-      font-size: 0.9rem;      
+      font-size: 0.9rem;
+      white-space: nowrap;
+      
       &.active {
         .current-category {
           color: var(--text-secondary);
@@ -65,6 +88,7 @@ defineProps<{
       transition: all 0.2s ease;
       display: flex; 
       align-items: center;
+      white-space: nowrap;
 
       &:hover {
         color: var(--primary-dark);
@@ -78,6 +102,22 @@ defineProps<{
       display: inline-block;
       font-size: 1.1em;
       vertical-align: middle;
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .category-breadcrumb {
+    .breadcrumb {
+      .breadcrumb-item {
+        font-size: 0.8rem;
+      }
+      
+      .breadcrumb-separator {
+        margin: 0 0.35rem;
+        font-size: 1em;
+      }
     }
   }
 }
