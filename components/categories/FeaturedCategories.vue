@@ -130,22 +130,30 @@ const props = defineProps({
 }
 
 /* Mobile responsive */
+/* Tablet view: 3 columns (3x3 grid when 9 items present) */
+@media (max-width: 991.98px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.9rem;
+  }
+}
+
 @media (max-width: 768px) {
   .featured-categories-section {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
   }
   
   .section-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   
   .section-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   
   .categories-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
   
   .skeleton-image {
@@ -155,8 +163,18 @@ const props = defineProps({
 }
 
 @media (max-width: 480px) {
+  .featured-categories-section {
+    padding: 1rem 0;
+  }
+
   .categories-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .skeleton-image {
+    width: 50px;
+    height: 50px;
   }
 }
 </style>

@@ -20,7 +20,15 @@
     </div>
 
     <!-- Bootstrap Carousel -->
-    <div v-else-if="banners && banners.length" id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div 
+      v-else-if="banners && banners.length" 
+      id="bannerCarousel" 
+      class="carousel slide" 
+      data-bs-ride="carousel"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Promotional banners"
+    >
       <!-- Indicators -->
       <div v-if="banners.length > 1" class="carousel-indicators">
         <button 
@@ -41,6 +49,9 @@
           v-for="(banner, index) in banners" 
           :key="index"
           :class="['carousel-item', { active: index === 0 }]"
+          role="group"
+          :aria-roledescription="`slide ${index + 1} of ${banners.length}`"
+          :aria-label="banner.title || `Banner ${index + 1}`"
         >
           <div 
             class="banner-slide"
@@ -51,8 +62,9 @@
             <img 
               :src="banner.image" 
               class="d-block w-100 banner-image" 
-              :alt="banner.title || `Banner ${index + 1}`"
+              :alt="banner.title || banner.description || `Promotional banner ${index + 1}`"
               loading="lazy"
+              fetchpriority="low"
             />
           </div>
         </div>
@@ -258,24 +270,85 @@ onMounted(() => {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .carousel {
-    height: 400px;
+    height: auto;
+    max-height: 220px;
+  }
+
+  .banner-slide {
+    max-height: 220px;
+    overflow: hidden;
+  }
+
+  .banner-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
   }
   
   .banner-title {
-    font-size: 2rem !important;
+    font-size: 1.5rem !important;
   }
   
   .banner-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    display: none; /* Hide subtitle on mobile to save space */
   }
   
   .banner-cta {
-    padding: 0.75rem 2rem !important;
-    font-size: 0.9rem;
+    padding: 0.5rem 1.5rem !important;
+    font-size: 0.85rem;
   }
   
   .carousel-caption {
     text-align: center;
+    padding: 0.5rem;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 8%;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .carousel-indicators {
+    bottom: 8px;
+    gap: 4px;
+  }
+
+  .carousel-indicators [data-bs-target] {
+    width: 8px;
+    height: 8px;
+    border-width: 1px;
+  }
+
+  .carousel-indicators [data-bs-target].active {
+    transform: scale(1.3);
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .carousel {
+    max-height: 180px;
+  }
+
+  .banner-slide {
+    max-height: 180px;
+  }
+
+  .banner-image {
+    height: 180px;
+  }
+
+  .banner-title {
+    font-size: 1.25rem !important;
   }
 }
 

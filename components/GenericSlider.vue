@@ -13,8 +13,11 @@
           @click="scrollLeft"
           :disabled="isAtStart && !loading"
           v-show="!loading && items.length > 3"
+          aria-label="Previous"
         >
-          <LucideIcon icon="mdi:chevron-left" />
+          <span class="slider-icon-wrap" aria-hidden="true">
+            <LucideIcon icon="mdi:chevron-left" class="slider-icon" />
+          </span>
         </button>
         
         <button 
@@ -22,8 +25,11 @@
           @click="scrollRight"
           :disabled="isAtEnd && !loading"
           v-show="!loading && items.length > 3"
+          aria-label="Next"
         >
-          <LucideIcon icon="mdi:chevron-right" />
+          <span class="slider-icon-wrap" aria-hidden="true">
+            <LucideIcon icon="mdi:chevron-right" class="slider-icon" />
+          </span>
         </button>
         
         <!-- Items Slider -->
@@ -207,7 +213,7 @@ onUnmounted(() => {
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0;
@@ -217,7 +223,8 @@ onUnmounted(() => {
   color: var(--color-primary);
   text-decoration: none;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  white-space: nowrap;
 }
 
 .view-all-link:hover {
@@ -233,11 +240,25 @@ onUnmounted(() => {
   .slider-container {
     padding: 0 50px;
   }
+
+  .generic-slider-section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .d-flex.mb-4 {
+    margin-bottom: 1rem !important;
+  }
 }
 
 @media (max-width: 576px) {
   .slider-container {
-    padding: 0 45px;
+    padding: 0 40px;
+  }
+
+  .generic-slider-section {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
   }
 }
 
@@ -247,6 +268,8 @@ onUnmounted(() => {
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scroll-snap-type: x proximity; /* Snap to items on mobile */
 }
 
 .items-slider::-webkit-scrollbar {
@@ -262,68 +285,72 @@ onUnmounted(() => {
 .item-slide {
   flex: 0 0 280px;
   max-width: 280px;
+  scroll-snap-align: start; /* Snap alignment for mobile scrolling */
 }
 
+
+/* Simplified arrow buttons using the same icon visuals as BannerCarousel */
 .slider-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--background-white);
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  /* larger invisible hit area for accessibility */
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
   cursor: pointer;
   z-index: 100;
-  transition: all 0.3s ease;
+  transition: transform 0.18s ease, opacity 0.18s ease;
   color: var(--color-primary);
-  font-size: 1.3rem;
-  box-shadow: var(--card-shadow);
-  opacity: 0.95;
+  opacity: 0.98;
+  background: var(--color-muted);
+  padding: 0;
 }
 
 .slider-arrow:hover:not(:disabled) {
-  background: var(--color-primary);
-  color: var(--background-white);
-  transform: translateY(-50%) scale(1.1);
-  opacity: 1;
+  transform: translateY(-50%) scale(1.05);
 }
 
 .slider-arrow:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
-  border-color: var(--border-color);
-  color: var(--text-secondary);
-  background: var(--background-light);
+}
+
+/* LucideIcon sizing for slider arrows; inherits color from .slider-arrow */
+.slider-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
 }
 
 .slider-arrow-left {
   left: 10px;
 }
-
 .slider-arrow-right {
   right: 10px;
 }
 
-.skeleton-card {
-  border: 1px solid var(--border-color);
-  background-color: var(--background-white);
-  box-shadow: var(--card-shadow);
+/* visual small circle inside the button */
+.slider-icon-wrap {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent; /* keep fill transparent */
+  border: 1px solid rgba(var(--color-primary-rgb), 0.06);
+  box-shadow: 0 2px 6px rgba(var(--shadow-rgb), 0.06);
 }
 
-.skeleton {
-  background: linear-gradient(90deg, var(--background-light) 25%, var(--border-color) 50%, var(--background-light) 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-.skeleton-image {
-  height: 200px;
-  width: 100%;
-}
 
 .skeleton-text {
   height: 16px;
@@ -360,7 +387,14 @@ onUnmounted(() => {
   .slider-arrow {
     width: 40px;
     height: 40px;
-    font-size: 1.1rem;
+  }
+  .slider-icon-wrap {
+    width: 30px;
+    height: 30px;
+  }
+  .slider-icon {
+    width: 1rem;
+    height: 1rem;
   }
   
   .slider-arrow-left {

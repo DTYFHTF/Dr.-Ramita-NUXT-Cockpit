@@ -254,8 +254,10 @@ onMounted(() => {
   }
 
   .category-tree {
+    margin-top: 0.75rem;
     .level-1-category {
       margin-bottom: 0.5rem;
+      
       
       .level-2-container {
         margin-left: 1rem;

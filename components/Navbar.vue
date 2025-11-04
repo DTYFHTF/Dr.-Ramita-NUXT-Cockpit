@@ -247,6 +247,39 @@ const cancelBlogDropdownClose = () => {
   }
 }
 
+/* Mobile navbar optimizations - compact header */
+@media (max-width: 768px) {
+  .navbar {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .navbar-brand img {
+    width: 9rem !important;
+    height: 28px !important;
+  }
+
+  .nav-shared-link {
+    font-size: 0.85rem;
+  }
+
+  .nav-shared-link .fs-4 {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+
+  .navbar-brand img {
+    width: 8rem !important;
+    height: 24px !important;
+  }
+}
+
 
 .mega-menu-wrapper {
   position: absolute;

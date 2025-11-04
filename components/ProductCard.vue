@@ -8,14 +8,16 @@
         <img
           v-if="images[0]"
           :src="images[0]"
-          :alt="product.name"
+          :alt="`${product.name} - main product image`"
           class="card-img-top main-image"
+          loading="lazy"
         />
         <img
           v-if="images[1]"
           :src="images[1]"
           :alt="`${product.name} - alternate view`"
           class="card-img-top hover-image"
+          loading="lazy"
         />
       </div>
       <div class="card-body d-flex flex-column align-items-start p-3">
@@ -354,7 +356,9 @@ function imageUrl(img: string) {
   width: 100%;
   height: 180px;
   overflow: hidden;
+  background-color: var(--background-light);
 }
+
 .card-img-top {
   object-fit: contain;
   width: 100%;
@@ -365,22 +369,64 @@ function imageUrl(img: string) {
   left: 0;
   opacity: 0;
 }
+
 .main-image {
   opacity: 1;
   z-index: 1;
   transform: scale(1);
 }
+
 .hover-image {
   z-index: 2;
   transform: scale(1.1);
 }
+
 .image-container:hover .main-image {
   opacity: 0;
   transform: scale(1.1);
 }
+
 .image-container:hover .hover-image {
   opacity: 1;
   transform: scale(1);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .image-container {
+    height: 200px; /* Slightly taller for mobile */
+    aspect-ratio: 1 / 1.1;
+  }
+
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  .card-title {
+    font-size: 0.9rem !important;
+    line-height: 1.3;
+  }
+
+  .product-description {
+    -webkit-line-clamp: 2; /* Show only 2 lines on mobile */
+    line-clamp: 2;
+    font-size: 0.85rem;
+  }
+
+  .price {
+    font-size: 1rem;
+  }
+
+  .add-to-cart-btn {
+    flex: 1;
+    min-height: 44px; /* Accessible touch target */
+  }
+
+  .wishlist-btn,
+  .quick-view-btn {
+    min-width: 44px; /* Accessible touch target */
+    min-height: 44px;
+  }
 }
 .wishlist-btn,
 .quick-view-btn {
