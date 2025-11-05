@@ -150,7 +150,7 @@ const router = useRouter();
 
 // Define which routes should show the search bar
 const searchBarRoutes = [
-  '/', '/products', '/shop', '/product/[slug]', '/category', '/category/[...slug]', '/CartPage', '/checkout', '/dashboard'
+  '/', '/products', '/shop', '/product/[slug]', '/category', '/category/[...slug]', '/cartpage', '/checkout', '/dashboard'
 ];
 const showSearchBar = computed(() => {
   // Always show search bar on product detail and category pages

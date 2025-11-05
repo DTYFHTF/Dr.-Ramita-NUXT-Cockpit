@@ -193,7 +193,7 @@
                 <!-- Pricing and Booking -->
                 <div class="booking-section">
                   <div class="price-section">
-                    <span class="price">₹{{ event.price || '499' }} onwards</span>
+                    <span class="price">₹{{ event.price || '499' }}</span>
                     <span class="filling-fast">Filling Fast</span>
                   </div>
 

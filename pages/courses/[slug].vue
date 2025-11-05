@@ -120,9 +120,28 @@
 
         <!-- CTA Section -->
         <footer class="cta-section mt-5 pt-4 border-top">
-          <div class="d-grid gap-2 mx-auto" style="max-width: 400px">
-            <button class="btn-smooth-primary" @click="showEnrollModal = true">
+          <!-- Show enrollment status if already enrolled -->
+          <div v-if="isEnrolled" class="enrolled-status mx-auto" style="max-width: 400px">
+            <div class="enrolled-badge">
+              <LucideIcon icon="mdi:check-circle" :size="24" class="me-2" />
+              <div>
+                <div class="enrolled-title">Already Enrolled</div>
+                <div class="enrolled-subtitle">
+                  {{ enrollmentStatus === 'confirmed' ? 'Start learning now!' : 'Payment pending' }}
+                </div>
+              </div>
+            </div>
+            <NuxtLink to="/dashboard?tab=courses" class="btn btn-smooth-success w-100 mt-3">
+              <LucideIcon icon="mdi:school" class="me-2" />
+              Go to My Courses
+            </NuxtLink>
+          </div>
+          
+          <!-- Show enroll button if not enrolled -->
+          <div v-else class="d-grid gap-2 mx-auto" style="max-width: 400px">
+            <button class="btn-smooth-primary" @click="showEnrollModal = true" :disabled="checkingEnrollment">
               {{
+                checkingEnrollment ? 'Checking...' :
                 course.price === 0
                   ? "Enroll for Free"
                   : `Enroll Now - ₹${course.price}`
@@ -133,6 +152,7 @@
               Secure payment processing
             </p>
           </div>
+          
           <BaseModal :show="showEnrollModal" @close="showEnrollModal = false">
             <div class="modal-narrow">
               <CourseRegistrationForm 
@@ -148,7 +168,7 @@
             type="enrollment"
             :message="successMessage"
             action-text="Start Learning"
-            @close="enrollmentSuccess = false"
+            @close="handleSuccessModalClose"
           />
         </footer>
       </div>
@@ -162,21 +182,34 @@ import LucideIcon from "@/components/LucideIcon.vue";
 import DynamicContent from "@/components/DynamicContent.vue";
 import { useApiLaravel } from '@/composables/useApi.js'
 import { useImageUrl } from '@/composables/useImageUrl.js'
-import { computed, ref } from 'vue';
+import { useUserStore } from '@/stores/user'
+import { computed, ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BaseModal from '@/components/BaseModal.vue';
 import CourseRegistrationForm from '@/components/CourseRegistrationForm.vue';
 import SuccessModal from '@/components/SuccessModal.vue';
 
+const userStore = useUserStore()
 const showEnrollModal = ref(false);
 const enrollmentSuccess = ref(false);
 const successMessage = ref('');
+const isEnrolled = ref(false);
+const enrollmentStatus = ref('');
+const checkingEnrollment = ref(false);
 
 // Handle successful enrollment
-const handleEnrollmentSuccess = (message) => {
+const handleEnrollmentSuccess = (response) => {
   showEnrollModal.value = false; // Close the enrollment modal
   enrollmentSuccess.value = true; // Show success modal
-  successMessage.value = message;
+  successMessage.value = response?.message || 'Successfully enrolled!';
+  // Recheck enrollment status
+  checkEnrollmentStatus();
+}
+
+// Handle success modal close - redirect to dashboard
+const handleSuccessModalClose = () => {
+  enrollmentSuccess.value = false;
+  navigateTo('/dashboard?tab=courses');
 }
 
 // Initialize route and reactive variables
@@ -217,6 +250,68 @@ const retryFetch = () => {
   // Force refresh by navigating to same route
   window.location.reload();
 };
+
+// Check if user is enrolled in this course
+const checkEnrollmentStatus = async () => {
+  if (!userStore.token || !slug) {
+    isEnrolled.value = false;
+    return;
+  }
+  
+  checkingEnrollment.value = true;
+  try {
+    const config = useRuntimeConfig();
+    const baseUrl = config.public.apiBase;
+    const response = await $fetch(`${baseUrl}/user/courses`, {
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`,
+        'Accept': 'application/json'
+      }
+    });
+    
+    console.log('Enrollment check response:', response);
+    console.log('Looking for slug:', slug);
+    
+    if (response?.success && response?.data) {
+      const enrollment = response.data.find(c => c.slug === slug);
+      console.log('Found enrollment:', enrollment);
+      if (enrollment) {
+        isEnrolled.value = true;
+        enrollmentStatus.value = enrollment.status;
+      } else {
+        isEnrolled.value = false;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to check enrollment status:', e);
+    isEnrolled.value = false;
+  } finally {
+    checkingEnrollment.value = false;
+  }
+};
+
+// Check enrollment on mount and when user logs in
+onMounted(() => {
+  if (userStore.token) {
+    checkEnrollmentStatus();
+  }
+});
+
+// Watch for user login/logout
+watch(() => userStore.token, (newToken) => {
+  if (newToken) {
+    checkEnrollmentStatus();
+  } else {
+    isEnrolled.value = false;
+  }
+});
+
+// Watch for course data to load
+watch(() => courseData.value, (newData) => {
+  if (newData && userStore.token) {
+    checkEnrollmentStatus();
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -322,6 +417,33 @@ const retryFetch = () => {
 
   .cta-section {
     border-top: 1px solid var(--border-color);
+    
+    .enrolled-status {
+      text-align: center;
+      
+      .enrolled-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+        border: 2px solid var(--color-success);
+        border-radius: 12px;
+        
+        .enrolled-title {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: var(--color-success);
+          margin-bottom: 0.25rem;
+        }
+        
+        .enrolled-subtitle {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+        }
+      }
+    }
     
     .btn {
       padding: 1rem 2rem;

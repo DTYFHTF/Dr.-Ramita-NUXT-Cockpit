@@ -32,5 +32,6 @@ function saveSettings() {
 <style scoped>
 .container {
   max-width: 600px;
+  background: var(--background-white);
 }
 </style>
