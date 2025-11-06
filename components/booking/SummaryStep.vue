@@ -157,9 +157,7 @@ const confirmBooking = async () => {
     
     if (consultationId) {
       store.setConsultationId(consultationId)
-      console.log('Consultation created with ID:', consultationId)
-      console.log('Consultation details:', consultation)
-      
+     
       // Move to payment step
       store.nextStep()
     } else {

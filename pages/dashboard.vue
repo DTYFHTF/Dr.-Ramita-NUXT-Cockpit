@@ -199,21 +199,14 @@ const dashboardLoadError = ref('')
 
 onMounted(async () => {
   try {
-    // Debug: Check localStorage directly
-    console.log('[Dashboard] LocalStorage user:', localStorage.getItem('user'))
-    console.log('[Dashboard] LocalStorage auth_token:', localStorage.getItem('auth_token'))
-    console.log('[Dashboard] Store user.value:', user.value)
-    console.log('[Dashboard] Store token.value:', userStore.token)
     
     // Wait for hydration to complete, but set a timeout (e.g. 5 seconds)
     const hydrationTimeout = 5000
     let hydratedResolved = false
-    console.log('[Dashboard] onMounted: hydrated.value =', hydrated.value)
     if (!hydrated.value) {
       await Promise.race([
         new Promise(resolve => {
           const unwatch = watch(hydrated, (newVal) => {
-            console.log('[Dashboard] hydrated watcher fired:', newVal)
             if (newVal) {
               hydratedResolved = true
               unwatch()
@@ -229,13 +222,10 @@ onMounted(async () => {
         }, hydrationTimeout))
       ])
     }
-    console.log('[Dashboard] After hydration: user.value =', user.value, 'token =', userStore.token)
     if (!user.value) {
       dashboardLoadError.value = 'User data not found after hydration. Please log in again.'
       console.error('[Dashboard] User missing after hydration!')
     } else {
-      console.log('[Dashboard] User authenticated:', !!user.value)
-      console.log('[Dashboard] User profile:', user.value)
     }
   } catch (e: any) {
     if (e?.message === 'Hydration timeout') {

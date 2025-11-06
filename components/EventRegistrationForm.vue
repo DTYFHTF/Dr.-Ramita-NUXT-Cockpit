@@ -33,7 +33,11 @@
       <div v-if="error" class="form-error">{{ error }}</div>
       <div v-if="success" class="form-success">{{ success }}</div>
       <button type="submit" class="btn btn-smooth-success" :disabled="loading">
-        {{ loading ? 'Registering...' : 'Register Now' }}
+        <span v-if="loading" class="d-flex align-items-center justify-content-center gap-2">
+          <span class="spinner-small"></span>
+          Processing...
+        </span>
+        <span v-else>Register Now</span>
       </button>
     </form>
   </div>
@@ -89,6 +93,7 @@ const loadRazorpayScript = () => {
 }
 
 const submitForm = async () => {
+  // Clear previous messages
   error.value = ''
   success.value = ''
   loading.value = true
@@ -98,7 +103,7 @@ const submitForm = async () => {
     const { useAuthApi } = await import('@/composables/useApi')
     const authApi = useAuthApi()
     
-    // Step 1: Create registration
+    // Step 1: Create registration or get event details for payment
     const registrationResponse = await authApi.post(
       `events/${props.eventSlug}/register`,
       userStore.token,
@@ -109,37 +114,166 @@ const submitForm = async () => {
       throw new Error('Invalid registration response')
     }
 
-    const { registration_id, requires_payment, status } = registrationResponse.data
+    const responseData = registrationResponse.data
     
     // Step 2: If payment required, initiate payment flow
-    if (requires_payment && status === 'pending') {
-      success.value = 'Registration created. Initiating payment...'
-      
-      // Create payment order for this registration
-      await initiateEnrollmentPayment(registration_id, 'event')
+    if (responseData.requires_payment) {
+      // For paid events, open payment gateway
+      // Keep loading true, initiateEventPayment will handle state changes
+      await initiateEventPayment(responseData.event_id, responseData.event_slug, responseData.price, form.value.phone)
     } else {
-      // Free event - registration confirmed
-      success.value = registrationResponse.message || 'Registration successful!'
-      emit('registration-success', registrationResponse)
+      // Free event - registration confirmed immediately
+      loading.value = false
+      success.value = `🎉 Successfully registered for "${responseData.event_title}"!`
+      emit('registration-success', {
+        success: true,
+        event_title: responseData.event_title,
+        message: `Successfully registered for ${responseData.event_title}`
+      })
       
-      // Refresh after delay
       setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.reload()
-        }
-      }, 1500)
+        navigateTo('/dashboard?tab=events')
+      }, 3000)
     }
   } catch (e) {
+    loading.value = false
+    
     if (e?.status === 401) {
-      error.value = 'Session expired. Please log in again.'
+      error.value = '🔒 Session expired. Please log in again.'
       userStore.logout()
-      setTimeout(() => navigateTo('/login'), 1000)
+      setTimeout(() => navigateTo('/login'), 2000)
+    } else if (e?.status === 409) {
+      error.value = '✓ You are already registered for this event! Redirecting to your events...'
+      setTimeout(() => navigateTo('/dashboard?tab=events'), 2500)
     } else if (e?.data?.message) {
       error.value = e.data.message
     } else {
       error.value = e.message || 'Registration failed. Please try again.'
     }
+  }
+}
+
+const initiateEventPayment = async (eventId, eventSlug, price, phone) => {
+  try {
+    // Clear any previous messages before opening payment
+    error.value = ''
+    success.value = 'Opening payment gateway...'
+    
+    const config = useRuntimeConfig()
+    const { useAuthApi } = await import('@/composables/useApi')
+    const authApi = useAuthApi()
+    
+    // Create payment order for event using unified enrollment payment endpoint
+    const paymentResponse = await authApi.post(
+      'enrollments/payments/create',
+      userStore.token,
+      {
+        registration_type: 'event',
+        event_id: eventId,
+        event_slug: eventSlug,
+        phone: phone
+      }
+    )
+    
+    if (!paymentResponse.success) {
+      throw new Error(paymentResponse.error || 'Failed to create payment order')
+    }
+    
+    // Clear success message before opening Razorpay modal
+    success.value = ''
+    
+    // Open Razorpay checkout
+    const razorpayOptions = {
+      key: paymentResponse.key_id || config.public.razorpayKeyId,
+      amount: paymentResponse.amount,
+      currency: paymentResponse.currency,
+      order_id: paymentResponse.razorpay_order_id,
+      name: 'Dr. Ramita Ayurveda',
+      description: `Event Registration: ${paymentResponse.item_name}`,
+      prefill: {
+        name: paymentResponse.user.name,
+        email: paymentResponse.user.email,
+        contact: paymentResponse.user.contact,
+      },
+      handler: async (razorpayResponse) => {
+        // Payment successful, verify and create registration
+        await verifyEventPayment(
+          eventId, 
+          eventSlug, 
+          phone, 
+          paymentResponse.payment_id, 
+          razorpayResponse
+        )
+      },
+      modal: {
+        ondismiss: () => {
+          // User closed the payment modal without completing
+          success.value = ''
+          error.value = 'Payment cancelled. Please try again to complete your registration.'
+          loading.value = false
+        },
+      },
+      theme: {
+        color: '#10b981',
+      },
+    }
+    
+    const razorpay = new window.Razorpay(razorpayOptions)
+    razorpay.open()
+    
+  } catch (e) {
     loading.value = false
+    success.value = ''
+    error.value = e?.data?.error || e.message || 'Failed to initiate payment'
+  }
+}
+
+const verifyEventPayment = async (eventId, eventSlug, phone, paymentId, razorpayResponse) => {
+  try {
+    // Clear messages and show verifying state
+    error.value = ''
+    success.value = 'Verifying payment...'
+    
+    const { useAuthApi } = await import('@/composables/useApi')
+    const authApi = useAuthApi()
+    const userStore = useUserStore()
+    
+    const verifyResponse = await authApi.post(
+      'enrollments/payments/verify',
+      userStore.token,
+      {
+        registration_type: 'event',
+        event_id: eventId,
+        event_slug: eventSlug,
+        phone: phone,
+        payment_id: paymentId,
+        razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+        razorpay_order_id: razorpayResponse.razorpay_order_id,
+        razorpay_signature: razorpayResponse.razorpay_signature,
+      }
+    )
+    
+    if (verifyResponse.success) {
+      loading.value = false
+      success.value = '✅ Payment successful! Registration confirmed.'
+      
+      emit('registration-success', {
+        success: true,
+        message: 'Payment successful! Registration confirmed.',
+        event_title: verifyResponse.event_title
+      })
+      
+      setTimeout(() => {
+        navigateTo('/dashboard?tab=events')
+      }, 2000)
+    } else {
+      throw new Error(verifyResponse.message || 'Payment verification failed')
+    }
+    
+  } catch (e) {
+    loading.value = false
+    success.value = ''
+    error.value = e?.data?.message || e.message || 'Payment verification failed. Please contact support.'
   }
 }
 
@@ -228,15 +362,16 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
     )
     
     if (verifyResponse.success) {
-      success.value = verifyResponse.message || 'Payment successful! Registration confirmed.'
-      emit('registration-success', verifyResponse)
+      success.value = '✅ Payment successful! Registration confirmed.'
+      emit('registration-success', {
+        success: true,
+        message: 'Payment successful! Registration confirmed.'
+      })
       
-      // Refresh page to show confirmed registration
+      // Redirect to dashboard my events tab
       setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.reload()
-        }
-      }, 2000)
+        navigateTo('/dashboard?tab=events')
+      }, 3000)
     } else {
       throw new Error(verifyResponse.error || 'Payment verification failed')
     }
@@ -307,5 +442,37 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
   background: rgba(16, 185, 129, 0.1);
   border-radius: 8px;
   border-left: 4px solid var(--color-success);
+}
+
+.spinner-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
 }
 </style>

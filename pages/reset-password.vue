@@ -104,7 +104,6 @@ onMounted(() => {
   token.value = route.query.token as string || ''
   email.value = route.query.email as string || ''
   
-  console.log('Reset password page loaded with:', { token: token.value, email: email.value })
   
   if (!token.value) {
     error.value = 'Invalid or missing reset token. Please request a new password reset link.'
@@ -113,12 +112,7 @@ onMounted(() => {
 
 async function resetPassword() {
   if (!password.value || !passwordConfirmation.value || !email.value || !token.value) {
-    console.log('Missing required fields:', { 
-      password: !!password.value, 
-      passwordConfirmation: !!passwordConfirmation.value, 
-      email: !!email.value, 
-      token: !!token.value 
-    })
+    
     return
   }
   
@@ -135,10 +129,7 @@ async function resetPassword() {
   error.value = ''
   loading.value = true
   
-  console.log('Attempting password reset with:', { 
-    email: email.value, 
-    token: token.value.substring(0, 10) + '...' // Log partial token for debugging
-  })
+  
   
   try {
     const result = await resetPasswordAPI({
@@ -148,7 +139,6 @@ async function resetPassword() {
       token: token.value
     })
     
-    console.log('Password reset result:', result)
     
     if (result.success) {
       // Redirect to login with success message

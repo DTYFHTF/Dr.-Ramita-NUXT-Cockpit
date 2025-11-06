@@ -352,7 +352,6 @@ const updateProfile = async () => {
     
     // If image is selected, use FormData for multipart upload
     if (selectedImageFile.value) {
-      console.log('[PROFILE] Updating with image:', selectedImageFile.value.name)
       const formData = new FormData()
       
       // Laravel requires _method field for PUT requests with FormData
@@ -384,10 +383,6 @@ const updateProfile = async () => {
       formData.append('address[pincode]', profileForm.value.address.pincode?.trim() || '')
       formData.append('address[country]', profileForm.value.address.country || 'India')
       
-      console.log('[PROFILE] FormData entries:')
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value)
-      }
       
       // Use POST with _method=PUT for Laravel FormData handling
       response = await $fetch(`${API_BASE}/user/profile`, {
@@ -400,7 +395,6 @@ const updateProfile = async () => {
         body: formData
       })
     } else {
-      console.log('[PROFILE] Updating without image')
       // No image, use regular JSON update
       const { useAuthApi } = await import('@/composables/useApi')
       const authApi = useAuthApi()
@@ -415,7 +409,6 @@ const updateProfile = async () => {
       })
     }
     
-    console.log('[PROFILE] Response:', response)
     
     // Update user store with new data
     if (response?.data) {

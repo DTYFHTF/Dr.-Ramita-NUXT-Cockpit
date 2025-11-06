@@ -66,7 +66,6 @@ const successMessage = computed(() => {
   return ''
 })
 
-console.log('[LOGIN] userStore before login:', JSON.stringify(userStore.user), userStore.token)
 
 const API_BASE = useRuntimeConfig().public.apiBase
 
@@ -82,13 +81,10 @@ async function login({ email, password }: { email: string, password: string }) {
         'Content-Type': 'application/json'
       }
     })
-    console.log('[LOGIN] loginResponse:', JSON.stringify(loginResponse))
     if (!loginResponse.token) throw new Error('No token returned from API')
     userStore.setToken(loginResponse.token)
     userStore.setUser(loginResponse.user)
-    console.log('[LOGIN] userStore after setUser/setToken:', JSON.stringify(userStore.user), userStore.token)
     await nextTick()
-    console.log('[LOGIN] userStore after nextTick:', JSON.stringify(userStore.user), userStore.token)
     router.push('/dashboard')
   } catch (err: any) {
     if (err?.data?.message) {

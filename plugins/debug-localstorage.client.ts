@@ -4,7 +4,6 @@ export default defineNuxtPlugin(() => {
     window.addEventListener('DOMContentLoaded', () => {
       const user = localStorage.getItem('user');
       const token = localStorage.getItem('auth_token');
-      console.log('[Nuxt:plugin] After DOMContentLoaded, localStorage:', { user, token });
     });
   }
 });

@@ -273,7 +273,6 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
       const promotionStr = newPromotion ? String(newPromotion) : '';
       if (promotionStr !== promotion.value) {
         promotion.value = promotionStr;
-        console.log('[useProductFilters] Synced promotion from route:', promotionStr);
       }
     },
     { immediate: true }
@@ -286,7 +285,6 @@ export function useProductFilters(searchQuery?: Ref<string>, currentCategoryId?:
       const promotionsStr = newPromotions ? String(newPromotions) : '';
       if (promotionsStr !== promotions.value) {
         promotions.value = promotionsStr;
-        console.log('[useProductFilters] Synced promotions from route:', promotionsStr);
       }
     },
     { immediate: true }

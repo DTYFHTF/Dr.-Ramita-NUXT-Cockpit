@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useImageUrl } from '@/composables/useImageUrl';
 
 interface Event {
   id: number;
@@ -73,6 +74,7 @@ interface Event {
   description: string;
   short_description?: string;
   image: string;
+  image_url?: string;
   date: string;
   time: string;
   location: string;
@@ -89,6 +91,7 @@ interface Event {
 const userStore = useUserStore();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const { getImageUrl } = useImageUrl();
 const events = ref<Event[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -106,7 +109,11 @@ const fetchEvents = async () => {
     });
 
     if (result?.success) {
-      events.value = result.data;
+      // Resolve image URLs using helper so relative/storage paths are converted to full URLs
+      events.value = result.data.map((ev) => ({
+        ...ev,
+        image: getImageUrl(ev.image || ev.image_url, '/placeholder-event.jpg'),
+      }));
     }
   } catch (err: any) {
     error.value = err?.data?.message || err?.message || 'Unable to load your events';
@@ -117,18 +124,27 @@ const fetchEvents = async () => {
 };
 
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return 'today';
-  if (diffDays === 1) return 'yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+  if (!dateString) return 'recently';
   
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'recently';
+    
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'today';
+    if (diffDays === 1) return 'yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'recently';
+  }
 };
 
 onMounted(() => {

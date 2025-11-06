@@ -11,8 +11,7 @@
     <template #meta>
       <slot name="meta">
         <div class="meta-item">
-          <LucideIcon icon="mdi:currency-dollar" class="icon" />
-          <span>{{ price ? `$${price}` : 'Free' }}</span>
+          <span>{{ price ? `₹${price}` : 'Free' }}</span>
         </div>
         <div class="meta-item">
           <LucideIcon icon="mdi:clock-outline" class="icon" />

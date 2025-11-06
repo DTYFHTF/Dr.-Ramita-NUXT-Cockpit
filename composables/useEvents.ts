@@ -176,7 +176,6 @@ export function useEventUtils() {
       // Fallback: copy to clipboard
       return navigator.clipboard.writeText(url).then(() => {
         // You can show a toast notification here
-        console.log('Event link copied to clipboard!')
         return true
       }).catch(() => {
         console.error('Failed to copy to clipboard')

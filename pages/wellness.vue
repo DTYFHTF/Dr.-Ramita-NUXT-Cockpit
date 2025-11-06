@@ -46,21 +46,10 @@
     :view-more-handler="goToHomeRemediesPage"
   />
 
-    <!-- Products Section -->
-    <IndexSection
-    section-id="products"
-    bg-class="bg-herbal-light"
-    title="Featured Products"
-    subtitle="Discover authentic Ayurvedic products for your wellness journey"
-    :items="limitedProducts"
-    :card-component="ProductCard"
-    :view-more-handler="goToProductsPage"
-  />
-
     <!-- Events Section -->
     <IndexSection
     section-id="events"
-    bg-class="bg-sandal-light"
+    bg-class="bg-herbal-light"
     title="Upcoming Events"
     subtitle="Join us for workshops, seminars, and wellness gatherings"
     :items="limitedEvents"
@@ -93,8 +82,7 @@ const { data: yoganmeditationData, error: yoganmeditationError, loading: yoganme
 const { data: recipesData, error: recipesError, loading: recipesLoading } = useApiLaravel('recipes');
 const { data: homeRemediesData, error: homeRemediesError, loading: homeRemediesLoading } = useApiLaravel('home-remedies');
 
-// Products and Events
-const { products, fetchProducts } = useProducts();
+// Events
 const { data: eventsData, error: eventsError, loading: eventsLoading } = useApiLaravel('events');
 
 
@@ -116,10 +104,6 @@ const coursesWithImages = computed(() => coursesData.value?.data?.map(i => addIm
 const yoganmeditationWithImages = computed(() => yoganmeditationData.value?.data?.map(i => addImageUrl(i, '/placeholder-yoga.jpg')) || []);
 const recipesWithImages = computed(() => recipesData.value?.data?.map(i => addImageUrl(i, '/placeholder-recipe.jpg')) || []);
 const homeRemediesWithImages = computed(() => homeRemediesData.value?.data?.map(i => addImageUrl(i, '/placeholder-remedy.jpg')) || []);
-const productsWithImages = computed(() => {
-  if (!products.value || !Array.isArray(products.value)) return [];
-  return products.value.map(i => ({ product: addImageUrl(i, '/placeholder-product.jpg') }));
-});
 const eventsWithImages = computed(() => {
   if (!eventsData.value?.data || !Array.isArray(eventsData.value.data)) return [];
   return eventsData.value.data.map(i => addImageUrl(i, '/placeholder-event.jpg'));
@@ -130,14 +114,6 @@ const limitedCourses = computed(() => coursesWithImages.value.slice(0, 3));
 const limitedYoganmeditation = computed(() => yoganmeditationWithImages.value.slice(0, 3));
 const limitedRecipies = computed(() => recipesWithImages.value.slice(0, 3));
 const limitedHomeRemedy = computed(() => homeRemediesWithImages.value.slice(0, 3));
-const limitedProducts = computed(() => {
-  const arr = [...productsWithImages.value];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr.slice(0, 3);
-});
 const limitedEvents = computed(() => eventsWithImages.value.slice(0, 3));
 
 
@@ -145,14 +121,9 @@ const goToCoursesPage = () => navigateTo("/courses");
 const goToYoganMeditationPage = () => navigateTo("blog/yoganmeditation");
 const goToRecipesPage = () => navigateTo("blog/recipe");
 const goToHomeRemediesPage = () => navigateTo("blog/homeremedy");
-const goToProductsPage = () => navigateTo("/products");
 const goToEventsPage = () => navigateTo("/events");
 
-// Fetch products and events on component mount
-onMounted(async () => {
-  await fetchProducts(1, 6); // Fetch first 6 products
-  // Events are automatically fetched by useApiLaravel
-});
+
 
 </script>
 

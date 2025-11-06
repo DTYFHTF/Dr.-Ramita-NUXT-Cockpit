@@ -28,7 +28,6 @@ export default defineNuxtPlugin(() => {
       // Clear any stale module cache before navigation
       if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
         // This is a back/forward navigation, which often causes the issue
-        console.log('Back/forward navigation detected, clearing module cache');
       }
       next();
     });

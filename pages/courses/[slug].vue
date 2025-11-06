@@ -269,12 +269,9 @@ const checkEnrollmentStatus = async () => {
       }
     });
     
-    console.log('Enrollment check response:', response);
-    console.log('Looking for slug:', slug);
     
     if (response?.success && response?.data) {
       const enrollment = response.data.find(c => c.slug === slug);
-      console.log('Found enrollment:', enrollment);
       if (enrollment) {
         isEnrolled.value = true;
         enrollmentStatus.value = enrollment.status;

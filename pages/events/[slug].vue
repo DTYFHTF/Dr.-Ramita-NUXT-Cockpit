@@ -192,41 +192,55 @@
 
                 <!-- Pricing and Booking -->
                 <div class="booking-section">
-                  <div class="price-section">
-                    <span class="price">₹{{ event.price || '499' }}</span>
-                    <span class="filling-fast">Filling Fast</span>
-                  </div>
-
-                  <template v-if="event.status === 'upcoming' && !isEventFull">
-                    <button class="book-now-btn" @click="showRegistration = true">Book Now</button>
-                    
-                    <!-- Registration Form Modal -->
-                    <BaseModal :show="showRegistration" @close="showRegistration = false">
-                      <div class="modal-narrow">
-                        <EventRegistrationForm 
-                          :event-slug="event.slug" 
-                          @registration-success="handleRegistrationSuccess"
-                        />
-                      </div>
-                    </BaseModal>
-                    
-                    <!-- Success Modal -->
-                    <SuccessModal
-                      :show="registrationSuccess"
-                      type="registration"
-                      :message="successMessage"
-                      action-text="Manage Your Events"
-                      @close="registrationSuccess = false"
-                    />
+                  <!-- Show registration status if already registered -->
+                  <template v-if="userRegistration">
+                    <div class="alert alert-success mb-3">
+                      <LucideIcon icon="mdi:check-circle" class="me-2" />
+                      You're registered for this event!
+                    </div>
+                    <button class="book-now-btn" @click="navigateTo('/dashboard?tab=events')">
+                      View My Events
+                    </button>
                   </template>
 
-                  <button v-else-if="isEventFull" class="book-now-btn disabled" disabled>
-                    Event Full
-                  </button>
+                  <!-- Show booking option if not registered -->
+                  <template v-else>
+                    <div class="price-section">
+                      <span class="price">₹{{ event.price || '499' }}</span>
+                      <span class="filling-fast">Filling Fast</span>
+                    </div>
 
-                  <button v-else-if="event.status === 'completed'" class="book-now-btn disabled" disabled>
-                    Event Completed
-                  </button>
+                    <template v-if="event.status === 'upcoming' && !isEventFull">
+                      <button class="book-now-btn" @click="showRegistration = true">Book Now</button>
+                    
+                      <!-- Registration Form Modal -->
+                      <BaseModal :show="showRegistration" @close="showRegistration = false">
+                        <div class="modal-narrow">
+                          <EventRegistrationForm 
+                            :event-slug="event.slug" 
+                            @registration-success="handleRegistrationSuccess"
+                          />
+                        </div>
+                      </BaseModal>
+                      
+                      <!-- Success Modal -->
+                      <SuccessModal
+                        :show="registrationSuccess"
+                        type="registration"
+                        :message="successMessage"
+                        action-text="Manage Your Events"
+                        @close="handleSuccessModalClose"
+                      />
+                    </template>
+
+                    <button v-else-if="isEventFull" class="book-now-btn disabled" disabled>
+                      Event Full
+                    </button>
+
+                    <button v-else-if="event.status === 'completed'" class="book-now-btn disabled" disabled>
+                      Event Completed
+                    </button>
+                  </template>
                 </div>
               </div>
             </div>
@@ -254,10 +268,16 @@ const registrationSuccess = ref(false)
 const successMessage = ref('')
 
 // Handle successful registration
-const handleRegistrationSuccess = (message) => {
+const handleRegistrationSuccess = (response) => {
   showRegistration.value = false; // Close the registration modal
   registrationSuccess.value = true; // Show success modal
-  successMessage.value = message;
+  successMessage.value = response?.message || 'Successfully registered!';
+}
+
+// Handle success modal close - redirect to dashboard
+const handleSuccessModalClose = () => {
+  registrationSuccess.value = false;
+  navigateTo('/dashboard?tab=events');
 }
 
 const route = useRoute()
@@ -265,11 +285,14 @@ const slug = route.params.slug
 
 const { getEventBySlug, registerForEvent } = useEvents()
 const { getImageUrl } = useImageUrl()
+const { useUserStore } = await import('@/stores/user')
+const userStore = useUserStore()
 
 const event = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const registering = ref(false)
+const userRegistration = ref(null) // Track if user is already registered
 
 
 // Computed properties
@@ -287,6 +310,34 @@ const spotsRemaining = computed(() => {
   return Math.max(0, event.value.capacity - (event.value.registered_count || 0))
 })
 
+// Check if user is already registered for this event
+const checkUserRegistration = async () => {
+  if (!userStore.token || !event.value) return
+
+  try {
+    const config = useRuntimeConfig()
+    const result = await $fetch(`${config.public.apiBase}/user/events`, {
+      headers: {
+        Authorization: `Bearer ${userStore.token}`,
+        Accept: 'application/json'
+      }
+    })
+
+    if (result?.success && result.data) {
+      userRegistration.value = result.data.find(
+        (reg) => reg.slug === event.value.slug
+      )
+      
+      // If user is already registered, redirect to My Events
+      if (userRegistration.value) {
+        navigateTo('/dashboard?tab=events')
+      }
+    }
+  } catch (err) {
+    console.error('Error checking registration:', err)
+  }
+}
+
 // Fetch event data
 const fetchEventData = async () => {
   try {
@@ -299,6 +350,9 @@ const fetchEventData = async () => {
         ...eventData,
         coverImageUrl: getImageUrl(eventData.image, '/placeholder-event.jpg')
       }
+      
+      // Check if user is already registered
+      await checkUserRegistration()
     } else {
       error.value = { message: 'Event not found' }
     }

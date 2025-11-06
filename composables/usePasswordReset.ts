@@ -43,13 +43,6 @@ export const usePasswordReset = () => {
     password_confirmation: string
     token: string
   }) => {
-    console.log('Attempting password reset API call to:', `${API_BASE}/reset-password`)
-    console.log('Request data:', { 
-      email: data.email, 
-      token: data.token.substring(0, 10) + '...',
-      password: '***',
-      password_confirmation: '***'
-    })
     
     try {
       const response = await $fetch(`${API_BASE}/reset-password`, {
@@ -61,7 +54,6 @@ export const usePasswordReset = () => {
         }
       }) as { message?: string }
       
-      console.log('Password reset API success:', response)
       
       return {
         success: true,

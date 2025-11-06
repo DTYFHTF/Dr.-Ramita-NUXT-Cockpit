@@ -176,11 +176,6 @@ const trackSuggestionClick = (suggestion: any) => {
       product_name: suggestion.name,
     });
   }
-  console.log('Search suggestion clicked:', {
-    query: internalQuery.value,
-    product: suggestion.name,
-    productId: suggestion.id
-  });
 };
 
 const onBlur = () => {

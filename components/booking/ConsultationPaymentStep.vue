@@ -107,7 +107,6 @@ const formatTime = (time) => {
 
 // Handle payment success
 const handlePaymentSuccess = (result) => {
-  console.log('Payment successful:', result)
   
   // Store payment ID
   if (result.payment_id) {
@@ -127,7 +126,6 @@ const handlePaymentError = (error) => {
 
 // Handle payment cancel
 const handlePaymentCancel = () => {
-  console.log('Payment cancelled by user')
   // User can retry payment or go back
 }
 

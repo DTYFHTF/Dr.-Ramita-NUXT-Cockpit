@@ -27,7 +27,7 @@
           class="form-input"
           placeholder="Enter your phone number"
           maxlength="20" 
-          :disabled="loading" 
+          :disabled="loading || processingPayment" 
         />
       </div>
       <div v-if="error" class="form-error">
@@ -41,14 +41,18 @@
       <button 
         type="submit" 
         class="btn btn-smooth-success" 
-        :disabled="loading || !!success"
+        :disabled="loading || processingPayment || enrollmentComplete"
       >
-        <span v-if="!loading && !success">Enroll Now</span>
+        <span v-if="!loading && !processingPayment && !enrollmentComplete">Enroll Now</span>
+        <span v-else-if="processingPayment" class="d-flex align-items-center justify-content-center gap-2">
+          <span class="spinner-small"></span>
+          Processing Payment...
+        </span>
         <span v-else-if="loading" class="d-flex align-items-center justify-content-center gap-2">
           <span class="spinner-small"></span>
-          Enrolling...
+          {{ loadingMessage || 'Processing...' }}
         </span>
-        <span v-else-if="success" class="d-flex align-items-center justify-content-center gap-2">
+        <span v-else-if="enrollmentComplete" class="d-flex align-items-center justify-content-center gap-2">
           <LucideIcon name="Check" :size="18" />
           Enrolled Successfully!
         </span>
@@ -81,7 +85,9 @@ const form = ref({
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
-const pendingPayment = ref(null)
+const processingPayment = ref(false)
+const enrollmentComplete = ref(false)
+const loadingMessage = ref('')
 
 // Pre-fill phone if user is logged in
 onMounted(() => {
@@ -111,34 +117,41 @@ const submitForm = async () => {
   error.value = ''
   success.value = ''
   loading.value = true
+  loadingMessage.value = 'Checking enrollment...'
+  enrollmentComplete.value = false
   
   try {
     const config = useRuntimeConfig()
     const { useAuthApi } = await import('@/composables/useApi')
     const authApi = useAuthApi()
     
-    // Step 1: Create enrollment
+    // Step 1: Check enrollment eligibility
     const enrollmentResponse = await authApi.post(
       `courses/${props.courseSlug}/enroll`,
       userStore.token,
       { phone: form.value.phone || null }
     )
     
-    if (!enrollmentResponse?.data) {
+    if (!enrollmentResponse) {
       throw new Error('Invalid enrollment response')
     }
 
-    const { registration_id, requires_payment, status, course_title } = enrollmentResponse.data
+    const { requires_payment, course_id, course_slug, course_title, price } = enrollmentResponse
     
-    // Step 2: If payment required, initiate payment flow
-    if (requires_payment && status === 'pending') {
-      success.value = 'Enrollment created. Opening payment gateway...'
+    // Step 2: If payment required, initiate payment flow directly
+    if (requires_payment) {
+      loading.value = false
+      success.value = 'Opening payment gateway...'
       
-      // Create payment order for this enrollment
-      await initiateEnrollmentPayment(registration_id, 'course')
+      // Create payment order linked to Course (NOT registration)
+      await initiateCoursePayment(course_id, course_slug, course_title, price)
     } else {
-      // Free course - enrollment confirmed
+      // Free course - enrollment confirmed immediately
+      const { registration_id, status } = enrollmentResponse.data
+      enrollmentComplete.value = true
       success.value = `🎉 Successfully enrolled in "${course_title}"!`
+      loading.value = false
+      
       emit('enrollment-success', { 
         success: true, 
         course_title,
@@ -146,6 +159,7 @@ const submitForm = async () => {
       })
     }
   } catch (e) {
+    enrollmentComplete.value = false
     if (e?.status === 401) {
       error.value = '🔒 Session expired. Please log in again.'
       userStore.logout()
@@ -162,19 +176,22 @@ const submitForm = async () => {
   }
 }
 
-const initiateEnrollmentPayment = async (registrationId, registrationType) => {
+const initiateCoursePayment = async (courseId, courseSlug, courseTitle, price) => {
   try {
+    processingPayment.value = true
     const config = useRuntimeConfig()
     const { useAuthApi } = await import('@/composables/useApi')
     const authApi = useAuthApi()
     
-    // Create payment order
+    // Create payment order linked to Course (payment-first flow)
     const paymentResponse = await authApi.post(
       'enrollments/payments/create',
       userStore.token,
       {
-        registration_id: registrationId,
-        registration_type: registrationType
+        registration_type: 'course',
+        course_id: courseId,
+        course_slug: courseSlug,
+        phone: form.value.phone || null,
       }
     )
     
@@ -192,6 +209,9 @@ const initiateEnrollmentPayment = async (registrationId, registrationType) => {
       item_name
     } = paymentResponse
     
+    // Clear the success message before opening payment gateway
+    success.value = ''
+    
     // Open Razorpay checkout
     const razorpayOptions = {
       key: key_id || config.public.razorpayKeyId,
@@ -207,17 +227,16 @@ const initiateEnrollmentPayment = async (registrationId, registrationType) => {
       },
       handler: async (response) => {
         // Payment successful, verify it
-        await verifyEnrollmentPayment(registrationId, registrationType, response)
+        await verifyCoursePayment(courseId, courseSlug, payment_id, razorpay_order_id, response)
       },
       modal: {
         ondismiss: () => {
-          error.value = 'Payment cancelled. Your enrollment is saved as pending. You can complete payment from "My Courses" section.'
-          loading.value = false
+          // Clear all success/loading states
+          success.value = ''
+          processingPayment.value = false
+          enrollmentComplete.value = false
           
-          // Redirect to my courses after 4 seconds so they can retry payment
-          setTimeout(() => {
-            navigateTo('/my-courses')
-          }, 4000)
+          error.value = 'Payment cancelled. Please try again when ready.'
         },
       },
       theme: {
@@ -228,13 +247,18 @@ const initiateEnrollmentPayment = async (registrationId, registrationType) => {
     const razorpay = new window.Razorpay(razorpayOptions)
     razorpay.open()
   } catch (e) {
+    success.value = ''
+    processingPayment.value = false
+    enrollmentComplete.value = false
     error.value = e?.data?.error || e.message || 'Failed to initiate payment'
-    loading.value = false
   }
 }
 
-const verifyEnrollmentPayment = async (registrationId, registrationType, razorpayResponse) => {
+const verifyCoursePayment = async (courseId, courseSlug, paymentId, orderId, razorpayResponse) => {
   try {
+    processingPayment.value = true
+    loadingMessage.value = 'Verifying payment...'
+    
     const config = useRuntimeConfig()
     const { useAuthApi } = await import('@/composables/useApi')
     const authApi = useAuthApi()
@@ -243,8 +267,11 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
       'enrollments/payments/verify',
       userStore.token,
       {
-        registration_id: registrationId,
-        registration_type: registrationType,
+        registration_type: 'course',
+        course_id: courseId,
+        course_slug: courseSlug,
+        payment_id: paymentId,
+        phone: form.value.phone || null,
         razorpay_payment_id: razorpayResponse.razorpay_payment_id,
         razorpay_order_id: razorpayResponse.razorpay_order_id,
         razorpay_signature: razorpayResponse.razorpay_signature,
@@ -252,7 +279,10 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
     )
     
     if (verifyResponse.success) {
+      enrollmentComplete.value = true
+      processingPayment.value = false
       success.value = '✅ Payment successful! Enrollment confirmed.'
+      
       emit('enrollment-success', {
         success: true,
         message: 'Payment successful! Enrollment confirmed.'
@@ -261,9 +291,10 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
       throw new Error(verifyResponse.error || 'Payment verification failed')
     }
   } catch (e) {
+    processingPayment.value = false
+    enrollmentComplete.value = false
+    success.value = ''
     error.value = e?.data?.error || e.message || 'Payment verification failed'
-  } finally {
-    loading.value = false
   }
 }
 </script>
