@@ -39,19 +39,8 @@
           :duration="course.duration"
           :level="course.level"
           :slug="course.slug"
-        >
-          <template #meta>
-            <div class="enrollment-badge">
-              <LucideIcon name="CheckCircle2" :size="16" class="me-1" />
-              Enrolled {{ formatDate(course.enrolled_at) }}
-            </div>
-          </template>
-          <template #button>
-            <NuxtLink :to="`/courses/${course.slug}`" class="btn btn-success w-100">
-              Continue Learning
-            </NuxtLink>
-          </template>
-        </CourseCard>
+          :button-text="'Continue Learning'"
+        />
       </div>
     </div>
   </div>
@@ -102,21 +91,6 @@ const fetchCourses = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return 'today';
-  if (diffDays === 1) return 'yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-  
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
 };
 
 onMounted(() => {
@@ -175,18 +149,6 @@ color: var(--text-primary);      margin-bottom: 0.5rem;
 
   .course-wrapper {
     position: relative;
-  }
-
-  .enrollment-badge {
-    display: inline-flex;
-    align-items: center;
-    background: var(--color-secondary);
-    color: white;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.75rem;
   }
 }
 </style>

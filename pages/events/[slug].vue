@@ -328,10 +328,7 @@ const checkUserRegistration = async () => {
         (reg) => reg.slug === event.value.slug
       )
       
-      // If user is already registered, redirect to My Events
-      if (userRegistration.value) {
-        navigateTo('/dashboard?tab=events')
-      }
+      // Don't redirect - let user view event details even if already registered
     }
   } catch (err) {
     console.error('Error checking registration:', err)

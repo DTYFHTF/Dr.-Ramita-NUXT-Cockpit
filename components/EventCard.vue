@@ -5,7 +5,6 @@
     :image="image || '/placeholder-event.jpg'"
     :imageAlt="title"
     :badge="getEventBadge()"
-    :link="slug ? `/events/${slug}` : null"
     customClass="event-card"
   >
     <template #meta>

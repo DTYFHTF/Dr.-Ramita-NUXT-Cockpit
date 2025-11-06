@@ -5,7 +5,6 @@
     :image="image || '/placeholder-course.jpg'"
     :imageAlt="title"
     :badge="price === 0 ? 'Free' : `₹ ${price}`"
-    :link="`/courses/${slug}`"
     customClass="course-card"
   >
     <template #meta>
@@ -26,7 +25,7 @@
           :to="`/courses/${slug}`"
           class="enroll-btn btn-smooth-primary"
         >
-          Learn More
+          {{ buttonText }}
           <LucideIcon icon="mdi:arrow-right-circle" color="white" class="btn-icon" />
         </NuxtLink>
       </slot>
@@ -48,6 +47,10 @@ const props = defineProps({
   price: Number,
   duration: String,
   level: String,
+  buttonText: {
+    type: String,
+    default: 'Learn More'
+  }
 });
 </script>
 

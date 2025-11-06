@@ -44,19 +44,7 @@
           :registered-count="event.registered_count"
           :status="event.status"
           :category="event.category"
-        >
-          <template #meta>
-            <div class="registration-badge">
-              <LucideIcon name="CheckCircle2" :size="16" class="me-1" />
-              Registered {{ formatDate(event.registered_at) }}
-            </div>
-          </template>
-          <template #button>
-            <NuxtLink :to="`/events/${event.slug}`" class="btn btn-success w-100">
-              View Details
-            </NuxtLink>
-          </template>
-        </EventCard>
+        />
       </div>
     </div>
   </div>
@@ -123,30 +111,6 @@ const fetchEvents = async () => {
   }
 };
 
-const formatDate = (dateString: string) => {
-  if (!dateString) return 'recently';
-  
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'recently';
-    
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'today';
-    if (diffDays === 1) return 'yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'recently';
-  }
-};
-
 onMounted(() => {
   fetchEvents();
 });
@@ -204,18 +168,6 @@ color: var(--text-primary);
 
   .event-wrapper {
     position: relative;
-  }
-
-  .registration-badge {
-    display: inline-flex;
-    align-items: center;
-    background: var(--color-secondary);
-    color: white;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.75rem;
   }
 }
 </style>
