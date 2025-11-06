@@ -19,49 +19,49 @@
               <!-- Navigation Menu -->
               <div class="sidebar-nav">
                 <button 
-                  @click="activeTab = 'profile'" 
+                  @click="changeTab('profile')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'profile' }]"
                 >
                   <LucideIcon icon="mdi:account" class="me-2" />
                   My Account
                 </button>
                 <button 
-                  @click="activeTab = 'courses'" 
+                  @click="changeTab('courses')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'courses' }]"
                 >
                   <LucideIcon icon="mdi:school" class="me-2" />
                   My Courses
                 </button>
                 <button 
-                  @click="activeTab = 'events'" 
+                  @click="changeTab('events')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'events' }]"
                 >
                   <LucideIcon icon="mdi:calendar-star" class="me-2" />
                   My Events
                 </button>
                 <button 
-                  @click="activeTab = 'consultations'" 
+                  @click="changeTab('consultations')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'consultations' }]"
                 >
                   <LucideIcon icon="mdi:calendar-check" class="me-2" />
                   My Consultations
                 </button>
                 <button 
-                  @click="activeTab = 'orders'" 
+                  @click="changeTab('orders')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'orders' }]"
                 >
                   <LucideIcon icon="mdi:package-variant" class="me-2" />
                   My Orders
                 </button>
                 <button 
-                  @click="activeTab = 'wishlist'" 
+                  @click="changeTab('wishlist')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'wishlist' }]"
                 >
                   <LucideIcon icon="mdi:heart" class="me-2" />
                   My Wishlist
                 </button>
                 <button 
-                  @click="activeTab = 'password'" 
+                  @click="changeTab('password')" 
                   :class="['sidebar-nav-item', { active: activeTab === 'password' }]"
                 >
                   <LucideIcon icon="mdi:lock" class="me-2" />
@@ -189,10 +189,16 @@ const route = useRoute()
 const router = useRouter()
 const activeTab = ref(route.query.tab || 'profile')
 
+// Function to change tab and update URL
+const changeTab = (tab: string) => {
+  activeTab.value = tab
+  router.push({ query: { tab } })
+}
+
 // Watch for tab query changes (e.g., when navigating from dropdown)
 watch(() => route.query.tab, (newTab) => {
   if (newTab) {
-    activeTab.value = newTab
+    activeTab.value = newTab as string
   }
 })
 const dashboardLoadError = ref('')
