@@ -288,7 +288,7 @@ const submitOrder = async () => {
           // Payment successful - verify on backend
           isSubmitting.value = true;
           const verificationResult = await verifyPayment(
-            response.order_id,
+            response.payment_id, // Use payment_id instead of order_id
             razorpayResponse,
             userStore.token || ''
           );
@@ -305,7 +305,8 @@ const submitOrder = async () => {
         },
         (error: any) => {
           // Payment failed or cancelled
-          errorMessage.value = error?.message || 'Payment failed or cancelled';
+          console.log('Payment cancelled or failed:', error);
+          errorMessage.value = error?.message || 'Payment was cancelled. Your cart has been preserved - you can try again.';
           isSubmitting.value = false;
         }
       );

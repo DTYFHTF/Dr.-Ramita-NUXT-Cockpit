@@ -12,7 +12,7 @@
             <p class="text-muted mb-4">Once you place an order it will appear here. Browse products to get started.</p>
             <NuxtLink to="/products" class="btn btn-smooth-success">
                 <LucideIcon icon="mdi:shopping" class="me-2" />
-                Shop Products
+                Start Shopping
             </NuxtLink>
         </div>
         <div v-else>
