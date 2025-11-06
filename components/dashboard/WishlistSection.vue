@@ -8,7 +8,7 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="wishlist.length === 0" class="empty-wishlist text-center py-5">
+    <div v-else-if="wishlist.length === 0" class="empty-state text-center py-5">
       <div class="empty-icon mb-3">
         <LucideIcon icon="mdi:heart-outline" size="4rem" color="var(--text-muted)" />
       </div>
@@ -147,14 +147,6 @@ onMounted(async () => {
 .wishlist-actions {
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--border-light);
-}
-
-.empty-wishlist {
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .modal {

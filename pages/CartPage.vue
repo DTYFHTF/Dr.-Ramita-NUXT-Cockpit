@@ -1,6 +1,6 @@
 <template>
   <div class="cart-page container py-5">
-    <div class="cart-header text-center mb-5">
+    <div v-if="cart.length > 0" class="cart-header text-center mb-5">
       <h1 class="cart-title">Your Cart</h1>
       <p class="cart-subtitle">Review your items and proceed to checkout</p>
     </div>

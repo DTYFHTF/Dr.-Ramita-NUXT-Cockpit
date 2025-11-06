@@ -298,9 +298,4 @@ onMounted(fetchConsultations)
   }
 }
 
-
-.btn{
-  color: var(--color-primary);
-}
-
 </style>

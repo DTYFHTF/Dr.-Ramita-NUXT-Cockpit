@@ -299,7 +299,7 @@ const getItemImage = (item: any): string => {
   
   &.status-confirmed {
     background: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
+    
     border: 1px solid rgba(34, 197, 94, 0.3);
   }
 }

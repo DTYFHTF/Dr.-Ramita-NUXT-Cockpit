@@ -221,6 +221,15 @@ const validateForm = () => {
 };
 
 const submitOrder = async () => {
+  // Check if cart is empty
+  if (!cart || cart.length === 0) {
+    errorMessage.value = 'Your cart is empty. Please add items before checkout.';
+    setTimeout(() => {
+      router.push('/products');
+    }, 2000);
+    return;
+  }
+
   if (!validateForm()) {
     errorMessage.value = 'Please fill all required fields.';
     return;

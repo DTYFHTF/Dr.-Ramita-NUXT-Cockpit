@@ -855,4 +855,11 @@ main {
   color: var(--text-white);
 }
 
+.empty-state{
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 

@@ -4,7 +4,17 @@
             <span class="spinner-border text-primary"></span>
         </div>
         <div v-else-if="error" class="alert alert-danger text-center">{{ error }}</div>
-        <div v-else-if="orders.length === 0" class="alert alert-info text-center">No orders found.</div>
+        <div v-else-if="orders.length === 0" class="empty-state text-center py-5">
+            <div class="empty-icon mb-3">
+                <LucideIcon icon="mdi:package-variant" size="4rem" color="var(--text-muted)" />
+            </div>
+            <h5 class="text-muted mb-3">You have no orders yet</h5>
+            <p class="text-muted mb-4">Once you place an order it will appear here. Browse products to get started.</p>
+            <NuxtLink to="/products" class="btn btn-smooth-success">
+                <LucideIcon icon="mdi:shopping" class="me-2" />
+                Shop Products
+            </NuxtLink>
+        </div>
         <div v-else>
             <div class="table-responsive rounded-4 shadow-sm p-3 dashboard-panel dashboard-table">
                 <table class="table align-middle">
@@ -24,7 +34,12 @@
                             <td>{{ order.created_at ? new Date(order.created_at).toLocaleString() : '' }}</td>
                             <td>{{ order.status }}</td>
                             <td>₹{{ order.total }}</td>
-                            <td>{{ order.cart.length }}</td>
+                            <td>
+                                <span :class="{ 'text-danger': getItemCount(order) === 0 }">
+                                    {{ getItemCount(order) }}
+                                    <span v-if="getItemCount(order) === 0" class="badge bg-danger ms-1" title="No items in order - data issue">⚠️</span>
+                                </span>
+                            </td>
                             <td>
                                 <NuxtLink :to="`/order/${order.id}`" class="btn btn-sm btn-smooth-outline p-2">
                                     <LucideIcon icon="mdi:eye" :size="16" class="me-1" />
@@ -64,6 +79,10 @@ const fetchOrders = async () => {
     } finally {
         loading.value = false;
     }
+};
+
+const getItemCount = (order: Order) => {
+    return order.cart?.length || 0;
 };
 
 onMounted(fetchOrders);

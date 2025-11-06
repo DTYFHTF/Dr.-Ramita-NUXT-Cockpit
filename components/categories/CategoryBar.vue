@@ -2,8 +2,8 @@
   <nav class="category-bar d-flex align-items-center py-2 border-bottom">
     <div class="container d-flex align-items-center justify-content-between p-0" style="max-width: 1200px;">
       <button class="btn btn-link d-flex align-items-center gap-2 shop-by-btn" @click="showSidebar = !showSidebar">
-        <LucideIcon :icon="showSidebar ? 'mdi:close' : 'mdi:menu'" class="fs-4 text-success" />
-        <span class="fw-semibold text-success">Shop by Categories</span>
+        <LucideIcon :icon="showSidebar ? 'mdi:close' : 'mdi:menu'" class="fs-4" />
+        <span class="fw-semibold">Shop by Categories</span>
       </button>
       <div v-if="!isMobile" class="category-links ms-auto d-flex align-items-center flex-wrap">
         <NuxtLink
