@@ -74,78 +74,43 @@
       <!-- FAQ Section -->
       <div class="faq-section mt-5">
         <h3 class="text-center mb-4">Frequently Asked Questions</h3>
-        <div class="accordion" id="bulkOrderFAQ">
-          <div class="accordion-item">
+        
+        <div v-if="faqsLoading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading FAQs...</span>
+          </div>
+        </div>
+
+        <div v-else-if="bulkOrderFaqs.length > 0" class="accordion" id="bulkOrderFAQ">
+          <div 
+            v-for="(faq, index) in bulkOrderFaqs" 
+            :key="faq.id"
+            class="accordion-item"
+          >
             <h2 class="accordion-header">
               <button
                 class="accordion-button"
+                :class="{ collapsed: index !== 0 }"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#faq1"
+                :data-bs-target="`#faq${faq.id}`"
               >
-                What is the minimum order quantity?
+                {{ faq.question }}
               </button>
             </h2>
-            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#bulkOrderFAQ">
-              <div class="accordion-body">
-                The minimum order quantity is 10 units per product. However, we can discuss custom requirements based on your specific needs.
-              </div>
+            <div 
+              :id="`faq${faq.id}`" 
+              class="accordion-collapse collapse"
+              :class="{ show: index === 0 }"
+              data-bs-parent="#bulkOrderFAQ"
+            >
+              <div class="accordion-body" v-html="faq.answer"></div>
             </div>
           </div>
+        </div>
 
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq2"
-              >
-                Do you ship internationally?
-              </button>
-            </h2>
-            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#bulkOrderFAQ">
-              <div class="accordion-body">
-                Yes, we ship worldwide. Shipping costs and delivery times will be calculated based on your location and order size.
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq3"
-              >
-                How long does it take to receive a quotation?
-              </button>
-            </h2>
-            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#bulkOrderFAQ">
-              <div class="accordion-body">
-                Our team typically responds within 24-48 hours with a detailed quotation tailored to your requirements.
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq4"
-              >
-                Can I request product samples before placing a bulk order?
-              </button>
-            </h2>
-            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#bulkOrderFAQ">
-              <div class="accordion-body">
-                Yes, we can arrange product samples for evaluation. Please mention this in your inquiry message, and we'll provide details on sample availability and costs.
-              </div>
-            </div>
-          </div>
+        <div v-else class="text-center py-5 text-muted">
+          <p>No FAQs available at the moment.</p>
         </div>
       </div>
     </div>
@@ -153,11 +118,39 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import LucideIcon from '@/components/LucideIcon.vue'
 import BulkOrderInquiryForm from '@/components/BulkOrderInquiryForm.vue'
 
+interface Faq {
+  id: number
+  category: string
+  question: string
+  answer: string
+  order: number
+  is_active: boolean
+}
+
 const userStore = useUserStore()
+const config = useRuntimeConfig()
+const bulkOrderFaqs = ref<Faq[]>([])
+const faqsLoading = ref(false)
+
+// Fetch bulk order FAQs on mount
+onMounted(async () => {
+  faqsLoading.value = true
+  try {
+    const response = await $fetch<{ success: boolean; data: Faq[] }>(`${config.public.apiBase}/faqs?category=bulk-order`)
+    if (response.success) {
+      bulkOrderFaqs.value = response.data
+    }
+  } catch (err) {
+    console.error('Failed to fetch FAQs:', err)
+  } finally {
+    faqsLoading.value = false
+  }
+})
 
 // Page metadata
 definePageMeta({

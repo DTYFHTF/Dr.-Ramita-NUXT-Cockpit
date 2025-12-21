@@ -51,7 +51,7 @@ export function useBulkOrderInquiry() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(data)
+        body: data
       }) as any
       
       success.value = true

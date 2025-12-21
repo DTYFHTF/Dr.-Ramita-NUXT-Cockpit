@@ -65,7 +65,7 @@ const emit = defineEmits(['close'])
 const title = computed(() => {
   if (props.type === 'enrollment') return '🎉 You\'re All Set!'
   if (props.type === 'registration') return '🎊 Registration Confirmed!'
-  return '✅ Inquiry Submitted Successfully!'
+  return 'Inquiry Submitted Successfully!'
 })
 
 const subtitle = computed(() => {
