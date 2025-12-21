@@ -137,13 +137,27 @@ const config = useRuntimeConfig()
 const bulkOrderFaqs = ref<Faq[]>([])
 const faqsLoading = ref(false)
 
-// Fetch bulk order FAQs on mount
+// Fetch bulk order FAQs on mount (or all if bulk-order category is empty)
 onMounted(async () => {
   faqsLoading.value = true
   try {
-    const response = await $fetch<{ success: boolean; data: Faq[] }>(`${config.public.apiBase}/faqs?category=bulk-order`)
-    if (response.success) {
+    // First try bulk-order category
+    let response = await $fetch<{ success: boolean; data: Faq[] }>(`${config.public.apiBase}/faqs?category=bulk-order`)
+    if (response.success && response.data.length > 0) {
       bulkOrderFaqs.value = response.data
+    } else {
+      // Fallback to all FAQs if bulk-order is empty
+      const allResponse = await $fetch<{ success: boolean; data: Record<string, Faq[]> | Faq[] }>(`${config.public.apiBase}/faqs`)
+      if (allResponse.success) {
+        // Flatten all categories into one array
+        const data = allResponse.data
+        if (Array.isArray(data)) {
+          bulkOrderFaqs.value = data
+        } else {
+          // It's grouped by category - flatten all
+          bulkOrderFaqs.value = Object.values(data).flat()
+        }
+      }
     }
   } catch (err) {
     console.error('Failed to fetch FAQs:', err)
