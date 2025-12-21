@@ -158,6 +158,28 @@ export function useProducts() {
     }
   }
 
+  /**
+   * Search products by name (for autocomplete)
+   */
+  async function searchProductsByName(query: string) {
+    if (!query || query.length < 2) {
+      return [];
+    }
+
+    try {
+      const response = (await $fetch(
+        `${API_BASE}/products?search=${encodeURIComponent(query)}&per_page=10`,
+        {
+          headers: { Accept: "application/json" },
+        }
+      )) as any;
+      return Array.isArray(response) ? response : response.data || [];
+    } catch (e: any) {
+      console.error('Product search error:', e);
+      return [];
+    }
+  }
+
   return {
     products,
     product,
@@ -168,6 +190,7 @@ export function useProducts() {
     fetchBestSellingProducts,
     fetchFeaturedProducts,
     fetchSimilarProducts,
+    searchProductsByName,
     categories,
     fetchCategories,
     pagination,

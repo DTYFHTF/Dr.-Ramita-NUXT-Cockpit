@@ -46,8 +46,8 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: 'enrollment', // 'enrollment' or 'registration'
-    validator: (value) => ['enrollment', 'registration'].includes(value)
+    default: 'enrollment', // 'enrollment', 'registration', or 'inquiry'
+    validator: (value) => ['enrollment', 'registration', 'inquiry'].includes(value)
   },
   message: {
     type: String,
@@ -63,15 +63,19 @@ const emit = defineEmits(['close'])
 
 // Creative titles and subtitles based on type
 const title = computed(() => {
-  return props.type === 'enrollment' 
-    ? '🎉 You\'re All Set!'
-    : '🎊 Registration Confirmed!'
+  if (props.type === 'enrollment') return '🎉 You\'re All Set!'
+  if (props.type === 'registration') return '🎊 Registration Confirmed!'
+  return '✅ Inquiry Submitted Successfully!'
 })
 
 const subtitle = computed(() => {
-  return props.type === 'enrollment'
-    ? 'Your learning journey begins now. Check your email for course details!'
-    : 'We\'re excited to see you at the event. Check your email for event details!'
+  if (props.type === 'enrollment') {
+    return 'Your learning journey begins now. Check your email for course details!'
+  }
+  if (props.type === 'registration') {
+    return 'We\'re excited to see you at the event. Check your email for event details!'
+  }
+  return 'Our team will review your request and contact you within 24-48 hours.'
 })
 
 const handleClose = () => {
