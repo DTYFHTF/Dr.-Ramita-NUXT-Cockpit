@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: 'guest', layout: 'auth' })
 import { ref, nextTick, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'

@@ -75,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: 'guest', layout: 'auth' })
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 

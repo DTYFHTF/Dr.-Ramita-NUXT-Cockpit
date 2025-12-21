@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: 'guest', layout: 'auth' })
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
