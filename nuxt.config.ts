@@ -74,7 +74,20 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
+    '@nuxt/image',
   ],
+  image: {
+    quality: 80,
+    format: ['webp', 'jpg', 'png'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+  },
   pinia: {
     autoImports: [
       'defineStore',

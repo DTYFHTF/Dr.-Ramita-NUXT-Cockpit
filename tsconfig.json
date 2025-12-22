@@ -1,6 +1,11 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {

@@ -90,7 +90,7 @@ onMounted(() => {
 
 // Redirect to login if not authenticated
 if (!userStore.token) {
-  await navigateTo('/auth');
+  await navigateTo('/login');
 }
 </script>
 

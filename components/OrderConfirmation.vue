@@ -292,9 +292,7 @@ const getItemImage = (item: any): string => {
   font-size: 0.875rem;
   
   &.status-pending {
-  background: rgba(107, 114, 128, 0.12); /* Muted gray */
-  color: #374151; /* slate-700 */
-  border: 1px solid rgba(107, 114, 128, 0.16);
+  color: var(--badge-color);
   }
   
   &.status-confirmed {

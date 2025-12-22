@@ -7,6 +7,7 @@ import { useFetch } from '#app'
 export function useApiLaravel(endpoint) {
   const config = useRuntimeConfig()
   const baseUrl = config.public.apiBase // e.g., http://localhost:8000/api
+  const { handleError } = useApiError()
 
   const headers = {
     Accept: 'application/json'
@@ -18,6 +19,10 @@ export function useApiLaravel(endpoint) {
     credentials: 'include', // Include cookies for session/CSRF
     onResponseError({ response }) {
       console.error('API Error:', response.status, response._data)
+      handleError({ 
+        status: response.status, 
+        data: response._data 
+      }, { showToast: true })
     }
   })
 
@@ -48,9 +53,11 @@ export function postBookingLaravel(data) {
 }
 
 // Authenticated API composable for dashboard and protected routes
+// DEPRECATED: Use useAuthenticatedApi() instead for better error handling and token refresh
 export function useAuthApi() {
   const config = useRuntimeConfig()
   const baseUrl = config.public.apiBase
+  const { handleError } = useApiError()
 
   const getAuthHeaders = (token) => ({
     'Accept': 'application/json',
@@ -59,33 +66,53 @@ export function useAuthApi() {
   })
 
   const get = async (endpoint, token) => {
-    return await $fetch(`${baseUrl}/${endpoint}`, {
-      method: 'GET',
-      headers: getAuthHeaders(token)
-    })
+    try {
+      return await $fetch(`${baseUrl}/${endpoint}`, {
+        method: 'GET',
+        headers: getAuthHeaders(token)
+      })
+    } catch (error) {
+      handleError(error)
+      throw error
+    }
   }
 
   const post = async (endpoint, token, body = {}) => {
-    return await $fetch(`${baseUrl}/${endpoint}`, {
-      method: 'POST',
-      headers: getAuthHeaders(token),
-      body: JSON.stringify(body)
-    })
+    try {
+      return await $fetch(`${baseUrl}/${endpoint}`, {
+        method: 'POST',
+        headers: getAuthHeaders(token),
+        body: JSON.stringify(body)
+      })
+    } catch (error) {
+      handleError(error)
+      throw error
+    }
   }
 
   const put = async (endpoint, token, body = {}) => {
-    return await $fetch(`${baseUrl}/${endpoint}`, {
-      method: 'PUT',
-      headers: getAuthHeaders(token),
-      body: JSON.stringify(body)
-    })
+    try {
+      return await $fetch(`${baseUrl}/${endpoint}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(token),
+        body: JSON.stringify(body)
+      })
+    } catch (error) {
+      handleError(error)
+      throw error
+    }
   }
 
   const del = async (endpoint, token) => {
-    return await $fetch(`${baseUrl}/${endpoint}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders(token)
-    })
+    try {
+      return await $fetch(`${baseUrl}/${endpoint}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(token)
+      })
+    } catch (error) {
+      handleError(error)
+      throw error
+    }
   }
 
   return {
