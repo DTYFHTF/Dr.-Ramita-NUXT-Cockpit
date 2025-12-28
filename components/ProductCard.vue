@@ -1,5 +1,8 @@
 <template>
-  <div class="card h-100 product-card border shadow-sm">
+  <div 
+    v-memo="[product.id, product.display_price, product.stock, isInWishlist, isInStock]"
+    class="card h-100 product-card border shadow-sm"
+  >
     <NuxtLink
       :to="`/products/${product.slug}`"
       class="text-decoration-none product-link d-flex flex-column h-100"

@@ -9,6 +9,18 @@ export function useApiLaravel(endpoint) {
   const baseUrl = config.public.apiBase // e.g., http://localhost:8000/api
   const { handleError } = useApiError()
 
+  // Deprecation warning
+  if (import.meta.dev) {
+    console.warn(
+      '⚠️ useApiLaravel is deprecated.\n' +
+      'Migrate to useProductsAsync() for:\n' +
+      '  - Better SSR support\n' +
+      '  - Automatic caching\n' +
+      '  - Token refresh on 401\n' +
+      'See: docs/MIGRATION_PLAN.md'
+    )
+  }
+
   const headers = {
     Accept: 'application/json'
     // Add Authorization if needed

@@ -101,7 +101,7 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_LARAVEL_API_URL,
       baseUrl: process.env.NUXT_LARAVEL_BASE_URL,
       cockpitToken: process.env.NUXT_COCKPIT_TOKEN,
-      razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID
+      razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID,
     }
   }
 });

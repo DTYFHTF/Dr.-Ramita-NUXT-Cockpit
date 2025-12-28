@@ -2,11 +2,16 @@
   <div id="app">
     <Navbar />
     <CategoryBar />
-    <main class="main-content">
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-    </main>
+    <ErrorBoundary
+      :show-details="isDev"
+      :on-error="handleError"
+    >
+      <main class="main-content">
+        <NuxtLayout>
+          <NuxtPage />
+        </NuxtLayout>
+      </main>
+    </ErrorBoundary>
     <Footer />
   </div>
 </template>
@@ -15,11 +20,23 @@
 import Navbar from '@/components/Navbar.vue';
 import CategoryBar from '@/components/categories/CategoryBar.vue';
 import Footer from '@/components/Footer.vue';
+import ErrorBoundary from '@/components/ErrorBoundary.vue';
 import { useTheme } from '@/composables/useTheme';
 
 // Initialize theme system
 const { initTheme } = useTheme();
 initTheme();
+
+// Development mode check
+const isDev = import.meta.dev;
+
+// Error handler for production logging
+const handleError = (error) => {
+  if (!isDev) {
+    // TODO: Send to error tracking service (Sentry, LogRocket, etc.)
+    console.error('[Production Error]', error);
+  }
+};
 </script>
 
 <style>
