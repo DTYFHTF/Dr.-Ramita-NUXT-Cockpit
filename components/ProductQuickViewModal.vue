@@ -20,12 +20,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUnmount, watch } from 'vue';
 import ProductQuickViewContent from './ProductQuickViewContent.vue';
 import type { Product } from '@/types';
 
 const props = defineProps<{ product: Product }>();
 const emit = defineEmits(['close', 'add-to-cart']);
+
+console.log('[ProductQuickViewModal] Component mounted with product:', props.product ? { id: props.product.id, name: props.product.name } : null);
+
+watch(() => props.product, (newProduct) => {
+  console.log('[ProductQuickViewModal] Product prop changed:', newProduct ? { id: newProduct.id, name: newProduct.name, has_variations: newProduct.has_variations, variations_count: newProduct.variations?.length } : null);
+}, { immediate: true });
 
 function onBackdropClick(e: MouseEvent) {
   // Only close if click is on backdrop, not modal content
@@ -37,9 +43,11 @@ function onEscape(e: KeyboardEvent) {
 }
 
 onMounted(() => {
+  console.log('[ProductQuickViewModal] onMounted');
   window.addEventListener('keydown', onEscape);
 });
 onBeforeUnmount(() => {
+  console.log('[ProductQuickViewModal] onBeforeUnmount');
   window.removeEventListener('keydown', onEscape);
 });
 </script>

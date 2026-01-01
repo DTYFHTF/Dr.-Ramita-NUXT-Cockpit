@@ -40,12 +40,12 @@
                   <input v-model="shipping.address" type="text" class="form-input" required placeholder="Flat, House no., Building" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Area <span class="required">*</span></label>
-                  <input v-model="shipping.area" type="text" class="form-input" required placeholder="Area, Street, Sector" />
+                  <label class="form-label">Area</label>
+                  <input v-model="shipping.area" type="text" class="form-input" placeholder="Area, Street, Sector" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Landmark <span class="required">*</span></label>
-                  <input v-model="shipping.landmark" type="text" class="form-input" placeholder="Nearby landmark" required />
+                  <label class="form-label">Landmark</label>
+                  <input v-model="shipping.landmark" type="text" class="form-input" placeholder="Nearby landmark" />
                 </div>
                 <div class="form-group">
                   <label class="form-label">City <span class="required">*</span></label>
@@ -56,14 +56,62 @@
                   <input v-model="shipping.state" type="text" class="form-input" required placeholder="Your state" />
                 </div>
                 <div class="form-group full-width mb-4">
-                  <label class="form-label">Country <span class="required">*</span></label>
-                  <input v-model="shipping.country" type="text" class="form-input" required placeholder="India" />
+                  <label class="form-label">Country</label>
+                  <input v-model="shipping.country" type="text" class="form-input" placeholder="India" />
                 </div>
               </div>
               
               <div class="form-group mt-4">
                 <label class="form-label">Special Instructions</label>
                 <textarea v-model="specialInstructions" class="form-textarea" rows="3" placeholder="Any special delivery instructions..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
+                <LucideIcon icon="mdi:truck-delivery" class="section-icon" />
+                <h3 class="section-title">Shipping Method</h3>
+              </div>
+              
+              <div v-if="loadingShipping" class="shipping-loading">
+                <span class="spinner"></span>
+                Calculating shipping rates...
+              </div>
+              
+              <div v-else-if="shippingError" class="shipping-error">
+                <LucideIcon icon="mdi:alert-circle" class="me-2" />
+                {{ shippingError }}
+              </div>
+              
+              <div v-else-if="shippingMethods.length === 0" class="shipping-info">
+                <LucideIcon icon="mdi:information" class="me-2" />
+                Enter state and pincode to see shipping options
+              </div>
+              
+              <div v-else class="payment-options">
+                <div v-for="method in shippingMethods" :key="method.id" class="payment-option">
+                  <input 
+                    class="payment-radio" 
+                    type="radio" 
+                    :id="`shipping_${method.id}`" 
+                    :value="method.id" 
+                    v-model="selectedShippingMethodId" 
+                    required 
+                  />
+                  <label class="payment-label" :for="`shipping_${method.id}`">
+                    <div class="payment-content">
+                      <div>
+                        <span class="payment-name">{{ method.name }}</span>
+                        <span v-if="method.is_express" class="badge-express">Express</span>
+                        <small class="d-block text-muted">{{ method.estimated_delivery }}</small>
+                      </div>
+                      <div class="text-end">
+                        <span v-if="method.cost === 0" class="text-success fw-bold">FREE</span>
+                        <span v-else class="fw-bold">₹{{ method.cost.toFixed(2) }}</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -136,16 +184,25 @@
             
             <div class="summary-totals">
               <div class="total-row">
-                <span>Shipping</span>
-                <span>₹{{ orderData?.shipping_cost || shippingCost }}</span>
+                <span>Subtotal</span>
+                <span>₹{{ totalPrice.toFixed(2) }}</span>
               </div>
-              <div class="total-row">
-                <span>Delivery</span>
-                <span>{{ estimatedDelivery }}</span>
+              <div v-if="selectedShippingMethodId" class="total-row">
+                <span>Shipping ({{ selectedShippingMethodName }})</span>
+                <span v-if="shippingCost === 0" class="text-success fw-bold">FREE</span>
+                <span v-else class="fw-bold">₹{{ shippingCost.toFixed(2) }}</span>
+              </div>
+              <div v-else-if="loadingShipping" class="total-row">
+                <span>Shipping</span>
+                <span>Calculating...</span>
+              </div>
+              <div v-if="selectedShippingMethodId" class="total-row">
+                <span>Estimated Delivery</span>
+                <span class="text-muted">{{ estimatedDelivery }}</span>
               </div>
               <div class="total-row final-total">
                 <span>Total</span>
-                <span>₹{{ ((orderData?.total) ? orderData.total : (totalPrice + (orderData?.shipping_cost || shippingCost))).toFixed(2) }}</span>
+                <span>₹{{ (totalPrice + shippingCost).toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -203,8 +260,116 @@ const paymentMethods = [
   { value: 'upi', label: 'UPI (via Razorpay)' },
   { value: 'paypal', label: 'International Cards (Razorpay)' }
 ];
-const shippingCost = 85;
-const estimatedDelivery = '3-7 business days';
+
+// Shipping method selection
+const shippingMethods = ref<any[]>([]);
+const selectedShippingMethodId = ref<number | null>(null);
+const loadingShipping = ref(false);
+const shippingError = ref('');
+
+// Computed shipping cost and delivery time
+const shippingCost = computed(() => {
+  if (!selectedShippingMethodId.value) return 0;
+  const method = shippingMethods.value.find(m => m.id === selectedShippingMethodId.value);
+  return method?.cost || 0;
+});
+
+const estimatedDelivery = computed(() => {
+  if (!selectedShippingMethodId.value) return 'Select shipping method';
+  const method = shippingMethods.value.find(m => m.id === selectedShippingMethodId.value);
+  return method?.estimated_delivery || '3-7 business days';
+});
+
+const selectedShippingMethodName = computed(() => {
+  if (!selectedShippingMethodId.value) return 'Not selected';
+  const method = shippingMethods.value.find(m => m.id === selectedShippingMethodId.value);
+  return method?.method_name || method?.name || 'Not selected';
+});
+
+// Fetch shipping rates when address is complete
+const fetchShippingRates = async () => {
+  // Check if cart has items
+  if (!cart || cart.length === 0) {
+    shippingError.value = 'Please add items to your cart first';
+    return;
+  }
+  
+  if (!shipping.value.state || !shipping.value.pincode) {
+    return;
+  }
+  
+  loadingShipping.value = true;
+  shippingError.value = '';
+  
+  try {
+    const response = await $fetch<any>(`${apiBase}/shipping/calculate`, {
+      method: 'POST',
+      body: {
+        cart: cart.map((item) => ({
+          product_id: item.product_id,
+          variation_id: item.variation_id,
+          quantity: item.quantity
+        })),
+        shipping_address: {
+          state: shipping.value.state,
+          pincode: shipping.value.pincode
+        }
+      },
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.success) {
+      // Map method_id from API response to id for the frontend
+      shippingMethods.value = (response.methods || []).map((method: any) => ({
+        ...method,
+        id: method.method_id, // Map method_id to id
+        name: method.method_name
+      }));
+      // Auto-select the first (cheapest) method
+      if (shippingMethods.value.length > 0) {
+        selectedShippingMethodId.value = shippingMethods.value[0].id;
+      }
+    } else {
+      shippingError.value = response.message || 'Unable to calculate shipping';
+    }
+  } catch (e: any) {
+    console.error('Shipping calculation error:', e);
+    // Extract validation error message if available
+    let errorMsg = 'Failed to calculate shipping rates';
+    
+    if (e.data?.errors) {
+      // Format validation errors
+      const errors = Object.values(e.data.errors).flat();
+      errorMsg = errors.join(', ');
+    } else if (e.data?.message) {
+      errorMsg = e.data.message;
+    } else if (e.message) {
+      errorMsg = e.message;
+    }
+    
+    shippingError.value = errorMsg;
+  } finally {
+    loadingShipping.value = false;
+  }
+};
+
+// Watch for address changes to recalculate shipping (debounced)
+let shippingDebounceTimer: any = null;
+watch([() => shipping.value.state, () => shipping.value.pincode], () => {
+  if (shipping.value.state && shipping.value.pincode) {
+    // Clear existing timer
+    if (shippingDebounceTimer) {
+      clearTimeout(shippingDebounceTimer);
+    }
+    // Wait 500ms after user stops typing
+    shippingDebounceTimer = setTimeout(() => {
+      fetchShippingRates();
+    }, 500);
+  }
+});
 
 const orderSuccess = ref(false);
 const orderData = ref<Order | null>(null);
@@ -212,11 +377,22 @@ const isSubmitting = ref(false);
 const errorMessage = ref('');
 
 const validateForm = () => {
-  // Basic validation for required fields
-  for (const key in shipping.value) {
-    if (!shipping.value[key as keyof ShippingInfo]) return false;
+  // Validate essential shipping fields only
+  const requiredFields = ['name', 'phone', 'pincode', 'address', 'city', 'state'];
+  for (const field of requiredFields) {
+    if (!shipping.value[field as keyof ShippingInfo]) {
+      errorMessage.value = `Please fill in ${field}`;
+      return false;
+    }
   }
-  if (!paymentMethod.value) return false;
+  if (!paymentMethod.value) {
+    errorMessage.value = 'Please select a payment method';
+    return false;
+  }
+  if (!selectedShippingMethodId.value) {
+    errorMessage.value = 'Please select a shipping method';
+    return false;
+  }
   return true;
 };
 
@@ -250,6 +426,7 @@ const submitOrder = async () => {
   const payload = {
     shipping: shipping.value,
     payment_method: paymentMethod.value === 'cod' ? 'cod' : 'razorpay',
+    shipping_method_id: selectedShippingMethodId.value,
     cart: cart.map((item) => ({
       product_id: item.product_id,
       variation_id: item.variation_id,
@@ -846,6 +1023,45 @@ const submitOrder = async () => {
   border-radius: 12px;
   margin-bottom: 2rem;
   border: 1px solid var(--color-error);
+}
+
+/* Shipping section styles */
+.shipping-loading,
+.shipping-error,
+.shipping-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.shipping-loading {
+  background: var(--background-light);
+  color: var(--text-muted);
+}
+
+.shipping-error {
+  background: var(--badge-color);
+  color: var(--text-error);
+  border: 1px solid var(--color-error);
+}
+
+.shipping-info {
+  background: #e7f3ff;
+  color: #0066cc;
+}
+
+.badge-express {
+  display: inline-block;
+  background: #ffeaa7;
+  color: #d63031;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  font-weight: 600;
 }
 
 /* Responsive Design */

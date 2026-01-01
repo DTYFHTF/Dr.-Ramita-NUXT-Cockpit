@@ -280,7 +280,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import LucideIcon from "./LucideIcon.vue";
 import ProductBadges from "./ProductBadges.vue";
 import PromotionBadge from "./PromotionBadge.vue";
@@ -291,8 +291,14 @@ import type { Product } from "@/types";
 const props = defineProps<{ product: Product; showViewDetails?: boolean }>();
 const emit = defineEmits(["add-to-cart"]);
 
+console.log('[ProductQuickViewContent] Component created with product:', props.product ? { id: props.product.id, name: props.product.name, has_variations: props.product.has_variations, variations_count: props.product.variations?.length } : null);
+
+onMounted(() => {
+  console.log('[ProductQuickViewContent] Component mounted');
+});
+
 const quantity = ref(1);
-const selectedVariationId = ref<string | null>(null);
+const selectedVariationId = ref<number | null>(null);
 
 const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
@@ -361,8 +367,13 @@ const canAddToCart = computed(() => {
 watch(
   () => props.product.variations,
   (vars) => {
+    console.log('[ProductQuickViewContent] Variations changed', {
+      count: vars?.length ?? 0,
+      variations: vars
+    });
     if (vars && vars.length) {
       selectedVariationId.value = vars[0].id;
+      console.log('[ProductQuickViewContent] Auto-selected first variation:', vars[0].id);
     }
   },
   { immediate: true }
@@ -375,14 +386,23 @@ function decrement() {
   if (quantity.value > 1) quantity.value--;
 }
 function addToCartHandler() {
+  console.log('[ProductQuickViewContent] addToCartHandler called', {
+    has_variations: props.product.has_variations,
+    variations_count: props.product.variations?.length ?? 0,
+    selectedVariation: selectedVariation.value,
+    selectedVariationId: selectedVariationId.value
+  });
+  
   if (props.product.has_variations && props.product.variations?.length && selectedVariation.value) {
     // Only pass parent product info, and set variation_id explicitly
+    console.log('[ProductQuickViewContent] Emitting add-to-cart with variation_id:', selectedVariation.value.id);
     emit("add-to-cart", {
       ...props.product,
       variation_id: selectedVariation.value.id,
       quantity: quantity.value,
     });
   } else {
+    console.log('[ProductQuickViewContent] Emitting add-to-cart without variation');
     emit("add-to-cart", { ...props.product, quantity: quantity.value });
   }
 }

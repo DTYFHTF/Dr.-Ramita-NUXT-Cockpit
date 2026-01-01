@@ -136,8 +136,9 @@
         </button>
       </template>
     </div>
-    <ProductQuickView v-if="showQuickView && fullProduct" :product="fullProduct" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   </div>
+  <!-- Modal moved outside card container to avoid v-memo and styling issues -->
+  <ProductQuickView v-if="showQuickView && fullProduct" :product="fullProduct" @close="closeQuickView" @add-to-cart="onQuickViewAddToCart" />
   <CartToast :show="showNotification" message="Product added to cart!" link-href="/CartPage" link-text="View Cart" />
   <div v-if="showWishlistNotification" class="toast-message wishlist-toast">
     Product added to wishlist! 
@@ -229,21 +230,33 @@ const handleWishlistToggle = async () => {
 };
 
 const handleAddToCart = async (product: Product) => {
+  console.log('[ProductCard] handleAddToCart called', {
+    product_id: product.id,
+    name: product.name,
+    has_variations: product.has_variations,
+    variations_count: product.variations?.length ?? 0,
+    variations: product.variations
+  });
+  
   if (!userStore.hydrated) {
+    console.log('[ProductCard] User store not hydrated yet');
     alert('Please wait, authentication state is loading.');
     return;
   }
   if (!isAuthenticated.value) {
+    console.log('[ProductCard] User not authenticated');
     alert('You need to be logged in to add products to the cart.');
     return;
   }
   try {
     // If product has variations, always open quick view for selection
     if (product.has_variations && product.variations && product.variations.length > 0) {
+      console.log('[ProductCard] Product has variations, opening quick view');
       openQuickView();
       return;
     }
     
+    console.log('[ProductCard] Adding product without variations directly to cart');
     // For products without variations, add directly to cart
     await addToCart(product);
     showNotification.value = true;
@@ -251,12 +264,13 @@ const handleAddToCart = async (product: Product) => {
       showNotification.value = false;
     }, 2000); // Hide notification after 2 seconds
   } catch (err: any) {
-    console.error('Add to cart error:', err);
+    console.error('[ProductCard] Add to cart error:', err);
     
     // Better error handling for 422 validation errors
     if (err?.status === 422) {
       if (err?.data?.error?.includes('variation')) {
         // If it's a variation error, open quick view
+        console.log('[ProductCard] Variation error, opening quick view');
         openQuickView();
         return;
       }
@@ -269,37 +283,63 @@ const handleAddToCart = async (product: Product) => {
 
 // Listen for an event from ProductQuickView when a variation is selected and added
 function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_id?: number }) {
-  // Only add variation_id if it exists in the payload
-  const productToAdd: Product & { variation_id?: number } = { ...props.product };
+  console.log('[ProductCard] onQuickViewAddToCart payload:', payload);
+  
+  // Use fullProduct if available (has complete data), otherwise fallback to props.product
+  const baseProduct = fullProduct.value || props.product;
+  const productToAdd: Product & { variation_id?: number } = { ...baseProduct };
   if (payload.variation_id !== undefined) {
     productToAdd.variation_id = payload.variation_id;
   }
-  addToCart(productToAdd, payload.quantity ?? 1);
-  showNotification.value = true;
-  setTimeout(() => {
-    showNotification.value = false;
-  }, 2000);
-  closeQuickView();
+  
+  console.log('[ProductCard] Adding to cart:', {
+    product_id: productToAdd.id,
+    variation_id: productToAdd.variation_id,
+    quantity: payload.quantity ?? 1
+  });
+  
+  try {
+    addToCart(productToAdd, payload.quantity ?? 1);
+    showNotification.value = true;
+    setTimeout(() => {
+      showNotification.value = false;
+    }, 2000);
+    closeQuickView();
+  } catch (error) {
+    console.error('[ProductCard] Error adding to cart:', error);
+    alert('Error adding to cart: ' + (error as any)?.message);
+  }
 }
 
 const openQuickView = async () => {
+  console.log('[ProductCard] openQuickView called', {
+    product_id: props.product.id,
+    has_variations: props.product.has_variations,
+    variations_exists: !!props.product.variations,
+    variations_count: props.product.variations?.length ?? 0
+  });
+  
   // If product already has variations, just show it
   if (props.product.has_variations && props.product.variations && props.product.variations.length > 0) {
+    console.log('[ProductCard] Using existing variations from props');
     fullProduct.value = props.product;
     showQuickView.value = true;
+    console.log('[ProductCard] showQuickView set to true');
     return;
   }
   
   // Otherwise, fetch the full product with variations
   try {
+    console.log('[ProductCard] Fetching full product details');
     isLoadingProduct.value = true;
     await fetchProduct(props.product.slug);
     
     // Use the fetched product if available, otherwise fallback to current product
     fullProduct.value = fetchedProduct.value || props.product;
     showQuickView.value = true;
+    console.log('[ProductCard] showQuickView set to true after fetch');
   } catch (error) {
-    console.error('Error fetching product details:', error);
+    console.error('[ProductCard] Error fetching product details:', error);
     // Fallback to original product if fetch fails
     fullProduct.value = props.product;
     showQuickView.value = true;
@@ -308,9 +348,19 @@ const openQuickView = async () => {
   }
 };
 const closeQuickView = () => {
+  console.log('[ProductCard] closeQuickView called');
   showQuickView.value = false;
   fullProduct.value = null;
 };
+
+// Add watchers to debug
+watch(showQuickView, (newVal) => {
+  console.log('[ProductCard] showQuickView changed to:', newVal);
+});
+
+watch(fullProduct, (newVal) => {
+  console.log('[ProductCard] fullProduct changed:', newVal ? { id: newVal.id, name: newVal.name, has_variations: newVal.has_variations } : null);
+});
 
 const props = defineProps<{ 
   product: Product;
