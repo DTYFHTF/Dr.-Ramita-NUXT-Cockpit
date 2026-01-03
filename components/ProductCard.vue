@@ -7,7 +7,7 @@
       :to="`/products/${product.slug}`"
       class="text-decoration-none product-link d-flex flex-column h-100"
     >
-      <div class="image-container">
+      <div :class="['image-container', { 'has-two-images': images.length === 2, 'has-three-images': images.length >= 3 }]">
         <img
           v-if="images[0]"
           :src="images[0]"
@@ -444,25 +444,42 @@ function imageUrl(img: string) {
   z-index: 3;
 }
 
-/* Hover animation - cycle through images */
-.image-container:hover .product-image.image-1 {
-  opacity: 0;
-  transform: scale(1.05);
+/* Hover animation - cycle through images (only when multiple images exist) */
+/* For products with 2 images: simple toggle */
+.image-container.has-two-images:hover .product-image.image-1 {
+  animation: fadeOutIn 3s ease-in-out infinite;
 }
 
-.image-container:hover .product-image.image-2 {
-  opacity: 1;
-  transform: scale(1);
-  animation: imageFade 4s ease-in-out infinite;
+.image-container.has-two-images:hover .product-image.image-2 {
+  animation: fadeInOut 3s ease-in-out infinite;
 }
 
-.image-container:hover .product-image.image-3 {
-  opacity: 0;
-  transform: scale(1);
-  animation: imageFade 4s ease-in-out 2s infinite;
+/* For products with 3 images: cycle through all three */
+.image-container.has-three-images:hover .product-image.image-1 {
+  animation: imageFade3 6s ease-in-out infinite;
 }
 
-@keyframes imageFade {
+.image-container.has-three-images:hover .product-image.image-2 {
+  animation: imageFade3 6s ease-in-out 2s infinite;
+}
+
+.image-container.has-three-images:hover .product-image.image-3 {
+  animation: imageFade3 6s ease-in-out 4s infinite;
+}
+
+/* Animation for 2 images - simple fade toggle */
+@keyframes fadeOutIn {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.05); }
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Animation for 3 images - each image shows for 33% of cycle */
+@keyframes imageFade3 {
   0%, 100% { opacity: 1; transform: scale(1); }
   33%, 66% { opacity: 0; transform: scale(1.05); }
 }
