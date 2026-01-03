@@ -19,7 +19,7 @@
             <button
               v-for="category in uniqueCategories"
               :key="category"
-              class="btn btn-sm btn-outline-primary me-2 mb-2"
+              class="category-filter-btn"
               :class="{ active: activeCategory === category }"
               @click="toggleCategory(category)"
             >
@@ -51,7 +51,7 @@
           <span class="badge bg-secondary ms-3">{{ group.length }}</span>     
         </h2>
         
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
           <div 
             v-for="term in group"
             :key="term.slug"
@@ -109,6 +109,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useGlossaryStore } from '@/stores/glossary';
+import type { GlossaryTerm } from '@/types';
 import Fuse from 'fuse.js';
 
 const glossaryStore = useGlossaryStore();
@@ -211,23 +212,59 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .glossary-index {
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: auto;
 }
 
 .glossary-header {
   position: sticky;
   top: 0;
-  background: rgba($background-light, 0.9);
+  background: rgba($background-light, 0.7);
   z-index: 1000;
-  padding: 2rem 0;
+  padding: 2rem 0 1.5rem;
   backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
 }
 
 .search-filter-container {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-filter-btn {
+  padding: 0.5rem 1.25rem;
+  border: 2px solid rgba($color-primary, 0.3);
+  background: transparent;
+  color: $color-primary;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($color-primary, 0.1);
+    border-color: $color-primary;
+    transform: translateY(-2px);
+  }
+
+  &.active {
+    background: $color-primary;
+    color: $text-light;
+    border-color: $color-primary;
+    box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+  }
 }
 
 .alphabet-nav {
@@ -245,6 +282,7 @@ onMounted(async () => {
   margin: 2rem 0 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid $border-color;
+  border-radius: 8px;
 }
 
 .glossary-card {
@@ -252,6 +290,7 @@ onMounted(async () => {
   padding-bottom: 3rem; /* Add space for related terms */
   transition: all 0.2s ease;
   border: 1px solid $border-color;
+  border-radius: 12px;
 }
 
 .glossary-card:hover {
@@ -262,7 +301,7 @@ onMounted(async () => {
 .term-preview {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transition: max-height 0.5s ease-in-out;
 }
 
 .term-preview.show {
@@ -288,11 +327,20 @@ onMounted(async () => {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: $button-bg; 
-  color: $text-light;
+  background: rgba($background-light, 0.5);
+  color: $color-primary;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(2px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $color-primary;
+    color: $text-light;
+    transform: scale(1.05);
+  }
 }
 
 .empty-state {
@@ -323,6 +371,7 @@ onMounted(async () => {
   .category-filters {
     overflow-x: auto;
     white-space: nowrap;
+   
   }
 }
 </style>
