@@ -376,12 +376,12 @@ const props = defineProps<{
 
 const images = computed(() => {
   // First, try to get product's main images
-  let imgs = [props.product.image, props.product.image_2, props.product.image_3].filter(Boolean);
+  let imgs = [props.product.image, props.product.image_2, props.product.image_3].filter((img): img is string => Boolean(img));
   
   // If product has no images but has variations, use the first variation's images
   if (imgs.length === 0 && props.product.has_variations && props.product.variations?.length) {
     const firstVariation = props.product.variations[0];
-    imgs = [firstVariation.image, firstVariation.image_2, firstVariation.image_3].filter(Boolean);
+    imgs = [firstVariation.image, firstVariation.image_2, firstVariation.image_3].filter((img): img is string => Boolean(img));
   }
   
   // Map to full URLs and remove duplicates
