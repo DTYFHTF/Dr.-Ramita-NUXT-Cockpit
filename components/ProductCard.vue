@@ -12,14 +12,21 @@
           v-if="images[0]"
           :src="images[0]"
           :alt="`${product.name} - main product image`"
-          class="card-img-top main-image"
+          class="card-img-top product-image image-1"
           loading="lazy"
         />
         <img
           v-if="images[1]"
           :src="images[1]"
           :alt="`${product.name} - alternate view`"
-          class="card-img-top hover-image"
+          class="card-img-top product-image image-2"
+          loading="lazy"
+        />
+        <img
+          v-if="images[2]"
+          :src="images[2]"
+          :alt="`${product.name} - third view`"
+          class="card-img-top product-image image-3"
           loading="lazy"
         />
       </div>
@@ -368,8 +375,8 @@ const props = defineProps<{
 }>();
 
 const images = computed(() => {
-  // Only use image and image_2 for the product card
-  const imgs = [props.product.image, props.product.image_2].filter(Boolean).map(imageUrl);
+  // Include all three images for the product card
+  const imgs = [props.product.image, props.product.image_2, props.product.image_3].filter(Boolean).map(imageUrl);
   return Array.from(new Set(imgs));
 });
 
@@ -377,7 +384,7 @@ const images = computed(() => {
 function imageUrl(img: string) {
   const config = useRuntimeConfig();
   if (!img) return "/fallback.jpg";
-  if (img.startsWith("https")) return img;
+  if (img.startsWith("http://") || img.startsWith("https://")) return img;
   return `${config.public.baseUrl}/storage/${img}`;
 }
 
@@ -416,32 +423,48 @@ function imageUrl(img: string) {
   object-fit: contain;
   width: 100%;
   height: 100%;
-  transition: transform 1.5s ease-in-out, opacity 0.6s ease-in-out;
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
   position: absolute;
   top: 0;
   left: 0;
   opacity: 0;
 }
 
-.main-image {
+/* Show first image by default */
+.product-image.image-1 {
   opacity: 1;
   z-index: 1;
-  transform: scale(1);
 }
 
-.hover-image {
+.product-image.image-2 {
   z-index: 2;
-  transform: scale(1.1);
 }
 
-.image-container:hover .main-image {
+.product-image.image-3 {
+  z-index: 3;
+}
+
+/* Hover animation - cycle through images */
+.image-container:hover .product-image.image-1 {
   opacity: 0;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-.image-container:hover .hover-image {
+.image-container:hover .product-image.image-2 {
   opacity: 1;
   transform: scale(1);
+  animation: imageFade 4s ease-in-out infinite;
+}
+
+.image-container:hover .product-image.image-3 {
+  opacity: 0;
+  transform: scale(1);
+  animation: imageFade 4s ease-in-out 2s infinite;
+}
+
+@keyframes imageFade {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  33%, 66% { opacity: 0; transform: scale(1.05); }
 }
 
 /* Mobile optimizations */

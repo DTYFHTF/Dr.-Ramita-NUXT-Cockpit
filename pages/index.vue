@@ -26,6 +26,7 @@
 
     <!-- Top Featured Products -->
     <GenericSlider 
+      v-if="topFeaturedProducts.length > 0"
       title="Top Featured"
       :items="topFeaturedProducts" 
       :loading="productsLoading"
@@ -37,6 +38,7 @@
     />
 <!-- Daily & Seasonal Products -->
     <GenericSlider 
+      v-if="dailySeasonalItems.length > 0"
       :title="dailySeasonalTitle"
       :items="dailySeasonalItems"
       :loading="homepageLoading"
@@ -46,12 +48,14 @@
     />
     <!-- Most Searched -->
     <MostSearched 
+      v-if="mostSearchedSection"
       :section-data="mostSearchedSection"
     />
 
     
     <!-- Best Selling Products -->
     <GenericSlider 
+      v-if="bestSellingProducts.length > 0"
       title="Best Selling Products"
       :items="bestSellingProducts" 
       :loading="productsLoading"
@@ -63,7 +67,10 @@
 
     <!-- Top Deals & Offers -->
     
-    <TopDealsOffers :deals="topDeals" />
+    <TopDealsOffers 
+      v-if="topDeals.length > 0"
+      :deals="topDeals" 
+    />
 
   <!-- Promotional Banners removed -->
   </div>
@@ -87,23 +94,12 @@ const { data: homepageData, error: homepageError, loading: homepageLoading } = u
 const { getImageUrl } = useImageUrl();
 
 const { 
-  loading: productsLoading,
-  fetchProducts,
-  fetchBestSellingProducts,
-  fetchFeaturedProducts
+  loading: productsLoading
 } = useProducts();
 
-const bestSellingProductsData = ref([]);
-const featuredProductsData = ref([]);
-
 onMounted(async () => {
-  try {
-    await fetchProducts(1, 12);
-    bestSellingProductsData.value = await fetchBestSellingProducts(12);
-    featuredProductsData.value = await fetchFeaturedProducts(12);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  }
+  // Products are now managed through homepage sections only
+  // No need for separate API calls
 });
 
 const addImageUrl = (item, fallback = '/placeholder-banner.jpg') => {
@@ -137,7 +133,7 @@ const topFeaturedProducts = computed(() => {
   if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  return featuredProductsData.value || [];
+  return [];
 });
 
 const bestSellingProducts = computed(() => {
@@ -146,7 +142,7 @@ const bestSellingProducts = computed(() => {
   if (section && Array.isArray(section.data?.products) && section.data.products.length > 0) {
     return section.data.products.map(product => addImageUrl(product, '/placeholder-product.jpg'));
   }
-  return bestSellingProductsData.value || [];
+  return [];
 });
 
 const mostSearchedSection = computed(() => {
@@ -201,10 +197,7 @@ const topDeals = computed(() => {
   const section = (homepageData.value?.sections || []).find(s => s.type === 'top_deals');
   
   if (section && Array.isArray(section.data?.deals)) {
-    return section.data.deals.map(d => ({
-      ...d,
-      image: d.image || '/placeholder-banner.jpg'
-    }));
+    return section.data.deals.map(d => addImageUrl(d, '/placeholder-banner.jpg'));
   }
   return [];
 });

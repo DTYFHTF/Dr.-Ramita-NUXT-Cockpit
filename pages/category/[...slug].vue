@@ -228,6 +228,7 @@ const promotion = ref<string>(
 // Computed properties
 const categorySlug = computed(() => {
   const slugArray = route.params.slug as string[]
+  if (!slugArray || !Array.isArray(slugArray) || slugArray.length === 0) return ''
   return slugArray[slugArray.length - 1] // Get the last slug for current category
 })
 
@@ -292,7 +293,7 @@ watch(() => promotion.value, async (newPromotion) => {
 
 // Use the same ancestry logic as HierarchicalCategoryTree for breadcrumbs
 const categoryPath = computed(() => {
-  if (!categorySlug.value || !hierarchicalCategories.value) return []
+  if (!categorySlug.value || !hierarchicalCategories.value || !Array.isArray(hierarchicalCategories.value)) return []
 
   // Find category by slug in the hierarchical tree
   const findCategoryBySlug = (categories: Category[], slug: string): Category | null => {
@@ -339,10 +340,11 @@ const subcategories = computed(() => {
 const categoryProducts = computed(() => {
   if (!currentCategory.value?.products) return []
   // No mapping needed; backend guarantees display_price, display_sale_price, and average_rating
-  return currentCategory.value.products
+  return currentCategory.value.products || []
 })
 
 const filteredProducts = computed(() => {
+  if (!categoryProducts.value || !Array.isArray(categoryProducts.value)) return []
   let filtered = [...categoryProducts.value]
   // Search filter
   if (searchQuery.value) {
@@ -398,12 +400,14 @@ const filteredProducts = computed(() => {
 })
 
 const displayProducts = computed(() => {
+  if (!filteredProducts.value || !Array.isArray(filteredProducts.value)) return []
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return filteredProducts.value.slice(start, end)
 })
 
 const totalPages = computed(() => {
+  if (!filteredProducts.value || !Array.isArray(filteredProducts.value)) return 1
   return Math.ceil(filteredProducts.value.length / itemsPerPage.value)
 })
 
