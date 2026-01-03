@@ -69,6 +69,32 @@
 
             <div class="form-section">
               <div class="section-header">
+                <LucideIcon icon="mdi:file-document" class="section-icon" />
+                <h3 class="section-title">GST Details (Optional)</h3>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">
+                  GSTIN (GST Identification Number)
+                  <small class="text-muted ms-2">For B2B purchases</small>
+                </label>
+                <input 
+                  v-model="gstin" 
+                  type="text" 
+                  class="form-input" 
+                  placeholder="22AAAAA0000A1Z5" 
+                  maxlength="15"
+                  @input="validateGSTIN"
+                />
+                <small v-if="gstinError" class="text-danger d-block mt-1">{{ gstinError }}</small>
+                <small v-else class="text-muted d-block mt-1">
+                  Enter 15-character GSTIN for GST invoice. Leave blank for B2C purchase.
+                </small>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="section-header">
                 <LucideIcon icon="mdi:truck-delivery" class="section-icon" />
                 <h3 class="section-title">Shipping Method</h3>
               </div>
@@ -253,6 +279,36 @@ const shipping = ref<ShippingInfo>({
   country: ''
 });
 const specialInstructions = ref('');
+const gstin = ref('');
+const gstinError = ref('');
+
+// GSTIN validation
+const validateGSTIN = () => {
+  const value = gstin.value.trim().toUpperCase();
+  gstin.value = value;
+  
+  if (!value) {
+    gstinError.value = '';
+    return true;
+  }
+  
+  // GSTIN format: 2 digits (state code) + 10 alphanumeric (PAN) + 1 digit (entity) + Z + 1 alphanumeric (checksum)
+  const gstinPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  
+  if (value.length !== 15) {
+    gstinError.value = 'GSTIN must be exactly 15 characters';
+    return false;
+  }
+  
+  if (!gstinPattern.test(value)) {
+    gstinError.value = 'Invalid GSTIN format';
+    return false;
+  }
+  
+  gstinError.value = '';
+  return true;
+};
+
 const paymentMethod = ref<PaymentMethod>('cod');
 const paymentMethods = [
   { value: 'cod', label: 'Cash on Delivery' },
@@ -411,6 +467,12 @@ const submitOrder = async () => {
     return;
   }
   
+  // Validate GSTIN if provided
+  if (gstin.value && !validateGSTIN()) {
+    errorMessage.value = 'Please enter a valid GSTIN or leave it blank.';
+    return;
+  }
+  
   // Check if user is authenticated
   if (!userStore.token) {
     errorMessage.value = 'You must be logged in to place an order. Redirecting to login...';
@@ -436,7 +498,8 @@ const submitOrder = async () => {
       price: item.price,
       image: item.image
     })),
-    special_instructions: specialInstructions.value
+    special_instructions: specialInstructions.value,
+    gstin: gstin.value.trim() || null // Include GSTIN if provided
   };
 
   try {

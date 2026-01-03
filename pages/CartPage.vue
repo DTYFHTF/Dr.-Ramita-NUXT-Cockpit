@@ -103,16 +103,13 @@
               <span>Subtotal</span>
               <span class="summary-value">₹{{ totalPrice.toFixed(2) }}</span>
             </div>
-            <div class="summary-row shipping-info">
-              <span>
-                <LucideIcon icon="mdi:truck" class="me-1" />
-                Shipping
-              </span>
-              <span class="summary-value">₹85.00</span>
-            </div>
             <div class="summary-row total-row">
               <span>Total</span>
-              <span class="total-amount">₹{{ (totalPrice + 85).toFixed(2) }}</span>
+              <span class="total-amount">₹{{ totalPrice.toFixed(2) }}</span>
+            </div>
+            <div class="summary-note">
+              <LucideIcon icon="mdi:information-outline" class="me-1" />
+              <span class="text-muted small">Shipping calculated at checkout</span>
             </div>
           </div>
           

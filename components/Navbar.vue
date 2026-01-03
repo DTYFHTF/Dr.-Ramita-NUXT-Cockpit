@@ -74,7 +74,7 @@
               />
             </div>
             <div v-if="user">
-              <CartIndicator class="nav-shared-link"/>
+              <CartDropdown />
             </div>
             <div >
               <ThemeToggle class="nav-shared-link"/>
@@ -95,6 +95,7 @@ import MegaMenu from "./MegaMenu.vue";
 import UserSection from '@/components/UserSection.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
 import NavbarContentSwitcher from '@/components/NavbarContentSwitcher.vue';
+import CartDropdown from '@/components/CartDropdown.vue';
 import { ref, computed } from "vue";
 import LucideIcon from '@/components/LucideIcon.vue';
 
