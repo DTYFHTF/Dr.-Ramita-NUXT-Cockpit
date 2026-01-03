@@ -72,9 +72,42 @@
             <span>Shipping</span>
             <span>₹{{ orderData.shipping_cost?.toFixed(2) || '0.00' }}</span>
           </div>
+          <div v-if="orderData.gst_amount" class="summary-row">
+            <span>GST ({{ orderData.gst_percentage }}%)</span>
+            <span>₹{{ orderData.gst_amount.toFixed(2) }}</span>
+          </div>
           <div class="summary-row total-row">
             <span>Total</span>
             <span>₹{{ orderData.total?.toFixed(2) || '0.00' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GST Details (if GSTIN provided) -->
+      <div v-if="orderData.gstin" class="gst-details-section">
+        <h4 class="section-title">
+          <LucideIcon icon="mdi:file-document" class="section-icon" />
+          GST Details
+        </h4>
+        <div class="gst-details">
+          <div class="gst-row">
+            <span class="gst-label">GSTIN</span>
+            <span class="gst-value">{{ orderData.gstin }}</span>
+          </div>
+          <div class="gst-row">
+            <span class="gst-label">GST Amount</span>
+            <span class="gst-value">₹{{ (orderData.gst_amount || 0).toFixed(2) }}</span>
+          </div>
+        </div>
+        <!-- Show HSN codes for each product if available -->
+        <div v-if="hasHsnCodes" class="hsn-codes-section mt-3">
+          <h5 class="hsn-title">HSN/SAC Codes</h5>
+          <div class="hsn-list">
+            <div v-for="item in orderData.cart" :key="`hsn-${item.product_id}-${item.variation_id}`" class="hsn-item">
+              <span class="hsn-product">{{ item.name }}</span>
+              <span v-if="item.hsn_code" class="hsn-code">{{ item.hsn_code }}</span>
+              <span v-else class="hsn-code text-muted">-</span>
+            </div>
           </div>
         </div>
       </div>
@@ -207,6 +240,10 @@ const { getImageUrl } = useImageUrl();
 const getItemImage = (item: any): string => {
   return getImageUrl(item?.image, '/placeholder-product.jpg');
 };
+
+const hasHsnCodes = computed(() => {
+  return props.orderData.cart?.some((item: any) => item.hsn_code) || false;
+});
 </script>
 
 <style scoped lang="scss">
@@ -509,6 +546,82 @@ const getItemImage = (item: any): string => {
   font-style: italic;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+/* GST Details Section */
+.gst-details-section {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--background-light);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.gst-details {
+  margin-top: 1rem;
+}
+
+.gst-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.gst-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.gst-value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+/* HSN Codes Section */
+.hsn-codes-section {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.hsn-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.hsn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hsn-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.hsn-product {
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.hsn-code {
+  font-family: monospace;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: right;
 }
 
 /* Action Buttons */

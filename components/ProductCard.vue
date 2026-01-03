@@ -154,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import LucideIcon from './LucideIcon.vue';
 import ProductQuickView from './ProductQuickView.vue';
 import ProductBadges from './ProductBadges.vue';
@@ -375,9 +375,17 @@ const props = defineProps<{
 }>();
 
 const images = computed(() => {
-  // Include all three images for the product card
-  const imgs = [props.product.image, props.product.image_2, props.product.image_3].filter(Boolean).map(imageUrl);
-  return Array.from(new Set(imgs));
+  // First, try to get product's main images
+  let imgs = [props.product.image, props.product.image_2, props.product.image_3].filter(Boolean);
+  
+  // If product has no images but has variations, use the first variation's images
+  if (imgs.length === 0 && props.product.has_variations && props.product.variations?.length) {
+    const firstVariation = props.product.variations[0];
+    imgs = [firstVariation.image, firstVariation.image_2, firstVariation.image_3].filter(Boolean);
+  }
+  
+  // Map to full URLs and remove duplicates
+  return Array.from(new Set(imgs.map(imageUrl)));
 });
 
 // Helper for image fallback

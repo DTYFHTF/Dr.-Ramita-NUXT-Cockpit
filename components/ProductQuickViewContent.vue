@@ -298,7 +298,7 @@ onMounted(() => {
 });
 
 const quantity = ref(1);
-const selectedVariationId = ref<number | null>(null);
+const selectedVariationId = ref<string | number | null>(null);
 
 const inStock = computed(() => {
   return props.product.in_stock ?? (props.product.stock ?? 0) > 0;
@@ -320,7 +320,7 @@ const images = computed(() => {
       selectedVariation.value.image,
       selectedVariation.value.image_2,
       selectedVariation.value.image_3,
-    ].filter(Boolean).map(imageUrl);
+    ].filter((img): img is string => Boolean(img)).map(imageUrl);
     
     // If variation has images, use them
     if (variationImages.length > 0) {
@@ -334,7 +334,7 @@ const images = computed(() => {
     props.product.image_2,
     props.product.image_3,
   ]
-    .filter(Boolean)
+    .filter((img): img is string => Boolean(img))
     .map(imageUrl);
   return Array.from(new Set(imgs));
   
@@ -352,23 +352,33 @@ const selectedVariation = computed(() => {
 const selectedVariationPrice = computed(() => {
   const v: any = selectedVariation.value;
   if (!v) return 0;
-  // If this variation has a discount, show the original price (for strike-through)
-  if (v.price_breakdown && (v.price_breakdown.discount_amount ?? 0) > 0) {
-    return (v.price_breakdown.original_price ?? v.price ?? 0);
-  }
-  // Otherwise show the normal/display price (server-provided preferred)
-  return (v.display_price ?? v.price_breakdown?.final_price ?? v.price ?? 0);
+  
+  // Use variation's own price_breakdown if available, otherwise just the price
+  return (v.price_breakdown?.original_price ?? v.price ?? 0);
 });
 
 const selectedVariationDisplaySalePrice = computed(() => {
   const v: any = selectedVariation.value;
   if (!v) return null;
-  // Prefer price_breakdown final_price when a discount exists (more authoritative)
+  
+  // Check if variation has its own price_breakdown with a discount
   if (v.price_breakdown && (v.price_breakdown.discount_amount ?? 0) > 0) {
-    return v.price_breakdown.final_price;
+    const finalPrice = v.price_breakdown.final_price;
+    const originalPrice = v.price_breakdown.original_price ?? v.price ?? 0;
+    // Only return final_price if it's actually less than original (has discount)
+    if (finalPrice < originalPrice) {
+      return finalPrice;
+    }
   }
-  // Fallback to server-provided explicit sale price if present
-  if (v.display_sale_price !== undefined && v.display_sale_price !== null) return v.display_sale_price;
+  
+  // Fallback to variation's display_sale_price if present and less than regular price
+  if (v.display_sale_price !== undefined && v.display_sale_price !== null) {
+    const regularPrice = v.price ?? 0;
+    if (v.display_sale_price < regularPrice) {
+      return v.display_sale_price;
+    }
+  }
+  
   return null;
 });
 const productDisplaySalePrice = computed(() => (props.product as any)?.display_sale_price ?? null);
