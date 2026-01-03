@@ -44,6 +44,9 @@ export interface ProductVariation {
   stock?: number;
   sku?: string;
   quantity?: number; // Optional quantity property
+  image?: string; // Variation-specific image (falls back to product image)
+  image_2?: string; // Variation-specific second image
+  image_3?: string; // Variation-specific third image
   // Computed pricing fields from backend
   final_price?: number;
   discount_amount?: number;

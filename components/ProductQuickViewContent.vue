@@ -314,6 +314,21 @@ function imageUrl(img: string) {
 
 // Helper for image fallback
 const images = computed(() => {
+  // If a variation is selected and has its own images, use those
+  if (selectedVariation.value) {
+    const variationImages = [
+      selectedVariation.value.image,
+      selectedVariation.value.image_2,
+      selectedVariation.value.image_3,
+    ].filter(Boolean).map(imageUrl);
+    
+    // If variation has images, use them
+    if (variationImages.length > 0) {
+      return Array.from(new Set(variationImages));
+    }
+  }
+  
+  // Otherwise fallback to product images
   const imgs = [
     props.product.image,
     props.product.image_2,
