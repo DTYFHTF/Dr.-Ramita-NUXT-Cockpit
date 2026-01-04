@@ -61,7 +61,14 @@
 
               <!-- Product Details -->
               <div class="cart-item-details flex-grow-1">
-                <h6 class="mb-1 fs-6">{{ item.name }}</h6>
+                <NuxtLink 
+                  :to="`/products/${item.product_id}`" 
+                  class="text-decoration-none text-dark" 
+                  target="_blank"
+                  @click="isDropdownOpen = false"
+                >
+                  <h6 class="mb-1 fs-6 hover-underline">{{ item.name }}</h6>
+                </NuxtLink>
                 <p v-if="item.variation_name" class="mb-1 small text-muted">
                   {{ item.variation_name }}
                 </p>
@@ -233,6 +240,10 @@ const removeItem = async (item: any) => {
   
   .cart-item-image img {
     border: 1px solid var(--bs-border-color);
+  }
+
+  .hover-underline:hover {
+    text-decoration: underline !important;
   }
 }
 

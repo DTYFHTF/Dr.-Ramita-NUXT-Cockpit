@@ -38,6 +38,12 @@
                 <LucideIcon icon="mdi:package-variant" class="stock-icon" />
                 {{ item.stock }} in stock
               </p>
+              <div v-if="item.quantity > item.stock" class="alert alert-danger py-1 px-2 mb-0 mt-2" role="alert">
+                <small><LucideIcon icon="mdi:alert-circle" size="14" class="me-1" /><strong>Quantity exceeds stock!</strong> Reduce to {{ item.stock }} or less.</small>
+              </div>
+              <div v-else-if="item.stock <= 10" class="alert alert-warning py-1 px-2 mb-0 mt-2" role="alert">
+                <small><LucideIcon icon="mdi:alert" size="14" class="me-1" />Only {{ item.stock }} left!</small>
+              </div>
             </div>
             
             <div class="item-controls">

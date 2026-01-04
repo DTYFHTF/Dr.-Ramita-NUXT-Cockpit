@@ -222,8 +222,9 @@
             style="width: 60px"
             v-model.number="quantity"
             min="1"
+            :max="availableStock"
           />
-          <button class="btn btn-outline" @click="increment">
+          <button class="btn btn-outline" @click="increment" :disabled="quantity >= availableStock">
             +
           </button>
           <button
@@ -234,12 +235,9 @@
             Add to cart
           </button>
         </div>
-        <div class="mb-2">
-          <span
-            class="badge"
-            :class="canAddToCart ? 'bg-success' : 'bg-danger'"
-          >
-            {{ canAddToCart ? "In stock" : "Out of stock" }}
+        <div v-if="!canAddToCart" class="mb-2">
+          <span class="badge bg-danger">
+            {{ stockMessage }}
           </span>
         </div>
         
@@ -285,11 +283,14 @@ import LucideIcon from "./LucideIcon.vue";
 import ProductBadges from "./ProductBadges.vue";
 import PromotionBadge from "./PromotionBadge.vue";
 import { useImageUrl } from '@/composables/useImageUrl.js'
+import { useCartStore } from '@/stores/cart'
 import type { Product } from "@/types";
 
 // --- Props ---
 const props = defineProps<{ product: Product; showViewDetails?: boolean }>();
 const emit = defineEmits(["add-to-cart"]);
+
+const cartStore = useCartStore();
 
 console.log('[ProductQuickViewContent] Component created with product:', props.product ? { id: props.product.id, name: props.product.name, has_variations: props.product.has_variations, variations_count: props.product.variations?.length } : null);
 
@@ -382,11 +383,46 @@ const selectedVariationDisplaySalePrice = computed(() => {
   return null;
 });
 const productDisplaySalePrice = computed(() => (props.product as any)?.display_sale_price ?? null);
-const canAddToCart = computed(() => {
-  if (props.product.has_variations && props.product.variations?.length) {
-    return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
+const availableStock = computed(() => {
+  let totalStock = 0;
+  if (props.product.has_variations && props.product.variations?.length && selectedVariation.value) {
+    totalStock = selectedVariation.value.stock ?? 0;
+  } else {
+    totalStock = props.product.stock ?? 0;
   }
-  return inStock.value;
+  
+  // Subtract quantity already in cart
+  const productId = props.product.id;
+  const variationId = selectedVariation.value?.id ?? null;
+  const cartItem = cartStore.cart.find(item => 
+    item.product_id === productId && 
+    (item.variation_id === variationId || (item.variation_id === null && variationId === null))
+  );
+  const cartQuantity = cartItem?.quantity ?? 0;
+  
+  return Math.max(0, totalStock - cartQuantity);
+});
+
+const canAddToCart = computed(() => {
+  return availableStock.value > 0;
+});
+
+const stockMessage = computed(() => {
+  if (availableStock.value === 0) {
+    // Check if out of stock due to cart or actual stock
+    const productId = props.product.id;
+    const variationId = selectedVariation.value?.id ?? null;
+    const cartItem = cartStore.cart.find(item => 
+      item.product_id === productId && 
+      (item.variation_id === variationId || (item.variation_id === null && variationId === null))
+    );
+    
+    if (cartItem && cartItem.quantity > 0) {
+      return "All available stocks are in cart";
+    }
+    return "Out of stock";
+  }
+  return "In stock";
 });
 
 watch(
@@ -405,7 +441,9 @@ watch(
 );
 
 function increment() {
-  quantity.value++;
+  if (quantity.value < availableStock.value) {
+    quantity.value++;
+  }
 }
 function decrement() {
   if (quantity.value > 1) quantity.value--;

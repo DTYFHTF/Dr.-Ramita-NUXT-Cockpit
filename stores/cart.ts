@@ -49,12 +49,49 @@ export const useCartStore = defineStore('cart', () => {
       if (isNaN(variation_id)) variation_id = null;
     }
     
+    // Get available stock from product
+    let availableStock: number;
+    if (variation_id && product.has_variations && product.variations) {
+      const selectedVariation = product.variations.find(v => Number(v.id) === variation_id);
+      availableStock = selectedVariation?.stock ?? 0;
+    } else {
+      availableStock = product.stock ?? 0;
+    }
+    
+    // Check current cart quantity for this item
+    const cartKey = `${product_id}:${variation_id === null ? 'null' : variation_id}`;
+    const currentCartItem = cart.value.find(item => 
+      item.product_id === product_id && 
+      (item.variation_id === variation_id || (item.variation_id === null && variation_id === null))
+    );
+    const currentCartQuantity = currentCartItem?.quantity ?? 0;
+    const requestedQuantity = Math.max(1, Number(quantity));
+    const totalQuantity = currentCartQuantity + requestedQuantity;
+    
+    // Validate stock before adding
+    if (totalQuantity > availableStock) {
+      const productName = product.name;
+      const variationName = variation_id && product.has_variations && product.variations 
+        ? product.variations.find(v => Number(v.id) === variation_id)?.name 
+        : null;
+      const fullName = variationName ? `${productName} - ${variationName}` : productName;
+      
+      if (currentCartQuantity > 0) {
+        throw new Error(
+          `Cannot add ${requestedQuantity} more. You already have ${currentCartQuantity} in cart. Only ${availableStock} available for "${fullName}".`
+        );
+      } else {
+        throw new Error(
+          `Cannot add ${requestedQuantity} items. Only ${availableStock} available in stock for "${fullName}".`
+        );
+      }
+    }
+    
     const payload = {
       product_id,
       variation_id,
-      quantity: Math.max(1, Number(quantity))
+      quantity: requestedQuantity
     };
-    
     
     try {
       await $fetch(`${API_BASE}/cart`, {

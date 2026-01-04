@@ -62,10 +62,12 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';
 import { useImageUrl } from '@/composables/useImageUrl.js'
+import { useRecentlyViewed } from '@/composables/useRecentlyViewed'
 
 const route = useRoute();
 const { product, loading, error, fetchProduct, fetchSimilarProducts } = useProducts();
 const { addToCart } = useCart();
+const { addToRecentlyViewed } = useRecentlyViewed();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore) as { user: Ref<User | null> };
 
@@ -132,6 +134,11 @@ async function loadProduct(slug: string) {
     // If product.value is wrapped in { data: ... }, unwrap it
     if (product.value && product.value.data) {
       product.value = product.value.data;
+    }
+    
+    // Track as recently viewed
+    if (product.value) {
+      addToRecentlyViewed(product.value);
     }
     
     // Fetch similar products once the product is loaded

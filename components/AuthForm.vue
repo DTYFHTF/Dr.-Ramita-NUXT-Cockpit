@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   submitLabel: { type: String, default: 'Submit' },
@@ -52,7 +52,7 @@ function onSubmit() {
 
 <style lang="scss" scoped>
 .auth-form {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
   background: var(--background-white);

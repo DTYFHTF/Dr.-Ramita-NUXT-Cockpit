@@ -273,15 +273,21 @@ const handleAddToCart = async (product: Product) => {
   } catch (err: any) {
     console.error('[ProductCard] Add to cart error:', err);
     
-    // Better error handling for 422 validation errors
-    if (err?.status === 422) {
+    // Better error handling for stock and validation errors
+    if (err?.message?.includes('available')) {
+      // Stock-related errors - show friendly message
+      alert(err.message);
+    } else if (err?.status === 422) {
+      // Show validation errors if available
       if (err?.data?.error?.includes('variation')) {
         // If it's a variation error, open quick view
         console.log('[ProductCard] Variation error, opening quick view');
         openQuickView();
         return;
       }
-      alert('Validation error: ' + (err?.data?.error || err?.data?.message || 'Invalid product data'));
+      alert(err?.data?.error || err?.data?.message || 'Validation error. Please check your input.');
+    } else if (err?.status === 401 || err?.status === 419) {
+      alert('Authentication failed. Please log in again.');
     } else {
       alert('Error adding to cart: ' + (err?.data?.message || err?.message || 'Unknown error'));
     }

@@ -20,6 +20,15 @@
               <div class="section-header">
                 <LucideIcon icon="mdi:truck" class="section-icon" />
                 <h3 class="section-title">Delivery Information</h3>
+                <button 
+                  v-if="hasSavedAddress" 
+                  type="button" 
+                  @click="loadSavedAddress" 
+                  class="btn btn-outline-primary btn-sm ms-auto"
+                >
+                  <LucideIcon icon="mdi:map-marker-check" class="me-1" />
+                  Use Saved Address
+                </button>
               </div>
               
               <div class="form-grid">
@@ -239,10 +248,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useCart } from '@/composables/useCart';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useUserSettings } from '@/composables/useUserSettings';
 import type { Order, OrderItem, ShippingInfo, PaymentMethod } from '@/types';
 import LucideIcon from '@/components/LucideIcon.vue';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
@@ -255,6 +265,15 @@ const apiBase = config.public.apiBase;
 const baseUrl = config.public.baseUrl;
 const userStore = useUserStore();
 const { initiatePayment, verifyPayment } = useRazorpay();
+const { getDefaultAddress, getPreferredDeliverySlot, getDeliverySlotLabel } = useUserSettings();
+
+// Check if user has saved address
+const hasSavedAddress = ref(false);
+
+onMounted(() => {
+  const savedAddress = getDefaultAddress();
+  hasSavedAddress.value = !!savedAddress;
+});
 
 // Helper function to get full image URL
 const getImageUrl = (imagePath: string | null | undefined) => {
@@ -452,6 +471,24 @@ const validateForm = () => {
   return true;
 };
 
+// Load saved address from settings
+const loadSavedAddress = () => {
+  const savedAddress = getDefaultAddress();
+  if (savedAddress) {
+    shipping.value.name = savedAddress.name;
+    shipping.value.phone = savedAddress.phone;
+    shipping.value.address = savedAddress.street;
+    shipping.value.city = savedAddress.city;
+    shipping.value.state = savedAddress.state;
+    shipping.value.pincode = savedAddress.pincode;
+    shipping.value.landmark = savedAddress.landmark;
+    shipping.value.country = 'India';
+    
+    // Clear any error messages
+    errorMessage.value = '';
+  }
+};
+
 const submitOrder = async () => {
   // Check if cart is empty
   if (!cart || cart.length === 0) {
@@ -567,8 +604,11 @@ const submitOrder = async () => {
         const errorMessages = Object.keys(errors).map(key => `${key}: ${errors[key].join(', ')}`);
         errorMessage.value = 'Validation errors:\n' + errorMessages.join('\n');
         console.error('Validation errors:', errors);
+      } else if (e?.data?.error?.includes('Insufficient stock')) {
+        // Special handling for stock errors
+        errorMessage.value = e.data.error + ' Please review your cart and reduce quantities.';
       } else {
-        errorMessage.value = e?.data?.message || 'Validation error. Please check your input.';
+        errorMessage.value = e?.data?.error || e?.data?.message || 'Validation error. Please check your input.';
       }
     } else if (e?.status === 500) {
       // Show detailed error in development
@@ -844,6 +884,27 @@ const submitOrder = async () => {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid var(--background-light);
+}
+
+.section-header .btn-outline-primary {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.375rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .section-icon {
