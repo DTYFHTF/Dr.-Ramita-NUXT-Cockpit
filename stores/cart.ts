@@ -156,21 +156,24 @@ export const useCartStore = defineStore('cart', () => {
     async (newToken, oldToken) => {
       if (newToken) {
         await fetchCart();
+        isInitialized.value = true;
       } else {
         cart.value = [];
+        isInitialized.value = false;
       }
-    },
-    { immediate: true }
+    }
   );
 
-  // Initial load
-  if (!isInitialized.value) {
+  // Initial load on client side only
+  if (process.client && !isInitialized.value) {
     if (userStore.token) {
-      fetchCart();
+      fetchCart().then(() => {
+        isInitialized.value = true;
+      });
     } else {
       cart.value = [];
+      isInitialized.value = true;
     }
-    isInitialized.value = true;
   }
 
   // Computed properties

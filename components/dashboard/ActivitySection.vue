@@ -131,8 +131,9 @@ const orders = ref<any[]>([])
 const recentlyViewed = ref<any[]>([])
 const registrations = ref<any[]>([])
 
-// Wishlist from store
-const wishlist = computed(() => wishlistStore.wishlist || [])
+// Wishlist from store (using storeToRefs for reactivity)
+const { wishlist: wishlistItems } = storeToRefs(wishlistStore)
+const wishlist = computed(() => wishlistItems.value || [])
 
 const config = useRuntimeConfig()
 const baseUrl = config.public.baseUrl

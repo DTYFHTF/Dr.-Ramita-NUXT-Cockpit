@@ -7,6 +7,12 @@
     <div v-if="orderSuccess && orderData">
       <OrderConfirmation :orderData="orderData" />
     </div>
+    <div v-else-if="cartLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading cart...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading your cart...</p>
+    </div>
     <div v-else>
       <div v-if="errorMessage" class="error-alert">
         <LucideIcon icon="mdi:alert-circle" class="me-2" />
@@ -118,9 +124,14 @@
                 {{ shippingError }}
               </div>
               
-              <div v-else-if="shippingMethods.length === 0" class="shipping-info">
+              <div v-else-if="!shipping.state || !shipping.pincode" class="shipping-info">
                 <LucideIcon icon="mdi:information" class="me-2" />
                 Enter state and pincode to see shipping options
+              </div>
+              
+              <div v-else-if="shippingMethods.length === 0" class="shipping-error">
+                <LucideIcon icon="mdi:alert-circle" class="me-2" />
+                No shipping methods available for your location. Please check your address or contact support.
               </div>
               
               <div v-else class="payment-options">
@@ -249,6 +260,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useCart } from '@/composables/useCart';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
@@ -259,7 +271,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
 
 const cartStore = useCart();
-const { cart, totalPrice } = cartStore;
+const { cart, totalPrice } = storeToRefs(cartStore);
 const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
@@ -268,13 +280,29 @@ const userStore = useUserStore();
 const { initiatePayment, verifyPayment } = useRazorpay();
 const { getDefaultAddress, getPreferredDeliverySlot, getDeliverySlotLabel } = useUserSettings();
 const { sessionExpired } = useAlert();
+const cartLoading = ref(true);
 
 // Check if user has saved address
 const hasSavedAddress = ref(false);
 
-onMounted(() => {
-  const savedAddress = getDefaultAddress();
-  hasSavedAddress.value = !!savedAddress;
+onMounted(async () => {
+  try {
+    cartLoading.value = true;
+    // Ensure cart is loaded
+    if (userStore.token) {
+      await cartStore.fetchCart();
+    }
+    
+    const savedAddress = getDefaultAddress();
+    hasSavedAddress.value = !!savedAddress;
+    
+    // If state and pincode are already filled, fetch shipping rates immediately
+    if (shipping.value.state && shipping.value.pincode) {
+      fetchShippingRates();
+    }
+  } finally {
+    cartLoading.value = false;
+  }
 });
 
 // Helper function to get full image URL
@@ -378,20 +406,22 @@ const fetchShippingRates = async () => {
   loadingShipping.value = true;
   shippingError.value = '';
   
+  const requestBody = {
+    cart: cart.value.map((item) => ({
+      product_id: item.product_id,
+      variation_id: item.variation_id,
+      quantity: item.quantity
+    })),
+    shipping_address: {
+      state: shipping.value.state,
+      pincode: shipping.value.pincode
+    }
+  };
+  
   try {
     const response = await $fetch<any>(`${apiBase}/shipping/calculate`, {
       method: 'POST',
-      body: {
-        cart: cart.map((item) => ({
-          product_id: item.product_id,
-          variation_id: item.variation_id,
-          quantity: item.quantity
-        })),
-        shipping_address: {
-          state: shipping.value.state,
-          pincode: shipping.value.pincode
-        }
-      },
+      body: requestBody,
       headers: { 
         Accept: 'application/json',
         'Content-Type': 'application/json'

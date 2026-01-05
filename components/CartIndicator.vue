@@ -10,8 +10,9 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useCart } from '@/composables/useCart';
-const { totalItems } = useCart();
+const { totalItems } = storeToRefs(useCart());
 </script>
 
 <style lang="scss">

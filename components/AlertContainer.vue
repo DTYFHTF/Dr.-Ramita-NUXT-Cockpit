@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAlert } from "~/composables/useAlert"
+import { useAlert } from '@/composables/useAlert'
 import { useRouter } from 'vue-router'
 
 const { alerts, dismissAlert } = useAlert()
