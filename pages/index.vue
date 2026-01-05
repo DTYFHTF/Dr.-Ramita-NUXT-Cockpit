@@ -1,13 +1,30 @@
 
 <template>
   <div>
-    <!-- Main Banner Carousel -->
-    <BannerCarousel 
-      v-if="banners.length > 0"
-      :banners="banners" 
-      :loading="homepageLoading" 
-      :error="homepageError" 
-    />
+    <!-- Loading state for entire page -->
+    <div v-if="homepageLoading && !homepageData" class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading homepage content...</p>
+    </div>
+
+    <!-- Error state -->
+    <div v-else-if="homepageError" class="alert alert-danger container my-5">
+      <h4>Failed to load homepage</h4>
+      <p>{{ homepageError }}</p>
+      <button class="btn btn-primary" @click="refreshPage">Retry</button>
+    </div>
+
+    <!-- Content -->
+    <div v-else>
+      <!-- Main Banner Carousel -->
+      <BannerCarousel 
+        v-if="banners.length > 0"
+        :banners="banners" 
+        :loading="homepageLoading" 
+        :error="homepageError" 
+      />
 
     <div class="container">
       <!-- Featured Categories -->
@@ -72,6 +89,7 @@
       :deals="topDeals" 
     />
 
+    </div><!-- End of content div -->
   <!-- Promotional Banners removed -->
   </div>
 </template>
@@ -96,6 +114,10 @@ const { getImageUrl } = useImageUrl();
 const { 
   loading: productsLoading
 } = useProducts();
+
+const refreshPage = () => {
+  window.location.reload();
+}
 
 onMounted(async () => {
   // Products are now managed through homepage sections only
@@ -202,6 +224,22 @@ const topDeals = computed(() => {
   return [];
 });
 </script>
+
+<style scoped>
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 2rem;
+}
+
+.loading-container p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+</style>
 
 <style scoped lang="scss">
 </style>

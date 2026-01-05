@@ -1,5 +1,10 @@
 import commonjs from 'vite-plugin-commonjs';
 
+// Ignore SSL certificate errors for .test domains in development
+if (process.env.NODE_ENV === 'development') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
+
 export default defineNuxtConfig({ 
   // Add compatibility date to fix the warning
   compatibilityDate: '2025-08-12',

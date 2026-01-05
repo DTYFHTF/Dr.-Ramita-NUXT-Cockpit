@@ -5,8 +5,8 @@
         <!-- Brand/Logo -->
         <NuxtLink to="/" class="navbar-brand d-flex align-items-center flex-shrink-0">
           <img
-            src="/rishipath-logo.png"
-            alt="Rishipath Logo"
+            :src="brand.logo"
+            :alt="brand.logoAlt"
             class="me-2"
             style="width:12rem; height: 36px; object-fit: contain;"
           />
@@ -116,6 +116,7 @@ if (typeof window !== 'undefined') {
   });
 }
 
+const brand = useBrand();
 const userStore = useUserStore();
 const { user, hydrated } = storeToRefs(userStore);
 

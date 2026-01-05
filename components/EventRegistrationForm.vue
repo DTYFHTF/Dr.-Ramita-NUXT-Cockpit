@@ -183,12 +183,13 @@ const initiateEventPayment = async (eventId, eventSlug, price, phone) => {
     success.value = ''
     
     // Open Razorpay checkout
+    const brand = useBrand();
     const razorpayOptions = {
       key: paymentResponse.key_id || config.public.razorpayKeyId,
       amount: paymentResponse.amount,
       currency: paymentResponse.currency,
       order_id: paymentResponse.razorpay_order_id,
-      name: 'Dr. Ramita Ayurveda',
+      name: brand.name,
       description: `Event Registration: ${paymentResponse.item_name}`,
       prefill: {
         name: paymentResponse.user.name,
@@ -308,12 +309,13 @@ const initiateEnrollmentPayment = async (registrationId, registrationType) => {
     } = paymentResponse
     
     // Open Razorpay checkout
+    const brand = useBrand();
     const razorpayOptions = {
       key: key_id || config.public.razorpayKeyId,
       amount: amount,
       currency: currency,
       order_id: razorpay_order_id,
-      name: 'Dr. Ramita Ayurveda',
+      name: brand.name,
       description: `Event Registration: ${item_name}`,
       prefill: {
         name: user.name,

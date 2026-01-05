@@ -8,7 +8,7 @@
         <section>
           <h2>1. Introduction</h2>
           <p>
-            Welcome to Dr. Ramita - Rishipath. We respect your privacy and are committed to protecting your personal data.
+            Welcome to {{ brand.fullName }}. We respect your privacy and are committed to protecting your personal data.
             This privacy policy will inform you about how we look after your personal data when you visit our website and
             tell you about your privacy rights.
           </p>
@@ -73,7 +73,7 @@
           <p>
             If you have any questions about this Privacy Policy, please contact us at:
             <br />
-            Email: drramita@rishipath.org
+            Email: {{ brand.email }}
           </p>
         </section>
       </div>
@@ -82,14 +82,16 @@
 </template>
 
 <script setup>
+const brand = useBrand();
+
 definePageMeta({
   layout: 'default',
 })
 
 useHead({
-  title: 'Privacy Policy - Dr. Ramita - Rishipath',
+  title: `Privacy Policy - ${brand.fullName}`,
   meta: [
-    { name: 'description', content: 'Privacy Policy for Dr. Ramita - Rishipath' }
+    { name: 'description', content: `Privacy Policy for ${brand.fullName}` }
   ]
 })
 </script>

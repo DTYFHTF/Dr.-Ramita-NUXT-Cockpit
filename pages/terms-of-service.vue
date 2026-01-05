@@ -8,7 +8,7 @@
         <section>
           <h2>1. Agreement to Terms</h2>
           <p>
-            By accessing and using Dr. Ramita - Rishipath, you accept and agree to be bound by the terms and provision
+            By accessing and using {{ brand.fullName }}, you accept and agree to be bound by the terms and provision
             of this agreement. If you do not agree to these terms, please do not use our services.
           </p>
         </section>
@@ -62,7 +62,7 @@
           <h2>6. Intellectual Property</h2>
           <p>
             All content on this website, including text, graphics, logos, images, and software, is the property of
-            Dr. Ramita - Rishipath and is protected by copyright and other intellectual property laws.
+            {{ brand.fullName }} and is protected by copyright and other intellectual property laws.
           </p>
         </section>
 
@@ -77,7 +77,7 @@
         <section>
           <h2>8. Limitation of Liability</h2>
           <p>
-            To the fullest extent permitted by law, Dr. Ramita - Rishipath shall not be liable for any indirect,
+            To the fullest extent permitted by law, {{ brand.fullName }} shall not be liable for any indirect,
             incidental, special, consequential, or punitive damages resulting from your use of our services.
           </p>
         </section>
@@ -95,7 +95,7 @@
           <p>
             For questions about these Terms of Service, please contact us at:
             <br />
-            Email: drramita@rishipath.org
+            Email: {{ brand.email }}
           </p>
         </section>
       </div>
@@ -104,14 +104,16 @@
 </template>
 
 <script setup>
+const brand = useBrand();
+
 definePageMeta({
   layout: 'default',
 })
 
 useHead({
-  title: 'Terms of Service - Dr. Ramita - Rishipath',
+  title: `Terms of Service - ${brand.fullName}`,
   meta: [
-    { name: 'description', content: 'Terms of Service for Dr. Ramita - Rishipath' }
+    { name: 'description', content: `Terms of Service for ${brand.fullName}` }
   ]
 })
 </script>

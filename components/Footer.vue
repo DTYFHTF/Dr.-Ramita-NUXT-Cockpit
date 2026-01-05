@@ -6,7 +6,7 @@
         <div class="footer-column">
           <div class="footer-logo-section">
             <NuxtLink to="/" class="footer-brand">
-              <img src="/rishipath-logo.png" alt="Rishipath Logo" class="footer-logo" />
+              <img :src="brand.logo" :alt="brand.logoAlt" class="footer-logo" />
             </NuxtLink>
             <p class="footer-description">
               {{ footerSettings?.site_description || 'Your trusted source for authentic Ayurvedic products, wellness courses, and holistic health guidance.' }}
@@ -135,7 +135,7 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <p class="copyright">
-          {{ footerSettings?.copyright_text || `© ${new Date().getFullYear()} Dr. Ramita Maharjan. All rights reserved.` }}
+          {{ footerSettings?.copyright_text || brand.copyrightText }}
         </p>
         <div class="payment-methods">
           <span class="payment-label">We Accept:</span>
@@ -153,6 +153,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useNewsletter } from '@/composables/useNewsletter'
 import LucideIcon from '@/components/LucideIcon.vue'
+
+const brand = useBrand()
 
 const {
   newsletterEmail,

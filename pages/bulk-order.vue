@@ -167,12 +167,14 @@ onMounted(async () => {
 })
 
 // Page metadata
+const brand = useBrand();
+
 definePageMeta({
   layout: 'auth'
 })
 
 useHead({
-  title: 'Wholesale & Bulk Orders - Dr. Ramita Ayurveda',
+  title: `Wholesale & Bulk Orders - ${brand.name}`,
   meta: [
     {
       name: 'description',

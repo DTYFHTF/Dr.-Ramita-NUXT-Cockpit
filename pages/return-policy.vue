@@ -86,7 +86,7 @@
           </p>
           <ul>
             <li>Take photos of the damaged item and packaging</li>
-            <li>Email us at drramita@rishipath.org with your order number and photos</li>
+            <li>Email us at {{ brand.email }} with your order number and photos</li>
             <li>We'll arrange for a replacement or full refund</li>
             <li>We'll provide a prepaid return label if needed</li>
           </ul>
@@ -114,7 +114,7 @@
           <p>
             For questions about returns or refunds, please contact our customer service:
             <br />
-            Email: drramita@rishipath.org
+            Email: {{ brand.email }}
             <br />
             Response time: Within 24 business hours
           </p>
@@ -125,14 +125,16 @@
 </template>
 
 <script setup>
+const brand = useBrand();
+
 definePageMeta({
   layout: 'default',
 })
 
 useHead({
-  title: 'Return & Refund Policy - Dr. Ramita - Rishipath',
+  title: `Return & Refund Policy - ${brand.fullName}`,
   meta: [
-    { name: 'description', content: 'Return and Refund Policy for Dr. Ramita - Rishipath' }
+    { name: 'description', content: `Return and Refund Policy for ${brand.fullName}` }
   ]
 })
 </script>

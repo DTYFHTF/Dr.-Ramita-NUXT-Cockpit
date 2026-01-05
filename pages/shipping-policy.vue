@@ -61,7 +61,7 @@
             <li>Incorrect items received</li>
           </ul>
           <p>
-            Please contact our customer service team within 48 hours of expected delivery at drramita@rishipath.org
+            Please contact our customer service team within 48 hours of expected delivery at {{ brand.email }}
             with your order number and details of the issue.
           </p>
         </section>
@@ -95,7 +95,7 @@
           <p>
             For any shipping-related questions or concerns, please contact us:
             <br />
-            Email: drramita@rishipath.org
+            Email: {{ brand.email }}
             <br />
             We typically respond within 24 business hours.
           </p>
@@ -106,14 +106,16 @@
 </template>
 
 <script setup>
+const brand = useBrand();
+
 definePageMeta({
   layout: 'default',
 })
 
 useHead({
-  title: 'Shipping Policy - Dr. Ramita - Rishipath',
+  title: `Shipping Policy - ${brand.fullName}`,
   meta: [
-    { name: 'description', content: 'Shipping Policy for Dr. Ramita - Rishipath' }
+    { name: 'description', content: `Shipping Policy for ${brand.fullName}` }
   ]
 })
 </script>
