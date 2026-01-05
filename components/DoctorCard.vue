@@ -13,7 +13,7 @@
         :src="doctorImage"
         :alt="doctor.name"
         class="doctor-photo"
-        @error="handleImageError"
+        @error="(e) => handleImageError(e)"
         style="width:100%;height:auto;object-fit:cover;border-radius:8px;"
       />
     </template>

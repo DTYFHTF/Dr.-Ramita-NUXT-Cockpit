@@ -174,7 +174,7 @@
                 :src="getImageUrl(product.image)"
                 :alt="product.name"
                 class="product-thumb"
-                @error="handleImageError"
+                @error="(e) => handleImageError(e)"
               />
               <div class="product-info-search">
                 <h6 class="product-name-search">{{ product.name }}</h6>

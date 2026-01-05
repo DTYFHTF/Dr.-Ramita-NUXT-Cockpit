@@ -56,7 +56,7 @@
                   :alt="item.name"
                   class="rounded"
                   style="width: 60px; height: 60px; object-fit: cover;"
-                  @error="handleImageError"
+                  @error="(e) => handleImageError(e)"
                 />
               </div>
 

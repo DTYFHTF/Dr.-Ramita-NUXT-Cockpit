@@ -27,7 +27,7 @@
         <div class="items-list">
           <div v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="cart-item">
             <div class="item-image">
-              <img :src="getImageUrl(item.image)" :alt="item.name" class="product-img" @error="handleImageError" />
+              <img :src="getImageUrl(item.image)" :alt="item.name" class="product-img" @error="(e) => handleImageError(e)" />
             </div>
             
             <div class="item-details">

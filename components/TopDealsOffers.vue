@@ -19,7 +19,7 @@
                     :alt="deal.title || deal.name || 'Deal'" 
                     class="deal-image"
                     loading="lazy"
-                    @error="handleImageError"
+                    @error="(e) => handleImageError(e)"
                   >
                   <div v-else class="deal-image-placeholder">
                     <div class="placeholder-content">

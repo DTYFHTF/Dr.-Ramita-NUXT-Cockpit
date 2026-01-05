@@ -32,7 +32,7 @@
           { type: 'link', to: { path: '/dashboard', query: { tab: 'wishlist' } }, icon: 'mdi:heart', label: 'Wishlist' },
           { type: 'divider' },
           { type: 'link', to: '/', icon: 'mdi:home', label: 'Home' },
-          { type: 'link', to: '/settings', icon: 'mdi:settings', label: 'Settings' },
+          { type: 'link', to: { path: '/dashboard', query: { tab: 'password' } }, icon: 'mdi:cog', label: 'Settings' },
           { type: 'action', href: '#', icon: 'mdi:smartphone', label: 'Download App' },
           { type: 'divider' }
         ]" />

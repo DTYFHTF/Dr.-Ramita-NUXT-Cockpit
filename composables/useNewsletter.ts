@@ -20,7 +20,10 @@ export function useNewsletter() {
       newsletterMessage.value = res?.message || 'Subscribed successfully!'
       newsletterEmail.value = ''
     } catch (err: any) {
-      newsletterMessage.value = err?.message || 'Subscription failed.'
+      console.error('Newsletter subscription error:', err)
+      // Extract error message from API response
+      const errorMessage = err?.data?.message || err?.message || 'Subscription failed. Please try again later.'
+      newsletterMessage.value = errorMessage
     } finally {
       loading.value = false
     }

@@ -37,7 +37,7 @@
                       <img 
                         :src="doctorImage" 
                         :alt="doctor.name"
-                        @error="handleImageError"
+                        @error="(e) => handleImageError(e)"
                       />
                     </div>
                   </div>
