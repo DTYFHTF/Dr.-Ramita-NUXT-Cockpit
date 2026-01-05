@@ -171,9 +171,10 @@
             >
               <img
                 v-if="product.image"
-                :src="product.image"
+                :src="getImageUrl(product.image)"
                 :alt="product.name"
                 class="product-thumb"
+                @error="handleImageError"
               />
               <div class="product-info-search">
                 <h6 class="product-name-search">{{ product.name }}</h6>
@@ -561,6 +562,7 @@ const MIN_QUANTITY = 10;
 const userStore = useUserStore();
 const { submitInquiry, loading, error } = useBulkOrderInquiry();
 const { searchProductsByName } = useProducts();
+const { getImageUrl, handleImageError } = useImageUrl();
 
 // Multi-step form
 const steps = ["Contact Info", "Products", "Shipping", "Details"];

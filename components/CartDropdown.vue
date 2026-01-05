@@ -52,10 +52,11 @@
               <!-- Product Image -->
               <div class="cart-item-image flex-shrink-0">
                 <img 
-                  :src="item.image || '/placeholder.jpg'" 
+                  :src="getImageUrl(item.image)" 
                   :alt="item.name"
                   class="rounded"
                   style="width: 60px; height: 60px; object-fit: cover;"
+                  @error="handleImageError"
                 />
               </div>
 
@@ -148,6 +149,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 const cartStore = useCartStore();
 const { cart, totalItems, totalPrice } = storeToRefs(cartStore);
 const isDropdownOpen = ref(false);
+const { getImageUrl, handleImageError } = useImageUrl();
 
 const incrementQuantity = async (item: any) => {
   try {

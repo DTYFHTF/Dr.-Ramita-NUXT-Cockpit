@@ -27,7 +27,7 @@
         <div class="items-list">
           <div v-for="item in cart" :key="`${item.product_id}:${item.variation_id}`" class="cart-item">
             <div class="item-image">
-              <img :src="imageUrl(item.image)" :alt="item.name" class="product-img" />
+              <img :src="getImageUrl(item.image)" :alt="item.name" class="product-img" @error="handleImageError" />
             </div>
             
             <div class="item-details">
@@ -146,17 +146,12 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useCart } from '@/composables/useCart';
-import { useImageUrl } from '@/composables/useImageUrl.js'
 import LucideIcon from '@/components/LucideIcon.vue';
 
 const cartStore = useCart();
 const { cart, totalItems, totalPrice } = storeToRefs(cartStore);
 const { updateQuantity, removeFromCart } = cartStore;
-const { getImageUrl } = useImageUrl();
-
-function imageUrl(img: string) {
-  return getImageUrl(img, '/fallback.jpg');
-}
+const { getImageUrl, handleImageError } = useImageUrl();
 </script>
 
 <style scoped>
