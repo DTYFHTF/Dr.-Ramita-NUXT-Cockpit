@@ -32,7 +32,10 @@ export const useCartStore = defineStore('cart', () => {
         price: item.price,
         image: item.image,
         stock: item.stock,
-        quantity: item.quantity
+        quantity: item.quantity,
+        gst_rate: item.gst_rate ?? 18.00,
+        gst_inclusive: item.gst_inclusive ?? false,
+        hsn_code: item.hsn_code ?? null,
       }));
     } catch (e) {
       cart.value = [];

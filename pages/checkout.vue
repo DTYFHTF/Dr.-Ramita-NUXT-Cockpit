@@ -233,6 +233,10 @@
                 <span>Subtotal</span>
                 <span>₹{{ totalPrice.toFixed(2) }}</span>
               </div>
+              <div class="total-row text-muted small">
+                <span>Total GST (Included)</span>
+                <span>₹{{ totalGST.toFixed(2) }}</span>
+              </div>
               <div v-if="selectedShippingMethodId" class="total-row">
                 <span>Shipping ({{ selectedShippingMethodName }})</span>
                 <span v-if="shippingCost === 0" class="text-success fw-bold">FREE</span>
@@ -391,10 +395,29 @@ const selectedShippingMethodName = computed(() => {
   return method?.method_name || method?.name || 'Not selected';
 });
 
+// Computed GST based on actual product GST rates
+const totalGST = computed(() => {
+  return cart.value.reduce((sum, item) => {
+    const itemTotal = item.price * item.quantity;
+    const gstRate = item.gst_rate || 18.00;
+    
+    let gstAmount = 0;
+    if (item.gst_inclusive) {
+      // GST is included in price: GST = Price - (Price / (1 + rate/100))
+      gstAmount = itemTotal - (itemTotal / (1 + gstRate / 100));
+    } else {
+      // GST is exclusive: GST = Price * (rate/100)
+      gstAmount = itemTotal * (gstRate / 100);
+    }
+    
+    return sum + gstAmount;
+  }, 0);
+});
+
 // Fetch shipping rates when address is complete
 const fetchShippingRates = async () => {
   // Check if cart has items
-  if (!cart || cart.length === 0) {
+  if (!cart.value || cart.value.length === 0) {
     shippingError.value = 'Please add items to your cart first';
     return;
   }
@@ -523,7 +546,7 @@ const loadSavedAddress = () => {
 
 const submitOrder = async () => {
   // Check if cart is empty
-  if (!cart || cart.length === 0) {
+  if (!cart.value || cart.value.length === 0) {
     errorMessage.value = 'Your cart is empty. Please add items before checkout.';
     setTimeout(() => {
       router.push('/products');
@@ -558,14 +581,17 @@ const submitOrder = async () => {
     shipping: shipping.value,
     payment_method: paymentMethod.value === 'cod' ? 'cod' : 'razorpay',
     shipping_method_id: selectedShippingMethodId.value,
-    cart: cart.map((item) => ({
+    cart: cart.value.map((item) => ({
       product_id: item.product_id,
       variation_id: item.variation_id,
       quantity: item.quantity,
       name: item.name,
       variation_name: item.variation_name,
       price: item.price,
-      image: item.image
+      image: item.image,
+      gst_rate: item.gst_rate,
+      gst_inclusive: item.gst_inclusive,
+      hsn_code: item.hsn_code,
     })),
     special_instructions: specialInstructions.value,
     gstin: gstin.value.trim() || null // Include GSTIN if provided

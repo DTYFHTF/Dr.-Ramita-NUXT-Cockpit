@@ -68,13 +68,13 @@
             <span>Subtotal</span>
             <span>₹{{ calculateSubtotal().toFixed(2) }}</span>
           </div>
+          <div class="summary-row text-muted small">
+            <span>Total GST (Included)</span>
+            <span>₹{{ calculateTotalGST().toFixed(2) }}</span>
+          </div>
           <div class="summary-row">
             <span>Shipping</span>
             <span>₹{{ orderData.shipping_cost?.toFixed(2) || '0.00' }}</span>
-          </div>
-          <div v-if="orderData.gst_amount" class="summary-row">
-            <span>GST ({{ orderData.gst_percentage }}%)</span>
-            <span>₹{{ orderData.gst_amount.toFixed(2) }}</span>
           </div>
           <div class="summary-row total-row">
             <span>Total</span>
@@ -232,6 +232,26 @@ const calculateSubtotal = (): number => {
   if (!props.orderData.cart) return 0;
   return props.orderData.cart.reduce((sum: number, item: any) => {
     return sum + (item.price * item.quantity);
+  }, 0);
+};
+
+const calculateTotalGST = (): number => {
+  if (!props.orderData.cart) return 0;
+  return props.orderData.cart.reduce((sum: number, item: any) => {
+    const itemTotal = item.price * item.quantity;
+    const gstRate = item.gst_rate || 18.00;
+    const gstInclusive = item.gst_inclusive !== undefined ? item.gst_inclusive : false;
+    
+    let gstAmount = 0;
+    if (gstInclusive) {
+      // GST is included in price
+      gstAmount = itemTotal - (itemTotal / (1 + gstRate / 100));
+    } else {
+      // GST is exclusive
+      gstAmount = itemTotal * (gstRate / 100);
+    }
+    
+    return sum + gstAmount;
   }, 0);
 };
 

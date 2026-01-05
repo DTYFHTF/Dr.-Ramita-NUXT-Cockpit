@@ -245,6 +245,9 @@ export interface CartItem {
   image: string;
   stock: number;
   quantity: number;
+  gst_rate: number;
+  gst_inclusive: boolean;
+  hsn_code: string | null;
 }
 
 export interface WishlistItem {
