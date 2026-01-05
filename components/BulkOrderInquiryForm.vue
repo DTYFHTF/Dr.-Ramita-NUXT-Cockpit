@@ -552,6 +552,7 @@ import {
   type BulkOrderProduct,
 } from "@/composables/useBulkOrderInquiry";
 import { useProducts } from "@/composables/useProducts";
+import { useAlert } from "@/composables/useAlert";
 import LucideIcon from "@/components/LucideIcon.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import { VueTelInput } from "vue-tel-input";
@@ -563,6 +564,7 @@ const userStore = useUserStore();
 const { submitInquiry, loading, error } = useBulkOrderInquiry();
 const { searchProductsByName } = useProducts();
 const { getImageUrl, handleImageError } = useImageUrl();
+const { warning } = useAlert();
 
 // Multi-step form
 const steps = ["Contact Info", "Products", "Shipping", "Details"];
@@ -693,7 +695,7 @@ function addProductFromSearch(product: any) {
   // Check if product already exists
   const exists = form.value.products.some((p) => p.product_id === product.id);
   if (exists) {
-    alert("This product is already added to your list");
+    warning("This product is already added to your list");
     return;
   }
 

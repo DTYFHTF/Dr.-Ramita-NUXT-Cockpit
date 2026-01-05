@@ -164,12 +164,14 @@ import { useCart } from '@/composables/useCart';
 import { useWishlist } from '@/composables/useWishlist';
 import { useUserStore } from '@/stores/user';
 import { useProducts } from '@/composables/useProducts';
+import { useAlert } from '@/composables/useAlert';
 import type { Product } from '@/types';
 
 const { addToCart } = useCart();
 const wishlistStore = useWishlist();
 const userStore = useUserStore();
 const { fetchProduct, product: fetchedProduct } = useProducts();
+const { authRequired, error: showError, success } = useAlert();
 
 const showNotification = ref(false);
 const showWishlistNotification = ref(false);
@@ -213,11 +215,11 @@ const getPromotions = () => {
 
 const handleWishlistToggle = async () => {
   if (!userStore.hydrated) {
-    alert('Please wait, authentication state is loading.');
+    showError('Please wait, authentication state is loading.');
     return;
   }
   if (!isAuthenticated.value) {
-    alert('You need to be logged in to manage your wishlist.');
+    authRequired('Log in to manage your wishlist');
     return;
   }
   try {
@@ -232,7 +234,7 @@ const handleWishlistToggle = async () => {
       }, 3000);
     }
   } catch (err: any) {
-    alert('Error updating wishlist: ' + (err?.message || err));
+    showError('Error updating wishlist: ' + (err?.message || err));
   }
 };
 
@@ -247,12 +249,12 @@ const handleAddToCart = async (product: Product) => {
   
   if (!userStore.hydrated) {
     console.log('[ProductCard] User store not hydrated yet');
-    alert('Please wait, authentication state is loading.');
+    showError('Please wait, authentication state is loading.');
     return;
   }
   if (!isAuthenticated.value) {
     console.log('[ProductCard] User not authenticated');
-    alert('You need to be logged in to add products to the cart.');
+    authRequired('Log in to add products to cart');
     return;
   }
   try {
@@ -276,7 +278,7 @@ const handleAddToCart = async (product: Product) => {
     // Better error handling for stock and validation errors
     if (err?.message?.includes('available')) {
       // Stock-related errors - show friendly message
-      alert(err.message);
+      showError(err.message);
     } else if (err?.status === 422) {
       // Show validation errors if available
       if (err?.data?.error?.includes('variation')) {
@@ -285,11 +287,11 @@ const handleAddToCart = async (product: Product) => {
         openQuickView();
         return;
       }
-      alert(err?.data?.error || err?.data?.message || 'Validation error. Please check your input.');
+      showError(err?.data?.error || err?.data?.message || 'Validation error. Please check your input.');
     } else if (err?.status === 401 || err?.status === 419) {
-      alert('Authentication failed. Please log in again.');
+      authRequired('Your session has expired');
     } else {
-      alert('Error adding to cart: ' + (err?.data?.message || err?.message || 'Unknown error'));
+      showError('Error adding to cart: ' + (err?.data?.message || err?.message || 'Unknown error'));
     }
   }
 };
@@ -320,7 +322,7 @@ function onQuickViewAddToCart(payload: Product & { quantity?: number; variation_
     closeQuickView();
   } catch (error) {
     console.error('[ProductCard] Error adding to cart:', error);
-    alert('Error adding to cart: ' + (error as any)?.message);
+    showError('Error adding to cart: ' + (error as any)?.message);
   }
 }
 

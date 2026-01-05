@@ -253,6 +253,7 @@ import { useCart } from '@/composables/useCart';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { useUserSettings } from '@/composables/useUserSettings';
+import { useAlert } from '@/composables/useAlert';
 import type { Order, OrderItem, ShippingInfo, PaymentMethod } from '@/types';
 import LucideIcon from '@/components/LucideIcon.vue';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
@@ -266,6 +267,7 @@ const baseUrl = config.public.baseUrl;
 const userStore = useUserStore();
 const { initiatePayment, verifyPayment } = useRazorpay();
 const { getDefaultAddress, getPreferredDeliverySlot, getDeliverySlotLabel } = useUserSettings();
+const { sessionExpired } = useAlert();
 
 // Check if user has saved address
 const hasSavedAddress = ref(false);
@@ -593,7 +595,7 @@ const submitOrder = async () => {
     
     // Provide detailed error messages
     if (e?.status === 401 || e?.status === 419) {
-      errorMessage.value = 'Authentication failed. Please log in again.';
+      sessionExpired();
       setTimeout(() => {
         router.push('/login');
       }, 2000);

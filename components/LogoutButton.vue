@@ -8,12 +8,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
+import { useAlert } from '~/composables/useAlert'
 
 const loading = ref(false)
 const error = ref('')
 const router = useRouter()
 const userStore = useUserStore()
 const config = useRuntimeConfig()
+const { error: showError } = useAlert()
 
 async function logout() {
   error.value = ''
@@ -32,7 +34,7 @@ async function logout() {
     // Ignore unauthenticated errors, still proceed to clear user/token
     if (err?.data?.message && err.data.message !== 'Unauthenticated.') {
       error.value = err.data.message
-      alert(error.value)
+      showError(error.value)
     }
   } finally {
     userStore.setUser(null)

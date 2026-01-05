@@ -13,6 +13,7 @@
       </main>
     </ErrorBoundary>
     <Footer />
+    <AlertContainer />
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import Navbar from '@/components/Navbar.vue';
 import CategoryBar from '@/components/categories/CategoryBar.vue';
 import Footer from '@/components/Footer.vue';
 import ErrorBoundary from '@/components/ErrorBoundary.vue';
+import AlertContainer from '@/components/AlertContainer.vue';
 import { useTheme } from '@/composables/useTheme';
 
 // Initialize theme system
