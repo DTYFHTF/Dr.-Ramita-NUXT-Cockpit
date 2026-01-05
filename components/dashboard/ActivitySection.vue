@@ -41,7 +41,7 @@
         </NuxtLink>
       </div>
       <div v-if="recentlyViewed.length > 0" class="row g-3">
-        <div v-for="product in recentlyViewed" :key="product.id" class="col-md-4 col-sm-6">
+        <div v-for="product in recentlyViewed" :key="product.id" class="col-md-3 col-sm-6">
           <NuxtLink :to="`/products/${product.slug}`" class="recent-product-card">
             <img :src="getImageUrl(product.image)" :alt="product.name" class="recent-product-img" />
             <div class="recent-product-info">
@@ -350,15 +350,17 @@ const getOrderStatusClass = (status: string) => {
   transition: all 0.3s ease;
   text-decoration: none;
   color: inherit;
-
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
   .recent-product-img {
-    width: 100%;
-    height: 150px;
+    width: 50%;
+    height: auto;
     object-fit: cover;
   }
 

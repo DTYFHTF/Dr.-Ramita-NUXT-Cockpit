@@ -128,23 +128,116 @@
 
       <!-- Step 2: Product Selection -->
       <div v-show="currentStep === 1" class="form-section">
-        <h3 class="section-title">
-          <LucideIcon icon="mdi:package-variant" class="me-2" />
-          Select Products
-        </h3>
+        <div class="row">
+          <!-- Product Catalog Sidebar -->
+          <div class="col-lg-4 order-lg-2 mb-4 mb-lg-0">
+            <div class="product-catalog-sidebar">
+              <div class="catalog-header">
+                <h5 class="mb-0">
+                  <LucideIcon icon="mdi:package-variant" class="me-2" />
+                  Available Products
+                </h5>
+                <p class="small text-muted mb-0 mt-1">
+                  {{ catalogProducts.length }} products available
+                </p>
+              </div>
+              
+              <!-- Category Filter -->
+              <div class="catalog-filter mb-3">
+                <select v-model="selectedCategory" class="form-input form-input-sm mb-2">
+                  <option value="">All Categories</option>
+                  <option v-for="cat in availableCategories" :key="cat" :value="cat">
+                    {{ cat }}
+                  </option>
+                </select>
+                <input
+                  v-model="catalogSearchQuery"
+                  type="text"
+                  class="form-input form-input-sm"
+                  placeholder="🔍 Search products..."
+                />
+              </div>
 
-        <!-- Product Search Input -->
-        <div class="mb-3">
-          <input
-            v-model="productSearchQuery"
-            type="text"
-            class="form-input product-search-input"
-            placeholder="Search & Add Products (type product name...)"
-            @input="handleProductSearch"
-          />
-          <small class="d-block text-muted mt-2"
-            >Minimum {{ MIN_QUANTITY }} units per product</small
-          >
+              <!-- Product List -->
+              <div 
+                ref="catalogListRef"
+                class="catalog-products-list"
+                @mouseenter="pauseAutoScroll"
+                @mouseleave="resumeAutoScroll"
+              >
+                <div v-if="catalogLoading" class="text-center py-4">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="small text-muted mt-2">Loading products...</p>
+                </div>
+                
+                <div v-else-if="filteredCatalogProducts.length > 0">
+                  <div
+                    v-for="product in filteredCatalogProducts"
+                    :key="product.id"
+                    class="catalog-product-card"
+                    :class="{ 'already-added': isProductAdded(product.id) }"
+                    @click="!isProductAdded(product.id) && addProductFromCatalog(product)"
+                  >
+                    <img
+                      v-if="product.image"
+                      :src="getImageUrl(product.image)"
+                      :alt="product.name"
+                      class="catalog-product-img"
+                      @error="(e) => handleImageError(e)"
+                    />
+                    <div class="catalog-product-img-placeholder" v-else>
+                      {{ product.name.charAt(0) }}
+                    </div>
+                    <div class="catalog-product-info">
+                      <h6 class="catalog-product-name">{{ product.name }}</h6>
+                      <p v-if="product.sku" class="catalog-product-sku">SKU: {{ product.sku }}</p>
+                      <p v-if="product.category_name" class="catalog-product-category">
+                        {{ product.category_name }}
+                      </p>
+                      <span v-if="isProductAdded(product.id)" class="badge bg-success">
+                        <LucideIcon icon="mdi:check" size="12" /> Added
+                      </span>
+                    </div>
+                    <button
+                      v-if="!isProductAdded(product.id)"
+                      type="button"
+                      class="btn-catalog-add"
+                      @click.stop="addProductFromCatalog(product)"
+                    >
+                      <LucideIcon icon="mdi:plus" size="16" />
+                    </button>
+                  </div>
+                </div>
+                
+                <div v-else class="text-center py-4 text-muted">
+                  <LucideIcon icon="mdi:package-variant-closed" size="32" class="mb-2" />
+                  <p class="small">No products found</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Product Selection Area -->
+          <div class="col-lg-8 order-lg-1">
+            <h3 class="section-title">
+              <LucideIcon icon="mdi:package-variant" class="me-2" />
+              Select Products
+            </h3>
+
+            <!-- Product Search Input -->
+            <div class="mb-3">
+              <input
+                v-model="productSearchQuery"
+                type="text"
+                class="form-input product-search-input"
+                placeholder="Search & Add Products (type product name...)"
+                @input="handleProductSearch"
+              />
+              <small class="d-block text-muted mt-2"
+                >Minimum {{ MIN_QUANTITY }} units per product</small
+              >
 
           <!-- Search Results Dropdown -->
           <div v-if="searchLoading" class="search-results-list mt-2">
@@ -255,29 +348,31 @@
             class="text-muted mb-3"
           />
           <p class="text-muted">
-            No products selected yet. Start typing in the search box above to
-            add products.
-          </p>
-        </div>
+              No products selected yet. Start typing in the search box above to
+              add products.
+            </p>
+          </div>
 
-        <div class="step-navigation mt-4">
-          <button
-            type="button"
-            @click="prevStep"
-            class="btn btn-outline-secondary px-4 me-2"
-          >
-            <LucideIcon icon="mdi:arrow-left" class="me-2" /> Back
-          </button>
-          <button
-            type="button"
-            @click="nextStep"
-            :disabled="form.products.length === 0"
-            class="btn btn-smooth-success px-4"
-          >
-            Next <LucideIcon icon="mdi:arrow-right" class="ms-2" />
-          </button>
+          <div class="step-navigation mt-4">
+            <button
+              type="button"
+              @click="prevStep"
+              class="btn btn-outline-secondary px-4 me-2"
+            >
+              <LucideIcon icon="mdi:arrow-left" class="me-2" /> Back
+            </button>
+            <button
+              type="button"
+              @click="nextStep"
+              :disabled="form.products.length === 0"
+              class="btn btn-smooth-success px-4"
+            >
+              Next <LucideIcon icon="mdi:arrow-right" class="ms-2" />
+            </button>
+          </div>
         </div>
       </div>
+    </div>
 
       <!-- Step 3: Shipping Address -->
       <div v-show="currentStep === 2" class="form-section">
@@ -545,7 +640,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import {
   useBulkOrderInquiry,
@@ -562,7 +657,7 @@ const MIN_QUANTITY = 10;
 
 const userStore = useUserStore();
 const { submitInquiry, loading, error } = useBulkOrderInquiry();
-const { searchProductsByName } = useProducts();
+const { products: composableProducts, fetchProducts } = useProducts();
 const { getImageUrl, handleImageError } = useImageUrl();
 const { warning } = useAlert();
 
@@ -575,6 +670,43 @@ const productSearchQuery = ref("");
 const productSearchResults = ref<any[]>([]);
 const searchLoading = ref(false);
 let searchDebounce: ReturnType<typeof setTimeout> | null = null;
+
+// Product Catalog Sidebar
+const catalogProducts = ref<any[]>([]);
+const catalogSearchQuery = ref("");
+const selectedCategory = ref("");
+const catalogLoading = ref(false);
+const catalogListRef = ref<HTMLElement | null>(null);
+let autoScrollInterval: ReturnType<typeof setInterval> | null = null;
+
+// Available categories from loaded products
+const availableCategories = computed(() => {
+  const cats = new Set(catalogProducts.value.map(p => p.category_name).filter(Boolean));
+  return Array.from(cats).sort();
+});
+
+// Filtered catalog based on search and category
+const filteredCatalogProducts = computed(() => {
+  let filtered = catalogProducts.value;
+  
+  // Filter by category
+  if (selectedCategory.value) {
+    filtered = filtered.filter(p => p.category_name === selectedCategory.value);
+  }
+  
+  // Filter by search query
+  if (catalogSearchQuery.value) {
+    const query = catalogSearchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.sku?.toLowerCase().includes(query) ||
+        p.category_name?.toLowerCase().includes(query)
+    );
+  }
+  
+  return filtered;
+});
 
 // Form state
 const form = ref({
@@ -664,7 +796,7 @@ function prevStep() {
 }
 
 // Product search with modal
-function handleProductSearch() {
+async function handleProductSearch() {
   console.log("Search triggered:", productSearchQuery.value);
 
   if (searchDebounce) clearTimeout(searchDebounce);
@@ -679,7 +811,12 @@ function handleProductSearch() {
   searchDebounce = setTimeout(async () => {
     console.log("Executing search for:", productSearchQuery.value);
     try {
-      const results = await searchProductsByName(productSearchQuery.value);
+      // Search within loaded catalog first
+      const query = productSearchQuery.value.toLowerCase();
+      const results = catalogProducts.value.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.sku?.toLowerCase().includes(query)
+      );
       console.log("Search results:", results);
       productSearchResults.value = results.slice(0, 20);
     } catch (err) {
@@ -708,6 +845,78 @@ function addProductFromSearch(product: any) {
   // Reset search
   productSearchQuery.value = "";
   productSearchResults.value = [];
+}
+
+// Catalog functions
+function isProductAdded(productId: number): boolean {
+  return form.value.products.some((p) => p.product_id === productId);
+}
+
+function addProductFromCatalog(product: any) {
+  if (isProductAdded(product.id)) {
+    warning("This product is already added to your list");
+    return;
+  }
+
+  form.value.products.push({
+    product_id: product.id,
+    product_name: product.name,
+    quantity: MIN_QUANTITY,
+  });
+}
+
+async function loadCatalogProducts() {
+  catalogLoading.value = true;
+  try {
+    console.log('Starting to load catalog products...');
+    // Fetch all active products (up to 200)
+    await fetchProducts(1, 200, '', '', null, null, true, false);
+    console.log('Fetch completed, composableProducts:', composableProducts.value?.length);
+    
+    // Copy products from the composable
+    catalogProducts.value = [...(composableProducts.value || [])];
+    console.log('Loaded catalog products:', catalogProducts.value.length);
+    
+    if (catalogProducts.value.length === 0) {
+      console.warn('No products loaded. Check API connection and data.');
+    }
+  } catch (err) {
+    console.error("Failed to load product catalog:", err);
+    catalogProducts.value = [];
+  } finally {
+    catalogLoading.value = false;
+  }
+}
+
+// Auto-scroll functions
+function startAutoScroll() {
+  if (autoScrollInterval) return;
+  
+  autoScrollInterval = setInterval(() => {
+    if (catalogListRef.value) {
+      const scrollElement = catalogListRef.value;
+      const isAtBottom = scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight - 10;
+      
+      if (isAtBottom) {
+        // Smoothly scroll back to top
+        scrollElement.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Scroll down slowly
+        scrollElement.scrollBy({ top: 1, behavior: 'smooth' });
+      }
+    }
+  }, 50); // Adjust speed: lower = faster
+}
+
+function pauseAutoScroll() {
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval);
+    autoScrollInterval = null;
+  }
+}
+
+function resumeAutoScroll() {
+  startAutoScroll();
 }
 
 // Product management
@@ -795,11 +1004,41 @@ function handleSuccessClose() {
   // Optionally redirect to dashboard or inquiries page
   navigateTo("/dashboard?tab=bulk-orders");
 }
+
+// Load catalog on mount
+onMounted(() => {
+  loadCatalogProducts();
+});
+
+// Watch for composableProducts changes
+watch(composableProducts, (newProducts) => {
+  if (newProducts && newProducts.length > 0 && catalogProducts.value.length === 0) {
+    console.log('Products updated via watch:', newProducts.length);
+    catalogProducts.value = [...newProducts];
+  }
+}, { immediate: true });
+
+// Watch for catalog products to be loaded, then start auto-scroll
+watch(catalogProducts, (products) => {
+  if (products.length > 0) {
+    // Wait a bit for DOM to update
+    setTimeout(() => {
+      startAutoScroll();
+    }, 1000);
+  }
+});
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval);
+  }
+});
 </script>
 
 <style scoped lang="scss">
 .bulk-order-form {
-  max-width: 900px;
+  max-width: 1200px; // Increased for sidebar
   margin: 0 auto;
 }
 
@@ -1026,6 +1265,235 @@ function handleSuccessClose() {
 .empty-products {
   background: var(--background-light);
   border-radius: 8px;
+}
+
+/* Product Catalog Sidebar */
+.product-catalog-sidebar {
+  position: sticky;
+  top: 100px;
+  background: var(--background-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-header {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1rem;
+  
+  h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Auto-Scrolling Product Ticker */
+.product-ticker-container {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, #e0f2f1 100%);
+  border-radius: 8px;
+  padding: 0.75rem 0;
+  border: 1px solid var(--color-primary);
+}
+
+.product-ticker {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-left linear infinite;
+  padding-right: 50px; /* Gap before loop */
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-item {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  margin: 0 0.5rem;
+  background: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  
+  &:hover:not(.ticker-added) {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    transform: scale(1.05);
+  }
+  
+  &.ticker-added {
+    background: var(--background-light);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.ticker-fade {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 30px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ticker-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--color-primary-light), transparent);
+}
+
+.ticker-fade-right {
+  right: 0;
+  background: linear-gradient(to left, #e0f2f1, transparent);
+}
+
+/* Pause animation on hover */
+.product-ticker-container:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+.catalog-filter {
+  margin-bottom: 0.5rem;
+}
+
+.catalog-products-list {
+  flex: 1;
+  overflow-y: auto;
+  margin: -0.5rem;
+  padding: 0.5rem;
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--background-light);
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
+  }
+}
+
+.catalog-product-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--background-white);
+  
+  &:hover:not(.already-added) {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  &.already-added {
+    background: var(--background-light);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.catalog-product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.catalog-product-img-placeholder {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.25rem;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.catalog-product-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.catalog-product-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.catalog-product-sku,
+.catalog-product-category {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.btn-catalog-add {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--color-primary-dark);
+    transform: scale(1.1);
+  }
 }
 
 /* Product Search Results */
