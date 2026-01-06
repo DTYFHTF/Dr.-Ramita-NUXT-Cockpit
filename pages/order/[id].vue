@@ -18,7 +18,7 @@
         </NuxtLink>
       </div>
       
-      <OrderConfirmation v-else-if="orderData" :orderData="orderData" />
+      <OrderConfirmation v-else-if="orderData" :orderData="orderData" :onRefresh="fetchOrderDetails" />
     </div>
   </div>
 </template>

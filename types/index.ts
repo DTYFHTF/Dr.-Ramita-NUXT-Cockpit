@@ -227,6 +227,7 @@ export interface Order {
   id: number | string;
   status: string;
   created_at: string;
+  updated_at?: string;
   cart: OrderItem[];
   shipping_cost: number;
   estimated_delivery: string;
@@ -234,6 +235,10 @@ export interface Order {
   shipping: ShippingInfo;
   payment_method: PaymentMethod;
   special_instructions?: string;
+  tracking_number?: string | null;
+  courier?: string | null;
+  gstin?: string;
+  gst_amount?: number;
 }
 
 export interface CartItem {

@@ -7,7 +7,24 @@
       </div>
       <h2 class="confirmation-title">Order Placed Successfully!</h2>
       <p class="confirmation-subtitle">Thank you for your purchase. We'll process your order soon.</p>
+      
+      <!-- Refresh Button -->
+      <button v-if="onRefresh" @click="handleRefresh" class="btn-refresh" :disabled="refreshing">
+        <LucideIcon :icon="refreshing ? 'mdi:loading' : 'mdi:refresh'" :class="{ 'spin': refreshing }" size="18" />
+        {{ refreshing ? 'Refreshing...' : 'Refresh Status' }}
+      </button>
     </div>
+
+    <!-- Order Tracking Timeline -->
+    <OrderTrackingTimeline 
+      v-if="showTracking"
+      :currentStatus="orderData.status"
+      :trackingNumber="orderData.tracking_number"
+      :courier="orderData.courier"
+      :createdAt="orderData.created_at"
+      :lastUpdated="orderData.updated_at"
+      class="mb-4"
+    />
 
     <!-- Order Details Card -->
     <div class="order-details-card">
@@ -173,15 +190,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import LucideIcon from './LucideIcon.vue';
+import OrderTrackingTimeline from './OrderTrackingTimeline.vue';
 import type { Order } from '@/types';
 import { useImageUrl } from '@/composables/useImageUrl';
 
 interface Props {
   orderData: Order;
   showActions?: boolean;
+  onRefresh?: () => Promise<void>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -189,6 +208,23 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const route = useRoute();
+const refreshing = ref(false);
+
+// Show tracking if status is not just pending
+const showTracking = computed(() => {
+  return ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].includes(props.orderData.status);
+});
+
+const handleRefresh = async () => {
+  if (!props.onRefresh || refreshing.value) return;
+  
+  refreshing.value = true;
+  try {
+    await props.onRefresh();
+  } finally {
+    refreshing.value = false;
+  }
+};
 
 // If we're on the order details page (/order/[id]), show "Back to Orders"
 // If we're on checkout success, show "View Orders"
@@ -301,6 +337,51 @@ const hasHsnCodes = computed(() => {
 .confirmation-subtitle {
   font-size: 1.125rem;
   color: var(--text-secondary);
+}
+
+.btn-refresh {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--background-white);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Order Details Card */

@@ -2,112 +2,132 @@
   <div class="activity-container">
     <h3 class="content-title mb-4">Recent Activity</h3>
     
-    <!-- Recent Orders -->
-    <div class="activity-section mb-4">
-      <div class="activity-header d-flex align-items-center mb-3">
-        <LucideIcon icon="mdi:package-variant" class="me-2 text-primary" />
-        <h5 class="mb-0">Recent Orders</h5>
-      </div>
-      <div v-if="orders && orders.length > 0" class="activity-list">
-        <div v-for="order in orders.slice(0, 5)" :key="order.id" class="activity-item">
-          <div class="activity-icon">
-            <LucideIcon icon="mdi:receipt" class="text-success" />
+    <div class="row g-3">
+      <!-- Recent Orders Card -->
+      <div class="col-lg-6">
+        <div class="activity-card">
+          <div class="activity-card-header">
+            <LucideIcon icon="mdi:package-variant" class="me-2 text-primary" />
+            <h6 class="mb-0">Recent Orders</h6>
           </div>
-          <div class="activity-content">
-            <div class="activity-title">Order #{{ order.id }}</div>
-            <div class="activity-meta">
-              <span class="badge" :class="getOrderStatusClass(order.status)">{{ order.status }}</span>
-              <span class="text-muted ms-2">{{ formatDate(order.created_at) }}</span>
+          <div class="activity-card-body">
+            <div v-if="orders && orders.length > 0" class="activity-list">
+              <div v-for="order in orders.slice(0, 3)" :key="order.id" class="activity-item-compact">
+                <div class="activity-item-icon">
+                  <LucideIcon icon="mdi:receipt" class="text-success" size="18" />
+                </div>
+                <div class="activity-item-content">
+                  <div class="activity-item-title">Order #{{ order.id }}</div>
+                  <div class="activity-item-meta">
+                    <span class="badge badge-sm" :class="getOrderStatusClass(order.status)">{{ order.status }}</span>
+                    <span class="text-muted ms-2 small">{{ formatDate(order.created_at) }}</span>
+                  </div>
+                </div>
+                <div class="activity-item-value">₹{{ order.total?.toFixed(2) }}</div>
+              </div>
             </div>
-            <div class="activity-detail text-muted">₹{{ order.total?.toFixed(2) }}</div>
-          </div>
-          <NuxtLink to="/dashboard?tab=orders" class="btn btn-sm btn-outline">
-            View
-          </NuxtLink>
-        </div>
-      </div>
-      <div v-else class="text-muted text-center py-3">
-        No orders yet
-      </div>
-    </div>
-
-    <!-- Recently Viewed Products -->
-    <div class="activity-section mb-4">
-      <div class="activity-header d-flex align-items-center mb-3">
-        <LucideIcon icon="mdi:eye" class="me-2 text-primary" />
-        <h5 class="mb-0">Recently Viewed Products</h5>
-        <NuxtLink v-if="recentlyViewed.length > 0" to="/products" class="btn btn-sm btn-outline ms-auto">
-          View All
-        </NuxtLink>
-      </div>
-      <div v-if="recentlyViewed.length > 0" class="row g-3">
-        <div v-for="product in recentlyViewed" :key="product.id" class="col-md-3 col-sm-6">
-          <NuxtLink :to="`/products/${product.slug}`" class="recent-product-card">
-            <img :src="getImageUrl(product.image)" :alt="product.name" class="recent-product-img" />
-            <div class="recent-product-info">
-              <div class="recent-product-name">{{ product.name }}</div>
-              <div class="recent-product-price text-success fw-bold">₹{{ product.price }}</div>
-              <div class="recent-product-time text-muted small">{{ product.viewedAt }}</div>
+            <div v-else class="text-muted text-center py-2 small">
+              No orders yet
             </div>
-          </NuxtLink>
+            <NuxtLink v-if="orders.length > 0" to="/dashboard?tab=orders" class="activity-view-all">
+              View All Orders →
+            </NuxtLink>
+          </div>
         </div>
       </div>
-      <div v-else class="text-muted text-center py-3">
-        No products viewed recently
-      </div>
-    </div>
 
-    <!-- Wishlist Activity -->
-    <div class="activity-section mb-4">
-      <div class="activity-header d-flex align-items-center mb-3">
-        <LucideIcon icon="mdi:heart" class="me-2 text-primary" />
-        <h5 class="mb-0">Wishlist Activity</h5>
-      </div>
-      <div v-if="wishlist && wishlist.length > 0" class="activity-list">
-        <div v-for="item in wishlist.slice(0, 5)" :key="item.id" class="activity-item">
-          <div class="activity-icon">
-            <LucideIcon icon="mdi:heart" class="text-danger" />
+      <!-- Wishlist Activity Card -->
+      <div class="col-lg-6">
+        <div class="activity-card">
+          <div class="activity-card-header">
+            <LucideIcon icon="mdi:heart" class="me-2 text-danger" />
+            <h6 class="mb-0">Wishlist Activity</h6>
           </div>
-          <div class="activity-content">
-            <div class="activity-title">{{ item.product?.name || 'Product' }}</div>
-            <div class="activity-meta text-muted">In your wishlist</div>
-            <div v-if="item.product?.price" class="activity-detail text-success fw-bold">₹{{ item.product.display_price || item.product.price }}</div>
-          </div>
-          <NuxtLink to="/dashboard?tab=wishlist" class="btn btn-sm btn-outline">
-            View All
-          </NuxtLink>
-        </div>
-      </div>
-      <div v-else class="text-muted text-center py-3">
-        No items in wishlist
-      </div>
-    </div>
-
-    <!-- Recent Course/Event Registrations -->
-    <div class="activity-section">
-      <div class="activity-header d-flex align-items-center mb-3">
-        <LucideIcon icon="mdi:calendar-check" class="me-2 text-primary" />
-        <h5 class="mb-0">Recent Registrations</h5>
-      </div>
-      <div v-if="registrations && registrations.length > 0" class="activity-list">
-        <div v-for="reg in registrations" :key="reg.id" class="activity-item">
-          <div class="activity-icon">
-            <LucideIcon :icon="reg.type === 'course' ? 'mdi:school' : 'mdi:calendar-star'" class="text-info" />
-          </div>
-          <div class="activity-content">
-            <div class="activity-title">{{ reg.title || reg.name }}</div>
-            <div class="activity-meta">
-              <span class="badge bg-info text-white">{{ reg.type || 'course' }}</span>
-              <span class="text-muted ms-2">{{ formatDate(reg.registered_at || reg.created_at) }}</span>
+          <div class="activity-card-body">
+            <div v-if="wishlist && wishlist.length > 0" class="activity-list">
+              <div v-for="item in wishlist.slice(0, 3)" :key="item.id" class="activity-item-compact">
+                <div class="activity-item-icon">
+                  <LucideIcon icon="mdi:heart" class="text-danger" size="18" />
+                </div>
+                <div class="activity-item-content">
+                  <div class="activity-item-title">{{ item.product?.name || 'Product' }}</div>
+                  <div class="activity-item-meta text-muted small">In your wishlist</div>
+                </div>
+                <div v-if="item.product?.price" class="activity-item-value text-success">₹{{ item.product.display_price || item.product.price }}</div>
+              </div>
             </div>
+            <div v-else class="text-muted text-center py-2 small">
+              No items in wishlist
+            </div>
+            <NuxtLink v-if="wishlist.length > 0" to="/dashboard?tab=wishlist" class="activity-view-all">
+              View All Items →
+            </NuxtLink>
           </div>
-          <NuxtLink :to="`/dashboard?tab=${reg.type}s`" class="btn btn-sm btn-outline">
-            View
-          </NuxtLink>
         </div>
       </div>
-      <div v-else class="text-muted text-center py-3">
-        No recent registrations
+
+      <!-- Recent Registrations Card -->
+      <div class="col-lg-6">
+        <div class="activity-card">
+          <div class="activity-card-header">
+            <LucideIcon icon="mdi:calendar-check" class="me-2 text-info" />
+            <h6 class="mb-0">Recent Registrations</h6>
+          </div>
+          <div class="activity-card-body">
+            <div v-if="registrations && registrations.length > 0" class="activity-list">
+              <div v-for="reg in registrations.slice(0, 3)" :key="reg.id" class="activity-item-compact">
+                <div class="activity-item-icon">
+                  <LucideIcon :icon="reg.type === 'course' ? 'mdi:school' : 'mdi:calendar-star'" class="text-info" size="18" />
+                </div>
+                <div class="activity-item-content">
+                  <div class="activity-item-title">{{ reg.title || reg.name }}</div>
+                  <div class="activity-item-meta">
+                    <span class="badge badge-sm bg-info text-white">{{ reg.type || 'course' }}</span>
+                    <span class="text-muted ms-2 small">{{ formatDate(reg.registered_at || reg.created_at) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="text-muted text-center py-2 small">
+              No recent registrations
+            </div>
+            <NuxtLink v-if="registrations.length > 0" to="/dashboard?tab=courses" class="activity-view-all">
+              View All →
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recently Viewed Products Card -->
+      <div class="col-lg-6">
+        <div class="activity-card">
+          <div class="activity-card-header">
+            <LucideIcon icon="mdi:eye" class="me-2 text-primary" />
+            <h6 class="mb-0">Recently Viewed</h6>
+          </div>
+          <div class="activity-card-body">
+            <div v-if="recentlyViewed.length > 0" class="recent-products-grid">
+              <NuxtLink 
+                v-for="product in recentlyViewed.slice(0, 4)" 
+                :key="product.id" 
+                :to="`/products/${product.slug}`" 
+                class="recent-product-mini"
+              >
+                <img :src="getImageUrl(product.image)" :alt="product.name" class="recent-product-mini-img" />
+                <div class="recent-product-mini-info">
+                  <div class="recent-product-mini-name">{{ product.name }}</div>
+                  <div class="recent-product-mini-price">₹{{ product.price }}</div>
+                </div>
+              </NuxtLink>
+            </div>
+            <div v-else class="text-muted text-center py-2 small">
+              No products viewed recently
+            </div>
+            <NuxtLink v-if="recentlyViewed.length > 0" to="/products" class="activity-view-all">
+              Browse All Products →
+            </NuxtLink>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -258,135 +278,260 @@ const getOrderStatusClass = (status: string) => {
 </script>
 
 <style scoped lang="scss">
-// Activity section styles
-.activity-section {
-  background: var(--background-white);
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-
-  .activity-header {
-    h5 {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-  }
-
-  // Empty state styling
-  .text-center {
-    color: var(--text-secondary);
-  }
-}
-
 .activity-container {
   .content-title {
     color: var(--text-primary);
   }
 }
 
+// Compact card design
+.activity-card {
+  background: var(--background-white);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--color-primary-light);
+  }
+
+  .activity-card-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: var(--background-light);
+    border-bottom: 1px solid var(--border-color);
+
+    h6 {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+  }
+
+  .activity-card-body {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// Compact activity list items
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.activity-item {
+.activity-item-compact {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--background-white);
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--background-light);
   border-radius: 8px;
-  border: 1px solid var(--border-color);
   transition: all 0.2s ease;
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transform: translateX(4px);
+    background: var(--background-hover);
+    transform: translateX(2px);
   }
 
-  .activity-icon {
-    width: 40px;
-    height: 40px;
+  .activity-item-icon {
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--background-light);
-    border-radius: 50%;
+    background: var(--background-white);
+    border-radius: 6px;
     flex-shrink: 0;
   }
 
-  .activity-content {
+  .activity-item-content {
     flex: 1;
+    min-width: 0; // Enable text truncation
 
-    .activity-title {
+    .activity-item-title {
       font-weight: 600;
       color: var(--text-primary);
+      font-size: 0.9rem;
       margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .activity-meta {
-      font-size: 0.85rem;
+    .activity-item-meta {
+      font-size: 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       color: var(--text-secondary);
-    }
 
-    .activity-detail {
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-      color: var(--text-secondary);
+      .badge-sm {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.7rem;
+      }
     }
+  }
+
+  .activity-item-value {
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    flex-shrink: 0;
   }
 }
 
-.recent-product-card {
+// View all link
+.activity-view-all {
   display: block;
-  background: var(--background-white);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
+  text-align: center;
+  padding: 0.5rem;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-top: auto;
+
+  &:hover {
+    background: var(--background-light);
+    color: var(--color-primary-dark);
+  }
+}
+
+// Recently viewed products mini grid
+.recent-products-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.recent-product-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--background-light);
+  border-radius: 8px;
   text-decoration: none;
   color: inherit;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
+  transition: all 0.2s ease;
+
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background: var(--background-hover);
+    transform: scale(1.02);
   }
 
-  .recent-product-img {
-    width: 50%;
-    height: auto;
+  .recent-product-mini-img {
+    width: 50px;
+    height: 50px;
     object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
   }
 
-  .recent-product-info {
-    padding: 1rem;
+  .recent-product-mini-info {
+    flex: 1;
+    min-width: 0;
 
-    .recent-product-name {
+    .recent-product-mini-name {
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      line-height: 1.2;
     }
 
-    .recent-product-price {
-      font-size: 1.1rem;
-      margin-bottom: 0.25rem;
+    .recent-product-mini-price {
+      font-size: 0.85rem;
       color: var(--color-primary);
       font-weight: 600;
     }
+  }
+}
 
-    .recent-product-time {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
+// Badge styles
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+// Order status badge colors
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+.text-dark {
+  color: #212529 !important;
+}
+
+.text-white {
+  color: #ffffff !important;
+}
+
+// Responsive adjustments
+@media (max-width: 991px) {
+  .activity-card {
+    margin-bottom: 1rem;
+  }
+
+  .recent-products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .activity-item-compact {
+    .activity-item-content {
+      .activity-item-title {
+        font-size: 0.85rem;
+      }
+
+      .activity-item-meta {
+        flex-wrap: wrap;
+      }
+    }
+
+    .activity-item-value {
+      font-size: 0.85rem;
     }
   }
 }
