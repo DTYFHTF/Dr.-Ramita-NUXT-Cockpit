@@ -22,6 +22,9 @@
                         <div class="order-id-section">
                             <span class="order-id-label">Order</span>
                             <span class="order-id-value">#{{ order.id }}</span>
+                            <NuxtLink :to="`/order/${order.id}`" class="btn-view-order-inline" title="View Order Details">
+                                <LucideIcon icon="mdi:eye" size="18" />
+                            </NuxtLink>
                         </div>
                         <span class="order-status-badge" :class="`status-${order.status}`">
                             {{ formatStatus(order.status) }}
@@ -56,13 +59,6 @@
                             <span class="total-label">Total Amount</span>
                             <span class="total-value">₹{{ order.total?.toFixed(2) }}</span>
                         </div>
-                    </div>
-                    
-                    <div class="order-card-footer">
-                        <NuxtLink :to="`/order/${order.id}`" class="btn-view-order">
-                            <LucideIcon icon="mdi:eye" size="18" class="me-2" />
-                            View Details
-                        </NuxtLink>
                     </div>
                 </div>
             </div>
@@ -179,7 +175,7 @@ onMounted(fetchOrders);
 
     .order-id-section {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 0.5rem;
 
       .order-id-label {
@@ -193,6 +189,33 @@ onMounted(fetchOrders);
         font-weight: 700;
         color: var(--text-primary);
         font-family: monospace;
+      }
+
+      .btn-view-order-inline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin-left: 0.25rem;
+        background: var(--background-white);
+        color: var(--text-secondary);
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid var(--border-color);
+
+        &:hover {
+          background: var(--color-primary);
+          color: white;
+          border-color: var(--color-primary);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
       }
     }
 

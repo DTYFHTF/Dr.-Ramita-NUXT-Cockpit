@@ -1,6 +1,6 @@
 <template>
   <div class="register-page d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="w-100" style="max-width: 420px;">
+    <div class="w-100 auth-container" style="max-width: 600px; width: 100%;">
       <h2 class="mb-3 text-center fw-bold">Create your account</h2>
       <RegisterForm
         :error="error"
@@ -67,5 +67,17 @@ async function register({ first_name, last_name, email, phone, password, passwor
 <style scoped>
 .register-page {
   background: var(--background-light);
+  width: 468px;
+}
+
+.auth-container {
+  max-width: 600px !important;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 100% !important;
+  }
 }
 </style>

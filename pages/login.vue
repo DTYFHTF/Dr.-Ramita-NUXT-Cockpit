@@ -1,6 +1,6 @@
 <template>
   <div class="login-page d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="w-100" style="max-width: 420px;">
+    <div class="w-100 auth-container" style="max-width: 600px; width: 100%;">
       <h2 class="mb-3 text-center fw-bold">Sign in to your account</h2>
       
       <!-- Success message for successful registration or password reset -->
@@ -104,5 +104,17 @@ async function login({ email, password }: { email: string, password: string }) {
 <style scoped>
 .login-page {
   background: var(--background-light);
+  width: 468px;
+}
+
+.auth-container {
+  max-width: 800px !important;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 100% !important;
+  }
 }
 </style>

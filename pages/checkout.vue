@@ -230,11 +230,11 @@
             
             <div class="summary-totals">
               <div class="total-row">
-                <span>Subtotal</span>
-                <span>₹{{ totalPrice.toFixed(2) }}</span>
+                <span>Items Total</span>
+                <span>₹{{ subtotalWithoutGST.toFixed(2) }}</span>
               </div>
-              <div class="total-row text-muted small">
-                <span>Total GST (Included)</span>
+              <div class="total-row">
+                <span>GST</span>
                 <span>₹{{ totalGST.toFixed(2) }}</span>
               </div>
               <div v-if="selectedShippingMethodId" class="total-row">
@@ -246,12 +246,12 @@
                 <span>Shipping</span>
                 <span>Calculating...</span>
               </div>
-              <div v-if="selectedShippingMethodId" class="total-row">
+              <div v-if="selectedShippingMethodId" class="total-row text-muted small">
                 <span>Estimated Delivery</span>
-                <span class="text-muted">{{ estimatedDelivery }}</span>
+                <span>{{ estimatedDelivery }}</span>
               </div>
               <div class="total-row final-total">
-                <span>Total</span>
+                <span>Total Amount</span>
                 <span>₹{{ (totalPrice + shippingCost).toFixed(2) }}</span>
               </div>
             </div>
@@ -362,11 +362,11 @@ const validateGSTIN = () => {
   return true;
 };
 
-const paymentMethod = ref<PaymentMethod>('cod');
+const paymentMethod = ref<PaymentMethod>('card');
 const paymentMethods = [
-  { value: 'cod', label: 'Cash on Delivery' },
+  // { value: 'cod', label: 'Cash on Delivery' }, // Hidden for now
   { value: 'card', label: 'Card / UPI / Wallet (via Razorpay)' },
-  { value: 'upi', label: 'UPI (via Razorpay)' },
+  // { value: 'upi', label: 'UPI (via Razorpay)' }, // Removed - already covered by card option
   { value: 'paypal', label: 'International Cards (Razorpay)' }
 ];
 
@@ -411,6 +411,22 @@ const totalGST = computed(() => {
     }
     
     return sum + gstAmount;
+  }, 0);
+});
+
+// Subtotal without GST
+const subtotalWithoutGST = computed(() => {
+  return cart.value.reduce((sum, item) => {
+    const itemTotal = item.price * item.quantity;
+    const gstRate = item.gst_rate || 18.00;
+    
+    if (item.gst_inclusive) {
+      // Remove GST from price to get base price
+      const basePrice = itemTotal / (1 + gstRate / 100);
+      return sum + basePrice;
+    }
+    // If GST is exclusive, price is already without GST
+    return sum + itemTotal;
   }, 0);
 });
 

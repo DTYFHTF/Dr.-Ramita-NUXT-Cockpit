@@ -15,18 +15,11 @@
       </button>
     </div>
 
-    <!-- Order Tracking Timeline -->
-    <OrderTrackingTimeline 
-      v-if="showTracking"
-      :currentStatus="orderData.status"
-      :trackingNumber="orderData.tracking_number"
-      :courier="orderData.courier"
-      :createdAt="orderData.created_at"
-      :lastUpdated="orderData.updated_at"
-      class="mb-4"
-    />
-
-    <!-- Order Details Card -->
+    <!-- Main Content Layout with Sidebar -->
+    <div class="order-content-layout">
+      <!-- Main Content -->
+      <div class="order-main-content">
+        <!-- Order Details Card -->
     <div class="order-details-card">
       <div class="order-header">
         <div class="order-info-grid">
@@ -82,19 +75,24 @@
         </h4>
         <div class="summary-details">
           <div class="summary-row">
-            <span>Subtotal</span>
+            <span>Items Total</span>
             <span>₹{{ calculateSubtotal().toFixed(2) }}</span>
           </div>
-          <div class="summary-row text-muted small">
-            <span>Total GST (Included)</span>
+          <div class="summary-row">
+            <span>GST</span>
             <span>₹{{ calculateTotalGST().toFixed(2) }}</span>
           </div>
           <div class="summary-row">
-            <span>Shipping</span>
-            <span>₹{{ orderData.shipping_cost?.toFixed(2) || '0.00' }}</span>
+            <span>Shipping Charges</span>
+            <span v-if="orderData.shipping_cost === 0" class="text-success fw-semibold">FREE</span>
+            <span v-else>₹{{ orderData.shipping_cost?.toFixed(2) || '0.00' }}</span>
+          </div>
+          <div class="summary-row text-muted small">
+            <span>Estimated Delivery</span>
+            <span>3-7 business days</span>
           </div>
           <div class="summary-row total-row">
-            <span>Total</span>
+            <span>Total Amount</span>
             <span>₹{{ orderData.total?.toFixed(2) || '0.00' }}</span>
           </div>
         </div>
@@ -136,28 +134,22 @@
           Delivery Information
         </h4>
         <div v-if="orderData.shipping" class="delivery-details">
-          <div class="delivery-address">
-            <p class="recipient-name">{{ orderData.shipping.name }}</p>
-            <p class="address-line">{{ orderData.shipping.address }}</p>
-            <p class="address-line">{{ orderData.shipping.area }}</p>
-            <p class="address-line">{{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }}</p>
-            <p class="address-line">{{ orderData.shipping.country }}</p>
-            <p class="contact-info">
-              <LucideIcon icon="mdi:phone" class="contact-icon" />
-              {{ orderData.shipping.phone }}
-            </p>
-            <p v-if="orderData.shipping.landmark" class="address-line">
-              <LucideIcon icon="mdi:map-marker" class="contact-icon" />
-              Near {{ orderData.shipping.landmark }}
-            </p>
-          </div>
-          <div class="delivery-estimate">
-            <div class="estimate-item">
-              <LucideIcon icon="mdi:clock-outline" class="estimate-icon" />
-              <div class="estimate-info">
-                <span class="estimate-label">Estimated Delivery</span>
-                <span class="estimate-value">3-7 business days</span>
-              </div>
+          <div class="delivery-content">
+            <div class="delivery-row">
+              <LucideIcon icon="mdi:account" class="delivery-icon" size="18" />
+              <span class="delivery-value">{{ orderData.shipping.name }}</span>
+            </div>
+            <div class="delivery-row">
+              <LucideIcon icon="mdi:map-marker" class="delivery-icon" size="18" />
+              <span class="delivery-value">
+                {{ orderData.shipping.address }}, {{ orderData.shipping.area }}, 
+                {{ orderData.shipping.city }}, {{ orderData.shipping.state }} - {{ orderData.shipping.pincode }}
+                <span v-if="orderData.shipping.landmark" class="text-muted"> (Near {{ orderData.shipping.landmark }})</span>
+              </span>
+            </div>
+            <div class="delivery-row">
+              <LucideIcon icon="mdi:phone" class="delivery-icon" size="18" />
+              <span class="delivery-value">{{ orderData.shipping.phone }}</span>
             </div>
           </div>
         </div>
@@ -173,6 +165,26 @@
           {{ orderData.special_instructions }}
         </div>
       </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="order-sidebar">
+        <!-- Order Tracking Timeline -->
+        <div class="sidebar-sticky">
+          <OrderTrackingTimeline 
+            v-if="showTracking"
+            :currentStatus="orderData.shipment_status || orderData.status"
+            :trackingNumber="orderData.tracking_number"
+            :courier="orderData.courier"
+            :createdAt="orderData.created_at"
+            :lastUpdated="orderData.updated_at"
+            :estimatedDeliveryDate="orderData.estimated_delivery_date"
+            :actualDeliveryDate="orderData.actual_delivery_date"
+            :shippedAt="orderData.shipped_at"
+          />
+        </div>
+      </aside>
     </div>
 
     <!-- Action Buttons -->
@@ -267,7 +279,17 @@ const formatDate = (dateString: string): string => {
 const calculateSubtotal = (): number => {
   if (!props.orderData.cart) return 0;
   return props.orderData.cart.reduce((sum: number, item: any) => {
-    return sum + (item.price * item.quantity);
+    const itemTotal = item.price * item.quantity;
+    const gstRate = item.gst_rate || 18.00;
+    const gstInclusive = item.gst_inclusive !== undefined ? item.gst_inclusive : false;
+    
+    if (gstInclusive) {
+      // Remove GST from price to get base price
+      const basePrice = itemTotal / (1 + gstRate / 100);
+      return sum + basePrice;
+    }
+    // If GST is exclusive, price is already without GST
+    return sum + itemTotal;
   }, 0);
 };
 
@@ -294,7 +316,9 @@ const calculateTotalGST = (): number => {
 const { getImageUrl } = useImageUrl();
 
 const getItemImage = (item: any): string => {
-  return getImageUrl(item?.image, '/placeholder-product.jpg');
+  // Try multiple image sources in order of preference
+  const imageSource = item?.image || item?.product_image || item?.variation_image;
+  return getImageUrl(imageSource, '/placeholder-product.jpg');
 };
 
 const hasHsnCodes = computed(() => {
@@ -304,10 +328,40 @@ const hasHsnCodes = computed(() => {
 
 <style scoped lang="scss">
 .order-confirmation {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
   color: var(--text-primary);
+}
+
+.order-content-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  align-items: start;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.order-main-content {
+  min-width: 0; // Prevent grid blowout
+}
+
+.order-sidebar {
+  @media (max-width: 1024px) {
+    order: -1; // Show tracking first on mobile
+  }
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 2rem;
+  
+  @media (max-width: 1024px) {
+    position: static;
+  }
 }
 
 /* Success Header - Based on SuccessStep component */
@@ -568,73 +622,33 @@ const hasHsnCodes = computed(() => {
 
 /* Delivery Section */
 .delivery-details {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2rem;
   background: var(--background-light);
   border-radius: 12px;
   padding: 1.5rem;
   border: 1px solid var(--border-color);
 }
 
-.delivery-address {
-  .recipient-name {
-    font-weight: 600;
-    font-size: 1.125rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-  
-  .address-line {
-    color: var(--text-secondary);
-    margin-bottom: 0.25rem;
-    line-height: 1.5;
-  }
-  
-  .contact-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-success);
-    font-weight: 500;
-    margin-top: 1rem;
-  }
-  
-  .contact-icon {
-    color: var(--color-success);
-  }
+.delivery-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.delivery-estimate {
-  .estimate-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: var(--background-white);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-  }
+.delivery-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
   
-  .estimate-icon {
-    color: var(--color-success);
+  .delivery-icon {
+    color: var(--color-primary);
     flex-shrink: 0;
+    margin-top: 0.125rem;
   }
   
-  .estimate-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    
-    .estimate-label {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-    
-    .estimate-value {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
+  .delivery-value {
+    color: var(--text-primary);
+    line-height: 1.6;
+    flex: 1;
   }
 }
 

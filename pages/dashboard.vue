@@ -753,16 +753,32 @@ const saveOtherSettings = () => {
 }
 
 // Save address
-const saveAddress = () => {
-  locationPrefs.value.address = { ...addressForm.value }
-  locationPrefs.value.hasAddress = true
-  localStorage.setItem('locationPrefs', JSON.stringify(locationPrefs.value))
-  locationMsg.value = 'Address saved successfully!'
-  showAddressForm.value = false
-  
-  setTimeout(() => {
-    locationMsg.value = ''
-  }, 3000)
+const saveAddress = async () => {
+  try {
+    // Save to backend if user is logged in
+    if (userStore.token && user.value) {
+      await authApi.put('user/profile', {
+        address: addressForm.value
+      })
+    }
+    
+    // Also save to localStorage for quick access
+    locationPrefs.value.address = { ...addressForm.value }
+    locationPrefs.value.hasAddress = true
+    localStorage.setItem('locationPrefs', JSON.stringify(locationPrefs.value))
+    locationMsg.value = 'Address saved successfully!'
+    showAddressForm.value = false
+    
+    setTimeout(() => {
+      locationMsg.value = ''
+    }, 3000)
+  } catch (error: any) {
+    console.error('Failed to save address:', error)
+    locationMsg.value = 'Failed to save address. Please try again.'
+    setTimeout(() => {
+      locationMsg.value = ''
+    }, 5000)
+  }
 }
 </script>
 

@@ -1,7 +1,14 @@
 <template>
   <div class="order-confirmation-page">
     <div class="container py-5">
-      <div v-if="loading" class="text-center">
+      <!-- Auth loading state -->
+      <div v-if="authLoading" class="text-center auth-loading">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      
+      <div v-else-if="loading" class="text-center">
         <div class="spinner-border text-success" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
@@ -24,12 +31,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import type { Order } from '@/types';
+
+// Use auth middleware
+definePageMeta({
+  middleware: 'auth'
+});
 
 // Meta tags
 useHead({
@@ -47,6 +59,7 @@ const config = useRuntimeConfig();
 const orderData = ref<Order | null>(null);
 const loading = ref(true);
 const error = ref<string>('');
+const authLoading = ref(!userStore.hydrated);
 
 const fetchOrderDetails = async () => {
   const orderId = route.params.id;
@@ -84,14 +97,26 @@ const fetchOrderDetails = async () => {
   }
 };
 
-onMounted(() => {
-  fetchOrderDetails();
-});
+// Watch for hydration completion
+watch(
+  () => userStore.hydrated,
+  (hydrated) => {
+    if (hydrated) {
+      authLoading.value = false;
+      if (userStore.token) {
+        fetchOrderDetails();
+      }
+    }
+  },
+  { immediate: true }
+);
 
-// Redirect to login if not authenticated
-if (!userStore.token) {
-  await navigateTo('/login');
-}
+onMounted(() => {
+  // If already hydrated on mount, fetch immediately
+  if (userStore.hydrated && userStore.token) {
+    fetchOrderDetails();
+  }
+});
 </script>
 
 <style scoped>
@@ -101,6 +126,13 @@ if (!userStore.token) {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1400px;
+}
+
+.auth-loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

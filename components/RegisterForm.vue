@@ -104,7 +104,7 @@ function onSubmit() {
 
 <style lang="scss" scoped>
 .auth-form {
-  max-width: 500px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
   background: var(--background-white);

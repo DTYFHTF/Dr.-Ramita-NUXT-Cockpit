@@ -30,6 +30,25 @@
             Track on {{ courier }} →
           </a>
         </div>
+        
+        <!-- Delivery Dates -->
+        <div v-if="shippedAt || estimatedDeliveryDate || actualDeliveryDate" class="delivery-dates">
+          <div v-if="shippedAt" class="date-item">
+            <LucideIcon icon="mdi:truck-fast" class="date-icon" size="16" />
+            <span class="date-label">Shipped:</span>
+            <span class="date-value">{{ formatDate(shippedAt) }}</span>
+          </div>
+          <div v-if="estimatedDeliveryDate" class="date-item">
+            <LucideIcon icon="mdi:calendar-clock" class="date-icon" size="16" />
+            <span class="date-label">Expected:</span>
+            <span class="date-value">{{ formatDate(estimatedDeliveryDate) }}</span>
+          </div>
+          <div v-if="actualDeliveryDate" class="date-item delivered">
+            <LucideIcon icon="mdi:check-circle" class="date-icon" size="16" />
+            <span class="date-label">Delivered:</span>
+            <span class="date-value">{{ formatDate(actualDeliveryDate) }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -67,6 +86,9 @@ interface Props {
   courier?: string | null;
   createdAt?: string;
   lastUpdated?: string;
+  estimatedDeliveryDate?: string | null;
+  actualDeliveryDate?: string | null;
+  shippedAt?: string | null;
 }
 
 const props = defineProps<Props>();
@@ -466,6 +488,48 @@ const copyTrackingNumber = async () => {
 
     .step-content .step-title {
       color: var(--text-secondary);
+    }
+  }
+  
+  .delivery-dates {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    .date-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      
+      .date-icon {
+        color: var(--text-secondary);
+      }
+      
+      .date-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      
+      .date-value {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      
+      &.delivered {
+        .date-icon,
+        .date-label {
+          color: var(--color-success);
+        }
+        
+        .date-value {
+          color: var(--color-success);
+          font-weight: 700;
+        }
+      }
     }
   }
 }
