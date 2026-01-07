@@ -274,6 +274,11 @@ import type { Order, OrderItem, ShippingInfo, PaymentMethod } from '@/types';
 import LucideIcon from '@/components/LucideIcon.vue';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
 
+// Require authentication for checkout
+definePageMeta({
+  middleware: 'auth'
+});
+
 const cartStore = useCart();
 const { cart, totalPrice } = storeToRefs(cartStore);
 const router = useRouter();

@@ -20,6 +20,11 @@ import { onMounted } from 'vue';
 import { useBookingStore } from '@/stores/booking';
 import { useDoctorStore } from '@/stores/doctorStore';
 
+// Require authentication for booking consultations
+definePageMeta({
+  middleware: 'auth'
+});
+
 // Meta tags
 useHead({
   title: 'Book Consultation - Schedule Your Consultation',

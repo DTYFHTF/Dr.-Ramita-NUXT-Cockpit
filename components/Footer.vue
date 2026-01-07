@@ -14,23 +14,18 @@
           </div>
           
           <!-- Social Media -->
-          <div class="social-links" v-if="hasSocialLinks">
+          <div class="social-links">
             <h4>Connect With Us</h4>
             <div class="social-icons">
-              <a v-if="footerSettings?.facebook_url" :href="footerSettings.facebook_url" target="_blank" rel="noopener" aria-label="Facebook">
-                <LucideIcon icon="Facebook" :size="20" />
-              </a>
-              <a v-if="footerSettings?.instagram_url" :href="footerSettings.instagram_url" target="_blank" rel="noopener" aria-label="Instagram">
-                <LucideIcon icon="Instagram" :size="20" />
-              </a>
-              <a v-if="footerSettings?.twitter_url" :href="footerSettings.twitter_url" target="_blank" rel="noopener" aria-label="Twitter">
-                <LucideIcon icon="Twitter" :size="20" />
-              </a>
-              <a v-if="footerSettings?.youtube_url" :href="footerSettings.youtube_url" target="_blank" rel="noopener" aria-label="YouTube">
-                <LucideIcon icon="Youtube" :size="20" />
-              </a>
-              <a v-if="footerSettings?.linkedin_url" :href="footerSettings.linkedin_url" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <LucideIcon icon="Linkedin" :size="20" />
+              <a 
+                v-for="social in socialLinks" 
+                :key="social.name"
+                :href="social.url" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                :aria-label="social.ariaLabel"
+              >
+                <LucideIcon :icon="social.icon" :size="20" />
               </a>
             </div>
           </div>
@@ -96,8 +91,18 @@
             <ul>
               <li><NuxtLink to="/privacy-policy">Privacy Policy</NuxtLink></li>
               <li><NuxtLink to="/terms-of-service">Terms of Service</NuxtLink></li>
+              <li><NuxtLink to="/medical-disclaimer">Medical Disclaimer</NuxtLink></li>
               <li><NuxtLink to="/shipping-policy">Shipping Policy</NuxtLink></li>
               <li><NuxtLink to="/return-policy">Return Policy</NuxtLink></li>
+            </ul>
+          </div>
+          
+          <div class="footer-links-group">
+            <h5>Company</h5>
+            <ul>
+              <li><NuxtLink to="/about">About Us</NuxtLink></li>
+              <li><NuxtLink to="/contact">Contact Us</NuxtLink></li>
+              <li><NuxtLink to="/faq">FAQ</NuxtLink></li>
             </ul>
           </div>
         </div>
@@ -155,6 +160,7 @@ import { useNewsletter } from '@/composables/useNewsletter'
 import LucideIcon from '@/components/LucideIcon.vue'
 
 const brand = useBrand()
+const { socialLinks } = useSocialMedia()
 
 const {
   newsletterEmail,
@@ -164,16 +170,6 @@ const {
 } = useNewsletter()
 
 const footerSettings = ref(null)
-
-const hasSocialLinks = computed(() => {
-  return footerSettings.value && (
-    footerSettings.value.facebook_url ||
-    footerSettings.value.instagram_url ||
-    footerSettings.value.twitter_url ||
-    footerSettings.value.youtube_url ||
-    footerSettings.value.linkedin_url
-  )
-})
 
 onMounted(async () => {
   try {

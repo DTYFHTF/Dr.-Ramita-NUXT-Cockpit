@@ -1,9 +1,33 @@
 <template>
-  <div class="legal-page">
-    <div class="container">
-      <div class="legal-content">
-        <h1>Return & Refund Policy</h1>
-        <p class="last-updated">Last Updated: January 2025</p>
+  <div class="cms-page">
+    <!-- Loading State -->
+    <div v-if="pending" class="container py-5 text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- CMS Content (if available) -->
+    <div v-else-if="cmsPage" class="cms-loaded">
+      <PageHero
+        :title="cmsPage.title"
+        :subtitle="cmsPage.subtitle || ''"
+        variant="gradient"
+      />
+      <div class="container py-5">
+        <div class="cms-content" v-html="cmsPage.content"></div>
+        <div v-if="cmsPage.last_updated" class="text-muted text-center mt-5 small">
+          Last Updated: {{ formatDate(cmsPage.last_updated) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Static Fallback Content -->
+    <div v-else class="legal-page">
+      <div class="container">
+        <div class="legal-content">
+          <h1>Return & Refund Policy</h1>
+          <p class="last-updated">Last Updated: January 7, 2026</p>
 
         <section>
           <h2>1. Return Eligibility</h2>
@@ -119,12 +143,16 @@
             Response time: Within 24 business hours
           </p>
         </section>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import PageHero from '@/components/PageHero.vue';
+
+const { page: cmsPage, pending, formatDate } = await useCMSPage('return-policy');
 const brand = useBrand();
 
 definePageMeta({
@@ -220,5 +248,51 @@ useHead({
       font-size: 1.25rem;
     }
   }
+}
+
+.cms-content {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  :deep(h1), :deep(h2), :deep(h3) {
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  :deep(h2) {
+    color: $color-primary;
+    font-size: 1.5rem;
+  }
+
+  :deep(p) {
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  :deep(ul), :deep(ol) {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
 }
 </style>

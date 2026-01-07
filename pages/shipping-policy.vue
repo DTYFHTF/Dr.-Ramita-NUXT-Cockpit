@@ -1,53 +1,66 @@
 <template>
-  <div class="legal-page">
-    <div class="container">
-      <div class="legal-content">
-        <h1>Shipping Policy</h1>
-        <p class="last-updated">Last Updated: January 2025</p>
+  <div class="cms-page">
+    <!-- Loading State -->
+    <div v-if="pending" class="container py-5 text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
 
-        <section>
-          <h2>1. Shipping Coverage</h2>
-          <p>
-            We currently ship to addresses within India. International shipping may be available for select products.
-            Please contact us for international shipping inquiries.
-          </p>
-        </section>
+    <!-- Error or CMS Content Not Available - Show Static Content -->
+    <div v-else-if="!cmsPage" class="legal-page">
+      <PageHero 
+        title="Shipping Policy" 
+        subtitle="Understand our shipping terms and delivery process"
+      />
+      
+      <div class="container py-5">
+        <div class="legal-content">
+          <p class="last-updated">Last Updated: January 7, 2026</p>
 
-        <section>
-          <h2>2. Processing Time</h2>
-          <p>
-            Orders are typically processed within 1-3 business days (excluding weekends and holidays) after payment
-            confirmation. You will receive a confirmation email with tracking information once your order has shipped.
-          </p>
-        </section>
+          <section>
+            <h2>1. Shipping Coverage</h2>
+            <p>
+              We currently ship to addresses within India. International shipping may be available for select products.
+              Please contact us for international shipping inquiries.
+            </p>
+          </section>
 
-        <section>
-          <h2>3. Delivery Time</h2>
-          <p>Standard delivery times by location:</p>
-          <ul>
-            <li><strong>Metro Cities:</strong> 3-5 business days</li>
-            <li><strong>Other Cities:</strong> 5-7 business days</li>
-            <li><strong>Remote Areas:</strong> 7-10 business days</li>
-          </ul>
-          <p>
-            Please note that delivery times are estimates and may vary based on courier service and location.
-          </p>
-        </section>
+          <section>
+            <h2>2. Processing Time</h2>
+            <p>
+              Orders are typically processed within 1-3 business days (excluding weekends and holidays) after payment
+              confirmation. You will receive a confirmation email with tracking information once your order has shipped.
+            </p>
+          </section>
 
-        <section>
-          <h2>4. Shipping Costs</h2>
-          <ul>
-            <li>Free shipping on orders above ₹999</li>
-            <li>Standard shipping fee of ₹99 for orders below ₹999</li>
-            <li>Express shipping available at additional cost</li>
-            <li>Shipping costs are calculated at checkout</li>
-          </ul>
-        </section>
+          <section>
+            <h2>3. Delivery Time</h2>
+            <p>Standard delivery times by location:</p>
+            <ul>
+              <li><strong>Metro Cities:</strong> 3-5 business days</li>
+              <li><strong>Other Cities:</strong> 5-7 business days</li>
+              <li><strong>Remote Areas:</strong> 7-10 business days</li>
+            </ul>
+            <p>
+              Please note that delivery times are estimates and may vary based on courier service and location.
+            </p>
+          </section>
 
-        <section>
-          <h2>5. Order Tracking</h2>
-          <p>
-            Once your order ships, you will receive a tracking number via email. You can track your shipment using this
+          <section>
+            <h2>4. Shipping Costs</h2>
+            <ul>
+              <li>Free shipping on orders above ₹999</li>
+              <li>Standard shipping fee of ₹99 for orders below ₹999</li>
+              <li>Express shipping available at additional cost</li>
+              <li>Shipping costs are calculated at checkout</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>5. Order Tracking</h2>
+            <p>
+              Once your order ships, you will receive a tracking number via email. You can track your shipment using this
             number on our website or the courier's website. You can also track orders from your account dashboard.
           </p>
         </section>
@@ -102,11 +115,53 @@
         </section>
       </div>
     </div>
+    </div>
+
+    <!-- CMS Content (if available and loaded) -->
+    <div v-else-if="cmsPage" class="cms-loaded">
+      <PageHero
+        :title="cmsPage.title"
+        :subtitle="cmsPage.subtitle || ''"
+        variant="gradient"
+      />
+
+      <div class="container py-5">
+        <div class="cms-content" v-html="cmsPage.content"></div>
+
+        <div v-if="cmsPage.last_updated" class="text-muted text-center mt-5 small">
+          Last Updated: {{ formatDate(cmsPage.last_updated) }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { CMSPageResponse } from '@/types/cms';
+import PageHero from '@/components/PageHero.vue';
+
 const brand = useBrand();
+const config = useRuntimeConfig();
+
+// Try to fetch CMS content
+const { data: response, pending, error } = await useFetch<CMSPageResponse>(`${config.public.apiBase}/pages/shipping-policy`, {
+  // If CMS page doesn't exist, we'll use static content
+  onResponseError() {
+    // Silently fail and use static content
+  }
+});
+
+// Extract page data from response
+const cmsPage = computed(() => response.value?.data);
+
+// Format date helper
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 definePageMeta({
   layout: 'default',
@@ -201,5 +256,51 @@ useHead({
       font-size: 1.25rem;
     }
   }
+}
+
+.cms-content {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  :deep(h1), :deep(h2), :deep(h3) {
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  :deep(h2) {
+    color: $color-primary;
+    font-size: 1.5rem;
+  }
+
+  :deep(p) {
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  :deep(ul), :deep(ol) {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
 }
 </style>

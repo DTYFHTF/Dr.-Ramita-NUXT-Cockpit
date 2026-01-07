@@ -7,63 +7,65 @@
       </p>
       
       <!-- Error message -->
-      <div v-if="error" class="alert alert-danger mb-3 text-center">
-        {{ error }}
-        <div v-if="isRateLimited" class="mt-2">
-          <small class="text-muted">You can try again in a few minutes, or <NuxtLink to="/forgot-password" class="text-primary">request a new reset link</NuxtLink>.</small>
-        </div>
+      <ErrorAlert
+        v-if="error"
+        :message="error"
+        type="error"
+        :dismissible="true"
+        @dismiss="error = ''"
+      />
+      <div v-if="isRateLimited" class="alert alert-info mt-2 text-center">
+        <small>You can try again in a few minutes, or <NuxtLink to="/forgot-password" class="text-primary">request a new reset link</NuxtLink>.</small>
       </div>
       
       <form @submit.prevent="resetPassword" class="auth-form">
-        <div class="form-group">
-          <label for="email" class="form-label">Email Address</label>
-          <input 
-            v-model="email" 
-            id="email" 
-            type="email" 
-            class="form-input"
-            placeholder="Enter your email address"
-            required 
-            :disabled="loading"
-          />
-        </div>
+        <FormInput
+          v-model="email"
+          label="Email Address"
+          type="email"
+          placeholder="Enter your email address"
+          :required="true"
+          :disabled="loading"
+        />
         
-        <div class="form-group">
-          <label for="password" class="form-label">New Password<span class="required">*</span></label>
-          <input 
-            v-model="password" 
-            id="password" 
-            type="password" 
-            class="form-input"
-            placeholder="Enter your new password"
-            required 
-            :disabled="loading"
-            minlength="8"
-          />
-        </div>
+        <FormInput
+          v-model="password"
+          label="New Password"
+          type="password"
+          placeholder="Enter your new password"
+          :required="true"
+          :disabled="loading"
+          min="8"
+        />
         
-        <div class="form-group">
-          <label for="password_confirmation" class="form-label">Confirm Password<span class="required">*</span></label>
+        <FormInput
+          v-model="passwordConfirmation"
+          label="Confirm Password"
+          type="password"
+          placeholder="Confirm new password"
+          :required="true"
+          :disabled="loading"
+        />
           <input 
-            v-model="passwordConfirmation" 
-            id="password_confirmation" 
-            type="password" 
-            class="form-input"
-            placeholder="Confirm your new password"
-            required 
-            :disabled="loading"
-            minlength="8"
-          />
-        </div>
+          v-model="passwordConfirmation"
+          label="Confirm Password"
+          type="password"
+          placeholder="Confirm your new password"
+          :required="true"
+          :disabled="loading"
+          min="8"
+        />
         
-        <button 
-          type="submit" 
-          class="btn btn-primary w-100 mb-3"
-          :disabled="loading || !password || !passwordConfirmation || !email"
+        <LoadingButton
+          type="submit"
+          variant="primary"
+          :loading="loading"
+          loading-text="Resetting..."
+          full-width
+          :disabled="!password || !passwordConfirmation || !email"
         >
-          <span v-if="loading">Resetting...</span>
-          <span v-else>Reset Password</span>
-        </button>
+          Reset Password
+        </LoadingButton>
       </form>
       
       <div class="text-center mt-3">
@@ -75,9 +77,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import FormInput from '@/components/FormInput.vue';
+import LoadingButton from '@/components/LoadingButton.vue';
+import ErrorAlert from '@/components/ErrorAlert.vue';
+
 definePageMeta({ middleware: 'guest', layout: 'auth' })
-import { ref, onMounted, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 
 const email = ref('')
 const password = ref('')

@@ -7,37 +7,43 @@
       </p>
       
       <!-- Success message -->
-      <div v-if="successMessage" class="alert alert-success mb-3 text-center">
-        {{ successMessage }}
-      </div>
+      <ErrorAlert
+        v-if="successMessage"
+        :message="successMessage"
+        type="success"
+        :dismissible="true"
+        @dismiss="successMessage = ''"
+      />
       
       <!-- Error message -->
-      <div v-if="error" class="alert alert-danger mb-3 text-center">
-        {{ error }}
-      </div>
+      <ErrorAlert
+        v-if="error"
+        :message="error"
+        type="error"
+        :dismissible="true"
+        @dismiss="error = ''"
+      />
       
       <form @submit.prevent="sendResetLink" class="auth-form">
-        <div class="form-group">
-          <label for="email" class="form-label">Email Address<span class="required">*</span></label>
-          <input 
-            v-model="email" 
-            id="email" 
-            type="email" 
-            class="form-input"
-            placeholder="Enter your email address"
-            required 
-            :disabled="loading"
-          />
-        </div>
+        <FormInput
+          v-model="email"
+          label="Email Address"
+          type="email"
+          placeholder="Enter your email address"
+          :required="true"
+          :disabled="loading"
+        />
         
-        <button 
-          type="submit" 
-          class="btn btn-primary w-100 mb-3"
-          :disabled="loading || !email"
+        <LoadingButton
+          type="submit"
+          variant="primary"
+          :loading="loading"
+          loading-text="Sending..."
+          full-width
+          :disabled="!email"
         >
-          <span v-if="loading">Sending...</span>
-          <span v-else>Send Reset Link</span>
-        </button>
+          Send Reset Link
+        </LoadingButton>
       </form>
       
       <div class="text-center mt-3">

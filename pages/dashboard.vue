@@ -464,9 +464,9 @@
 
 <script setup lang="ts">
 // Add authentication middleware
-// definePageMeta({
-//   middleware: 'auth'
-// })
+definePageMeta({
+  middleware: 'auth'
+})
 
 import LucideIcon from '@/components/LucideIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'

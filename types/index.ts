@@ -205,6 +205,10 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image?: string;
+  // GST fields from backend
+  gst_rate?: number;
+  gst_inclusive?: boolean;
+  hsn_code?: string | null;
 }
 
 export interface ShippingInfo {
@@ -221,7 +225,8 @@ export interface ShippingInfo {
   email?: string;
 }
 
-export type PaymentMethod = 'cod' | 'card' | 'upi' | 'paypal';
+// Payment methods supported by the system
+export type PaymentMethod = 'cod' | 'card' | 'upi' | 'paypal' | 'razorpay';
 
 export interface Order {
   id: number | string;
@@ -230,7 +235,7 @@ export interface Order {
   updated_at?: string;
   cart: OrderItem[];
   shipping_cost: number;
-  estimated_delivery: string;
+  estimated_delivery?: string;
   total: number;
   shipping: ShippingInfo;
   payment_method: PaymentMethod;
@@ -239,6 +244,11 @@ export interface Order {
   courier?: string | null;
   gstin?: string;
   gst_amount?: number;
+  // Shipment tracking fields
+  shipment_status?: string | null;
+  estimated_delivery_date?: string | null;
+  actual_delivery_date?: string | null;
+  shipped_at?: string | null;
 }
 
 export interface CartItem {
