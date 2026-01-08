@@ -76,12 +76,12 @@
 import { ref, computed } from 'vue';
 
 interface FaqItem {
-  id: number;
-  category: string;
+  id?: number;
+  category?: string;
   question: string;
   answer: string;
-  order: number;
-  is_active: boolean;
+  order?: number;
+  is_active?: boolean;
 }
 
 interface FaqCategory {
@@ -93,7 +93,6 @@ const brand = useBrand();
 const config = useRuntimeConfig();
 
 definePageMeta({
-  layout: 'default',
 })
 
 useHead({
@@ -429,29 +428,29 @@ const staticFallbackFaqs: FaqCategory[] = [
 ];
 
 const filteredFaqs = computed(() => {
-  let filtered = faqData;
+  let filtered = faqData.value;
 
   // Filter by category
   if (selectedCategory.value !== 'All') {
-    filtered = filtered.filter(cat => cat.name === selectedCategory.value);
+    filtered = filtered.filter((cat: FaqCategory) => cat.name === selectedCategory.value);
   }
 
   // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.map(category => ({
+    filtered = filtered.map((category: FaqCategory) => ({
       ...category,
-      items: category.items.filter(faq => 
+      items: category.items.filter((faq: FaqItem) => 
         faq.question.toLowerCase().includes(query) || 
         faq.answer.toLowerCase().includes(query)
       )
-    })).filter(category => category.items.length > 0);
+    })).filter((category: FaqCategory) => category.items.length > 0);
   }
 
   return filtered;
 });
 
-const toggleFaq = (id) => {
+const toggleFaq = (id: string) => {
   activeFaq.value = activeFaq.value === id ? null : id;
 };
 </script>
