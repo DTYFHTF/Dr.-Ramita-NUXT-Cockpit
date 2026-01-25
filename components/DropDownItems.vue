@@ -33,7 +33,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { NuxtLink } from '#components';
 import SmoothLink from '@/components/SmoothLink.vue';
 import LucideIcon from '@/components/LucideIcon.vue';

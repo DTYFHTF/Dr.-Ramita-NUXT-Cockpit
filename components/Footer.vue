@@ -184,7 +184,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .footer {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 8%) 100%);
+  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -8%) 100%);
   color: $text-light;
   padding-top: 4rem;
   margin-top: auto;

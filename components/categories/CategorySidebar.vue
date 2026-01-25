@@ -15,10 +15,8 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 import LucideIcon from '@/components/LucideIcon.vue';
 import HierarchicalCategoryTree from '@/components/categories/HierarchicalCategoryTree.vue';
-
 const props = defineProps({
   show: Boolean,
   categories: Array

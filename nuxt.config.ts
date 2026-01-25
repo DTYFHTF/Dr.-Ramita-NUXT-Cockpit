@@ -1,9 +1,13 @@
 import commonjs from 'vite-plugin-commonjs';
 
 // Ignore SSL certificate errors for .test domains in development
-if (process.env.NODE_ENV === 'development') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+// NOTE: Disabling certificate verification is insecure. Avoid setting
+// `NODE_TLS_REJECT_UNAUTHORIZED = '0'` in source. If you need to
+// trust local test certificates, configure your environment or use
+// a local CA instead of disabling verification globally.
+// if (process.env.NODE_ENV === 'development') {
+//   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// }
 
 export default defineNuxtConfig({ 
   // Add compatibility date to fix the warning
@@ -35,6 +39,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           additionalData: `
+            @use "sass:color" as color;
             @use "@/assets/scss/variables" as *;
           `
         }
