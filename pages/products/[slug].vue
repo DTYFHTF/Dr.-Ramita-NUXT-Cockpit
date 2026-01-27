@@ -8,6 +8,10 @@
     </div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else-if="product">
+      <!-- Category Breadcrumb -->
+      <div v-if="product.categories && product.categories.length > 0" class="container my-3">
+        <CategoryBreadcrumb :categories="breadcrumbCategories" />
+      </div>
       
       <div class="product-detail-flex">
         <!-- Content column -->
@@ -58,6 +62,7 @@ import ProductReviewSection from '@/components/ProductReviewSection.vue';
 import GenericSlider from '@/components/GenericSlider.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import CartToast from '@/components/CartToast.vue';
+import CategoryBreadcrumb from '@/components/categories/CategoryBreadcrumb.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import type { User } from '@/types';
@@ -98,6 +103,15 @@ const canAddToCart = computed(() => {
     return selectedVariation.value && (selectedVariation.value.stock ?? 0) > 0;
   }
   return inStock.value;
+});
+
+// Breadcrumb categories for navigation
+const breadcrumbCategories = computed(() => {
+  if (!product.value?.categories || product.value.categories.length === 0) {
+    return [];
+  }
+  // Return all categories for the breadcrumb (including parent categories if available)
+  return product.value.categories;
 });
 
 // Similar Products Logic

@@ -212,8 +212,6 @@ watch(remedyData, (val) => {
 </script>
 
 <style scoped lang="scss">
-@use "sass:color";
-
 .remedy-header {
   // background-color: $accent-soft-green;
   margin-top: 2rem;

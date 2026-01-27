@@ -112,15 +112,50 @@ const statusConfig = {
     color: '#3b82f6',
     label: 'Processing'
   },
+  ready_to_ship: {
+    icon: 'mdi:package-check',
+    color: '#6366f1',
+    label: 'Ready to Ship'
+  },
+  packed: {
+    icon: 'mdi:package-variant-closed',
+    color: '#8b5cf6',
+    label: 'Packed'
+  },
+  dispatched: {
+    icon: 'mdi:truck-delivery',
+    color: '#a855f7',
+    label: 'Dispatched'
+  },
   shipped: {
     icon: 'mdi:truck-delivery',
     color: '#8b5cf6',
     label: 'Shipped'
   },
+  in_transit: {
+    icon: 'mdi:truck-fast',
+    color: '#ec4899',
+    label: 'In Transit'
+  },
+  out_for_delivery: {
+    icon: 'mdi:truck-fast',
+    color: '#f59e0b',
+    label: 'Out for Delivery'
+  },
   delivered: {
     icon: 'mdi:home-import-outline',
     color: '#10b981',
     label: 'Delivered'
+  },
+  failed: {
+    icon: 'mdi:alert-circle',
+    color: '#ef4444',
+    label: 'Delivery Failed'
+  },
+  returned: {
+    icon: 'mdi:package-variant-closed-remove',
+    color: '#ef4444',
+    label: 'Returned'
   },
   cancelled: {
     icon: 'mdi:close-circle',
@@ -133,13 +168,17 @@ const statusConfig = {
 const allSteps = [
   { status: 'pending', label: 'Order Placed', description: 'Your order has been received' },
   { status: 'confirmed', label: 'Confirmed', description: 'Payment confirmed, preparing your order' },
-  { status: 'processing', label: 'Processing', description: 'Packing your items carefully' },
-  { status: 'shipped', label: 'Shipped', description: 'Your order is on its way' },
+  { status: 'processing', label: 'Processing', description: 'Preparing your items' },
+  { status: 'ready_to_ship', label: 'Ready to Ship', description: 'Your order is ready for shipment' },
+  { status: 'packed', label: 'Packed', description: 'Your order has been packed' },
+  { status: 'dispatched', label: 'Dispatched', description: 'Your order has been dispatched' },
+  { status: 'in_transit', label: 'In Transit', description: 'Your order is on the way' },
+  { status: 'out_for_delivery', label: 'Out for Delivery', description: 'Your order is out for delivery' },
   { status: 'delivered', label: 'Delivered', description: 'Order delivered successfully' }
 ];
 
 const timelineSteps = computed(() => {
-  // If cancelled, show different timeline
+  // Special handling for failed/cancelled/returned statuses
   if (props.currentStatus === 'cancelled') {
     return [
       { status: 'pending', label: 'Order Placed', completed: true, current: false, timestamp: props.createdAt },
@@ -147,14 +186,50 @@ const timelineSteps = computed(() => {
     ];
   }
 
+  if (props.currentStatus === 'failed') {
+    return [
+      ...allSteps.slice(0, -1), // All steps except delivered
+      { status: 'failed', label: 'Delivery Failed', completed: true, current: true, timestamp: props.lastUpdated, description: 'Delivery attempt failed' }
+    ].map((step, index, array) => ({
+      ...step,
+      completed: index < array.length - 1 || step.status === 'failed',
+      current: step.status === 'failed',
+      timestamp: index === 0 ? props.createdAt : 
+                 (step.status === 'failed' ? props.lastUpdated : 
+                 (step.status === 'dispatched' && props.shippedAt ? props.shippedAt : undefined))
+    }));
+  }
+
+  if (props.currentStatus === 'returned') {
+    return [
+      ...allSteps.slice(0, -1), // All steps except delivered
+      { status: 'returned', label: 'Returned', completed: true, current: true, timestamp: props.lastUpdated, description: 'Order has been returned' }
+    ].map((step, index, array) => ({
+      ...step,
+      completed: index < array.length - 1 || step.status === 'returned',
+      current: step.status === 'returned',
+      timestamp: index === 0 ? props.createdAt : 
+                 (step.status === 'returned' ? props.lastUpdated : 
+                 (step.status === 'dispatched' && props.shippedAt ? props.shippedAt : undefined))
+    }));
+  }
+
   // Normal flow
   const currentIndex = allSteps.findIndex(s => s.status === props.currentStatus);
   
+  // If status not found in steps, default to pending (index 0)
+  const safeCurrentIndex = currentIndex >= 0 ? currentIndex : 0;
+  
   return allSteps.map((step, index) => ({
     ...step,
-    completed: index < currentIndex,
-    current: index === currentIndex,
-    timestamp: index === 0 ? props.createdAt : (index === currentIndex ? props.lastUpdated : undefined)
+    // A step is completed if: it's before current step OR it IS the current step
+    completed: index <= safeCurrentIndex,
+    current: index === safeCurrentIndex,
+    // Show timestamp for first step (order placed) and current step
+    timestamp: index === 0 ? props.createdAt : 
+               (index === safeCurrentIndex ? props.lastUpdated : 
+               (step.status === 'dispatched' && props.shippedAt ? props.shippedAt :
+               (step.status === 'delivered' && props.actualDeliveryDate ? props.actualDeliveryDate : undefined)))
   }));
 });
 

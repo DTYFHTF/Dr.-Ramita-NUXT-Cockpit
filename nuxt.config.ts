@@ -13,9 +13,13 @@ export default defineNuxtConfig({
   // Add compatibility date to fix the warning
   compatibilityDate: '2025-08-12',
   
+  // Enable SSR for better initial page load
+  ssr: true,
+  
   // Add experimental features to fix dynamic import issues
   experimental: {
     payloadExtraction: false,
+    inlineSSRStyles: true, // Inline critical CSS to prevent FOUC
   },
   
   css: [
@@ -23,6 +27,7 @@ export default defineNuxtConfig({
     "@/assets/scss/main.scss" // Adding our global SCSS file
   ],
   plugins: [
+    { src: '~/plugins/prevent-fouc.client.ts', mode: 'client' },
     { src: '~/plugins/bootstrap.client.ts', mode: 'client' },
     { src: '~/plugins/autoLinkDirective.client.ts', mode: 'client' }, // Registering the autoLinkDirective plugin
     { src: '~/plugins/error-handler.client.ts', mode: 'client' } // Handle dynamic import errors
@@ -47,6 +52,9 @@ export default defineNuxtConfig({
     },
     server: {
       allowedHosts: ["74b8-152-58-194-75.ngrok-free.app"],
+      hmr: {
+        overlay: true
+      }
     },
     build: {
       rollupOptions: {
@@ -67,6 +75,12 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ],
+      style: [
+        {
+          children: 'body{opacity:0;transition:opacity 0.2s ease-in}body.nuxt-loaded{opacity:1}',
+          type: 'text/css'
+        }
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico' },

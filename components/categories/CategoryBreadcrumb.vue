@@ -9,16 +9,13 @@
       <template v-for="(category, index) in categories" :key="category.id">
         <span class="breadcrumb-separator">›</span>
         <li class="breadcrumb-item" :class="{ active: index === categories.length - 1 }">
-          <NuxtLink 
-            v-if="index < categories.length - 1"
+          <NuxtLink
             :to="`/category/${category.slug}`"
             class="breadcrumb-link"
+            :aria-current="index === categories.length - 1 ? 'page' : undefined"
           >
             {{ category.name }}
           </NuxtLink>
-          <span v-else class="current-category">
-            {{ category.name }}
-          </span>
         </li>
       </template>
     </ol>
