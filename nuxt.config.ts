@@ -127,5 +127,26 @@ export default defineNuxtConfig({
       cockpitToken: process.env.NUXT_COCKPIT_TOKEN,
       razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID,
     }
+  },
+  nitro: {
+    // Disable SSL verification for local development with .test domains
+    experimental: {
+      nodeFetch: true
+    },
+    routeRules: {
+      '/**': {
+        headers: {
+          'NODE_TLS_REJECT_UNAUTHORIZED': '0'
+        }
+      }
+    }
+  },
+  hooks: {
+    // Disable SSL certificate verification for .test domains in development
+    'nitro:init': (nitro) => {
+      if (process.env.NODE_ENV === 'development') {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+      }
+    }
   }
 });

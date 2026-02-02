@@ -29,7 +29,7 @@ export function useApiLaravel(endpoint) {
   const { data, error, pending } = useFetch(`${baseUrl}/${endpoint}`, {
     key: `api-${endpoint}`, // Add unique cache key
     lazy: false, // Fetch immediately during SSR
-    server: true, // Enable server-side rendering
+    server: false, // Disable SSR to avoid SSL certificate issues with .test domains
     headers,
     credentials: 'include', // Include cookies for session/CSRF
     onResponseError({ response }) {

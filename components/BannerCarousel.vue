@@ -56,7 +56,7 @@
           <div 
             class="banner-slide"
             :style="banner.link ? 'cursor: pointer;' : ''"
-            @click="banner.link ? $router.push(banner.link) : null"
+            @click="banner.link ? handleBannerClick(banner) : null"
           >
             <!-- Background Image -->
             <img 
@@ -95,6 +95,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   banners: {
@@ -124,6 +125,34 @@ onMounted(() => {
     }
   }
 });
+
+const router = useRouter();
+
+/**
+ * Handle banner clicks safely.
+ * - External links (http/https) -> full navigation
+ * - Asset links (images) -> full navigation to file
+ * - Internal routes -> use router.push
+ */
+const handleBannerClick = (banner) => {
+  if (!banner || !banner.link) return;
+  const link = banner.link;
+
+  // External URL -> full navigation
+  if (/^https?:\/\//i.test(link)) {
+    window.location.href = link;
+    return;
+  }
+
+  // If link points to an image/asset, avoid router navigation
+  if (/\.(jpg|jpeg|png|gif|svg|webp)(\?.*)?$/i.test(link)) {
+    window.location.href = link;
+    return;
+  }
+
+  // Otherwise assume internal route
+  router.push(link).catch(() => {});
+};
 </script>
 
 <style scoped>

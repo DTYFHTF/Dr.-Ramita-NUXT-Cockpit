@@ -2,7 +2,7 @@
   <div class="banner-mid-grid">
     <div v-for="(banner, idx) in banners" :key="idx" class="banner-mid-item">
       <NuxtLink
-        v-if="banner.link"
+        v-if="banner.link && isInternalRoute(banner.link)"
         :to="getBannerLink(banner.link)"
         class="banner-mid-link"
       >
@@ -10,6 +10,13 @@
           <img :src="banner.image" :alt="banner.title || 'Banner'" />
         </div>
       </NuxtLink>
+
+      <a v-else-if="banner.link" :href="banner.link" class="banner-mid-link" rel="noopener" target="_blank">
+        <div class="banner-mid-img-wrapper">
+          <img :src="banner.image" :alt="banner.title || 'Banner'" />
+        </div>
+      </a>
+
       <div v-else class="banner-mid-img-wrapper">
         <img :src="banner.image" :alt="banner.title || 'Banner'" />
       </div>
@@ -28,10 +35,18 @@ const props = defineProps({
 // Helper to prepend /category/ if link is a slug (not absolute URL or already a path)
 function getBannerLink(link) {
   if (!link) return '#';
-  //Production
-  if (link.startsWith('https') || link.startsWith('/')) return link;
-  // If it's a slug (no slash, no https), prepend /category/
+  if (link.startsWith('https')) return link;
+  if (link.startsWith('/')) return link;
   return `/category/${encodeURIComponent(link)}`;
+}
+
+function isInternalRoute(link) {
+  if (!link) return false;
+  // treat starting with / as internal route
+  if (link.startsWith('/')) return true;
+  // non-http links that are slugs -> internal
+  if (!/^https?:\/\//i.test(link) && !/\.(jpg|jpeg|png|gif|svg|webp)(\?.*)?$/i.test(link)) return true;
+  return false;
 }
 </script>
 
