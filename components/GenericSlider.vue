@@ -233,11 +233,15 @@ onUnmounted(() => {
 
 .slider-container {
   position: relative;
-  padding: 0 60px;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
   .slider-container {
+    padding: 0;
+  }
+
+  .items-slider {
     padding: 0 50px;
   }
 
@@ -253,6 +257,10 @@ onUnmounted(() => {
 
 @media (max-width: 576px) {
   .slider-container {
+    padding: 0;
+  }
+
+  .items-slider {
     padding: 0 40px;
   }
 
@@ -270,6 +278,8 @@ onUnmounted(() => {
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   scroll-snap-type: x proximity; /* Snap to items on mobile */
+  /* keep horizontal spacing so first/last items aren't cut off */
+  padding: 0 60px;
 }
 
 .items-slider::-webkit-scrollbar {
@@ -307,13 +317,14 @@ onUnmounted(() => {
   z-index: 100;
   transition: transform 0.18s ease, opacity 0.18s ease;
   color: var(--color-primary);
-  opacity: 0.98;
+  opacity: 0.66;
   background: var(--color-muted);
   padding: 0;
 }
 
 .slider-arrow:hover:not(:disabled) {
   transform: translateY(-50%) scale(1.05);
+  opacity: 1;
 }
 
 .slider-arrow:disabled {
@@ -332,10 +343,10 @@ onUnmounted(() => {
 }
 
 .slider-arrow-left {
-  left: 10px;
+  left: -22px;
 }
 .slider-arrow-right {
-  right: 10px;
+  right: -22px;
 }
 
 /* visual small circle inside the button */
@@ -398,11 +409,11 @@ onUnmounted(() => {
   }
   
   .slider-arrow-left {
-    left: 5px;
+    left: -18px;
   }
   
   .slider-arrow-right {
-    right: 5px;
+    right: -18px;
   }
 }
 
