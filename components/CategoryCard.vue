@@ -13,7 +13,6 @@
         <div class="category-overlay">
           <div class="overlay-content">
             <h4 class="category-title">{{ category.title }}</h4>
-            <p class="category-subtitle line-clamp-2">{{ category.subtitle || category.description }}</p>
             <span class="btn btn-smooth-success">Explore More</span>
           </div>
         </div>
@@ -129,23 +128,7 @@ const target = computed(() => {
   color: white;
 }
 
-.category-subtitle {
-  font-size: 1rem;
-  opacity: 0.9;
-  margin: 0 0 1rem 0;
-}
 
-/* clamp subtitle/description to 2 lines */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2em;
-  max-height: 2.4em;
-}
 
 @media (max-width: 768px) {
   .category-card {
@@ -156,9 +139,6 @@ const target = computed(() => {
     font-size: 1.2rem;
   }
   
-  .category-subtitle {
-    font-size: 0.9rem;
-  }
   
   .explore-btn {
     padding: 0.4rem 1rem;

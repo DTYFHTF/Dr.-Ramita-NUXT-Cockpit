@@ -208,7 +208,6 @@ onUnmounted(() => {
 
 <style scoped>
 .generic-slider-section {
-  background-color: var(--background-white);
   color: var(--text-primary);
 }
 
