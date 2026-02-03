@@ -54,13 +54,11 @@
       view-all-url="/products?collection=featured"
     />
 <!-- Daily & Seasonal Products -->
-    <GenericSlider 
-      v-if="dailySeasonalItems.length > 0"
+    <SeasonalProducts
+      v-if="seasonalPromotions.length > 0"
       :title="dailySeasonalTitle"
-      :items="dailySeasonalItems"
+      :promotions="seasonalPromotions"
       :loading="homepageLoading"
-      :card-component="dailySeasonalCardComponent"
-      :card-props-key="dailySeasonalCardPropsKey"
       :view-all-url="dailySeasonalViewAllUrl"
     />
     <!-- Most Searched -->
@@ -99,7 +97,7 @@ import BannerCarousel from '@/components/BannerCarousel.vue';
 import FeaturedCategories from '@/components/categories/FeaturedCategories.vue';
 import BannerMidGrid from '@/components/BannerMidGrid.vue';
 import GenericSlider from '@/components/GenericSlider.vue';
-import CategoryCard from '@/components/CategoryCard.vue';
+import SeasonalProducts from '@/components/SeasonalProducts.vue';
 import MostSearched from '@/components/MostSearched.vue';
 import TopDealsOffers from '@/components/TopDealsOffers.vue';
 import ProductCard from '@/components/ProductCard.vue';
@@ -179,26 +177,28 @@ const dailySeasonalTitle = computed(() => {
   return dailySeasonalSection.value?.data?.title || 'Daily & Seasonal Products';
 });
 
-const dailySeasonalItems = computed(() => {
+// Extract promotions with their products for SeasonalProducts component
+const seasonalPromotions = computed(() => {
   if (!dailySeasonalSection.value) return [];
   
   if (Array.isArray(dailySeasonalSection.value.data?.deals) && dailySeasonalSection.value.data.deals.length) {
     return dailySeasonalSection.value.data.deals.map(promo => {
-      const card = addImageUrl(promo, '/placeholder-banner.jpg');
       return {
-        ...card,
-        subtitle: card.description || '',
-        link: card.url || '/promotions'
+        id: promo.id || promo.promotion_slug,
+        title: promo.title,
+        description: promo.description || '',
+        season: promo.season || '',
+        image: addImageUrl(promo, '/placeholder-banner.jpg').image,
+        url: promo.url || '/promotions',
+        products: promo.products || [], // Backend already provides products array
+        promotion_slug: promo.promotion_slug,
+        promotion_scope: promo.promotion_scope
       };
     });
   }
   
   return [];
 });
-
-const dailySeasonalCardComponent = computed(() => CategoryCard);
-
-const dailySeasonalCardPropsKey = computed(() => 'category');
 
 const dailySeasonalViewAllUrl = computed(() => {
   const section = dailySeasonalSection.value;

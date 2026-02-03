@@ -1,7 +1,7 @@
 <template>
   <section class="generic-slider-section py-5" :class="sectionClass">
     <div class="container">
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div v-if="title" class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title" :class="titleClass">{{ title }}</h2>
         <a v-if="viewAllUrl" :href="viewAllUrl" class="view-all-link">{{ viewAllText }} <i class="bi bi-arrow-right"></i></a>
       </div>
@@ -159,12 +159,20 @@ const scrollRight = () => {
   }
 };
 
+const emit = defineEmits(['loadMore']);
+
 const updateArrowStates = () => {
   if (!sliderContainer.value) return;
   
   const { scrollLeft, scrollWidth, clientWidth } = sliderContainer.value;
   isAtStart.value = scrollLeft <= 10;
   isAtEnd.value = scrollLeft + clientWidth >= scrollWidth - 10;
+  
+  // Emit loadMore event when scrolling near the end (within 80% of total width)
+  const scrollPercentage = (scrollLeft + clientWidth) / scrollWidth;
+  if (scrollPercentage >= 0.8 && !isAtEnd.value) {
+    emit('loadMore');
+  }
 };
 
 const initializeSlider = () => {
@@ -209,6 +217,7 @@ onUnmounted(() => {
 <style scoped>
 .generic-slider-section {
   color: var(--text-primary);
+  background: transparent !important;
 }
 
 .section-title {
