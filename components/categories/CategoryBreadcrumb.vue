@@ -53,7 +53,7 @@ defineProps<{
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: var(--border-default);
     border-radius: 2px;
   }
 
@@ -69,7 +69,7 @@ defineProps<{
 
     .breadcrumb-item {
       font-size: 0.9rem;
-      white-space: nowrap;
+      whitespace: nowrap;
       
       &.active {
         .current-category {
@@ -80,7 +80,7 @@ defineProps<{
     }
 
     .breadcrumb-link {
-      color: var(--color-primary);
+      color: var(--accent-primary);
       text-decoration: none;
       transition: all 0.2s ease;
       display: flex; 
@@ -88,7 +88,7 @@ defineProps<{
       white-space: nowrap;
 
       &:hover {
-        color: var(--primary-dark);
+        color: var(--accent-hover);
         text-decoration: underline;
       }
     }
@@ -122,14 +122,14 @@ defineProps<{
 // Dark theme support
 [data-theme="dark"] {
   .breadcrumb-link {
-    color: var(--color-primary);
+    color: var(--accent-primary);
     
     &:hover {
-      color: var(--primary-dark);
+      color: var(--accent-hover);
     }
   }
   .breadcrumb-separator {
-    color: var(--text-muted, #aaa);
+    color: var(--text-muted);
   }
 }
 </style>

@@ -18,11 +18,11 @@ definePageMeta({
 
 <style scoped>
 .content-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .content-title {

@@ -63,5 +63,5 @@ onMounted(async () => {
 }
 .loading { color: var(--text-muted); }
 .error { color: var(--color-error); }
-.success { color: var(--color-primary); }
+.success { color: var(--accent-primary); }
 </style>

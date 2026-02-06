@@ -228,7 +228,7 @@ onUnmounted(() => {
 }
 
 .view-all-link {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: clamp(0.875rem, 2vw, 1rem);
@@ -236,7 +236,7 @@ onUnmounted(() => {
 }
 
 .view-all-link:hover {
-  color: var(--primary-dark);
+  color: var(--accent-primary-hover);
 }
 
 .slider-container {
@@ -324,7 +324,7 @@ onUnmounted(() => {
   cursor: pointer;
   z-index: 100;
   transition: transform 0.18s ease, opacity 0.18s ease;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   opacity: 0.66;
   background: var(--color-muted);
   padding: 0;
@@ -366,7 +366,7 @@ onUnmounted(() => {
   justify-content: center;
   border-radius: 50%;
   background: transparent; /* keep fill transparent */
-  border: 1px solid rgba(var(--color-primary-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-rgb), 0.06);
   box-shadow: 0 2px 6px rgba(var(--shadow-rgb), 0.06);
 }
 

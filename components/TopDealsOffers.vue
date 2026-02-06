@@ -183,7 +183,7 @@ const handleImageError = (event) => {
 
 <style scoped lang="scss">
 .top-deals-offers {
-  background-color: var(--background-light, #f8f9fa);
+  background-color: var(--surface-muted);
   color: var(--text-primary, #2c3e50);
   padding: 3rem 0;
 }
@@ -209,7 +209,7 @@ const handleImageError = (event) => {
 
 .deal-card {
   position: relative;
-  background: var(--background-white, #ffffff);
+  background: var(--surface-primary);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

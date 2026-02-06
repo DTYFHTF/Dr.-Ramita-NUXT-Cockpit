@@ -61,7 +61,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Default variant with gradient
 .page-hero {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
   color: white;
 }
 

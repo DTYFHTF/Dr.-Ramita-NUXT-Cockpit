@@ -252,8 +252,8 @@ const retryFetch = async () => {
 
 .pose-step {
   transition: all 0.3s ease;
-  border: 1px solid var(--border-color);
-  background: var(--background-white);
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
 
   &:hover {
     transform: translateY(-8px);
@@ -280,7 +280,7 @@ const retryFetch = async () => {
   max-width: 460px;
   height: 300px;
   object-fit: contain;
-  background: var(--background-white);
+  background: var(--surface-primary);
 }
 
 .pose-instructions {

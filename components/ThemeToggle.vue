@@ -23,7 +23,7 @@ const { theme, toggleTheme } = useTheme()
 
 .theme-toggle-btn {
   background: transparent;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   padding: 8px;
   cursor: pointer;
@@ -34,8 +34,8 @@ const { theme, toggleTheme } = useTheme()
   // Remove color/font so nav-shared-link can apply
   
   &:hover {
-    background: var(--background-light);
-    border-color: var(--color-primary);
+    background: var(--surface-muted);
+    border-color: var(--accent-primary);
     transform: translateY(-1px);
   }
   

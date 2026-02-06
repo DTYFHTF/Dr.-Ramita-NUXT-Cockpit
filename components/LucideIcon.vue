@@ -50,7 +50,7 @@ div {
 svg {
   display: inline-block;
   vertical-align: middle; 
-  color: var(--color-primary-rgb);
+  color: var(--accent-rgb);
   height: 1em; 
   width: 1em; 
 }

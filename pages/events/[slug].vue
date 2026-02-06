@@ -473,11 +473,11 @@ useHead(() => ({
 /* === EVENT HEADER === */
 
 .event-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .event-title {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-size: 2.5rem;
   line-height: 1.2;
 }
@@ -529,7 +529,7 @@ useHead(() => ({
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  color: var(--color-primary);
+  color: var(--accent-primary);
 }
 
 .section-subtitle {
@@ -624,7 +624,7 @@ useHead(() => ({
 
 .agenda-title {
   font-weight: 600;
-  color: $color-primary;
+  color: var(--accent-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -669,9 +669,9 @@ useHead(() => ({
 
 
 .registration-card {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   overflow: hidden;
   margin-top: 1.5rem;
 }
@@ -710,7 +710,7 @@ useHead(() => ({
 
 
 .venue-link {
-  color: $color-secondary;
+  color: var(--text-link);
   text-decoration: none;
   font-size: 0.85rem;
 }

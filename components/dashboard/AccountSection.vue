@@ -453,7 +453,7 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .profile-avatar-section {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   padding-bottom: 2rem;
 }
 
@@ -481,7 +481,7 @@ watch(showProfileEdit, (newVal) => {
     color: var(--text-primary);
     font-size: 1rem;
     padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-default);
   }
 }
 
@@ -504,12 +504,12 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .alert-info {
-  background-color: var(--background-light, #e3f2fd);
-  border-color: var(--color-primary);
+  background-color: var(--surface-muted);
+  border-color: var(--accent-primary);
   color: var(--text-primary);
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--accent-primary);
 }
 
 .modal {
@@ -523,7 +523,7 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .modal-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   padding: 1.5rem;
 }
 
@@ -548,13 +548,13 @@ watch(showProfileEdit, (newVal) => {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease;
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
   
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
   }
 }
 
@@ -578,7 +578,7 @@ input[type="date"].form-input {
 .spinner-border {
   width: 2rem;
   height: 2rem;
-  border: 0.25em solid var(--color-primary);
+  border: 0.25em solid var(--accent-primary);
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border-animation 0.75s linear infinite;

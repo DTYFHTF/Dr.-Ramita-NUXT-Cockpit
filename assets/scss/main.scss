@@ -1,21 +1,17 @@
 .btn-smooth-outline {
-  // Dark mode: make text white for visibility
-  [data-theme="dark"] & {
-    color: #fff;
-    border-color: #fff;
-  }
+  // Dark mode handled via semantic tokens - no override needed
 }
 
- // ====================================
+// ====================================
 // GLOBAL DROPDOWN MENU STYLES
 // ====================================
 .custom-dropdown-menu {
   min-width: 220px;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(var(--shadow-rgb), 0.18);
+  box-shadow: var(--shadow-lg);
   padding: 0.5rem 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   margin-top: 0.5rem;
   transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s;
   color: var(--text-primary);
@@ -42,7 +38,7 @@
 }
 .custom-dropdown-item:hover,
 .custom-dropdown-item:focus {
-  background: var(--background-light);
+  background: var(--surface-hover);
   color: var(--text-primary);
   outline: none;
 }
@@ -54,8 +50,8 @@
 }
 .dropdown-item:hover,
 .dropdown-item:focus {
-  background: var(--background-light);
-  color: var(--color-primary) !important;
+  background: var(--surface-hover);
+  color: var(--accent-primary) !important;
   outline: none;
 }
 // ====================================
@@ -87,7 +83,7 @@
 // Active state for NuxtLink/RouterLink
 .nav-shared-link.router-link-active,
 .nav-shared-link.router-link-exact-active {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-weight: 600;
   background: none;
   box-shadow: none;
@@ -95,114 +91,187 @@
 .nav-shared-link:hover,
 .nav-shared-link:focus,
 .nav-shared-link.active {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   background: none;
   text-decoration: none;
   transform: translateY(-2px);
 }
-// ====================================
-// GLOBAL CSS VARIABLES & THEME SYSTEM
-// ====================================
 
-// CSS Custom Properties for Theme Support
+// ============================================================================
+// SEMANTIC TOKEN SYSTEM
+// Brand → Semantic → Theme Mapping (Stripe/Vercel Pattern)
+// ============================================================================
+
 :root {
-  --search-bg: var(--background-white);
-  --search-text: var(--text-primary);
-  --search-placeholder: var(--text-secondary);
-  --search-btn-bg: var(--background-light);
-  --search-btn-hover: var(--color-primary);
-  // Light theme (default)
-  --color-primary: #{$color-primary};
-  --primary-dark: #1e3624; // Darker shade of primary for hover states
-  --color-secondary: #{$color-secondary};
-  --accent-soft-green: #{$accent-soft-green};
-  --background-light: #{$background-light};
-  --background-white: #{$background-white};
-  --text-primary: #{$text-primary};
-  --text-secondary: #{$text-secondary};
-  --text-light: #{$text-light};
-  --text-error: #{$text-error};
-  --border-color: #{$border-color};
-  --button-bg: #{$button-bg};
-  --card-shadow: #{$card-shadow};
-  --badge-color: #{$badge-color};
-  --badge-free-color: #{$badge-free-color};
+  // ==========================================================================
+  // BRAND TOKENS (Theme-Agnostic - Never change)
+  // ==========================================================================
+  --brand-forest: #{$brand-forest};
+  --brand-sage: #{$brand-sage};
+  --brand-mint: #{$brand-mint};
+  --brand-teal: #{$brand-teal};
   
-  // Additional theme variables
-  --text-white: #ffffff;
-  --text-muted: #6c757d;
-  --color-error: #dc3545;
-  --color-warning: #ffc107;
-  --color-success: #38a169;
-  --color-muted: #aaa;
+  // Social brands
+  --brand-whatsapp: #{$brand-whatsapp};
+  --brand-facebook: #{$brand-facebook};
+  --brand-twitter: #{$brand-twitter};
+  --brand-instagram: #{$brand-instagram};
   
-  // Alert backgrounds
-  --success-bg: #d1fae5;
-  --error-bg: #fee2e2;
+  // ==========================================================================
+  // SEMANTIC TOKENS - Light Theme (Default)
+  // Components should ONLY use these tokens
+  // ==========================================================================
   
-  // Brand colors (generally consistent across themes)
-  --brand-whatsapp: #01CB37;
-  --brand-facebook: #1877F2;
-  --brand-twitter: #1DA1F2;
-  --brand-instagram: #C13584;
+  // --- Surface/Background Hierarchy ---
+  --surface-base: #{$light-bg-base};           // Page background
+  --surface-primary: #{$light-bg-base};        // Cards, modals, popovers
+  --surface-secondary: #{$light-bg-subtle};    // Subtle sections
+  --surface-muted: #{$light-bg-muted};         // Disabled, inactive areas
+  --surface-emphasis: #{$light-bg-emphasis};   // Highlighted sections
+  --surface-hover: #{$light-bg-muted};         // Hover states
+  --surface-active: #{$light-bg-emphasis};     // Active/pressed states
   
-  // RGB values for transparent colors
-  --background-white-rgb: 255, 255, 255;
-  --background-light-rgb: 242, 247, 244;
-  --color-primary-rgb: 42, 77, 58;
-  --shadow-rgb: 0, 0, 0;
-  --shadow-light-rgb: 0, 0, 0;
-  --shadow-medium-rgb: 0, 0, 0;
-  --shimmer-rgb: 255, 255, 255;
-  /* Height used by the sticky navbar. CategoryBar uses this via `top: var(--navbar-height)` */
+  // --- Text Hierarchy ---
+  --text-primary: #{$light-text-primary};      // Headings, body text
+  --text-secondary: #{$light-text-secondary};  // Supporting text
+  --text-muted: #{$light-text-muted};          // Disabled, hints
+  --text-placeholder: #{$light-text-placeholder};
+  --text-inverse: #ffffff;                     // Text on dark backgrounds
+  
+  // --- Border Hierarchy ---
+  --border-default: #{$light-border-default};
+  --border-muted: #{$light-border-muted};
+  --border-emphasis: #{$light-border-emphasis};
+  
+  // --- Accent Colors (Brand-derived) ---
+  --accent-primary: #{$brand-forest};          // Primary brand accent
+  --accent-primary-hover: #{color.adjust($brand-forest, $lightness: -8%)};
+  --accent-secondary: #{$brand-sage};          // Secondary accent
+  --accent-soft: #{$brand-mint};               // Soft/subtle accent
+  
+  // --- Action Colors (Interactive elements) ---
+  --action-primary: #{$brand-teal};            // Primary buttons, CTAs
+  --action-primary-hover: #{color.adjust($brand-teal, $lightness: -6%)};
+  --action-primary-text: #ffffff;
+  --action-primary-alpha: rgba(45, 123, 123, 0.12);
+  
+  // --- Status Colors ---
+  --status-success: #059669;
+  --status-success-hover: #047857;
+  --status-success-bg: #ecfdf5;
+  --status-error: #dc2626;
+  --status-error-hover: #b91c1c;
+  --status-error-bg: #fef2f2;
+  --status-warning: #d97706;
+  --status-warning-bg: #fffbeb;
+  --status-info: #0284c7;
+  --status-info-bg: #f0f9ff;
+  
+  // --- Shadow System ---
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  
+  // --- Layout ---
   --navbar-height: 60px;
+  
+  // ==========================================================================
+  // LEGACY VARIABLE ALIASES (For backward compatibility)
+  // Gradually migrate components to use semantic tokens above
+  // ==========================================================================
+  --color-primary: var(--accent-primary);
+  --primary-dark: var(--accent-primary-hover);
+  --color-secondary: var(--accent-secondary);
+  --accent-soft-green: var(--accent-soft);
+  --background-light: var(--surface-muted);
+  --background-white: var(--surface-primary);
+  --text-light: var(--surface-secondary);
+  --text-error: var(--status-error);
+  --border-color: var(--border-default);
+  --button-bg: var(--action-primary);
+  --card-shadow: var(--shadow-md);
+  --badge-color: #fef7ed;
+  --badge-free-color: #86efac;
+  --text-white: var(--text-inverse);
+  --color-error: var(--status-error);
+  --color-warning: var(--status-warning);
+  --color-success: var(--status-success);
+  --color-muted: var(--text-muted);
+  --success-bg: var(--status-success-bg);
+  --error-bg: var(--status-error-bg);
+  
+  // RGB values for transparent usage
+  --surface-primary-rgb: 255, 255, 255;
+  --surface-muted-rgb: 240, 245, 242;
+  --accent-primary-rgb: 42, 77, 58;
+  --shadow-rgb: 0, 0, 0;
 }
 
-// Dark theme
+// ==========================================================================
+// DARK THEME - Modern Charcoal + Sage (Stripe/Vercel Style)
+// Minimal overrides - semantic tokens handle the mapping
+// ==========================================================================
 [data-theme="dark"] {
-  --search-bg: var(--background-white);
-  --search-text: var(--text-primary);
-  --search-placeholder: var(--text-secondary);
-  --search-btn-bg: var(--background-light);
-  --search-btn-hover: var(--color-primary);
-  --color-primary: #4ade80;
-  --primary-dark: #22c55e; // Darker shade for dark theme
-  --color-secondary: #8bc9a8;
-  --color-success: #10b981;
-  --accent-soft-green: #a7d5c4;
-  --background-light: #111827;
-  --background-white: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-light: #f3f4f6;
-  --text-error: #ef4444;
-  --border-color: #4b5563;
-  --button-bg: #10b981;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  // --- Surface/Background Hierarchy ---
+  --surface-base: #{$dark-bg-base};
+  --surface-primary: #{$dark-bg-subtle};
+  --surface-secondary: #{$dark-bg-muted};
+  --surface-muted: #{$dark-bg-muted};
+  --surface-emphasis: #{$dark-bg-emphasis};
+  --surface-hover: #{$dark-bg-emphasis};
+  --surface-active: #323d35;
+  
+  // --- Text Hierarchy ---
+  --text-primary: #{$dark-text-primary};
+  --text-secondary: #{$dark-text-secondary};
+  --text-muted: #{$dark-text-muted};
+  --text-placeholder: #{$dark-text-placeholder};
+  --text-inverse: #{$dark-bg-base};
+  
+  // --- Border Hierarchy ---
+  --border-default: #{$dark-border-default};
+  --border-muted: #{$dark-border-muted};
+  --border-emphasis: #{$dark-border-emphasis};
+  
+  // --- Accent Colors (Adjusted for dark mode visibility) ---
+  --accent-primary: #6ee7a0;                   // Softer, readable green
+  --accent-primary-hover: #5dd88f;
+  --accent-secondary: #8bc9a8;
+  --accent-soft: #a7d5c4;
+  
+  // --- Action Colors ---
+  --action-primary: #2dd4bf;                   // Teal that works on dark
+  --action-primary-hover: #14b8a6;
+  --action-primary-text: #{$dark-bg-base};
+  --action-primary-alpha: rgba(45, 212, 191, 0.15);
+  
+  // --- Status Colors (Adjusted for dark backgrounds) ---
+  --status-success: #34d399;
+  --status-success-hover: #2bc485;
+  --status-success-bg: rgba(16, 185, 129, 0.15);
+  --status-error: #f87171;
+  --status-error-hover: #ef4444;
+  --status-error-bg: rgba(239, 68, 68, 0.15);
+  --status-warning: #fbbf24;
+  --status-warning-bg: rgba(251, 191, 36, 0.15);
+  --status-info: #38bdf8;
+  --status-info-bg: rgba(56, 189, 248, 0.15);
+  
+  // --- Shadow System (Deeper for dark mode) ---
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+  
+  // --- Legacy aliases update automatically via var() references ---
   --badge-color: #374151;
-  --badge-free-color: #22c55e;
-  --text-white: #ffffff;
-
+  --badge-free-color: #34d399;
   
-  // Additional dark theme variables
-  --text-muted: #9ca3af;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-  --color-muted: #6b7280;
-  --card-background: #374151;
-  --modal-overlay-rgb: 0, 0, 0;
-  --shadow-rgb: 0, 0, 0;
-  --success-bg: #064e3b;
-  --error-bg: #7f1d1d;
-  
-  // RGB values for transparent colors
-  --background-white-rgb: 31, 41, 55;
-  --background-light-rgb: 17, 24, 39;
-  --color-primary-rgb: 74, 222, 128;
-  --shadow-rgb: 0, 0, 0;
-  --shadow-light-rgb: 0, 0, 0;
-  --shadow-medium-rgb: 0, 0, 0;
-  --shimmer-rgb: 255, 255, 255;
+  // RGB values for transparent usage
+  --surface-primary-rgb: 22, 29, 25;
+  --surface-muted-rgb: 30, 39, 33;
+  --accent-primary-rgb: 110, 231, 160;
 }
 
 /* Responsive overrides for navbar height used by sticky elements (CategoryBar offset) */
@@ -224,13 +293,13 @@
 
 // Global body and html styles for theme support
 html {
-  background-color: var(--background-light);
+  background-color: var(--surface-base);
 }
 
 body {
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 // ====================================
@@ -251,29 +320,26 @@ textarea,
 select {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--color-muted);
-  border-radius: 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
   font-size: 1rem;
   color: var(--text-primary);
-  /* Ensure input background follows the current theme (light/dark) so text remains readable */
-  background: var(--background-white);
+  background: var(--surface-primary);
   transition: all 0.2s ease;
   font-family: inherit;
   
   &:focus {
     outline: none;
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+    border-color: var(--action-primary);
+    box-shadow: 0 0 0 3px var(--action-primary-alpha);
   }
   
   &::placeholder {
-    /* Use a less prominent color for placeholders that adapts to theme */
-    color: var(--text-secondary);
-    opacity: 0.9;
+    color: var(--text-placeholder);
   }
   
   &:disabled {
-    background: var(--background-light);
+    background: var(--surface-muted);
     color: var(--text-muted);
     cursor: not-allowed;
     opacity: 0.6;
@@ -292,7 +358,7 @@ label {
 
 // Required field indicator
 .required {
-  color: var(--color-error);
+  color: var(--status-error);
 }
 
 // Form groups
@@ -314,19 +380,19 @@ label {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
-  border-radius: 12px;
-  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-family: inherit;
   line-height: 1;
   
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
   }
@@ -338,35 +404,35 @@ label {
 
 // Button variants
 .btn-primary {
-  background: var(--color-success);
-  color: var(--text-white);
+  background: var(--action-primary);
+  color: var(--action-primary-text);
   
   &:hover:not(:disabled) {
-    background: var(--primary-dark);
-    color: var(--text-white);
+    background: var(--action-primary-hover);
+    box-shadow: var(--shadow-md);
     text-decoration: none;
   }
 }
 
 .btn-outline {
-  background: var(--background-white);
-  color: var(--text-secondary);
-  border: 2px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
   
   &:hover:not(:disabled) {
-    background: var(--background-light);
-    color: var(--text-primary);
+    background: var(--surface-hover);
+    border-color: var(--border-emphasis);
     text-decoration: none;
   }
 }
 
 .btn-error {
-  background: var(--color-error);
-  color: var(--text-white);
+  background: var(--status-error);
+  color: var(--text-inverse);
   
   &:hover:not(:disabled) {
-    background: #c82333;
-    color: var(--text-white);
+    background: var(--status-error-hover);
+    box-shadow: var(--shadow-md);
   }
 }
 
@@ -376,11 +442,11 @@ label {
 
 // Section background classes
 .bg-herbal-light {
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
 }
 
 .bg-sandal-light {
-  background-color: var(--background-light);
+  background-color: var(--surface-muted);
 }
 
 // Text utilities
@@ -402,19 +468,15 @@ label {
 
 // Override Bootstrap utilities with theme variables
 .bg-white {
-  background-color: var(--background-white) !important;
+  background-color: var(--surface-primary) !important;
 }
 
 .bg-light {
-  background-color: var(--background-light) !important;
+  background-color: var(--surface-muted) !important;
 }
 
 .text-dark {
   color: var(--text-primary) !important;
-}
-
-.text-muted {
-  color: var(--text-muted) !important;
 }
 
 .text-muted {
@@ -426,26 +488,26 @@ label {
 }
 
 .text-primary {
-  color: var(--color-primary) !important;
+  color: var(--accent-primary) !important;
 }
 
 .bg-success {
-  background: var(--button-bg) !important;
+  background: var(--status-success) !important;
 }
 
 .bg-danger {
-  background: #EE6678 !important;
+  background: var(--status-error) !important;
 }
 
 // Bootstrap component overrides
 .card {
-  background-color: var(--background-white);
-  border-color: var(--border-color);
+  background-color: var(--surface-primary);
+  border-color: var(--border-default);
   color: var(--text-primary);
 }
 
 .modal-content {
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
 }
 
@@ -454,20 +516,19 @@ label {
 }
 
 .form-control {
-  background-color: var(--background-white);
-  border-color: var(--border-color);
+  background-color: var(--surface-primary);
+  border-color: var(--border-default);
   color: var(--text-primary);
   
   &:focus {
-    background-color: var(--background-white);
-    border-color: var(--color-primary);
+    background-color: var(--surface-primary);
+    border-color: var(--action-primary);
     color: var(--text-primary);
-    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+    box-shadow: 0 0 0 3px var(--action-primary-alpha);
   }
   
   &::placeholder {
-    color: var(--text-muted);
-    opacity: 0.8;
+    color: var(--text-placeholder);
   }
 }
 
@@ -495,73 +556,73 @@ label {
   position: absolute;
   top: 25px;
   left: 25px;
-  background: linear-gradient(90deg, rgba(var(--background-white-rgb, 255, 255, 255), 0.9) 0%, rgba(var(--background-light-rgb, 245, 240, 235), 0.9) 100%);
+  background: rgba(var(--surface-primary-rgb), 0.92);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
   color: var(--text-secondary);
-  z-index: 10; /* Ensure it is above other elements */
-  backdrop-filter: blur(2px);
+  z-index: 10;
+  backdrop-filter: blur(4px);
 }
 
 .badge {
   position: absolute;
   top: 8px;
   left: 8px;
-  z-index: 2; /* Ensure it stays above the image */
+  z-index: 2;
 }
 
 .badge-category {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #2a4d3a;
+  background-color: var(--brand-forest);
   color: #ffffff;
   padding: 5px 10px;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .card {
-  background: #fff;
+  background: var(--surface-primary);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-muted);
 }
 
 .card:hover,
 .card:focus {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
   outline: none;
 }
 
 .card-header {
   position: relative;
-  height: 200px; /* Ensure consistent height */
-  background: #f5f0eb; /* Add fallback background color */
+  height: 200px;
+  background: var(--surface-muted);
   padding: 0;
-  z-index: 1; /* Ensure it does not overlap the category-tag */
-  overflow: hidden; /* Ensure the image scaling doesn't affect layout */
+  z-index: 1;
+  overflow: hidden;
 }
 
 .card-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image covers the container */
-  object-position: center; /* Center the image */
-  transition: transform 0.4s ease; /* Smooth scaling effect */
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
 }
 
 .card-header:hover .card-image {
-  transform: scale(1.03); /* Slight zoom on hover */
-  z-index: 1; /* Ensure it stays below the badge */
+  transform: scale(1.02);
+  z-index: 1;
 }
 
 .card-content {
@@ -581,11 +642,11 @@ label {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #9c8e7e;
+  color: var(--text-muted);
 }
 
 .title {
-  color: #4a3f35;
+  color: var(--text-primary);
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -600,16 +661,16 @@ label {
 }
 
 .description {
-  color: #7a6a5c;
-  line-height: 1.5;
+  color: var(--text-secondary);
+  line-height: 1.6;
   margin-bottom: 1.5rem;
   text-align: left;
-  height: 4.5rem; /* Fixed height for three lines of text */
+  height: 4.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
-  line-clamp: 3; /* Standard property for compatibility */
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
@@ -624,37 +685,40 @@ label {
   }
 }
 
-.bg-success{
-  background: $button-bg !important; ;
+// Legacy overrides - kept for backward compatibility
+.bg-success {
+  background: var(--status-success) !important;
 }
-.bg-danger{
-  background: #EE6678 !important;
+
+.bg-danger {
+  background: var(--status-error) !important;
 }
-.text-primary{
-  color: $color-primary !important;
+
+.text-primary {
+  color: var(--accent-primary) !important;
 }
 
 .toast-message {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: $accent-soft-green;
+  background-color: var(--status-success);
   color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
   z-index: 1000;
   animation: fadeInOut 2s ease-in-out;
 }
 
-h1{
-  color:var(--text-primary);
+h1 {
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 2.5rem;
   font-family: $font-primary;
 }
 
-h2{
+h2 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -672,59 +736,61 @@ section {
   
   &.py-4, &.py-5 {
     &:nth-child(even) {
-      background-color: var(--background-light);
+      background-color: var(--surface-muted);
     }
     
     &:nth-child(odd) {
-      background-color: var(--background-white);
+      background-color: var(--surface-primary);
     }
   }
 }
-.list-before{
-    padding: 0.6rem 1.2rem;
-    align-items: center;
-    display: block;
 
-    &::before {
-      content: "•";
-      margin-right: 0.5rem;
-      color: $color-secondary;
-    }
+.list-before {
+  padding: 0.6rem 1.2rem;
+  align-items: center;
+  display: block;
+
+  &::before {
+    content: "•";
+    margin-right: 0.5rem;
+    color: var(--accent-secondary);
   }
+}
+
 .tag-badge {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: rgba($badge-color, 0.9);
-        color: $text-primary;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-        border-radius: 20px;
-        z-index: 5;
-      }
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(var(--surface-primary-rgb), 0.92);
+  color: var(--text-primary);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 16px;
+  z-index: 5;
+  backdrop-filter: blur(4px);
+}
 
 main {
-  min-height: 80vh; /* Ensures the main content area occupies space */
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
 }
-/* Quick table dark mode fix */
-  
 
-[data-theme="dark"] .dashboard-table .table th {
-  background-color: var(--background-light) ;
-  color: var(--text-primary) ;
+// Dashboard table dark mode - uses semantic tokens automatically
+.dashboard-table .table th {
+  background-color: var(--surface-muted);
+  color: var(--text-primary);
 }
 
-[data-theme="dark"] .dashboard-table .table td {
-  background-color: var(--background-white) ;
-  color: var(--text-primary) ;
+.dashboard-table .table td {
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
   .table {
     font-size: 0.875rem;
-    background: var(--background-white);
+    background: var(--surface-primary);
   }
 }
 
@@ -746,20 +812,17 @@ main {
 
 /* Mobile viewport optimizations */
 @media (max-width: 768px) {
-  /* Reduce spacing on mobile */
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
-  /* Improve form inputs on mobile */
   input,
   textarea,
   select {
     font-size: 16px; /* Prevents zoom on iOS */
   }
 
-  /* Optimize headings for mobile */
   h1 {
     font-size: clamp(1.75rem, 5vw, 2.5rem);
   }
@@ -773,13 +836,11 @@ main {
     font-size: clamp(1.1rem, 3.5vw, 1.25rem);
   }
 
-  /* Reduce card padding on mobile */
   .card-content,
   .card-body {
     padding: 1rem;
   }
 
-  /* Optimize section spacing */
   section {
     &.py-5 {
       padding-top: 2rem !important;
@@ -821,13 +882,12 @@ main {
 }
 
 /* Accessibility improvements */
-/* Skip to main content link */
 .skip-to-content {
   position: absolute;
   top: -40px;
   left: 0;
-  background: var(--color-primary);
-  color: var(--text-white);
+  background: var(--accent-primary);
+  color: var(--text-inverse);
   padding: 0.5rem 1rem;
   text-decoration: none;
   z-index: 100;
@@ -840,7 +900,7 @@ main {
 
 /* Focus visible styles for keyboard navigation */
 *:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -851,11 +911,11 @@ main {
 
 /* Improve contrast for better readability */
 ::selection {
-  background-color: var(--color-primary);
-  color: var(--text-white);
+  background-color: var(--accent-primary);
+  color: var(--text-inverse);
 }
 
-.empty-state{
+.empty-state {
   min-height: 300px;
   display: flex;
   flex-direction: column;

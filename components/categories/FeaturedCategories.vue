@@ -54,7 +54,7 @@ const props = defineProps({
 <style scoped>
 .featured-categories-section {
   padding: 4rem 0 2rem 0;
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
 }
 
 .section-header {
@@ -96,7 +96,7 @@ const props = defineProps({
   align-items: center;
   padding: 1rem;
   border-radius: 16px;
-  background-color: var(--background-light);
+  background-color: var(--surface-muted);
   min-height: 200px;
   justify-content: center;
 }
@@ -105,7 +105,7 @@ const props = defineProps({
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(90deg, var(--background-light) 25%, var(--background-white) 50%, var(--background-light) 75%);
+  background: linear-gradient(90deg, var(--surface-muted) 25%, var(--surface-primary) 50%, var(--surface-muted) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   margin-bottom: 1rem;
@@ -115,7 +115,7 @@ const props = defineProps({
   width: 100px;
   height: 16px;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--background-light) 25%, var(--background-white) 50%, var(--background-light) 75%);
+  background: linear-gradient(90deg, var(--surface-muted) 25%, var(--surface-primary) 50%, var(--surface-muted) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

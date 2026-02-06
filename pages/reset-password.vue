@@ -173,7 +173,7 @@ useHead({
 
 <style scoped>
 .reset-password-page {
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 
 .form-group {

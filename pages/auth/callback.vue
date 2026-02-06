@@ -75,6 +75,6 @@ onMounted(async () => {
 
 <style scoped>
 .auth-callback {
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 </style>

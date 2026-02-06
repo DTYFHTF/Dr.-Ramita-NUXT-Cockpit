@@ -286,9 +286,9 @@ const getOrderStatusClass = (status: string) => {
 
 // Compact card design
 .activity-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   overflow: hidden;
   height: 100%;
   display: flex;
@@ -304,8 +304,8 @@ const getOrderStatusClass = (status: string) => {
     display: flex;
     align-items: center;
     padding: 1rem 1.25rem;
-    background: var(--background-light);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--surface-muted);
+    border-bottom: 1px solid var(--border-default);
 
     h6 {
       font-weight: 600;
@@ -335,7 +335,7 @@ const getOrderStatusClass = (status: string) => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 8px;
   transition: all 0.2s ease;
 
@@ -350,7 +350,7 @@ const getOrderStatusClass = (status: string) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--background-white);
+    background: var(--surface-primary);
     border-radius: 6px;
     flex-shrink: 0;
   }
@@ -385,7 +385,7 @@ const getOrderStatusClass = (status: string) => {
 
   .activity-item-value {
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--accent-primary);
     font-size: 0.9rem;
     flex-shrink: 0;
   }
@@ -396,7 +396,7 @@ const getOrderStatusClass = (status: string) => {
   display: block;
   text-align: center;
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
@@ -405,7 +405,7 @@ const getOrderStatusClass = (status: string) => {
   margin-top: auto;
 
   &:hover {
-    background: var(--background-light);
+    background: var(--surface-muted);
     color: var(--color-primary-dark);
   }
 }
@@ -423,7 +423,7 @@ const getOrderStatusClass = (status: string) => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 8px;
   text-decoration: none;
   color: inherit;
@@ -460,7 +460,7 @@ const getOrderStatusClass = (status: string) => {
 
     .recent-product-mini-price {
       font-size: 0.85rem;
-      color: var(--color-primary);
+      color: var(--accent-primary);
       font-weight: 600;
     }
   }
@@ -484,7 +484,7 @@ const getOrderStatusClass = (status: string) => {
 }
 
 .bg-primary {
-  background-color: var(--color-primary) !important;
+  background-color: var(--accent-primary) !important;
 }
 
 .bg-success {

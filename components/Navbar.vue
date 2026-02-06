@@ -177,7 +177,7 @@ const cancelBlogDropdownClose = () => {
   position: sticky;
   top: 0;
   z-index: 1030;
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.1);
 }
 
@@ -219,7 +219,7 @@ const cancelBlogDropdownClose = () => {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--background-white);
+    background-color: var(--surface-primary);
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.1);
   }

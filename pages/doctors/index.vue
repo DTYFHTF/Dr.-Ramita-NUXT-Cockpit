@@ -94,8 +94,8 @@ onMounted(async () => {
 }
 
 .alert-danger {
-  background-color: var(--background-light);
-  border-color: var(--border-color);
+  background-color: var(--surface-muted);
+  border-color: var(--border-default);
   color: var(--text-error);
   padding: 1rem;
   border-radius: 0.25rem;

@@ -128,7 +128,7 @@ const reportError = () => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: var(--background-light, #f9fafb);
+  background: var(--surface-muted);
 }
 
 .error-container {

@@ -412,8 +412,8 @@ function imageUrl(img: string) {
   transition: box-shadow 0.18s, transform 0.18s;
   box-shadow: 0 4px 8px rgba(var(--shadow-light-rgb), 0.1);
   border-radius: 8px;
-  background-color: var(--background-white);
-  border-color: var(--border-color);
+  background-color: var(--surface-primary);
+  border-color: var(--border-default);
 }
 
 .product-link {
@@ -432,7 +432,7 @@ function imageUrl(img: string) {
   width: 100%;
   height: 180px;
   overflow: hidden;
-  background-color: var(--background-light);
+  background-color: var(--surface-muted);
 }
 
 .card-img-top {
@@ -546,15 +546,15 @@ function imageUrl(img: string) {
   height: 40px;
   border-radius: 50%;
   transition: all 0.3s ease;
-  background-color: var(--background-white);
-  border-color: var(--border-color);
+  background-color: var(--surface-primary);
+  border-color: var(--border-default);
 }
 
 .wishlist-btn:hover,
 .quick-view-btn:hover,
 .wishlist-btn:active,
 .quick-view-btn:active {
-  background-color: var(--background-light);
+  background-color: var(--surface-muted);
 }
 
 .add-to-cart-btn {

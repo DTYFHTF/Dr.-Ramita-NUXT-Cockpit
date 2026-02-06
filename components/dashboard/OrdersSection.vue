@@ -153,9 +153,9 @@ onMounted(fetchOrders);
 }
 
 .order-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   overflow: hidden;
   transition: all 0.3s ease;
 
@@ -170,8 +170,8 @@ onMounted(fetchOrders);
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem;
-    background: var(--background-light);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--surface-muted);
+    border-bottom: 1px solid var(--border-default);
 
     .order-id-section {
       display: flex;
@@ -198,17 +198,17 @@ onMounted(fetchOrders);
         width: 32px;
         height: 32px;
         margin-left: 0.25rem;
-        background: var(--background-white);
+        background: var(--surface-primary);
         color: var(--text-secondary);
         border-radius: 6px;
         text-decoration: none;
         transition: all 0.2s ease;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--border-default);
 
         &:hover {
-          background: var(--color-primary);
+          background: var(--accent-primary);
           color: white;
-          border-color: var(--color-primary);
+          border-color: var(--accent-primary);
           transform: translateY(-1px);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -345,7 +345,7 @@ onMounted(fetchOrders);
       justify-content: space-between;
       align-items: center;
       padding-top: 1rem;
-      border-top: 1px solid var(--border-color);
+      border-top: 1px solid var(--border-default);
 
       .total-label {
         font-size: 0.9rem;
@@ -356,15 +356,15 @@ onMounted(fetchOrders);
       .total-value {
         font-size: 1.25rem;
         font-weight: 700;
-        color: var(--color-primary);
+        color: var(--accent-primary);
       }
     }
   }
 
   .order-card-footer {
     padding: 1rem 1.25rem;
-    background: var(--background-light);
-    border-top: 1px solid var(--border-color);
+    background: var(--surface-muted);
+    border-top: 1px solid var(--border-default);
 
     .btn-view-order {
       display: flex;
@@ -372,7 +372,7 @@ onMounted(fetchOrders);
       justify-content: center;
       width: 100%;
       padding: 0.75rem;
-      background: var(--color-primary);
+      background: var(--accent-primary);
       color: white;
       border-radius: 8px;
       text-decoration: none;
@@ -383,7 +383,7 @@ onMounted(fetchOrders);
       &:hover {
         background: var(--color-primary-dark);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
       }
 
       &:active {

@@ -169,7 +169,7 @@ const resetBooking = () => {
 }
 
 .confirmation-details {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 2rem;
   margin: 2rem 0;
@@ -181,7 +181,7 @@ const resetBooking = () => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   
   &:last-child {
     border-bottom: none;
@@ -205,13 +205,13 @@ const resetBooking = () => {
   padding: 1.5rem;
   background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
   border-radius: 8px;
-  border-left: 3px solid var(--color-primary);
+  border-left: 3px solid var(--accent-primary);
   margin: 2rem 0;
   text-align: left;
   
   svg {
     flex-shrink: 0;
-    color: var(--color-primary);
+    color: var(--accent-primary);
     margin-top: 0.25rem;
   }
   
@@ -244,7 +244,7 @@ const resetBooking = () => {
   color: white;
 }
 .btn-smooth-outline{
-  color: var(--color-primary);
+  color: var(--accent-primary);
 }
 
 .step-title {

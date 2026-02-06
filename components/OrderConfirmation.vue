@@ -396,8 +396,8 @@ const hasHsnCodes = computed(() => {
 .btn-refresh {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--background-white);
-  border: 2px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 2px solid var(--border-default);
   border-radius: 8px;
   color: var(--text-primary);
   font-weight: 600;
@@ -409,8 +409,8 @@ const hasHsnCodes = computed(() => {
   gap: 0.5rem;
 
   &:hover:not(:disabled) {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
@@ -440,7 +440,7 @@ const hasHsnCodes = computed(() => {
 
 /* Order Details Card */
 .order-details-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   overflow: hidden;
@@ -500,7 +500,7 @@ const hasHsnCodes = computed(() => {
 .delivery-section,
 .instructions-section {
   padding: 2rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   
   &:last-child {
     border-bottom: none;
@@ -532,9 +532,9 @@ const hasHsnCodes = computed(() => {
   display: flex;
   gap: 1rem;
   padding: 1.5rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   transition: all 0.2s ease;
   
   &:hover {
@@ -550,7 +550,7 @@ const hasHsnCodes = computed(() => {
     height: 80px;
     object-fit: cover;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-default);
   }
 }
 
@@ -578,10 +578,10 @@ const hasHsnCodes = computed(() => {
     .item-quantity {
       font-size: 0.875rem;
       color: var(--text-secondary);
-      background: var(--background-white);
+      background: var(--surface-primary);
       padding: 0.25rem 0.75rem;
       border-radius: 16px;
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border-default);
     }
     
     .item-price {
@@ -594,10 +594,10 @@ const hasHsnCodes = computed(() => {
 
 /* Order Summary */
 .summary-details {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .summary-row {
@@ -607,7 +607,7 @@ const hasHsnCodes = computed(() => {
   padding: 0.75rem 0;
   
   &:not(:last-child) {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-default);
   }
   
   &.total-row {
@@ -622,10 +622,10 @@ const hasHsnCodes = computed(() => {
 
 /* Delivery Section */
 .delivery-details {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .delivery-content {
@@ -640,7 +640,7 @@ const hasHsnCodes = computed(() => {
   gap: 0.75rem;
   
   .delivery-icon {
-    color: var(--color-primary);
+    color: var(--accent-primary);
     flex-shrink: 0;
     margin-top: 0.125rem;
   }
@@ -654,10 +654,10 @@ const hasHsnCodes = computed(() => {
 
 /* Instructions */
 .instructions-content {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 8px;
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   font-style: italic;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -667,9 +667,9 @@ const hasHsnCodes = computed(() => {
 .gst-details-section {
   padding: 1.5rem;
   margin-bottom: 2rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .gst-details {
@@ -681,7 +681,7 @@ const hasHsnCodes = computed(() => {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
 
   &:last-child {
     border-bottom: none;
@@ -702,7 +702,7 @@ const hasHsnCodes = computed(() => {
 /* HSN Codes Section */
 .hsn-codes-section {
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-default);
 }
 
 .hsn-title {

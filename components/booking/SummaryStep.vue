@@ -194,7 +194,7 @@ const confirmBooking = async () => {
 }
 
 .booking-summary-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -205,7 +205,7 @@ const confirmBooking = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   
   &:last-child {
     border-bottom: none;
@@ -230,13 +230,13 @@ const confirmBooking = async () => {
   padding: 1rem;
   background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
   border-radius: 8px;
-  border-left: 3px solid var(--color-primary);
+  border-left: 3px solid var(--accent-primary);
   font-size: 0.9rem;
   color: var(--text-secondary);
   
   svg {
     flex-shrink: 0;
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 }
 

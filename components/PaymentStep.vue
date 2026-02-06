@@ -204,11 +204,11 @@ onUnmounted(() => {
 }
 
 .payment-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   margin-bottom: 1.5rem;
 }
 
@@ -220,7 +220,7 @@ onUnmounted(() => {
     width: 64px;
     height: 64px;
     margin: 0 auto 1rem;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(135deg, var(--accent-primary), var(--color-secondary));
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -242,8 +242,8 @@ onUnmounted(() => {
 }
 
 .amount-section {
-  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-secondary-rgb), 0.05));
-  border: 2px solid var(--color-primary);
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.05), rgba(var(--color-secondary-rgb), 0.05));
+  border: 2px solid var(--accent-primary);
   border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
@@ -263,7 +263,7 @@ onUnmounted(() => {
     display: block;
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--accent-primary);
     font-family: $font-primary;
   }
 }
@@ -271,7 +271,7 @@ onUnmounted(() => {
 .details-section {
   margin-bottom: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-default);
 }
 
 .timer-section {
@@ -386,7 +386,7 @@ onUnmounted(() => {
   font-size: 0.813rem;
   
   :deep(svg) {
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 }
 

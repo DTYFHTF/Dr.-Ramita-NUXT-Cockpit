@@ -304,10 +304,10 @@ const copyTrackingNumber = async () => {
 
 <style scoped lang="scss">
 .tracking-timeline {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .timeline-header {
@@ -327,9 +327,9 @@ const copyTrackingNumber = async () => {
   align-items: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 10px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   min-width: 250px;
 
   .tracking-icon {
@@ -338,7 +338,7 @@ const copyTrackingNumber = async () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--background-white);
+    background: var(--surface-primary);
     border-radius: 10px;
     flex-shrink: 0;
   }
@@ -364,7 +364,7 @@ const copyTrackingNumber = async () => {
 .tracking-number-card {
   flex: 1;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--accent-primary) 100%);
   border-radius: 10px;
   color: white;
   min-width: 280px;
@@ -445,7 +445,7 @@ const copyTrackingNumber = async () => {
       margin-left: auto;
       padding: 0.4rem 0.75rem;
       background: white;
-      color: var(--color-primary);
+      color: var(--accent-primary);
       border-radius: 6px;
       text-decoration: none;
       font-weight: 600;
@@ -486,15 +486,15 @@ const copyTrackingNumber = async () => {
       justify-content: center;
       position: relative;
       z-index: 2;
-      background: var(--background-light);
-      border: 3px solid var(--border-color);
+      background: var(--surface-muted);
+      border: 3px solid var(--border-default);
       transition: all 0.3s ease;
     }
 
     .step-line {
       width: 3px;
       flex: 1;
-      background: var(--border-color);
+      background: var(--border-default);
       min-height: 50px;
       transition: all 0.3s ease;
     }
@@ -545,14 +545,14 @@ const copyTrackingNumber = async () => {
   // Current step styling
   &.step-current {
     .step-indicator .step-dot {
-      background: var(--color-primary);
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
       animation: pulse 2s ease-in-out infinite;
     }
 
     .step-content .step-title {
-      color: var(--color-primary);
+      color: var(--accent-primary);
       font-weight: 700;
     }
   }
@@ -569,7 +569,7 @@ const copyTrackingNumber = async () => {
   .delivery-dates {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-default);
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -619,10 +619,10 @@ const copyTrackingNumber = async () => {
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
+    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(var(--color-primary-rgb), 0.1);
+    box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0.1);
   }
 }
 

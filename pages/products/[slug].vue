@@ -240,7 +240,7 @@ function handleAddToCartProxy(payload: any) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: var(--background-white);
+  background-color: var(--surface-base);
   color: var(--text-primary);
 }
 .product-detail-flex {
@@ -266,7 +266,7 @@ function handleAddToCartProxy(payload: any) {
   max-width: 1200px;
   min-height: 500px;
   padding:0px !important;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 0;
   box-shadow: none;
   display: flex;
@@ -281,8 +281,8 @@ function handleAddToCartProxy(payload: any) {
   padding: 0 2.5rem;
 }
 .review-card {
-  background: var(--background-light);
-  border: 1px solid var(--border-color);
+  background: var(--surface-muted);
+  border: 1px solid var(--border-default);
   border-radius: 0.375rem;
   transition: transform 0.2s;
 }
@@ -309,8 +309,8 @@ function handleAddToCartProxy(payload: any) {
 .similar-products-section {
   // margin-top: 3rem;
   // padding-top: 2rem;
-  border-top: 1px solid var(--border-color);
-  background-color: var(--background-light);
+  border-top: 1px solid var(--border-default);
+  background-color: var(--surface-muted);
 }
 .error {
   color: var(--text-error);

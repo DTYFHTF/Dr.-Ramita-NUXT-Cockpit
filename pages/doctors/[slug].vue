@@ -343,7 +343,7 @@ if (error.value) {
 }
 
 .doctor-header {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -355,13 +355,13 @@ if (error.value) {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--color-primary);
+  border: 3px solid var(--accent-primary);
   box-shadow: 0 4px 20px var(--card-shadow);
 }
 
 .doctor-info .doctor-specialization {
   font-size: 1.1rem;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-weight: 600;
 }
 
@@ -372,7 +372,7 @@ if (error.value) {
   color: var(--text-primary);
   font-weight: 600;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--accent-primary);
   padding-bottom: 0.5rem;
   display: inline-block;
 }
@@ -396,7 +396,7 @@ if (error.value) {
   gap: 0.75rem;
 }
 .language-tag {
-  background: var(--color-primary);
+  background: var(--accent-primary);
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -406,7 +406,7 @@ if (error.value) {
 
 .awards-list, .memberships-list, .social-links {
   .award-item, .membership-item, .social-link {
-    background: var(--background-light);
+    background: var(--surface-muted);
     padding: 1rem 1.5rem;
     border-radius: 8px;
     margin-bottom: 0.75rem;
@@ -420,7 +420,7 @@ if (error.value) {
     transition: all 0.3s ease;
   }
   .social-link:hover {
-    background: var(--color-primary);
+    background: var(--accent-primary);
     color: #fff;
   }
   .social-link:hover :deep(.lucide-icon) {
@@ -464,7 +464,7 @@ if (error.value) {
   margin-bottom: 0.75rem;
 }
 .working-hours {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -473,7 +473,7 @@ if (error.value) {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
 }
 .schedule-item:last-child {
   border-bottom: none;
@@ -491,8 +491,8 @@ if (error.value) {
   top: 2rem;
 }
 .booking-card {
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -510,7 +510,7 @@ if (error.value) {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--accent-primary);
 }
 .fee-label {
   color: var(--text-secondary);
@@ -557,7 +557,7 @@ if (error.value) {
 
 .quick-contact {
   text-align: center;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-default);
   padding-top: 1rem;
 }
 

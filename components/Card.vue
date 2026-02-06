@@ -48,12 +48,12 @@ const props = defineProps({
 
 <style scoped lang="scss">
 .card {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--background-white);
+  background: var(--surface-primary);
 }
 
 .card-header {

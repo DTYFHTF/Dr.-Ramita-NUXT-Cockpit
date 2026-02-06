@@ -69,7 +69,7 @@ const currentStepComponent = computed(() => {
 <style scoped lang="scss">
 .booking-wizard {
   padding: 2rem 1rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   color: var(--text-primary);
 }
 
@@ -107,7 +107,7 @@ const currentStepComponent = computed(() => {
   left: 50%;
   right: -50%;
   height: 2px;
-  background: var(--border-color);
+  background: var(--border-default);
   z-index: 0;
 }
 
@@ -115,8 +115,8 @@ const currentStepComponent = computed(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--background-white);
-  border: 2px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 2px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,9 +128,9 @@ const currentStepComponent = computed(() => {
 }
 
 .step-indicator.active .step-number {
-  background-color: var(--color-primary);
+  background-color: var(--accent-primary);
   color: var(--text-white, #fff);
-  border-color: var(--color-primary);
+  border-color: var(--accent-primary);
 }
 
 .step-indicator.completed .step-number {
@@ -145,7 +145,7 @@ const currentStepComponent = computed(() => {
 }
 
 .step-content {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 0.5rem;
   padding: 2rem;
   box-shadow: var(--card-shadow);

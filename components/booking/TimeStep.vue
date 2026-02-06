@@ -178,7 +178,7 @@ const selectTime = (slot) => {
     margin-bottom: 0.5rem;
     
     .selected-doctor {
-      color: var(--color-primary);
+      color: var(--accent-primary);
       font-weight: 500;
       font-size: 1.1rem;
       margin-bottom: 0.75rem;
@@ -202,7 +202,7 @@ const selectTime = (slot) => {
         
         &.your-timezone {
           background: rgba(var(--color-primary-rgb, 42,77,58), 0.1);
-          color: var(--color-primary);
+          color: var(--accent-primary);
           border: 1px solid rgba(var(--color-primary-rgb, 42,77,58), 0.2);
         }
         
@@ -228,21 +228,21 @@ const selectTime = (slot) => {
 
 .time-slot {
   padding: 1rem 0.5rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--background-white);
+  background: var(--surface-primary);
 
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     transform: translateY(-2px);
   }
 
   &.selected {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
     color: var(--text-white, #fff);
     
     .slot-time, .slot-period, .doctor-time {
@@ -285,8 +285,8 @@ const selectTime = (slot) => {
 }
 
 .alert {
-  background: var(--background-white);
-  border-color: var(--border-color);
+  background: var(--surface-primary);
+  border-color: var(--border-default);
   color: var(--text-primary);
 }
 
@@ -295,7 +295,7 @@ const selectTime = (slot) => {
   padding: 2rem;
   
   .spinner-border {
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 }
 </style>

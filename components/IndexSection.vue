@@ -159,15 +159,15 @@ section {
 }
 
 .alert-danger {
-  background-color: $background-light;
-  border-color: $border-color;
-  color: $text-error;
+  background-color: var(--surface-muted);
+  border-color: var(--border-default);
+  color: var(--text-error);
   padding: 1rem;
   border-radius: 0.25rem;
 }
 
 .text-muted {
-  color: $text-secondary;
+  color: var(--text-secondary);
 }
 
 .visually-hidden {

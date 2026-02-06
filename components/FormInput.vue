@@ -79,15 +79,15 @@ const inputId = computed(() => props.id || `input-${Math.random().toString(36).s
   font-size: 1rem;
   line-height: 1.5;
   color: var(--text-primary);
-  background-color: var(--background-white);
-  border: 1px solid var(--border-color);
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.25);
   }
 
   &::placeholder {
@@ -104,7 +104,7 @@ const inputId = computed(() => props.id || `input-${Math.random().toString(36).s
   }
 
   &:disabled {
-    background-color: var(--background-light);
+    background-color: var(--surface-muted);
     cursor: not-allowed;
     opacity: 0.6;
   }

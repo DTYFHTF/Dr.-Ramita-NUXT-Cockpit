@@ -85,7 +85,7 @@ const hasActiveFilters = computed(() => {
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   flex-wrap: wrap;
 }
@@ -107,8 +107,8 @@ const hasActiveFilters = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   color: var(--text-primary);
   padding: 0.5rem 0.75rem;
   border-radius: 20px;

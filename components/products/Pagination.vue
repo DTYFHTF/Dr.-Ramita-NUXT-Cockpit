@@ -70,17 +70,17 @@ const handlePageChange = (page: number) => {
       text-align: center;
       transition: all 0.2s ease;
       color: var(--text-primary);
-      background-color: var(--background-white);
-      border-color: var(--border-color);
+      background-color: var(--surface-primary);
+      border-color: var(--border-default);
       
       &:hover:not(:disabled) {
-        color: var(--color-primary);
-        background-color: var(--background-light);
-        border-color: var(--color-primary);
+        color: var(--accent-primary);
+        background-color: var(--surface-muted);
+        border-color: var(--accent-primary);
       }
       
       &:focus {
-        box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.25);
+        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.25);
       }
     }
     

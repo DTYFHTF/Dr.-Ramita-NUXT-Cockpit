@@ -163,7 +163,7 @@ const goBack = () => {
   padding: 1.5rem;
   background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .detail-item {
@@ -179,7 +179,7 @@ const goBack = () => {
   }
   
   :deep(svg) {
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
   
   span {

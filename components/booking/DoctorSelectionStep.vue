@@ -203,8 +203,8 @@ onMounted(async () => {
 .doctor-list-item {
   display: flex;
   align-items: center;
-  background: var(--background-white);
-  border: 2px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 2px solid var(--border-default);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1rem;
@@ -212,13 +212,13 @@ onMounted(async () => {
   transition: all 0.3s ease;
   
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
   }
   
   &.selected {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     background: rgba(var(--color-primary-rgb, 42,77,58), 0.05);
   }
   
@@ -236,7 +236,7 @@ onMounted(async () => {
     height: 64px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-default);
   }
 }
 
@@ -257,7 +257,7 @@ onMounted(async () => {
 }
 
 .doctor-specialization {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-weight: 500;
   font-size: 0.9rem;
   margin: 0;
@@ -356,7 +356,7 @@ onMounted(async () => {
   .amount {
     font-size: 1.3rem;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 }
 
@@ -373,7 +373,7 @@ onMounted(async () => {
 }
 
 .selected-check {
-  background: var(--color-primary);
+  background: var(--accent-primary);
   color: white;
   border-radius: 50%;
   width: 28px;
@@ -384,7 +384,7 @@ onMounted(async () => {
 }
 
 .select-circle {
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   border-radius: 50%;
   width: 28px;
   height: 28px;
@@ -392,7 +392,7 @@ onMounted(async () => {
 }
 
 .doctor-list-item:hover .select-circle {
-  border-color: var(--color-primary);
+  border-color: var(--accent-primary);
 }
 
 @media (max-width: 768px) {

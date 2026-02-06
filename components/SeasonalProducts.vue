@@ -4,7 +4,9 @@
       <!-- Section Header -->
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">{{ title }}</h2>
-        <a v-if="viewAllUrl" :href="viewAllUrl" class="view-all-link">View All <i class="bi bi-arrow-right"></i></a>
+        <a v-if="viewAllUrl" :href="viewAllUrl" class="view-all-link"
+          >View All <i class="bi bi-arrow-right"></i
+        ></a>
       </div>
 
       <!-- Season Tabs -->
@@ -13,11 +15,13 @@
           <button
             v-for="(promotion, index) in promotions"
             :key="promotion.id"
-            class="season-tab"
+            class="season-tab mx-2"
             :class="{ active: activeTab === index }"
             @click="setActiveTab(index)"
           >
-            <span class="season-icon" v-if="getSeasonIcon(promotion)">{{ getSeasonIcon(promotion) }}</span>
+            <span class="season-icon" v-if="getSeasonIcon(promotion)">{{
+              getSeasonIcon(promotion)
+            }}</span>
             <span class="season-name">{{ promotion.title }}</span>
           </button>
         </div>
@@ -29,11 +33,7 @@
         <div v-if="loading" class="slider-container">
           <div class="items-slider">
             <div class="slider-track">
-              <div 
-                class="item-slide" 
-                v-for="n in 4" 
-                :key="n"
-              >
+              <div class="item-slide" v-for="n in 4" :key="n">
                 <div class="card skeleton-card">
                   <div class="skeleton skeleton-image"></div>
                   <div class="card-body">
@@ -48,7 +48,10 @@
         </div>
 
         <!-- Products Slider (Lazy Loaded) -->
-        <div v-else-if="activeProducts.length > 0" class="products-slider-wrapper">
+        <div
+          v-else-if="activeProducts.length > 0"
+          class="products-slider-wrapper"
+        >
           <GenericSlider
             :title="''"
             :items="activeProducts"
@@ -79,29 +82,29 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
-import GenericSlider from '@/components/GenericSlider.vue';
-import ProductCard from '@/components/ProductCard.vue';
-import { useProducts } from '@/composables/useProducts';
+import { ref, computed, watch } from "vue";
+import GenericSlider from "@/components/GenericSlider.vue";
+import ProductCard from "@/components/ProductCard.vue";
+import { useProducts } from "@/composables/useProducts";
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'Daily & Seasonal Products'
+    default: "Daily & Seasonal Products",
   },
   promotions: {
     type: Array,
     required: true,
-    default: () => []
+    default: () => [],
   },
   loading: {
     type: Boolean,
-    default: false
+    default: false,
   },
   viewAllUrl: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
 // Active tab index
@@ -113,19 +116,27 @@ const loadedProductsMap = ref({});
 const loadingMoreMap = ref({});
 const hasMoreMap = ref({});
 
-const { products: fetchedProducts, loading: productsLoading, fetchProducts } = useProducts();
+const {
+  products: fetchedProducts,
+  loading: productsLoading,
+  fetchProducts,
+} = useProducts();
 
 // Initialize products map when promotions change
-watch(() => props.promotions, (newPromotions) => {
-  newPromotions.forEach((promo, index) => {
-    if (!loadedProductsMap.value[index]) {
-      // Initialize with the 6 products from homepage
-      loadedProductsMap.value[index] = promo.products || [];
-      // Assume there might be more products (we'll find out when we try to load)
-      hasMoreMap.value[index] = (promo.products || []).length >= 6;
-    }
-  });
-}, { immediate: true, deep: true });
+watch(
+  () => props.promotions,
+  (newPromotions) => {
+    newPromotions.forEach((promo, index) => {
+      if (!loadedProductsMap.value[index]) {
+        // Initialize with the 6 products from homepage
+        loadedProductsMap.value[index] = promo.products || [];
+        // Assume there might be more products (we'll find out when we try to load)
+        hasMoreMap.value[index] = (promo.products || []).length >= 6;
+      }
+    });
+  },
+  { immediate: true, deep: true },
+);
 
 // Get the active promotion
 const activePromotion = computed(() => {
@@ -151,12 +162,12 @@ const setActiveTab = (index) => {
 const loadMoreProducts = async () => {
   const tabIndex = activeTab.value;
   const promo = activePromotion.value;
-  
+
   if (!promo || !promo.promotion_slug) return;
   if (loadingMoreMap.value[tabIndex] || !hasMoreMap.value[tabIndex]) return;
-  
+
   loadingMoreMap.value[tabIndex] = true;
-  
+
   try {
     // Fetch products filtered by promotion slug
     // Use limit=20 to get more than the initial 6
@@ -165,22 +176,26 @@ const loadMoreProducts = async () => {
       limit: 20,
       offset: 0, // We'll get all and then filter out duplicates
     });
-    
+
     if (fetchedProducts.value && fetchedProducts.value.length > 0) {
       // Get current product IDs to avoid duplicates
-      const currentIds = new Set(loadedProductsMap.value[tabIndex].map(p => p.id));
-      
+      const currentIds = new Set(
+        loadedProductsMap.value[tabIndex].map((p) => p.id),
+      );
+
       // Filter out products we already have
-      const newProducts = fetchedProducts.value.filter(p => !currentIds.has(p.id));
-      
+      const newProducts = fetchedProducts.value.filter(
+        (p) => !currentIds.has(p.id),
+      );
+
       if (newProducts.length > 0) {
         // Append new products
         loadedProductsMap.value[tabIndex] = [
           ...loadedProductsMap.value[tabIndex],
-          ...newProducts
+          ...newProducts,
         ];
       }
-      
+
       // If we got fewer products than requested, no more to load
       if (fetchedProducts.value.length < 20) {
         hasMoreMap.value[tabIndex] = false;
@@ -189,7 +204,7 @@ const loadMoreProducts = async () => {
       hasMoreMap.value[tabIndex] = false;
     }
   } catch (error) {
-    console.error('Error loading more products:', error);
+    console.error("Error loading more products:", error);
     hasMoreMap.value[tabIndex] = false;
   } finally {
     loadingMoreMap.value[tabIndex] = false;
@@ -198,39 +213,47 @@ const loadMoreProducts = async () => {
 
 // Get season icon/emoji based on promotion name or season
 const getSeasonIcon = (promotion) => {
-  const name = (promotion.title || '').toLowerCase();
-  const desc = (promotion.description || '').toLowerCase();
-  const season = (promotion.season || '').toLowerCase();
+  const name = (promotion.title || "").toLowerCase();
+  const desc = (promotion.description || "").toLowerCase();
+  const season = (promotion.season || "").toLowerCase();
   const text = `${name} ${desc} ${season}`;
 
   // Ayurvedic seasons (6 Ritus)
-  if (text.includes('grishma') || text.includes('summer')) return '☀️';
-  if (text.includes('varsha') || text.includes('monsoon')) return '🌧️';
-  if (text.includes('sharad') || text.includes('autumn')) return '🍂';
-  if (text.includes('hemanta') || text.includes('pre-winter')) return '🍁';
-  if (text.includes('shishira') || text.includes('winter')) return '❄️';
-  if (text.includes('vasanta') || text.includes('spring')) return '🌸';
+  if (text.includes("grishma") || text.includes("summer")) return "☀️";
+  if (text.includes("varsha") || text.includes("monsoon")) return "🌧️";
+  if (text.includes("sharad") || text.includes("autumn")) return "🍂";
+  if (text.includes("hemanta") || text.includes("pre-winter")) return "🍁";
+  if (text.includes("shishira") || text.includes("winter")) return "❄️";
+  if (text.includes("vasanta") || text.includes("spring")) return "🌸";
 
   // Generic seasonal keywords
-  if (text.includes('cooling') || text.includes('heat')) return '🌞';
-  if (text.includes('immunity') || text.includes('wellness')) return '💪';
-  if (text.includes('detox') || text.includes('cleanse')) return '🌿';
-  if (text.includes('daily') || text.includes('everyday')) return '⭐';
+  if (text.includes("cooling") || text.includes("heat")) return "🌞";
+  if (text.includes("immunity") || text.includes("wellness")) return "💪";
+  if (text.includes("detox") || text.includes("cleanse")) return "🌿";
+  if (text.includes("daily") || text.includes("everyday")) return "⭐";
 
-  return ''; // No icon
+  return ""; // No icon
 };
 
 // Auto-select first tab on mount
-watch(() => props.promotions, (newPromos) => {
-  if (newPromos && newPromos.length > 0 && activeTab.value >= newPromos.length) {
-    activeTab.value = 0;
-  }
-}, { immediate: true });
+watch(
+  () => props.promotions,
+  (newPromos) => {
+    if (
+      newPromos &&
+      newPromos.length > 0 &&
+      activeTab.value >= newPromos.length
+    ) {
+      activeTab.value = 0;
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
 .seasonal-products-section {
-  background-color: var(--background-white);
+  background-color: var(--surface-base);
 }
 
 .section-title {
@@ -241,7 +264,7 @@ watch(() => props.promotions, (newPromos) => {
 }
 
 .view-all-link {
-  color: var(--primary);
+  color: var(--accent-primary);
   text-decoration: none;
   font-weight: 600;
   font-size: 1rem;
@@ -252,7 +275,7 @@ watch(() => props.promotions, (newPromos) => {
 }
 
 .view-all-link:hover {
-  color: var(--primary-dark);
+  color: var(--accent-primary-hover);
 }
 
 .view-all-link i {
@@ -284,8 +307,8 @@ watch(() => props.promotions, (newPromos) => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: var(--background-light);
-  border: 2px solid var(--border-color);
+  background-color: var(--surface-muted);
+  border: 2px solid var(--border-default);
   border-radius: 50px;
   color: var(--text-secondary);
   font-weight: 600;
@@ -297,20 +320,20 @@ watch(() => props.promotions, (newPromos) => {
 }
 
 .season-tab:hover {
-  background-color: var(--background-white);
-  border-color: var(--primary);
-  color: var(--primary);
+  background-color: var(--surface-primary);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .season-tab.active {
   /* Match hover styling so active tab appears lifted and highlighted */
-  background-color: var(--background-white);
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-primary);
+  border-color: var(--accent-primary);
+
+  color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .season-tab.active:hover {
@@ -376,7 +399,7 @@ watch(() => props.promotions, (newPromos) => {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: var(--border-color) transparent;
+  scrollbar-color: var(--border-default) transparent;
 }
 
 .slider-track {
@@ -397,7 +420,12 @@ watch(() => props.promotions, (newPromos) => {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, var(--background-light) 0%, var(--border-color) 50%, var(--background-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--surface-muted) 0%,
+    var(--border-default) 50%,
+    var(--surface-muted) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;

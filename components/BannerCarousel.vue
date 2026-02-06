@@ -216,7 +216,7 @@ const handleBannerClick = (banner) => {
 }
 
 .banner-cta {
-  background: linear-gradient(135deg, var(--color-success) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--color-success) 0%, var(--accent-hover) 100%);
   border: none;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -276,15 +276,15 @@ const handleBannerClick = (banner) => {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--accent-primary);
   transition: all 0.3s ease;
   margin: 0;
   text-indent: 0;
 }
 
 .carousel-indicators [data-bs-target].active {
-  background-color: var(--color-primary);
-  border-color: var(--background-white);
+  background-color: var(--accent-primary);
+  border-color: var(--surface-primary);
   transform: scale(1.2);
 }
 

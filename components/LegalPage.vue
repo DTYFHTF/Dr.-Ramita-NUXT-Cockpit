@@ -34,7 +34,7 @@ defineProps<Props>();
 .legal-page {
   min-height: 100vh;
   padding: 4rem 0;
-  background: $background-light;
+  background: var(--surface-muted);
 }
 
 .container {
@@ -50,7 +50,7 @@ defineProps<Props>();
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   h1 {
-    color: $color-primary;
+    color: var(--accent-primary);
     font-size: 2.5rem;
     margin-bottom: 1rem;
   }
@@ -108,15 +108,15 @@ defineProps<Props>();
       margin-bottom: 2.5rem;
 
       h2 {
-        color: $color-primary;
+        color: var(--accent-primary);
         font-size: 1.5rem;
         margin-bottom: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba($color-primary, 0.1);
+        border-top: 1px solid rgba(var(--accent-primary-rgb), 0.1);
       }
 
       h3 {
-        color: darken($color-primary, 10%);
+        color: var(--accent-primary-hover);
         font-size: 1.2rem;
         margin-top: 1.5rem;
         margin-bottom: 0.75rem;
@@ -144,7 +144,7 @@ defineProps<Props>();
         }
 
         strong {
-          color: $color-primary;
+          color: var(--accent-primary);
           font-weight: 600;
         }
       }

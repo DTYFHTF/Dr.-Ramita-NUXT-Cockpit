@@ -66,7 +66,7 @@ async function register({ first_name, last_name, email, phone, password, passwor
 
 <style scoped>
 .register-page {
-  background: var(--background-light);
+  background: var(--surface-muted);
   width: 468px;
 }
 

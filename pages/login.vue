@@ -103,7 +103,7 @@ async function login({ email, password }: { email: string, password: string }) {
 
 <style scoped>
 .login-page {
-  background: var(--background-light);
+  background: var(--surface-muted);
   width: 468px;
 }
 

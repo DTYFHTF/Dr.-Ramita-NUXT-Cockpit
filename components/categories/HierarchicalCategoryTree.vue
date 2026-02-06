@@ -285,13 +285,13 @@ onMounted(() => {
       transition: all 0.2s ease;
       
       &:hover {
-        background-color: var(--background-light);
-        color: var(--color-primary);
+        background-color: var(--surface-muted);
+        color: var(--accent-primary);
       }
       
       &.active {
-        background-color: var(--background-light);
-        color: var(--color-primary);
+        background-color: var(--surface-muted);
+        color: var(--accent-primary);
         
         .category-icon, .expand-icon {
           color: white;
@@ -320,7 +320,7 @@ onMounted(() => {
         
         &.navigation-link {
           &:hover {
-            color: var(--color-primary);
+            color: var(--accent-primary);
             text-decoration: none;
           }
         }

@@ -191,7 +191,7 @@ useHead({
 <style scoped lang="scss">
 .bulk-order-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--background-white) 0%, var(--background-light) 100%);
+  background: linear-gradient(135deg, var(--surface-primary) 0%, var(--surface-muted) 100%);
 }
 
 
@@ -239,9 +239,9 @@ useHead({
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
@@ -257,7 +257,7 @@ useHead({
 }
 
 .form-container {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -270,9 +270,9 @@ useHead({
 .info-card {
   text-align: center;
   padding: 2rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   height: 100%;
   transition: transform 0.2s;
 
@@ -296,14 +296,14 @@ useHead({
 
 .info-icon {
   font-size: 3rem;
-  color: var(--color-primary);
+  color: var(--accent-primary);
 }
 
 .faq-section {
   max-width: 800px;
   margin: 3rem auto;
   padding: 2rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 
@@ -315,33 +315,33 @@ useHead({
 }
 
 .accordion-item {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   margin-bottom: 0.5rem;
   border-radius: 8px !important;
   overflow: hidden;
 }
 
 .accordion-button {
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
   font-weight: 500;
   padding: 1.25rem;
 
   &:not(.collapsed) {
-    background-color: var(--background-light);
-    color: var(--color-primary);
+    background-color: var(--surface-muted);
+    color: var(--accent-primary);
   }
 
   &:focus {
     box-shadow: none;
-    border-color: var(--border-color);
+    border-color: var(--border-default);
   }
 }
 
 .accordion-body {
   padding: 1.25rem;
   color: var(--text-secondary);
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
 }
 
 @media (max-width: 768px) {

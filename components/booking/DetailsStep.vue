@@ -104,7 +104,7 @@ const handleSubmit = () => {
 }
 
 .booking-form {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
@@ -128,15 +128,15 @@ const handleSubmit = () => {
   textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-default);
     border-radius: 8px;
     transition: border-color 0.2s ease;
-    background: var(--background-white);
+    background: var(--surface-primary);
     color: var(--text-primary);
 
     &:focus {
       outline: none;
-      border-color: var(--color-primary);
+      border-color: var(--accent-primary);
       box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 42,77,58), 0.1);
     }
 

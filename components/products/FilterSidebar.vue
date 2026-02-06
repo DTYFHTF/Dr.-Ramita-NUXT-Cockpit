@@ -316,12 +316,12 @@ const clearAllFilters = () => {
   font-size: 0.9rem;
   padding: 0.25rem 0.75rem;
   transition: all 0.2s ease;
-  background: var(--background-white);
+  background: var(--surface-primary);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 
   &:hover {
-    background-color: var(--background-light);
+    background-color: var(--surface-muted);
     transform: translateY(-1px);
     color: var(--text-primary);
   }
@@ -348,8 +348,8 @@ const clearAllFilters = () => {
 }
 
 .card {
-  background: var(--background-white);
-  border-color: var(--border-color);
+  background: var(--surface-primary);
+  border-color: var(--border-default);
 }
 
 .card-title {

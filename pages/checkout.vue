@@ -734,7 +734,7 @@ const submitOrder = async () => {
 
 /* Success Page */
 .success-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   box-shadow: var(--card-shadow);
   padding: 3rem;
@@ -771,7 +771,7 @@ const submitOrder = async () => {
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
 }
 
@@ -804,7 +804,7 @@ const submitOrder = async () => {
 }
 
 .items-list {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -814,7 +814,7 @@ const submitOrder = async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   gap: 1rem;
 }
 
@@ -831,7 +831,7 @@ const submitOrder = async () => {
   height: 60px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .item-details {
@@ -862,7 +862,7 @@ const submitOrder = async () => {
 }
 
 .order-summary-final {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -876,7 +876,7 @@ const submitOrder = async () => {
 }
 
 .total-row {
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--border-default);
   padding-top: 1rem;
   font-size: 1.25rem;
   font-weight: 700;
@@ -888,7 +888,7 @@ const submitOrder = async () => {
 }
 
 .address-details {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -946,7 +946,7 @@ const submitOrder = async () => {
 
 /* Form Styles */
 .form-container {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -962,20 +962,20 @@ const submitOrder = async () => {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .section-header .btn-outline-primary {
   background: transparent;
-  border: 2px solid var(--color-primary);
-  color: var(--color-primary);
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
   padding: 0.375rem 1rem;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
   
   &:hover {
-    background: var(--color-primary);
+    background: var(--accent-primary);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
@@ -1029,16 +1029,16 @@ const submitOrder = async () => {
 .payment-label {
   display: block;
   padding: 1rem 1.25rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--background-white);
+  background: var(--surface-primary);
 }
 
 .payment-radio:checked + .payment-label {
-  border-color: var(--color-success);
-  background: var(--background-light);
+  border-color: var(--status-success);
+  background: var(--surface-muted);
 }
 
 .payment-content {
@@ -1069,7 +1069,7 @@ const submitOrder = async () => {
   padding: 1rem;
   background: var(--badge-color);
   border-radius: 12px;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-size: 0.875rem;
   margin-top: 1rem;
 }
@@ -1081,7 +1081,7 @@ const submitOrder = async () => {
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 2px solid var(--background-light);
+  border-top: 2px solid var(--surface-muted);
 }
 
 /* Loading Spinner */
@@ -1107,7 +1107,7 @@ const submitOrder = async () => {
 }
 
 .summary-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -1119,7 +1119,7 @@ const submitOrder = async () => {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .summary-icon {
@@ -1144,7 +1144,7 @@ const submitOrder = async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--background-light);
+  border-bottom: 1px solid var(--surface-muted);
   gap: 0.75rem;
 }
 
@@ -1161,7 +1161,7 @@ const submitOrder = async () => {
   height: 50px;
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .item-info {
@@ -1195,7 +1195,7 @@ const submitOrder = async () => {
 
 .summary-totals {
   padding-top: 1rem;
-  border-top: 2px solid var(--background-light);
+  border-top: 2px solid var(--surface-muted);
 }
 
 .total-row {
@@ -1210,7 +1210,7 @@ const submitOrder = async () => {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-success);
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--border-default);
   padding-top: 1rem;
   margin-top: 0.5rem;
 }
@@ -1241,7 +1241,7 @@ const submitOrder = async () => {
 }
 
 .shipping-loading {
-  background: var(--background-light);
+  background: var(--surface-muted);
   color: var(--text-muted);
 }
 

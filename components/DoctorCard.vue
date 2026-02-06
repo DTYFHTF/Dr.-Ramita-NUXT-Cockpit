@@ -123,13 +123,13 @@ const formatMode = (mode: string) => {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    background: var(--background-light);
+    background: var(--surface-muted);
     color: var(--text-primary);
     padding: 0.2rem 0.5rem;
     border-radius: 12px;
     font-size: 0.75rem;
     font-weight: 500;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-default);
     &.mode-online {
       background: #e0f2fe;
       color: #0277bd;

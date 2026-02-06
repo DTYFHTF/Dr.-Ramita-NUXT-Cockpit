@@ -295,24 +295,23 @@ const handleSubmit = async () => {
 
 <style scoped lang="scss">
 .contact-page {
-  background: $background-light;
+  background: var(--surface-muted);
   min-height: 100vh;
 }
 
 .hero-section {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
   color: white;
   padding: 4rem 0 3rem;
   text-align: center;
   margin-bottom: 3rem;
   position: relative;
 
-  // Ensure text is always visible
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.1);
     pointer-events: none;
   }
 
@@ -326,13 +325,13 @@ const handleSubmit = async () => {
     margin-bottom: 0.75rem;
     font-weight: 700;
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
   .tagline {
     font-size: 1.2rem;
     color: white;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -350,13 +349,13 @@ const handleSubmit = async () => {
 }
 
 .contact-form-section {
-  background: white;
+  background: var(--surface-primary);
   padding: 2.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 
   h2 {
-    color: $color-primary;
+    color: var(--accent-primary);
     font-size: 1.8rem;
     margin-bottom: 0.75rem;
   }
@@ -376,10 +375,10 @@ const handleSubmit = async () => {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: var(--text-dark);
+      color: var(--text-primary);
 
       .required {
-        color: #dc3545;
+        color: var(--status-error);
       }
     }
 
@@ -388,15 +387,18 @@ const handleSubmit = async () => {
     textarea {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 2px solid #e0e0e0;
+      border: 1px solid var(--border-default);
       border-radius: 8px;
       font-size: 1rem;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.2s ease;
       font-family: inherit;
+      background: var(--surface-primary);
+      color: var(--text-primary);
 
       &:focus {
         outline: none;
-        border-color: $color-primary;
+        border-color: var(--action-primary);
+        box-shadow: 0 0 0 3px var(--action-primary-alpha);
       }
     }
 
@@ -420,7 +422,7 @@ const handleSubmit = async () => {
 
         span {
           font-size: 0.95rem;
-          color: var(--text-dark);
+          color: var(--text-secondary);
         }
       }
     }
@@ -429,23 +431,23 @@ const handleSubmit = async () => {
   .btn-submit {
     width: 100%;
     padding: 1rem;
-    background: $color-primary;
-    color: white;
+    background: var(--action-primary);
+    color: var(--action-primary-text);
     border: none;
     border-radius: 8px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
-      background: darken($color-primary, 10%);
+      background: var(--action-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+      box-shadow: var(--shadow-md);
     }
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
     }
   }
@@ -457,15 +459,15 @@ const handleSubmit = async () => {
     font-weight: 500;
 
     &.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+      background: var(--status-success-bg);
+      color: var(--status-success);
+      border: 1px solid var(--status-success);
     }
 
     &.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: var(--status-error-bg);
+      color: var(--status-error);
+      border: 1px solid var(--status-error);
     }
   }
 }
@@ -479,7 +481,7 @@ const handleSubmit = async () => {
     margin-bottom: 1.5rem;
 
     h3 {
-      color: $color-primary;
+      color: var(--accent-primary);
       font-size: 1.3rem;
       margin-bottom: 1rem;
       font-weight: 600;
@@ -522,7 +524,7 @@ const handleSubmit = async () => {
         }
 
         a {
-          color: $color-primary;
+          color: var(--accent-primary);
           text-decoration: none;
           font-weight: 500;
 
@@ -534,7 +536,7 @@ const handleSubmit = async () => {
     }
 
     .hours {
-      background: $background-light;
+      background: var(--surface-muted);
       padding: 1rem;
       border-radius: 8px;
       margin: 1rem 0;
@@ -544,7 +546,7 @@ const handleSubmit = async () => {
         color: var(--text-dark);
 
         strong {
-          color: $color-primary;
+          color: var(--accent-primary);
         }
       }
     }
@@ -557,7 +559,7 @@ const handleSubmit = async () => {
         margin-bottom: 0.75rem;
 
         a {
-          color: $color-primary;
+          color: var(--accent-primary);
           text-decoration: none;
           transition: all 0.3s ease;
           display: inline-block;
@@ -592,7 +594,7 @@ const handleSubmit = async () => {
             background: #1877f2;
 
             &:hover {
-              background: darken(#1877f2, 10%);
+              background: #0d66d9;
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
             }
@@ -611,7 +613,7 @@ const handleSubmit = async () => {
             background: #ff0000;
 
             &:hover {
-              background: darken(#ff0000, 10%);
+              background: #cc0000;
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
             }
@@ -621,7 +623,7 @@ const handleSubmit = async () => {
             background: #1da1f2;
 
             &:hover {
-              background: darken(#1da1f2, 10%);
+              background: #0c8ad9;
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
             }
@@ -631,7 +633,7 @@ const handleSubmit = async () => {
             background: #0A66C2;
 
             &:hover {
-              background: darken(#0A66C2, 10%);
+              background: #084d91;
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
             }
@@ -641,7 +643,7 @@ const handleSubmit = async () => {
             background: #25D366;
 
             &:hover {
-              background: darken(#25D366, 10%);
+              background: #1da851;
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
             }
@@ -659,11 +661,11 @@ const handleSubmit = async () => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
   h2 {
-    color: $color-primary;
+    color: var(--accent-primary);
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba($color-primary, 0.2);
+    border-bottom: 2px solid rgba(var(--accent-primary-rgb), 0.2);
   }
 
   .info-grid {
@@ -673,12 +675,12 @@ const handleSubmit = async () => {
 
     .info-box {
       padding: 1.5rem;
-      background: $background-light;
+      background: var(--surface-muted);
       border-radius: 8px;
-      border-left: 4px solid $color-primary;
+      border-left: 4px solid var(--accent-primary);
 
       h3 {
-        color: $color-primary;
+        color: var(--accent-primary);
         font-size: 1.1rem;
         margin-bottom: 0.75rem;
         font-weight: 600;
@@ -691,7 +693,7 @@ const handleSubmit = async () => {
         margin: 0;
 
         a {
-          color: $color-primary;
+          color: var(--accent-primary);
           text-decoration: none;
 
           &:hover {
@@ -701,7 +703,7 @@ const handleSubmit = async () => {
 
         strong {
           font-weight: 600;
-          color: darken($color-primary, 10%);
+          color: var(--accent-primary-hover);
         }
       }
     }

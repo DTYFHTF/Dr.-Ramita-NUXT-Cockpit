@@ -61,8 +61,8 @@ const target = computed(() => {
   overflow: hidden;
   border-radius: 12px;
   min-height: 200px; /* use min-height so layout can adapt */
-  background-color: var(--background-white);
-  border-color: var(--border-color);
+  background-color: var(--surface-primary);
+  border-color: var(--border-default);
   box-shadow: var(--card-shadow);
 }
 

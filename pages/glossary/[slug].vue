@@ -135,7 +135,7 @@ onMounted(async () => {
 }
 
 .breadcrumbs a {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   text-decoration: none;
 }
 
@@ -161,7 +161,7 @@ onMounted(async () => {
   flex: 1;
   background-color: var(--card-background);
   padding: 1rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   align-self: flex-start; /* Ensures the sidebar height matches content */
   width: 250px; /* Fixed width for sidebar */
@@ -184,7 +184,7 @@ onMounted(async () => {
 
 .divider {
   border: none;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--border-default);
   margin: 1rem 0;
 }
 </style>

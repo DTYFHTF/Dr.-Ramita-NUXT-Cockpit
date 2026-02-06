@@ -350,7 +350,7 @@ watch(() => courseData.value, (newData) => {
 
   .course-section {
     padding: 2rem;
-    background: var(--background-white);
+    background: var(--surface-primary);
     border-radius: 1rem;
     box-shadow: var(--card-shadow);
     color: var(--text-primary);
@@ -368,7 +368,7 @@ watch(() => courseData.value, (newData) => {
         padding: 0.75rem 0;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-default);
         color: var(--text-primary);
 
         &:last-child {
@@ -379,13 +379,13 @@ watch(() => courseData.value, (newData) => {
   }
 
   .instructor-card {
-    background: var(--background-white);
+    background: var(--surface-primary);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-default);
     
     &.card {
-      background: var(--background-white);
-      border-color: var(--border-color);
+      background: var(--surface-primary);
+      border-color: var(--border-default);
     }
     
     .card-body {
@@ -400,7 +400,7 @@ watch(() => courseData.value, (newData) => {
     .instructor-name {
       font-size: 1.25rem;
       font-weight: 600;
-      color: var(--color-primary);
+      color: var(--accent-primary);
     }
     
     .instructor-title {
@@ -413,7 +413,7 @@ watch(() => courseData.value, (newData) => {
   }
 
   .cta-section {
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-default);
     
     .enrolled-status {
       text-align: center;
@@ -469,13 +469,13 @@ watch(() => courseData.value, (newData) => {
   }
   
   .alert {
-    background: var(--background-white);
-    border-color: var(--border-color);
+    background: var(--surface-primary);
+    border-color: var(--border-default);
     color: var(--text-primary);
   }
   
   .spinner-grow {
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 
   @media (max-width: 768px) {

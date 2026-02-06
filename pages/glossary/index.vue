@@ -218,7 +218,7 @@ onMounted(async () => {
 .glossary-header {
   position: sticky;
   top: 0;
-  background: rgba($background-light, 0.7);
+  background: rgba(var(--surface-muted-rgb), 0.7);
   z-index: 1000;
   padding: 2rem 0 1.5rem;
   backdrop-filter: blur(10px);
@@ -238,9 +238,9 @@ onMounted(async () => {
 
 .category-filter-btn {
   padding: 0.5rem 1.25rem;
-  border: 2px solid rgba($color-primary, 0.3);
+  border: 2px solid rgba(var(--accent-primary-rgb), 0.3);
   background: transparent;
-  color: $color-primary;
+  color: var(--accent-primary);
   border-radius: 50px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -249,21 +249,21 @@ onMounted(async () => {
   white-space: nowrap;
 
   &:hover {
-    background: rgba($color-primary, 0.1);
-    border-color: $color-primary;
+    background: rgba(var(--accent-primary-rgb), 0.1);
+    border-color: var(--accent-primary);
     transform: translateY(-2px);
   }
 
   &.active {
-    background: $color-primary;
-    color: $text-light;
-    border-color: $color-primary;
-    box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(var(--accent-primary-rgb), 0.3);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.2);
   }
 }
 
@@ -281,7 +281,7 @@ onMounted(async () => {
 .alphabet-section-header {
   margin: 2rem 0 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid $border-color;
+  border-bottom: 2px solid var(--border-default);
   border-radius: 8px;
 }
 
@@ -289,7 +289,7 @@ onMounted(async () => {
   position: relative;
   padding-bottom: 3rem; /* Add space for related terms */
   transition: all 0.2s ease;
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-default);
   border-radius: 12px;
 }
 
@@ -320,15 +320,15 @@ onMounted(async () => {
 
 .preview-content {
   padding-top: 1rem;
-  border-top: 1px solid rgba($border-color, 0.05);
+  border-top: 1px solid rgba(var(--border-default-rgb, 220, 229, 223), 0.05);
 }
 
 .badge-category {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba($background-light, 0.5);
-  color: $color-primary;
+  background: rgba(var(--surface-muted-rgb), 0.5);
+  color: var(--accent-primary);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -337,8 +337,8 @@ onMounted(async () => {
   transition: all 0.3s ease;
 
   &:hover {
-    background: $color-primary;
-    color: $text-light;
+    background: var(--accent-primary);
+    color: var(--text-inverse);
     transform: scale(1.05);
   }
 }
@@ -352,11 +352,11 @@ onMounted(async () => {
 
 
 .alphabet-nav a {
-  color: $text-primary; 
+  color: var(--text-primary); 
 }
 
 .alphabet-nav a.text-primary {
-  color: $text-primary !important; 
+  color: var(--text-primary) !important; 
 }
 
 @media (max-width: 768px) {

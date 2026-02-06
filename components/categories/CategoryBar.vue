@@ -106,8 +106,8 @@ onUnmounted(() => {
   z-index: 1025; /* Below Navbar (1030) but above content */
   overflow-x: auto;
   white-space: nowrap;
-  background: var(--background-white);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-default);
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.05);
 }

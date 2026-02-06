@@ -100,7 +100,7 @@ useHead({
 
 <style scoped>
 .forgot-password-page {
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 
 .form-group {

@@ -26,7 +26,7 @@ const close = () => emit('close')
   justify-content: center;
 }
 .modal-content {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
   padding: 2rem 1.5rem 1.5rem 1.5rem;
   min-width: 320px;

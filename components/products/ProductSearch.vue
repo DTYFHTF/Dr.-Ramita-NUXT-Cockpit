@@ -228,7 +228,7 @@ const onBlur = () => {
 }
 .suggestion-category {
   padding: 0.125rem 0.5rem;
-  background: var(--background-light, #f5f5f5);
+  background: var(--surface-muted);
   border-radius: 4px;
   font-size: 0.75rem;
 }
@@ -260,7 +260,7 @@ const onBlur = () => {
 }
 .price-final {
   font-weight: 600;
-  color: var(--color-primary, #2e7d32);
+  color: var(--accent-primary);
   font-size: 1.15rem;
   white-space: nowrap;
 }
@@ -273,7 +273,7 @@ const onBlur = () => {
   font-weight: 600;
 }
 .suggestion-footer {
-  border-top: 2px solid var(--background-light, #f0f0f0);
+  border-top: 2px solid var(--surface-muted);
   padding: 0.5rem 0.5rem;
   margin-top: 0.25rem;
 }
@@ -282,7 +282,7 @@ const onBlur = () => {
   padding: 0.5rem 1rem;
   background: transparent;
   border: none;
-  color: var(--color-primary, #2e7d32);
+  color: var(--accent-primary);
   font-weight: 500;
   cursor: pointer;
   display: flex;
@@ -293,7 +293,7 @@ const onBlur = () => {
   transition: background 0.2s;
 }
 .view-all-btn:hover {
-  background: var(--background-light, #f5f5f5);
+  background: var(--surface-muted);
 }
 .suggestion-img-wrapper {
   display: inline-block;
@@ -305,8 +305,8 @@ const onBlur = () => {
   height: 32px;
   object-fit: cover;
   border-radius: 8px;
-  background: var(--background-light, #f5f5f5);
-  border: 1px solid var(--border-color, #e0e0e0);
+  background: var(--surface-muted);
+  border: 1px solid var(--border-default);
 }
 .suggestion-name {
   vertical-align: middle;
@@ -383,7 +383,7 @@ const onBlur = () => {
   top: 110%;
   left: 0;
   right: 0;
-  background: var(--background-white, #fff);
+  background: var(--surface-primary);
   border: 2px solid var(--color-muted, #e0e0e0);
   border-top: none;
   border-radius: 0 0 16px 16px;
@@ -397,7 +397,7 @@ const onBlur = () => {
 }
 
 .suggestion-item:hover {
-  background: var(--background-light, #f5f5f5);
+  background: var(--surface-muted);
   color: var(--color-success, #2e7d32);
 }
 
@@ -411,7 +411,7 @@ const onBlur = () => {
   top: 110%;
   left: 0;
   right: 0;
-  background: var(--background-white, #fff);
+  background: var(--surface-primary);
   border: 2px solid var(--color-muted, #e0e0e0);
   border-top: none;
   border-radius: 14px;
@@ -430,14 +430,14 @@ const onBlur = () => {
   padding: 0.65rem 1.2rem;
   color: var(--text-primary, #222);
   cursor: pointer;
-  border-bottom: 1px solid var(--background-light, #f5f5f5);
+  border-bottom: 1px solid var(--surface-muted);
   transition: background 0.18s, color 0.18s;
   border-radius: 10px;
   margin: 0.15rem 0.5rem;
 }
 .suggestion-item:hover {
-  background: var(--background-light, #f5f5f5);
-  color: var(--color-primary, #2e7d32);
+  background: var(--surface-muted);
+  color: var(--accent-primary);
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .suggestion-img-wrapper {
@@ -446,7 +446,7 @@ const onBlur = () => {
   justify-content: center;
   min-width: 36px;
   min-height: 36px;
-  background: var(--background-light, #f5f5f5);
+  background: var(--surface-muted);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -455,7 +455,7 @@ const onBlur = () => {
   height: 32px;
   object-fit: cover;
   border-radius: 6px;
-  background: var(--background-light, #f5f5f5);
+  background: var(--surface-muted);
   border: none;
   display: block;
 }

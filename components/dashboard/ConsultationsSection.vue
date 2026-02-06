@@ -258,8 +258,8 @@ onMounted(fetchConsultations)
   text-align: center;
   padding: 3rem 1rem;
   border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background: var(--background-white);
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
 
   :deep(svg) {
     opacity: 0.5;
@@ -277,7 +277,7 @@ onMounted(fetchConsultations)
     display: flex;
     justify-content: space-between;
     padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-default);
 
     &:last-child {
       border-bottom: none;

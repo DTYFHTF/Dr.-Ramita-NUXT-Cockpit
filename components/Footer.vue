@@ -184,8 +184,8 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .footer {
-  background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -8%) 100%);
-  color: $text-light;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1a3628 100%);
+  color: #f0f5f2;
   padding-top: 4rem;
   margin-top: auto;
 }
@@ -210,7 +210,7 @@ onMounted(async () => {
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 1.25rem;
-    color: $text-light;
+    color: #f0f5f2;
     letter-spacing: 0.5px;
   }
 
@@ -229,13 +229,13 @@ onMounted(async () => {
       margin-bottom: 0.75rem;
 
       a {
-        color: rgba($text-light, 0.85);
+        color: rgba(240, 245, 242, 0.85);
         text-decoration: none;
         transition: all 0.2s ease;
         display: inline-block;
 
         &:hover {
-          color: $text-light;
+          color: #f0f5f2;
           transform: translateX(4px);
         }
       }
@@ -258,7 +258,7 @@ onMounted(async () => {
 }
 
 .footer-description {
-  color: rgba($text-light, 0.85);
+  color: rgba(240, 245, 242, 0.85);
   line-height: 1.6;
   margin-bottom: 0;
   font-size: 0.95rem;
@@ -283,8 +283,8 @@ onMounted(async () => {
     height: 40px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    color: $text-light;
-    transition: all 0.3s ease;
+    color: #f0f5f2;
+    transition: all 0.2s ease;
 
     &:hover {
       background: rgba(255, 255, 255, 0.2);
@@ -298,14 +298,14 @@ onMounted(async () => {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    color: rgba($text-light, 0.85);
+    color: rgba(240, 245, 242, 0.85);
 
     a, span {
-      color: rgba($text-light, 0.85);
+      color: rgba(240, 245, 242, 0.85);
       text-decoration: none;
       
       &:hover {
-        color: $text-light;
+        color: #f0f5f2;
       }
     }
   }
@@ -333,12 +333,12 @@ onMounted(async () => {
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
-    color: $text-light;
+    color: #f0f5f2;
   }
 
   p {
     margin: 0.25rem 0 0;
-    color: rgba($text-light, 0.85);
+    color: rgba(240, 245, 242, 0.85);
     font-size: 0.95rem;
   }
 }
@@ -352,15 +352,15 @@ onMounted(async () => {
 .newsletter-input {
   flex: 1;
   padding: 0.875rem 1.25rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: $text-light;
+  color: #f0f5f2;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 
   &::placeholder {
-    color: rgba($text-light, 0.6);
+    color: rgba(240, 245, 242, 0.6);
   }
 
   &:focus {
@@ -379,7 +379,7 @@ onMounted(async () => {
   padding: 0.75rem 1rem;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: $text-light;
+  color: #f0f5f2;
   
   &.success {
     background: rgba(135, 197, 164, 0.2);
@@ -392,7 +392,7 @@ onMounted(async () => {
   align-items: center;
   padding: 2rem 0;
   font-size: 0.9rem;
-  color: rgba($text-light, 0.75);
+  color: rgba(240, 245, 242, 0.75);
 }
 
 .copyright {

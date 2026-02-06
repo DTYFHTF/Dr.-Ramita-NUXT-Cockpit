@@ -49,7 +49,7 @@ const categories = computed(() => {
 
 <style scoped>
 .most-searched {
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
 }
 
@@ -90,7 +90,7 @@ const categories = computed(() => {
 }
 
 .search-tag:hover {
-  background-color: var(--background-light);
+  background-color: var(--surface-muted);
   transform: translateY(-2px);
   color: var(--text-primary);
   text-decoration: none;

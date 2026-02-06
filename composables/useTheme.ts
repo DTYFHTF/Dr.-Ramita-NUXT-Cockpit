@@ -46,6 +46,7 @@ export function useTheme() {
 
   return {
     theme: readonly(theme),
+    currentTheme: readonly(theme), // Alias for convenience
     setTheme,
     toggleTheme,
     initTheme

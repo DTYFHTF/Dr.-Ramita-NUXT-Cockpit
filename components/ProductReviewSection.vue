@@ -321,7 +321,7 @@ async function deleteReply(review: Review) {
 }
 .review-card {
   background: var(--card-background);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 0.375rem;
   transition: transform 0.2s;
 }

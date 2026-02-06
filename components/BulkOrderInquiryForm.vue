@@ -1049,9 +1049,9 @@ onUnmounted(() => {
   align-items: center;
   margin-bottom: 2rem;
   padding: 1rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .step-item {
@@ -1068,7 +1068,7 @@ onUnmounted(() => {
     left: 60%;
     right: -40%;
     height: 2px;
-    background: var(--border-color);
+    background: var(--border-default);
     z-index: 0;
   }
 
@@ -1081,8 +1081,8 @@ onUnmounted(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--background-light);
-  border: 2px solid var(--border-color);
+  background: var(--surface-muted);
+  border: 2px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1094,8 +1094,8 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 
   .active & {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
     color: white;
   }
 
@@ -1121,8 +1121,8 @@ onUnmounted(() => {
 
 /* Form Section */
 .form-section {
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -1159,17 +1159,17 @@ onUnmounted(() => {
 .form-input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease;
-  background-color: var(--background-white);
+  background-color: var(--surface-primary);
   color: var(--text-primary);
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
   }
 
   &.form-input-sm {
@@ -1180,11 +1180,11 @@ onUnmounted(() => {
 
 /* Ensure the product search input always shows a visible border */
 .product-search-input {
-  border: 2px solid var(--color-primary) !important;
+  border: 2px solid var(--accent-primary) !important;
   
   &:focus {
-    border: 2px solid var(--color-primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.15) !important;
+    border: 2px solid var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15) !important;
   }
 }
 
@@ -1205,14 +1205,14 @@ onUnmounted(() => {
 }
 
 .selected-product-card {
-  background: var(--background-light);
-  border: 1px solid var(--border-color);
+  background: var(--surface-muted);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   padding: 1rem;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 }
@@ -1237,7 +1237,7 @@ onUnmounted(() => {
 .product-id-badge {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  background: var(--color-primary);
+  background: var(--accent-primary);
   color: white;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -1263,7 +1263,7 @@ onUnmounted(() => {
 }
 
 .empty-products {
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 8px;
 }
 
@@ -1271,8 +1271,8 @@ onUnmounted(() => {
 .product-catalog-sidebar {
   position: sticky;
   top: 100px;
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 1rem;
   max-height: calc(100vh - 120px);
@@ -1282,7 +1282,7 @@ onUnmounted(() => {
 
 .catalog-header {
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-default);
   margin-bottom: 1rem;
   
   h5 {
@@ -1301,7 +1301,7 @@ onUnmounted(() => {
   background: linear-gradient(135deg, var(--color-primary-light) 0%, #e0f2f1 100%);
   border-radius: 8px;
   padding: 0.75rem 0;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--accent-primary);
 }
 
 .product-ticker {
@@ -1334,20 +1334,20 @@ onUnmounted(() => {
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
   
   &:hover:not(.ticker-added) {
-    background: var(--color-primary);
+    background: var(--accent-primary);
     color: white;
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     transform: scale(1.05);
   }
   
   &.ticker-added {
-    background: var(--background-light);
+    background: var(--surface-muted);
     color: var(--text-secondary);
     cursor: not-allowed;
     opacity: 0.5;
@@ -1394,12 +1394,12 @@ onUnmounted(() => {
   }
   
   &::-webkit-scrollbar-track {
-    background: var(--background-light);
+    background: var(--surface-muted);
     border-radius: 10px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
+    background: var(--accent-primary);
     border-radius: 10px;
   }
 }
@@ -1409,21 +1409,21 @@ onUnmounted(() => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
   margin-bottom: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--background-white);
+  background: var(--surface-primary);
   
   &:hover:not(.already-added) {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
     transform: translateY(-2px);
   }
   
   &.already-added {
-    background: var(--background-light);
+    background: var(--surface-muted);
     opacity: 0.6;
     cursor: not-allowed;
   }
@@ -1434,7 +1434,7 @@ onUnmounted(() => {
   height: 50px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   flex-shrink: 0;
 }
 
@@ -1445,7 +1445,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background: var(--color-primary-light);
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-weight: 600;
   font-size: 1.25rem;
   border-radius: 8px;
@@ -1482,7 +1482,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primary);
+  background: var(--accent-primary);
   color: white;
   border: none;
   border-radius: 6px;
@@ -1500,9 +1500,9 @@ onUnmounted(() => {
 .search-results-list {
   max-height: 400px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
-  background: var(--background-white);
+  background: var(--surface-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -1511,7 +1511,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -1520,7 +1520,7 @@ onUnmounted(() => {
   }
 
   &:hover {
-    background: var(--background-light);
+    background: var(--surface-muted);
   }
 }
 
@@ -1544,28 +1544,28 @@ onUnmounted(() => {
 
 /* Vue Tel Input Dark Mode Fix */
 :deep(.vue-tel-input) {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   border-radius: 8px;
 
   &:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
   }
 
   .vti__input {
     padding: 0.75rem;
     font-size: 1rem;
-    background-color: var(--background-white);
+    background-color: var(--surface-primary);
     color: var(--text-primary);
   }
 
   /* Fix dropdown visibility in dark mode */
   .vti__dropdown {
-    background-color: var(--background-white);
-    border: 1px solid var(--border-color);
+    background-color: var(--surface-primary);
+    border: 1px solid var(--border-default);
 
     &-list {
-      background-color: var(--background-white);
+      background-color: var(--surface-primary);
       color: var(--text-primary);
     }
 
@@ -1575,7 +1575,7 @@ onUnmounted(() => {
 
       &:hover,
       &.highlighted {
-        background-color: var(--background-light);
+        background-color: var(--surface-muted);
       }
 
       strong {
@@ -1602,12 +1602,12 @@ onUnmounted(() => {
 
   /* Search box in dropdown */
   .vti__search_box {
-    background-color: var(--background-white);
+    background-color: var(--surface-primary);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-default);
 
     &:focus {
-      border-color: var(--color-primary);
+      border-color: var(--accent-primary);
     }
   }
 }

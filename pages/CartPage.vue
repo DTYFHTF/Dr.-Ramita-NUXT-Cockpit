@@ -182,7 +182,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 .empty-cart {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   box-shadow: var(--card-shadow);
   max-width: 500px;
@@ -224,7 +224,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 
 /* Cart Items */
 .cart-items {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -236,7 +236,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   gap: 0.75rem;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .header-icon {
@@ -264,7 +264,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem;
-  border: 2px solid var(--background-light);
+  border: 2px solid var(--surface-muted);
   border-radius: 16px;
   transition: all 0.2s ease;
 }
@@ -285,7 +285,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   height: 100px;
   object-fit: cover;
   border-radius: 12px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
 }
 
 .item-details {
@@ -358,7 +358,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 .quantity-input {
   display: flex;
   align-items: center;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -369,7 +369,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
@@ -383,7 +383,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 
 .qty-btn:disabled {
   background: var(--text-muted);
-  color: var(--background-white);
+  color: var(--surface-primary);
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -393,7 +393,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   height: 36px;
   text-align: center;
   border: none;
-  background: var(--background-white);
+  background: var(--surface-primary);
   color: var(--text-primary);
   font-weight: 600;
 }

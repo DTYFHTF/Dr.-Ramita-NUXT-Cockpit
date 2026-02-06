@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :data-theme="currentTheme">
     <Navbar />
     <CategoryBar />
     <ErrorBoundary
@@ -26,7 +26,7 @@ import AlertContainer from '@/components/AlertContainer.vue';
 import { useTheme } from '@/composables/useTheme';
 
 // Initialize theme system
-const { initTheme } = useTheme();
+const { currentTheme, initTheme } = useTheme();
 initTheme();
 
 // Development mode check
@@ -50,15 +50,8 @@ const handleError = (error) => {
   --font-secondary: 'Noto Sans', Arial, 'Helvetica Neue', sans-serif;
   
   font-family: var(--font-primary), var(--font-secondary);
-
   
   --spacing-unit: 8px;
-
-  --success-color: var(--color-success);
-  --text-dark: var(--text-primary);
-  --text-muted: var(--text-muted);
-  --border-color: var(--border-color);
-  --primary-light: #e6fffa;
 }
 html{
   scroll-behavior: smooth;

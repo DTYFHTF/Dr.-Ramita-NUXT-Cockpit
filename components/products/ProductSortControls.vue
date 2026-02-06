@@ -56,8 +56,8 @@ function sortArrow(type: string) {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: var(--background-light);
-  border: 2px solid var(--border-color);
+  background: var(--surface-muted);
+  border: 2px solid var(--border-default);
   color: var(--text-secondary);
   padding: 0.5rem 1rem;
   border-radius: 8px;

@@ -216,23 +216,22 @@ useHead({
 
 <style scoped lang="scss">
 .about-page {
-  background: $background-light;
+  background: var(--surface-muted);
 }
 
 .hero-section {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
   color: white;
   padding: 5rem 0 4rem;
   text-align: center;
   margin-bottom: 3rem;
   position: relative;
 
-  // Ensure text is always visible
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.1);
     pointer-events: none;
   }
 
@@ -246,14 +245,14 @@ useHead({
     margin-bottom: 1rem;
     font-weight: 700;
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
   .tagline {
     font-size: 1.5rem;
     font-weight: 300;
     color: white;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -264,22 +263,22 @@ useHead({
 }
 
 section {
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   margin-bottom: 2rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 
   h2 {
-    color: $color-primary;
+    color: var(--accent-primary);
     font-size: 2rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba($color-primary, 0.2);
+    border-bottom: 2px solid var(--border-default);
   }
 
   h3 {
-    color: darken($color-primary, 10%);
+    color: var(--accent-primary);
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
     font-weight: 600;
@@ -287,7 +286,7 @@ section {
 
   p {
     line-height: 1.8;
-    color: var(--text-dark);
+    color: var(--text-secondary);
     margin-bottom: 1rem;
     font-size: 1.05rem;
   }
@@ -297,7 +296,7 @@ section {
 
     li {
       margin-bottom: 0.75rem;
-      color: var(--text-dark);
+      color: var(--text-secondary);
       font-size: 1.05rem;
     }
   }
@@ -318,13 +317,13 @@ section {
   .mission-card {
     text-align: center;
     padding: 1.5rem;
-    background: $background-light;
+    background: var(--surface-muted);
     border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
     }
 
     .icon {
@@ -335,7 +334,7 @@ section {
     h3 {
       font-size: 1.2rem;
       margin-bottom: 0.75rem;
-      color: $color-primary;
+      color: var(--accent-primary);
     }
 
     p {
@@ -350,7 +349,7 @@ section {
   .value-item {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid rgba($color-primary, 0.1);
+    border-bottom: 1px solid var(--border-muted);
 
     &:last-child {
       margin-bottom: 0;
@@ -361,7 +360,7 @@ section {
     h3 {
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
-      color: $color-primary;
+      color: var(--accent-primary);
     }
 
     p {
@@ -373,9 +372,9 @@ section {
 .offering-card {
   margin-bottom: 1.5rem;
   padding: 1.5rem;
-  background: $background-light;
+  background: var(--surface-muted);
   border-radius: 8px;
-  border-left: 4px solid $color-primary;
+  border-left: 4px solid var(--accent-primary);
 
   &:last-child {
     margin-bottom: 0;
@@ -384,7 +383,7 @@ section {
   h3 {
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
-    color: $color-primary;
+    color: var(--accent-primary);
   }
 
   p {
@@ -398,19 +397,19 @@ section {
 
   li {
     margin-bottom: 1rem;
-    color: var(--text-dark);
+    color: var(--text-secondary);
     font-size: 1.05rem;
 
     strong {
-      color: $color-primary;
+      color: var(--accent-primary);
       font-weight: 600;
     }
   }
 }
 
 .commitment-box {
-  background: #d4edda;
-  border-left: 4px solid #28a745;
+  background: var(--status-success-bg);
+  border-left: 4px solid var(--status-success);
   padding: 2rem;
   border-radius: 8px;
   margin-top: 1.5rem;
@@ -420,7 +419,7 @@ section {
     padding-left: 1.5rem;
 
     li {
-      color: #155724;
+      color: var(--text-primary);
       margin-bottom: 0.75rem;
       font-size: 1.05rem;
 
@@ -450,28 +449,28 @@ section {
       text-decoration: none;
       border-radius: 8px;
       font-weight: 600;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       display: inline-block;
 
       &.btn-primary {
-        background: $color-primary;
-        color: white;
+        background: var(--action-primary);
+        color: var(--action-primary-text);
 
         &:hover {
-          background: darken($color-primary, 10%);
+          background: var(--action-primary-hover);
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+          box-shadow: var(--shadow-md);
         }
       }
 
       &.btn-secondary {
-        background: white;
-        color: $color-primary;
-        border: 2px solid $color-primary;
+        background: var(--surface-primary);
+        color: var(--accent-primary);
+        border: 1px solid var(--accent-primary);
 
         &:hover {
-          background: $color-primary;
-          color: white;
+          background: var(--accent-primary);
+          color: var(--text-inverse);
           transform: translateY(-2px);
         }
       }
@@ -483,14 +482,14 @@ section {
   text-align: center;
 
   .contact-link {
-    color: $color-primary;
+    color: var(--accent-primary);
     font-weight: 600;
     text-decoration: none;
     border-bottom: 2px solid transparent;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.2s ease;
 
     &:hover {
-      border-bottom-color: $color-primary;
+      border-bottom-color: var(--accent-primary);
     }
   }
 }

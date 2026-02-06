@@ -530,7 +530,7 @@ function getDiscountPercentage() {
 }
 .quick-view-content {
   position: relative;
-  background: var(--background-light); 
+  background: var(--surface-muted); 
   border-radius: 10px;
   max-width: 900px;
   width: 100%;
@@ -604,8 +604,8 @@ function getDiscountPercentage() {
 .carousel-control-prev-icon {
   background-image: none !important;
   border: none;
-  border-left: 2px solid var(--color-primary);
-  border-bottom: 2px solid var(--color-primary);
+  border-left: 2px solid var(--accent-primary);
+  border-bottom: 2px solid var(--accent-primary);
   transform: rotate(45deg);
   width: 1rem;
   height: 1rem;
@@ -617,8 +617,8 @@ function getDiscountPercentage() {
 .carousel-control-next-icon {
   background-image: none !important;
   border: none;
-  border-right: 2px solid var(--color-primary);
-  border-bottom: 2px solid var(--color-primary);
+  border-right: 2px solid var(--accent-primary);
+  border-bottom: 2px solid var(--accent-primary);
   transform: rotate(-45deg);
   width: 1rem;
   height: 1rem;

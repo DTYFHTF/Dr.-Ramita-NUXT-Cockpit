@@ -107,7 +107,7 @@ function onSubmit() {
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   box-shadow: var(--card-shadow);
 }

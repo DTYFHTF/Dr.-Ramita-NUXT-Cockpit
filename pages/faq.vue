@@ -457,12 +457,12 @@ const toggleFaq = (id: string) => {
 
 <style scoped lang="scss">
 .faq-page {
-  background: $background-light;
+  background: var(--surface-muted);
   min-height: 100vh;
 }
 
 .hero-section {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 15%) 100%);
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
   color: white;
   padding: 4rem 0 3rem;
   text-align: center;
@@ -517,7 +517,7 @@ const toggleFaq = (id: string) => {
     transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: $color-primary;
+      border-color: var(--accent-primary);
     }
   }
 }
@@ -539,13 +539,13 @@ const toggleFaq = (id: string) => {
     font-weight: 500;
 
     &:hover {
-      border-color: $color-primary;
-      color: $color-primary;
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
     }
 
     &.active {
-      background: $color-primary;
-      border-color: $color-primary;
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
       color: white;
     }
   }
@@ -560,11 +560,11 @@ const toggleFaq = (id: string) => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
     h2 {
-      color: $color-primary;
+      color: var(--accent-primary);
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
       padding-bottom: 0.75rem;
-      border-bottom: 2px solid rgba($color-primary, 0.2);
+      border-bottom: 2px solid rgba(var(--accent-primary-rgb), 0.2);
     }
   }
 
@@ -594,12 +594,12 @@ const toggleFaq = (id: string) => {
         transition: color 0.3s ease;
 
         &:hover {
-          color: $color-primary;
+          color: var(--accent-primary);
         }
 
         .icon {
           font-size: 1.5rem;
-          color: $color-primary;
+          color: var(--accent-primary);
           font-weight: 300;
           margin-left: 1rem;
           flex-shrink: 0;
@@ -613,19 +613,19 @@ const toggleFaq = (id: string) => {
         font-size: 1rem;
 
         :deep(a) {
-          color: $color-primary;
+          color: var(--accent-primary);
           text-decoration: none;
           border-bottom: 1px solid transparent;
           transition: border-color 0.3s ease;
 
           &:hover {
-            border-bottom-color: $color-primary;
+            border-bottom-color: var(--accent-primary);
           }
         }
 
         :deep(strong) {
           font-weight: 600;
-          color: darken($color-primary, 10%);
+          color: var(--accent-primary-hover);
         }
 
         :deep(br) {
@@ -652,7 +652,7 @@ const toggleFaq = (id: string) => {
 }
 
 .still-questions {
-  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
   color: white;
   padding: 3rem;
   border-radius: 12px;
@@ -674,7 +674,7 @@ const toggleFaq = (id: string) => {
     display: inline-block;
     padding: 1rem 2.5rem;
     background: white;
-    color: $color-primary;
+    color: var(--accent-primary);
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
