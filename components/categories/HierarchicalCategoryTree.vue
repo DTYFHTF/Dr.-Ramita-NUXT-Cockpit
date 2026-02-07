@@ -285,16 +285,16 @@ onMounted(() => {
       transition: all 0.2s ease;
       
       &:hover {
-        background-color: var(--surface-muted);
+        background-color: var(--text-footer);
         color: var(--accent-primary);
       }
       
       &.active {
-        background-color: var(--surface-muted);
+        background-color: var(--text-footer);
         color: var(--accent-primary);
         
         .category-icon, .expand-icon {
-          color: white;
+          color: var(--text-inverse);
         }
         
         .product-count {

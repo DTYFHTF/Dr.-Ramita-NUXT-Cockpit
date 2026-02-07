@@ -135,7 +135,7 @@ const getBannerStyle = (deal) => {
     };
   }
   return {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--status-processing) 100%)',
   };
 };
 
@@ -183,8 +183,8 @@ const handleImageError = (event) => {
 
 <style scoped lang="scss">
 .top-deals-offers {
-  background-color: var(--surface-muted);
-  color: var(--text-primary, #2c3e50);
+  background-color: var(--text-footer);
+  color: var(--text-primary);
   padding: 3rem 0;
 }
 
@@ -195,7 +195,7 @@ const handleImageError = (event) => {
 .section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary, #2c3e50);
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.5px;
 }
@@ -234,7 +234,7 @@ const handleImageError = (event) => {
   h6 {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--text-primary, #2c3e50);
+    color: var(--text-primary);
     margin: 0;
     line-height: 1.4;
   }
@@ -245,7 +245,7 @@ const handleImageError = (event) => {
   width: 100%;
   padding-top: 75%; // 4:3 aspect ratio
   overflow: hidden;
-  background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+  background: linear-gradient(to bottom, var(--surface-muted), var(--surface-emphasis));
 }
 
 .deal-image {
@@ -267,11 +267,11 @@ const handleImageError = (event) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, var(--surface-muted) 0%, var(--border-emphasis) 100%);
   
   .placeholder-content {
     text-align: center;
-    color: #6b7280;
+    color: var(--text-muted);
     
     svg {
       opacity: 0.5;

@@ -462,8 +462,8 @@ const toggleFaq = (id: string) => {
 }
 
 .hero-section {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-inverse);
   padding: 4rem 0 3rem;
   text-align: center;
   margin-bottom: 3rem;
@@ -487,13 +487,13 @@ const toggleFaq = (id: string) => {
     font-size: 2.5rem;
     margin-bottom: 0.75rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .tagline {
     font-size: 1.2rem;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 }
@@ -511,7 +511,7 @@ const toggleFaq = (id: string) => {
     width: 100%;
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-default);
     border-radius: 50px;
     outline: none;
     transition: border-color 0.3s ease;
@@ -531,8 +531,8 @@ const toggleFaq = (id: string) => {
 
   .category-btn {
     padding: 0.75rem 1.5rem;
-    background: white;
-    border: 2px solid #e0e0e0;
+    background: var(--surface-primary);
+    border: 2px solid var(--border-default);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -546,14 +546,14 @@ const toggleFaq = (id: string) => {
     &.active {
       background: var(--accent-primary);
       border-color: var(--accent-primary);
-      color: white;
+      color: var(--text-inverse);
     }
   }
 }
 
 .faq-content {
   .faq-category-section {
-    background: white;
+    background: var(--surface-primary);
     padding: 2.5rem;
     margin-bottom: 2rem;
     border-radius: 12px;
@@ -570,7 +570,7 @@ const toggleFaq = (id: string) => {
 
   .faq-items {
     .faq-item {
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid var(--border-default);
       margin-bottom: 1rem;
 
       &:last-child {
@@ -590,7 +590,7 @@ const toggleFaq = (id: string) => {
         text-align: left;
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--text-dark);
+        color: var(--text-primary);
         transition: color 0.3s ease;
 
         &:hover {
@@ -608,7 +608,7 @@ const toggleFaq = (id: string) => {
 
       .faq-answer {
         padding: 0 0 1.5rem 0;
-        color: var(--text-dark);
+        color: var(--text-primary);
         line-height: 1.8;
         font-size: 1rem;
 
@@ -652,8 +652,8 @@ const toggleFaq = (id: string) => {
 }
 
 .still-questions {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-inverse);
   padding: 3rem;
   border-radius: 12px;
   text-align: center;
@@ -673,7 +673,7 @@ const toggleFaq = (id: string) => {
   .btn-contact {
     display: inline-block;
     padding: 1rem 2.5rem;
-    background: white;
+    background: var(--surface-primary);
     color: var(--accent-primary);
     text-decoration: none;
     border-radius: 50px;

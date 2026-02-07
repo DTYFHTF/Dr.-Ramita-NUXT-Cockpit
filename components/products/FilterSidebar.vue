@@ -321,7 +321,7 @@ const clearAllFilters = () => {
   border: 1px solid var(--border-default);
 
   &:hover {
-    background-color: var(--surface-muted);
+    background-color: var(--text-footer);
     transform: translateY(-1px);
     color: var(--text-primary);
   }

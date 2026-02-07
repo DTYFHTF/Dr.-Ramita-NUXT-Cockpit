@@ -73,7 +73,7 @@ const formatDate = (dateString: string) => {
 .cms-content {
   max-width: 900px;
   margin: 0 auto;
-  background: var(--background-white);
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -86,13 +86,13 @@ const formatDate = (dateString: string) => {
 
   :deep(h1) {
     font-size: 2rem;
-    border-bottom: 2px solid var(--color-primary);
+    border-bottom: 2px solid var(--accent-primary);
     padding-bottom: 0.5rem;
   }
 
   :deep(h2) {
     font-size: 1.5rem;
-    color: var(--color-primary);
+    color: var(--accent-primary);
   }
 
   :deep(h3) {
@@ -116,11 +116,11 @@ const formatDate = (dateString: string) => {
   }
 
   :deep(a) {
-    color: var(--color-primary);
+    color: var(--accent-primary);
     text-decoration: underline;
 
     &:hover {
-      color: var(--color-secondary);
+      color: var(--accent-secondary);
     }
   }
 
@@ -130,7 +130,7 @@ const formatDate = (dateString: string) => {
   }
 
   :deep(blockquote) {
-    border-left: 4px solid var(--color-primary);
+    border-left: 4px solid var(--accent-primary);
     padding-left: 1.5rem;
     margin: 1.5rem 0;
     font-style: italic;

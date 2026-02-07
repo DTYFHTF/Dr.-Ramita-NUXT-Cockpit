@@ -83,27 +83,27 @@ const alertIcon = computed(() => {
   align-items: flex-start;
 
   &-success {
-    color: #0f5132;
-    background-color: #d1e7dd;
-    border-color: #badbcc;
+    color: var(--status-success-text);
+    background-color: var(--status-success-bg);
+    border-color: var(--status-success-border);
   }
 
   &-danger {
-    color: #842029;
-    background-color: #f8d7da;
-    border-color: #f5c2c7;
+    color: var(--status-error-text);
+    background-color: var(--status-error-bg);
+    border-color: var(--status-error-border);
   }
 
   &-warning {
-    color: #664d03;
-    background-color: #fff3cd;
-    border-color: #ffecb5;
+    color: var(--status-warning-text);
+    background-color: var(--status-warning-bg);
+    border-color: var(--status-warning-border);
   }
 
   &-info {
-    color: #055160;
-    background-color: #cff4fc;
-    border-color: #b6effb;
+    color: var(--status-info-text);
+    background-color: var(--status-info-bg);
+    border-color: var(--status-info-border);
   }
 
   &-heading {

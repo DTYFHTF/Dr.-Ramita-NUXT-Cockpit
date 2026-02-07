@@ -39,7 +39,7 @@ function onError() {
 .user-avatar {
   border-radius: 50%;
   object-fit: cover;
-  background: #f3f3f3;
+  background: var(--surface-muted);
   display: inline-block;
 }
 .user-avatar.sm {

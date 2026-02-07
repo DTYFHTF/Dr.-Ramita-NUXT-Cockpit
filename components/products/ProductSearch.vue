@@ -211,7 +211,7 @@ const onBlur = () => {
   flex: 1;
   font-size: 1.08rem;
   font-weight: 500;
-  color: var(--text-primary, #222);
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -224,7 +224,7 @@ const onBlur = () => {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.85rem;
-  color: var(--text-muted, #666);
+  color: var(--text-muted);
 }
 .suggestion-category {
   padding: 0.125rem 0.5rem;
@@ -238,11 +238,11 @@ const onBlur = () => {
   gap: 0.25rem;
 }
 .rating-stars {
-  color: #f59e0b;
+  color: var(--status-warning);
   font-size: 0.85rem;
 }
 .review-count {
-  color: var(--text-muted, #999);
+  color: var(--text-muted);
   font-size: 0.75rem;
 }
 .suggestion-price-right {
@@ -254,7 +254,7 @@ const onBlur = () => {
 }
 .price-original {
   text-decoration: line-through;
-  color: var(--text-muted, #999);
+  color: var(--text-muted);
   font-size: 0.85rem;
   white-space: nowrap;
 }
@@ -265,8 +265,8 @@ const onBlur = () => {
   white-space: nowrap;
 }
 .price-discount {
-  background: var(--color-danger, #dc3545);
-  color: white;
+  background: var(--status-error);
+  color: var(--text-inverse);
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -338,7 +338,7 @@ const onBlur = () => {
   background: var(--search-bg,);
   border-radius: 2.5rem;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
-  border: 2px solid #cccbcb;
+  border: 2px solid var(--border-default)bcb;
   padding: 2px 8px 2px 16px;
   position: relative;
 }
@@ -350,10 +350,10 @@ const onBlur = () => {
   font-size: 1.08rem;
   padding: 0.7rem 0 0.7rem 0;
   border-radius: 2rem;
-  color: var(--search-text, #f3f3f3);
+  color: var(--search-text);
 }
 .search-input::placeholder {
-  color: var(--search-placeholder, #bfc8db);
+  color: var(--search-placeholder);
   opacity: 1;
   font-style: italic;
 }
@@ -374,7 +374,7 @@ const onBlur = () => {
   padding: 0;
 }
 .navbar-search-btn:hover {
-  background: #e0e0e0;
+  background: var(--border-default);
 }
 
 
@@ -384,7 +384,7 @@ const onBlur = () => {
   left: 0;
   right: 0;
   background: var(--surface-primary);
-  border: 2px solid var(--color-muted, #e0e0e0);
+  border: 2px solid var(--border-default);
   border-top: none;
   border-radius: 0 0 16px 16px;
   max-height: 300px;
@@ -398,7 +398,7 @@ const onBlur = () => {
 
 .suggestion-item:hover {
   background: var(--surface-muted);
-  color: var(--color-success, #2e7d32);
+  color: var(--status-success);
 }
 
 .suggestion-item:last-child {
@@ -412,7 +412,7 @@ const onBlur = () => {
   left: 0;
   right: 0;
   background: var(--surface-primary);
-  border: 2px solid var(--color-muted, #e0e0e0);
+  border: 2px solid var(--border-default);
   border-top: none;
   border-radius: 14px;
   max-height: 320px;
@@ -428,7 +428,7 @@ const onBlur = () => {
   align-items: center;
   gap: 1rem;
   padding: 0.65rem 1.2rem;
-  color: var(--text-primary, #222);
+  color: var(--text-primary);
   cursor: pointer;
   border-bottom: 1px solid var(--surface-muted);
   transition: background 0.18s, color 0.18s;
@@ -462,7 +462,7 @@ const onBlur = () => {
 .suggestion-name {
   font-size: 1.08rem;
   font-weight: 500;
-  color: var(--text-primary, #222);
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

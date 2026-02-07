@@ -296,11 +296,11 @@ onMounted(async () => {
   }
   
   .star {
-    color: #ddd;
+    color: var(--border-default);
     font-size: 0.85rem;
     
     &.filled {
-      color: #ffd700;
+      color: var(--color-star-rating);
     }
   }
   
@@ -329,8 +329,8 @@ onMounted(async () => {
 }
 
 .day-compact {
-  background: var(--color-secondary);
-  color: white;
+  background: var(--accent-secondary);
+  color: var(--text-inverse);
   font-size: 0.7rem;
   padding: 0.2rem 0.4rem;
   border-radius: 3px;
@@ -374,7 +374,7 @@ onMounted(async () => {
 
 .selected-check {
   background: var(--accent-primary);
-  color: white;
+  color: var(--text-inverse);
   border-radius: 50%;
   width: 28px;
   height: 28px;

@@ -159,7 +159,7 @@ section {
 }
 
 .alert-danger {
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   border-color: var(--border-default);
   color: var(--text-error);
   padding: 1rem;

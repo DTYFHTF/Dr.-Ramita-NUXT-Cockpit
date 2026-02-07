@@ -53,7 +53,7 @@ import LucideIcon from '@/components/LucideIcon.vue';
 }
 
 .overlay {
-  background-color: rgba(var(--background-light-rgb), 0.6);
+  background-color: rgba(var(--surface-muted-rgb), 0.6);
   z-index: 0;
 }
 

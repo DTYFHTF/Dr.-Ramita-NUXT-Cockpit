@@ -220,8 +220,8 @@ useHead({
 }
 
 .hero-section {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-inverse);
   padding: 5rem 0 4rem;
   text-align: center;
   margin-bottom: 3rem;
@@ -244,14 +244,14 @@ useHead({
     font-size: 3rem;
     margin-bottom: 1rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
   .tagline {
     font-size: 1.5rem;
     font-weight: 300;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 }

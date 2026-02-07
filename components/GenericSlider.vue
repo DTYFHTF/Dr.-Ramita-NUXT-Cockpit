@@ -326,7 +326,7 @@ onUnmounted(() => {
   transition: transform 0.18s ease, opacity 0.18s ease;
   color: var(--accent-primary);
   opacity: 0.66;
-  background: var(--color-muted);
+  background: var(--border-default);
   padding: 0;
 }
 

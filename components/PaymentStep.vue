@@ -220,12 +220,12 @@ onUnmounted(() => {
     width: 64px;
     height: 64px;
     margin: 0 auto 1rem;
-    background: linear-gradient(135deg, var(--accent-primary), var(--color-secondary));
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--text-inverse);
   }
   
   h3 {
@@ -242,7 +242,7 @@ onUnmounted(() => {
 }
 
 .amount-section {
-  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.05), rgba(var(--color-secondary-rgb), 0.05));
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.05), rgba(var(--accent-secondary-rgb), 0.05));
   border: 2px solid var(--accent-primary);
   border-radius: 12px;
   padding: 1.5rem;
@@ -280,15 +280,15 @@ onUnmounted(() => {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: #fef3c7;
-  border: 1px solid #fbbf24;
+  background: var(--status-warning-bg);
+  border: 1px solid var(--status-warning);
   border-radius: 8px;
-  color: #92400e;
+  color: var(--status-warning-text);
   font-size: 0.875rem;
   font-weight: 500;
   
   :deep(svg) {
-    color: #f59e0b;
+    color: var(--status-warning);
   }
 }
 
@@ -302,28 +302,28 @@ onUnmounted(() => {
   font-weight: 500;
   
   &.processing {
-    background: #dbeafe;
-    border: 1px solid #60a5fa;
-    color: #1e40af;
+    background: var(--status-info-bg);
+    border: 1px solid var(--status-info);
+    color: var(--status-info-text);
   }
   
   &.success {
-    background: #d1fae5;
-    border: 1px solid #34d399;
-    color: #065f46;
+    background: var(--status-success-bg);
+    border: 1px solid var(--status-success);
+    color: var(--status-success-text);
     
     :deep(svg) {
-      color: #10b981;
+      color: var(--status-success);
     }
   }
   
   &.error {
-    background: #fee2e2;
-    border: 1px solid #f87171;
-    color: #991b1b;
+    background: var(--status-error-bg);
+    border: 1px solid var(--status-error);
+    color: var(--status-error-text);
     
     :deep(svg) {
-      color: #dc2626;
+      color: var(--status-error);
       flex-shrink: 0;
     }
     
@@ -339,7 +339,7 @@ onUnmounted(() => {
       p {
         margin: 0;
         font-size: 0.875rem;
-        color: #7f1d1d;
+        color: var(--status-error-text);
       }
     }
   }
@@ -349,7 +349,7 @@ onUnmounted(() => {
   width: 24px;
   height: 24px;
   border: 3px solid rgba(30, 64, 175, 0.3);
-  border-top-color: #1e40af;
+  border-top-color: var(--status-info-text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -358,7 +358,7 @@ onUnmounted(() => {
   width: 18px;
   height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border-top-color: var(--text-inverse);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

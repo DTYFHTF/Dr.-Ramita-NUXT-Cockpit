@@ -129,14 +129,14 @@ const currentStepComponent = computed(() => {
 
 .step-indicator.active .step-number {
   background-color: var(--accent-primary);
-  color: var(--text-white, #fff);
+  color: var(--text-inverse);
   border-color: var(--accent-primary);
 }
 
 .step-indicator.completed .step-number {
-  background-color: var(--color-secondary);
-  color: var(--text-white, #fff);
-  border-color: var(--color-secondary);
+  background-color: var(--accent-secondary);
+  color: var(--text-inverse);
+  border-color: var(--accent-secondary);
 }
 
 .step-label {

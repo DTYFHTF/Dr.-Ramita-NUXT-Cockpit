@@ -8,7 +8,7 @@
             :to="category.slug ? `/category/${encodeURIComponent(category.slug)}` : (category.url || `/category/${encodeURIComponent(category.title || category.name)}`)" 
             class="search-tag"
           >
-            <div class="tag-circle" :style="{ backgroundColor: category.color || '#28a745' }">
+            <div class="tag-circle" :style="{ backgroundColor: category.color || 'var(--accent-primary)' }">
               #{{ idx + 1 }}
             </div>
             <span class="tag-name">{{ category.title || category.name }}</span>
@@ -90,7 +90,7 @@ const categories = computed(() => {
 }
 
 .search-tag:hover {
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   transform: translateY(-2px);
   color: var(--text-primary);
   text-decoration: none;
@@ -103,7 +103,7 @@ const categories = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-inverse);
   font-weight: 600;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;

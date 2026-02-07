@@ -122,7 +122,7 @@ onMounted(() => {
 <style scoped>
 .order-confirmation-page {
   min-height: 80vh;
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 
 .container {

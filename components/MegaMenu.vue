@@ -193,7 +193,7 @@ function firstAvailableImage(product) {
   width: 100%;
   height: 120px;
   object-fit: contain;
-  background: var(--background-white );
+  background: var(--surface-primary);
   border-radius: 6px;
   margin-bottom: 8px;
   display: block;

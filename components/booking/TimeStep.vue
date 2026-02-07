@@ -208,7 +208,7 @@ const selectTime = (slot) => {
         
         &.doctor-timezone {
           background: rgba(59, 130, 246, 0.1);
-          color: #3b82f6;
+          color: var(--status-info);
           border: 1px solid rgba(59, 130, 246, 0.2);
         }
       }
@@ -243,10 +243,10 @@ const selectTime = (slot) => {
   &.selected {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: var(--text-white, #fff);
+    color: var(--text-inverse);
     
     .slot-time, .slot-period, .doctor-time {
-      color: var(--text-white, #fff);
+      color: var(--text-inverse);
     }
   }
 }

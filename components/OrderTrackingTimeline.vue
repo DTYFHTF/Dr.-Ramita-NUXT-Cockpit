@@ -99,67 +99,67 @@ const copied = ref(false);
 const statusConfig = {
   pending: {
     icon: 'mdi:clock-outline',
-    color: '#f59e0b',
+    color: 'var(--status-warning)',
     label: 'Order Pending'
   },
   confirmed: {
     icon: 'mdi:check-circle',
-    color: '#10b981',
+    color: 'var(--status-success)',
     label: 'Order Confirmed'
   },
   processing: {
     icon: 'mdi:package-variant',
-    color: '#3b82f6',
+    color: 'var(--status-info)',
     label: 'Processing'
   },
   ready_to_ship: {
     icon: 'mdi:package-check',
-    color: '#6366f1',
+    color: 'var(--status-processing)',
     label: 'Ready to Ship'
   },
   packed: {
     icon: 'mdi:package-variant-closed',
-    color: '#8b5cf6',
+    color: 'var(--status-processing)',
     label: 'Packed'
   },
   dispatched: {
     icon: 'mdi:truck-delivery',
-    color: '#a855f7',
+    color: 'var(--status-processing)',
     label: 'Dispatched'
   },
   shipped: {
     icon: 'mdi:truck-delivery',
-    color: '#8b5cf6',
+    color: 'var(--status-processing)',
     label: 'Shipped'
   },
   in_transit: {
     icon: 'mdi:truck-fast',
-    color: '#ec4899',
+    color: 'var(--status-processing)',
     label: 'In Transit'
   },
   out_for_delivery: {
     icon: 'mdi:truck-fast',
-    color: '#f59e0b',
+    color: 'var(--status-warning)',
     label: 'Out for Delivery'
   },
   delivered: {
     icon: 'mdi:home-import-outline',
-    color: '#10b981',
+    color: 'var(--status-success)',
     label: 'Delivered'
   },
   failed: {
     icon: 'mdi:alert-circle',
-    color: '#ef4444',
+    color: 'var(--status-error)',
     label: 'Delivery Failed'
   },
   returned: {
     icon: 'mdi:package-variant-closed-remove',
-    color: '#ef4444',
+    color: 'var(--status-error)',
     label: 'Returned'
   },
   cancelled: {
     icon: 'mdi:close-circle',
-    color: '#ef4444',
+    color: 'var(--status-error)',
     label: 'Cancelled'
   }
 };
@@ -238,7 +238,7 @@ const getStatusIcon = (status: string): string => {
 };
 
 const getStatusColor = (status: string): string => {
-  return statusConfig[status as keyof typeof statusConfig]?.color || '#6b7280';
+  return statusConfig[status as keyof typeof statusConfig]?.color || 'var(--text-muted)';
 };
 
 const formatStatus = (status: string): string => {
@@ -366,7 +366,7 @@ const copyTrackingNumber = async () => {
   padding: 1rem;
   background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--accent-primary) 100%);
   border-radius: 10px;
-  color: white;
+  color: var(--text-inverse);
   min-width: 280px;
 
   .tracking-number-header {
@@ -396,7 +396,7 @@ const copyTrackingNumber = async () => {
       padding: 0.5rem 0.75rem;
       border-radius: 6px;
       letter-spacing: 0.5px;
-      color: white;
+      color: var(--text-inverse);
     }
 
     .btn-copy {
@@ -408,7 +408,7 @@ const copyTrackingNumber = async () => {
       background: rgba(255, 255, 255, 0.2);
       border: none;
       border-radius: 6px;
-      color: white;
+      color: var(--text-inverse);
       cursor: pointer;
       transition: all 0.2s ease;
 
@@ -444,7 +444,7 @@ const copyTrackingNumber = async () => {
     .btn-track {
       margin-left: auto;
       padding: 0.4rem 0.75rem;
-      background: white;
+      background: var(--surface-primary);
       color: var(--accent-primary);
       border-radius: 6px;
       text-decoration: none;
@@ -612,7 +612,7 @@ const copyTrackingNumber = async () => {
 .step-pulse {
   width: 12px;
   height: 12px;
-  background: white;
+  background: var(--surface-primary);
   border-radius: 50%;
   animation: pulse-dot 1.5s ease-in-out infinite;
 }

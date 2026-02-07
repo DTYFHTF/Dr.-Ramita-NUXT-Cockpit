@@ -98,7 +98,7 @@ const handleClose = () => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--status-success) 0%, var(--status-success-emphasis) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@ const handleClose = () => {
 }
 
 .check-icon {
-  color: white;
+  color: var(--text-inverse);
   font-size: 2.5rem;
   animation: checkIn 0.6s ease 0.2s both;
 }

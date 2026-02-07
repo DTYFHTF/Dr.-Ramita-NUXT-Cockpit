@@ -14,6 +14,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 </style>  

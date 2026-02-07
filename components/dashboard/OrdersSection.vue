@@ -207,7 +207,7 @@ onMounted(fetchOrders);
 
         &:hover {
           background: var(--accent-primary);
-          color: white;
+          color: var(--text-inverse);
           border-color: var(--accent-primary);
           transform: translateY(-1px);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -228,37 +228,37 @@ onMounted(fetchOrders);
 
       &.status-pending {
         background: rgba(245, 158, 11, 0.15);
-        color: #d97706;
+        color: var(--status-warning);
         border: 1px solid rgba(245, 158, 11, 0.3);
       }
 
       &.status-confirmed {
         background: rgba(16, 185, 129, 0.15);
-        color: #059669;
+        color: var(--status-success);
         border: 1px solid rgba(16, 185, 129, 0.3);
       }
 
       &.status-processing {
         background: rgba(59, 130, 246, 0.15);
-        color: #2563eb;
+        color: var(--status-info);
         border: 1px solid rgba(59, 130, 246, 0.3);
       }
 
       &.status-shipped {
         background: rgba(139, 92, 246, 0.15);
-        color: #7c3aed;
+        color: var(--status-processing);
         border: 1px solid rgba(139, 92, 246, 0.3);
       }
 
       &.status-delivered {
         background: rgba(16, 185, 129, 0.15);
-        color: #059669;
+        color: var(--status-success);
         border: 1px solid rgba(16, 185, 129, 0.3);
       }
 
       &.status-cancelled {
         background: rgba(239, 68, 68, 0.15);
-        color: #dc2626;
+        color: var(--status-error);
         border: 1px solid rgba(239, 68, 68, 0.3);
       }
     }
@@ -303,13 +303,13 @@ onMounted(fetchOrders);
         margin-bottom: 0.5rem;
 
         .tracking-icon {
-          color: #7c3aed;
+          color: var(--status-processing);
         }
 
         .tracking-label {
           font-size: 0.85rem;
           font-weight: 600;
-          color: #7c3aed;
+          color: var(--status-processing);
         }
       }
 
@@ -332,7 +332,7 @@ onMounted(fetchOrders);
         .courier-badge {
           font-size: 0.75rem;
           font-weight: 600;
-          color: #7c3aed;
+          color: var(--status-processing);
           background: rgba(139, 92, 246, 0.15);
           padding: 0.25rem 0.6rem;
           border-radius: 12px;
@@ -373,7 +373,7 @@ onMounted(fetchOrders);
       width: 100%;
       padding: 0.75rem;
       background: var(--accent-primary);
-      color: white;
+      color: var(--text-inverse);
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;

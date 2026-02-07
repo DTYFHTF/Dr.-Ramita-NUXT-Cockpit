@@ -184,17 +184,17 @@ useHead({
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-dark);
+  color: var(--text-primary);
 }
 
 .required {
-  color: #dc3545;
+  color: var(--status-error);
 }
 
 .form-input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-default);
   border-radius: 0.375rem;
   font-size: 1rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -202,12 +202,12 @@ useHead({
 
 .form-input:focus {
   outline: none;
-  border-color: #0d6efd;
+  border-color: var(--accent-primary);
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
 .form-input:disabled {
-  background-color: #f8f9fa;
+  background-color: var(--text-footer);
   opacity: 0.65;
 }
 
@@ -225,12 +225,12 @@ useHead({
 }
 
 .btn-primary {
-  background-color: #0d6efd;
-  color: white;
+  background-color: var(--accent-primary);
+  color: var(--text-inverse);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0b5ed7;
+  background-color: var(--accent-primary-hover);
 }
 
 .btn:disabled {
@@ -239,7 +239,7 @@ useHead({
 }
 
 .auth-form {
-  background: white;
+  background: var(--surface-primary);
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);

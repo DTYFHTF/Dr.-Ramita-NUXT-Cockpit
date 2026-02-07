@@ -292,7 +292,7 @@ const cancelBlogDropdownClose = () => {
   max-width: 90vw;
   width: 600px;
   z-index: 1050;
-  background: var(--background-white);
+  background: var(--surface-primary);
   box-shadow: 0 4px 24px rgba(var(--shadow-rgb), 0.12);
   border-radius: 0 0 12px 12px;
   padding: 1.5rem 2rem;

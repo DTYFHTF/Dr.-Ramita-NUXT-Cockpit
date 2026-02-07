@@ -134,7 +134,7 @@ const reportError = () => {
 .error-container {
   max-width: 500px;
   text-align: center;
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -144,7 +144,7 @@ const reportError = () => {
   width: 64px;
   height: 64px;
   margin: 0 auto 1.5rem;
-  color: #ef4444;
+  color: var(--status-error);
 }
 
 .error-icon svg {
@@ -155,12 +155,12 @@ const reportError = () => {
 .error-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .error-message {
-  color: #6b7280;
+  color: var(--text-muted);
   margin-bottom: 2rem;
   line-height: 1.6;
 }
@@ -186,12 +186,12 @@ const reportError = () => {
 }
 
 .btn-retry {
-  background: #3b82f6;
-  color: white;
+  background: var(--status-info);
+  color: var(--text-inverse);
 }
 
 .btn-retry:hover {
-  background: #2563eb;
+  background: var(--status-info);
 }
 
 .btn-retry svg {
@@ -200,18 +200,18 @@ const reportError = () => {
 }
 
 .btn-report {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--surface-muted);
+  color: var(--text-secondary);
 }
 
 .btn-report:hover {
-  background: #e5e7eb;
+  background: var(--border-default);
 }
 
 .error-details {
   margin-top: 2rem;
   text-align: left;
-  background: #f9fafb;
+  background: var(--surface-subtle);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -219,14 +219,14 @@ const reportError = () => {
 .error-details summary {
   cursor: pointer;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
   user-select: none;
 }
 
 .error-details pre {
   margin-top: 1rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--text-secondary);
   overflow-x: auto;
   white-space: pre-wrap;
   word-wrap: break-word;

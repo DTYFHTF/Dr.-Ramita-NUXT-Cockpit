@@ -121,7 +121,7 @@ const handleSubmit = () => {
   }
 
   .required {
-    color: var(--text-error, #ef4444);
+    color: var(--text-error);
   }
 
   input,

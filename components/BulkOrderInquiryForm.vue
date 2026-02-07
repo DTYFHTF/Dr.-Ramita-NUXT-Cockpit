@@ -1096,13 +1096,13 @@ onUnmounted(() => {
   .active & {
     background: var(--accent-primary);
     border-color: var(--accent-primary);
-    color: white;
+    color: var(--text-inverse);
   }
 
   .completed & {
     background: var(--color-success);
     border-color: var(--color-success);
-    color: white;
+    color: var(--text-inverse);
   }
 }
 
@@ -1238,7 +1238,7 @@ onUnmounted(() => {
   display: inline-block;
   padding: 0.125rem 0.5rem;
   background: var(--accent-primary);
-  color: white;
+  color: var(--text-inverse);
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -1298,7 +1298,7 @@ onUnmounted(() => {
 .product-ticker-container {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-primary-light) 0%, #e0f2f1 100%);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--status-info-bg) 100%);
   border-radius: 8px;
   padding: 0.75rem 0;
   border: 1px solid var(--accent-primary);
@@ -1329,7 +1329,7 @@ onUnmounted(() => {
   display: inline-block;
   padding: 0.25rem 1rem;
   margin: 0 0.5rem;
-  background: white;
+  background: var(--surface-primary);
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -1341,7 +1341,7 @@ onUnmounted(() => {
   
   &:hover:not(.ticker-added) {
     background: var(--accent-primary);
-    color: white;
+    color: var(--text-inverse);
     border-color: var(--accent-primary);
     transform: scale(1.05);
   }
@@ -1370,7 +1370,7 @@ onUnmounted(() => {
 
 .ticker-fade-right {
   right: 0;
-  background: linear-gradient(to left, #e0f2f1, transparent);
+  background: linear-gradient(to left, var(--status-info-bg), transparent);
 }
 
 /* Pause animation on hover */
@@ -1483,7 +1483,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background: var(--accent-primary);
-  color: white;
+  color: var(--text-inverse);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -1575,7 +1575,7 @@ onUnmounted(() => {
 
       &:hover,
       &.highlighted {
-        background-color: var(--surface-muted);
+        background-color: var(--text-footer);
       }
 
       strong {

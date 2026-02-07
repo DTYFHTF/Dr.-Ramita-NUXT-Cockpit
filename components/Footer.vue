@@ -184,8 +184,8 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .footer {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1a3628 100%);
-  color: #f0f5f2;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-footer);
   padding-top: 4rem;
   margin-top: auto;
 }
@@ -210,7 +210,7 @@ onMounted(async () => {
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 1.25rem;
-    color: #f0f5f2;
+    color: var(--text-footer);
     letter-spacing: 0.5px;
   }
 
@@ -235,7 +235,7 @@ onMounted(async () => {
         display: inline-block;
 
         &:hover {
-          color: #f0f5f2;
+          color: var(--text-footer);
           transform: translateX(4px);
         }
       }
@@ -283,7 +283,7 @@ onMounted(async () => {
     height: 40px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    color: #f0f5f2;
+    color: var(--text-footer);
     transition: all 0.2s ease;
 
     &:hover {
@@ -305,7 +305,7 @@ onMounted(async () => {
       text-decoration: none;
       
       &:hover {
-        color: #f0f5f2;
+        color: var(--text-footer);
       }
     }
   }
@@ -333,7 +333,7 @@ onMounted(async () => {
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
-    color: #f0f5f2;
+    color: var(--text-footer);
   }
 
   p {
@@ -355,7 +355,7 @@ onMounted(async () => {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: #f0f5f2;
+  color: var(--text-footer);
   font-size: 1rem;
   transition: all 0.2s ease;
 
@@ -379,7 +379,7 @@ onMounted(async () => {
   padding: 0.75rem 1rem;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: #f0f5f2;
+  color: var(--text-footer);
   
   &.success {
     background: rgba(135, 197, 164, 0.2);

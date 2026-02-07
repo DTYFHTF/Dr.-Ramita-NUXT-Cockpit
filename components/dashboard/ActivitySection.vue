@@ -476,11 +476,11 @@ const getOrderStatusClass = (status: string) => {
 
 // Order status badge colors
 .bg-warning {
-  background-color: #ffc107 !important;
+  background-color: var(--status-warning) !important;
 }
 
 .bg-info {
-  background-color: #17a2b8 !important;
+  background-color: var(--status-info) !important;
 }
 
 .bg-primary {
@@ -488,23 +488,23 @@ const getOrderStatusClass = (status: string) => {
 }
 
 .bg-success {
-  background-color: #28a745 !important;
+  background-color: var(--status-success) !important;
 }
 
 .bg-danger {
-  background-color: #dc3545 !important;
+  background-color: var(--status-error) !important;
 }
 
 .bg-secondary {
-  background-color: #6c757d !important;
+  background-color: var(--text-muted) !important;
 }
 
 .text-dark {
-  color: #212529 !important;
+  color: var(--text-primary) !important;
 }
 
 .text-white {
-  color: #ffffff !important;
+  color: var(--text-inverse) !important;
 }
 
 // Responsive adjustments

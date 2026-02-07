@@ -550,11 +550,11 @@ function toggleSort(type: string) {
 /* Main Layout */
 .category-page {
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 
 .breadcrumb-section {
-  background: var(--background-white);
+  background: var(--surface-primary);
   padding: 0.5rem 0;
   min-height: 40px;
   border-radius: 0 0 12px 12px;
@@ -594,7 +594,7 @@ function toggleSort(type: string) {
 }
 
 .filters-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -606,7 +606,7 @@ function toggleSort(type: string) {
   justify-content: space-between;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .filters-title {
@@ -616,7 +616,7 @@ function toggleSort(type: string) {
 }
 
 .filter-icon {
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-size: 1.5rem;
 }
 
@@ -649,7 +649,7 @@ function toggleSort(type: string) {
   top: -8px;
   right: -8px;
   background: var(--color-danger);
-  color: white;
+  color: var(--text-inverse);
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -666,8 +666,8 @@ function toggleSort(type: string) {
 }
 
 .offcanvas-header {
-  background: var(--color-primary);
-  color: white;
+  background: var(--accent-primary);
+  color: var(--text-inverse);
   padding: 1.5rem;
 }
 
@@ -679,14 +679,14 @@ function toggleSort(type: string) {
 }
 
 .offcanvas-body {
-  background: var(--background-white);
+  background: var(--surface-primary);
   max-height: calc(100vh - 100px);
   overflow-y: auto;
 }
 
 /* Products Main */
 .products-main {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -700,7 +700,7 @@ function toggleSort(type: string) {
   align-items: flex-start;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
   gap: 2rem;
 }
 
@@ -763,9 +763,9 @@ function toggleSort(type: string) {
 }
 
 .search-component {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   overflow: hidden;
   transition: all 0.2s ease;
 }

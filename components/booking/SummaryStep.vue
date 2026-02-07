@@ -247,8 +247,8 @@ const confirmBooking = async () => {
   padding: 1rem;
   background: rgba(220, 38, 38, 0.1);
   border-radius: 8px;
-  border-left: 3px solid #dc2626;
-  color: #dc2626;
+  border-left: 3px solid var(--status-error);
+  color: var(--status-error);
   font-size: 0.9rem;
   
   svg {

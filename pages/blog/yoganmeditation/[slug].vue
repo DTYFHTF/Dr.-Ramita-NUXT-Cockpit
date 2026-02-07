@@ -121,7 +121,7 @@
                     :alt="pose.title"
                     class="card-img-bottom d-block mx-auto"
                     loading="lazy"
-                    style="max-height: 300px; width: auto; object-fit: contain; background: white;"
+                    style="max-height: 300px; width: auto; object-fit: contain; background: var(--surface-primary);"
                   />
                   <div class="pose-instructions text-muted fs-5 lh-lg">
                     <DynamicContent :content="pose.instructions" />
@@ -266,8 +266,8 @@ const retryFetch = async () => {
     font-size: 1.25rem;
     margin-right: 1rem;
     margin-left:0;
-    background: var(--color-secondary);
-    color: var(--text-white, #fff);
+    background: var(--accent-secondary);
+    color: var(--text-inverse);
     border-radius: 50%;
   }
 }

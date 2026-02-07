@@ -924,7 +924,7 @@ const submitOrder = async () => {
 }
 
 .continue-shopping-btn:hover {
-  background: var(--primary-dark);
+  background: var(--accent-primary-hover);
   color: var(--text-white);
   transform: translateY(-1px);
 }
@@ -976,7 +976,7 @@ const submitOrder = async () => {
   
   &:hover {
     background: var(--accent-primary);
-    color: white;
+    color: var(--text-inverse);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
   }
@@ -1252,14 +1252,14 @@ const submitOrder = async () => {
 }
 
 .shipping-info {
-  background: #e7f3ff;
-  color: #0066cc;
+  background: var(--status-info-bg);
+  color: var(--status-info);
 }
 
 .badge-express {
   display: inline-block;
-  background: #ffeaa7;
-  color: #d63031;
+  background: var(--status-warning-bg);
+  color: var(--status-error);
   font-size: 0.75rem;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;

@@ -47,13 +47,13 @@ const props = withDefaults(defineProps<Props>(), {
     font-size: 2.5rem;
     margin-bottom: 0.75rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .subtitle {
     font-size: 1.2rem;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     margin: 0;
   }
@@ -61,8 +61,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Default variant with gradient
 .page-hero {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-inverse);
 }
 
 @media (max-width: 768px) {

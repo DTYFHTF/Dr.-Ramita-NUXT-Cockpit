@@ -58,7 +58,7 @@ function isInternalRoute(link) {
   margin: 2rem 0;
 }
 .banner-mid-item {
-  background: #fff;
+  background: var(--surface-primary);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -72,7 +72,7 @@ function isInternalRoute(link) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: var(--surface-primary);
 }
 .banner-mid-img-wrapper img {
   width: 100%;

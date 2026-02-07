@@ -394,7 +394,7 @@ watch(() => courseData.value, (newData) => {
     
     .instructor-avatar {
       object-fit: cover;
-      border: 3px solid var(--color-secondary);
+      border: 3px solid var(--accent-secondary);
     }
 
     .instructor-name {

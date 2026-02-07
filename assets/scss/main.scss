@@ -159,13 +159,58 @@
   --status-success: #059669;
   --status-success-hover: #047857;
   --status-success-bg: #ecfdf5;
+  --status-success-text: #155724;
+  --status-success-border: #badbcc;
+  --status-success-emphasis: #047857;
   --status-error: #dc2626;
   --status-error-hover: #b91c1c;
   --status-error-bg: #fef2f2;
+  --status-error-text: #721c24;
+  --status-error-border: #f5c2c7;
+  --status-error-emphasis: #b91c1c;
   --status-warning: #d97706;
   --status-warning-bg: #fffbeb;
+  --status-warning-text: #856404;
+  --status-warning-border: #ffecb5;
+  --status-warning-emphasis: #b45309;
   --status-info: #0284c7;
   --status-info-bg: #f0f9ff;
+  --status-info-text: #0c5460;
+  --status-info-border: #b6effb;
+  --status-processing: #7c3aed;
+  --status-processing-bg: #f5f3ff;
+  
+  // --- Social Media Colors ---
+  --social-facebook: #1877f2;
+  --social-facebook-hover: #0d66d9;
+  --social-twitter: #1da1f2;
+  --social-twitter-hover: #0c8ad9;
+  --social-whatsapp: #25D366;
+  --social-whatsapp-hover: #1da851;
+  --social-youtube: #ff0000;
+  --social-youtube-hover: #cc0000;
+  --social-linkedin: #0A66C2;
+  --social-linkedin-hover: #084d91;
+  --social-instagram-1: #f09433;
+  --social-instagram-2: #e6683c;
+  --social-instagram-3: #dc2743;
+  --social-instagram-4: #cc2366;
+  --social-instagram-5: #bc1888;
+  
+  // --- Tag/Badge Colors ---
+  --tag-info-bg: #e0f2fe;
+  --tag-info-text: #0277bd;
+  --tag-info-border: #81d4fa;
+  --tag-purple-bg: #f3e5f5;
+  --tag-purple-text: #7b1fa2;
+  --tag-purple-border: #ce93d8;
+  --tag-success-border: #a5d6a7;
+  
+  // --- Specialty Colors ---
+  --color-star-rating: #ffd700;
+  --brand-forest-dark: #1e3624;
+  --text-footer: #{$light-bg-muted};
+  --surface-subtle: #{$light-bg-subtle};
   
   // --- Shadow System ---
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -184,11 +229,17 @@
   --primary-dark: var(--accent-primary-hover);
   --color-secondary: var(--accent-secondary);
   --accent-soft-green: var(--accent-soft);
-  --background-light: var(--surface-muted);
-  --background-white: var(--surface-primary);
+  --accent-hover: var(--accent-primary-hover);
+  --accent-rgb: var(--accent-primary-rgb);
+  --accent-secondary-rgb: 107, 156, 125;
+  --background-hover: var(--surface-hover);
   --text-light: var(--surface-secondary);
   --text-error: var(--status-error);
+  --text-link: var(--accent-primary);
   --border-color: var(--border-default);
+  --border-light: var(--border-muted);
+  --border-subtle: var(--border-muted);
+  --card-background: var(--surface-primary);
   --button-bg: var(--action-primary);
   --card-shadow: var(--shadow-md);
   --badge-color: #fef7ed;
@@ -197,9 +248,21 @@
   --color-error: var(--status-error);
   --color-warning: var(--status-warning);
   --color-success: var(--status-success);
+  --color-danger: var(--status-error);
+  --color-danger-rgb: 220, 38, 38;
   --color-muted: var(--text-muted);
+  --color-primary-dark: var(--accent-primary-hover);
+  --color-primary-light: var(--accent-soft);
+  --color-primary-rgb: 42, 77, 58;
   --success-bg: var(--status-success-bg);
   --error-bg: var(--status-error-bg);
+  --calendar-text: var(--text-primary);
+  --calendar-text-secondary: var(--text-secondary);
+  --modal-overlay-rgb: 0, 0, 0;
+  --search-text: var(--text-inverse);
+  --search-placeholder: var(--text-placeholder);
+  --shadow-light-rgb: 0, 0, 0;
+  --shadow-medium-rgb: 0, 0, 0;
   
   // RGB values for transparent usage
   --surface-primary-rgb: 255, 255, 255;
@@ -250,13 +313,41 @@
   --status-success: #34d399;
   --status-success-hover: #2bc485;
   --status-success-bg: rgba(16, 185, 129, 0.15);
+  --status-success-text: #6ee7b7;
+  --status-success-border: rgba(16, 185, 129, 0.3);
+  --status-success-emphasis: #059669;
   --status-error: #f87171;
   --status-error-hover: #ef4444;
   --status-error-bg: rgba(239, 68, 68, 0.15);
+  --status-error-text: #fca5a5;
+  --status-error-border: rgba(239, 68, 68, 0.3);
+  --status-error-emphasis: #dc2626;
   --status-warning: #fbbf24;
   --status-warning-bg: rgba(251, 191, 36, 0.15);
+  --status-warning-text: #fde68a;
+  --status-warning-border: rgba(251, 191, 36, 0.3);
+  --status-warning-emphasis: #d97706;
   --status-info: #38bdf8;
   --status-info-bg: rgba(56, 189, 248, 0.15);
+  --status-info-text: #7dd3fc;
+  --status-info-border: rgba(56, 189, 248, 0.3);
+  --status-processing: #a78bfa;
+  --status-processing-bg: rgba(139, 92, 246, 0.15);
+  
+  // --- Tag/Badge Colors (Dark mode) ---
+  --tag-info-bg: rgba(2, 119, 189, 0.2);
+  --tag-info-text: #7dd3fc;
+  --tag-info-border: rgba(129, 212, 250, 0.3);
+  --tag-purple-bg: rgba(123, 31, 162, 0.2);
+  --tag-purple-text: #ce93d8;
+  --tag-purple-border: rgba(206, 147, 216, 0.3);
+  --tag-success-border: rgba(165, 214, 167, 0.3);
+  
+  // --- Specialty (Dark mode) ---
+  --color-star-rating: #fbbf24;
+  --brand-forest-dark: #0f1512;
+  --text-footer: #{$dark-text-secondary};
+  --surface-subtle: #{$dark-bg-subtle};
   
   // --- Shadow System (Deeper for dark mode) ---
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);

@@ -254,7 +254,7 @@ function handleClearPriceRange() {
 /* Main Layout */
 .products-page {
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--surface-muted);
   padding: 2rem 0;
 }
 
@@ -292,7 +292,7 @@ function handleClearPriceRange() {
 }
 
 .filters-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -304,7 +304,7 @@ function handleClearPriceRange() {
   justify-content: space-between;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .filter-icon {
@@ -365,7 +365,7 @@ function handleClearPriceRange() {
 }
 
 .filter-toggle:hover {
-  background: var(--primary-dark);
+  background: var(--accent-primary-hover);
   transform: translateY(-1px);
 }
 
@@ -391,8 +391,8 @@ function handleClearPriceRange() {
 }
 
 .offcanvas-header {
-  background: var(--background-light);
-  border-bottom: 2px solid var(--border-color);
+  background: var(--surface-muted);
+  border-bottom: 2px solid var(--border-default);
 }
 
 .offcanvas-title {
@@ -404,14 +404,14 @@ function handleClearPriceRange() {
 }
 
 .offcanvas-body {
-  background: var(--background-white);
+  background: var(--surface-primary);
   max-height: calc(100vh - 100px);
   overflow-y: auto;
 }
 
 /* Products Main */
 .products-main {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -424,7 +424,7 @@ function handleClearPriceRange() {
   align-items: flex-start;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
   gap: 2rem;
 }
 
@@ -481,9 +481,9 @@ function handleClearPriceRange() {
 }
 
 .search-component {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-default);
   overflow: hidden;
   transition: all 0.2s ease;
 }
@@ -517,7 +517,7 @@ function handleClearPriceRange() {
   display: flex;
   justify-content: center;
   padding-top: 2rem;
-  border-top: 2px solid var(--background-light);
+  border-top: 2px solid var(--surface-muted);
 }
 
 /* Responsive Design */

@@ -784,21 +784,21 @@ const saveAddress = async () => {
 
 <style scoped lang="scss">
 .dashboard-wrapper {
-  background-color: var(--background-light);
+  background-color: var(--text-footer);
   min-height: 100vh;
 }
 
 .profile-sidebar {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
   height: fit-content;
 }
 
 .profile-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-default);
   padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
@@ -835,22 +835,22 @@ const saveAddress = async () => {
   text-align: left;
   
   &:hover {
-    background: var(--background-light);
-    color: var(--color-primary);
+    background: var(--surface-muted);
+    color: var(--accent-primary);
   }
   
   &.active {
-    background: var(--color-primary);
+    background: var(--accent-primary);
     color: var(--text-white);
   }
 }
 
 .content-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-default);
 }
 
 .content-title {
@@ -862,8 +862,8 @@ const saveAddress = async () => {
 
 .alert-success {
   background-color: var(--success-bg);
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
 }
 
 .alert-danger {
@@ -883,7 +883,7 @@ const saveAddress = async () => {
     flex: 1;
     max-width: 200px;
     padding: 1.5rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-default);
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
@@ -895,7 +895,7 @@ const saveAddress = async () => {
     }
 
     &.active {
-      border-color: var(--color-primary);
+      border-color: var(--accent-primary);
       background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.1));
     }
 
@@ -909,16 +909,16 @@ const saveAddress = async () => {
       justify-content: center;
       
       &.sunrise-preview {
-        background: linear-gradient(135deg, #FFD93D 0%, #FF6B35 100%);
+        background: linear-gradient(135deg, var(--status-warning) 0%, var(--status-warning-emphasis) 100%);
       }
       
       &.midnight-preview {
-        background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
       }
 
       .theme-icon {
         font-size: 2rem;
-        color: white;
+        color: var(--text-inverse);
       }
     }
 
@@ -941,8 +941,8 @@ background-color: rgba(0,0,0,0.2);    }
       cursor: pointer;
 
       &:checked {
-        background-color: var(--color-primary);
-        border-color: var(--color-primary);
+        background-color: var(--accent-primary);
+        border-color: var(--accent-primary);
       }
     }
   }
@@ -958,14 +958,14 @@ background-color: rgba(0,0,0,0.2);    }
     
     .btn-outline-primary {
       background: transparent;
-      border: 2px solid var(--color-primary);
-      color: var(--color-primary);
+      border: 2px solid var(--accent-primary);
+      color: var(--accent-primary);
       font-weight: 600;
       transition: all 0.3s ease;
       
       &:hover {
-        background: var(--color-primary);
-        color: white;
+        background: var(--accent-primary);
+        color: var(--text-inverse);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
       }
@@ -995,12 +995,12 @@ background-color: rgba(0,0,0,0.2);    }
 
   .delivery-slot-card {
     padding: 1.5rem 1rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-default);
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: var(--background-white);
+    background: var(--surface-primary);
 
     &:hover {
       transform: translateY(-2px);
@@ -1008,13 +1008,13 @@ background-color: rgba(0,0,0,0.2);    }
     }
 
     &.active {
-      border-color: var(--color-primary);
+      border-color: var(--accent-primary);
       background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.1));
     }
 
     .slot-icon {
       font-size: 2rem;
-      color: var(--color-primary);
+      color: var(--accent-primary);
       margin-bottom: 0.5rem;
     }
 

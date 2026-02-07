@@ -328,7 +328,7 @@ useHead({
   padding: 1.25rem;
 
   &:not(.collapsed) {
-    background-color: var(--surface-muted);
+    background-color: var(--text-footer);
     color: var(--accent-primary);
   }
 

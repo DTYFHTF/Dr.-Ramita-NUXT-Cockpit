@@ -81,22 +81,22 @@ const getBadgeTooltip = () => {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  background: linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--status-error) 0%, var(--status-error-emphasis) 100%);
+  color: var(--text-inverse);
   box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
   
   &.promotion-percentage {
-    background: linear-gradient(135deg, var(--color-error) 0%, #dc2626 100%);
+    background: linear-gradient(135deg, var(--status-error) 0%, var(--status-error-emphasis) 100%);
   }
   
   &.promotion-fixed {
-    background: linear-gradient(135deg, var(--color-warning) 0%, #f59e0b 100%);
+    background: linear-gradient(135deg, var(--color-warning) 0%, var(--status-warning-emphasis) 100%);
   }
   
   // Special styling for curation/seasonal (non-discount) promotions
   &.promotion-curation,
   &.promotion-seasonal {
-    background: linear-gradient(135deg, var(--color-success) 0%, #10b981 100%);
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--status-success-emphasis) 100%);
     box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
   }
 

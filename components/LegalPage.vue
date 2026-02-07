@@ -44,7 +44,7 @@ defineProps<Props>();
 }
 
 .legal-content {
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -63,15 +63,15 @@ defineProps<Props>();
   }
 
   .important-notice {
-    background: #f8d7da;
-    border-left: 4px solid #dc3545;
+    background: var(--status-error-bg);
+    border-left: 4px solid var(--status-error);
     padding: 1.5rem;
     margin-bottom: 2rem;
     border-radius: 4px;
 
     :deep(p) {
       margin-bottom: 0.75rem;
-      color: #721c24;
+      color: var(--status-error-text);
       line-height: 1.6;
 
       &:last-child {
@@ -85,15 +85,15 @@ defineProps<Props>();
   }
 
   .acknowledgement {
-    background: #d4edda;
-    border-left: 4px solid #28a745;
+    background: var(--status-success-bg);
+    border-left: 4px solid var(--status-success);
     padding: 1.5rem;
     margin-top: 2rem;
     border-radius: 4px;
 
     :deep(p) {
       margin: 0;
-      color: #155724;
+      color: var(--status-success-text);
       font-size: 1.05rem;
       line-height: 1.6;
     }
@@ -125,7 +125,7 @@ defineProps<Props>();
 
       p {
         line-height: 1.8;
-        color: var(--text-dark);
+        color: var(--text-primary);
         margin-bottom: 1rem;
       }
 
@@ -135,7 +135,7 @@ defineProps<Props>();
         
         li {
           margin-bottom: 0.5rem;
-          color: var(--text-dark);
+          color: var(--text-primary);
 
           ul, ol {
             margin-top: 0.5rem;

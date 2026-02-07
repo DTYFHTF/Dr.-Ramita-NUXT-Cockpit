@@ -83,26 +83,26 @@ const handleLogin = (alertId: string) => {
 
 .alert-item {
   pointer-events: auto;
-  background: white;
+  background: var(--surface-primary);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   border-left: 4px solid;
   
   &.alert-success {
-    border-left-color: #10b981;
+    border-left-color: var(--status-success);
   }
   
   &.alert-error {
-    border-left-color: #ef4444;
+    border-left-color: var(--status-error);
   }
   
   &.alert-warning {
-    border-left-color: #f59e0b;
+    border-left-color: var(--status-warning);
   }
   
   &.alert-info {
-    border-left-color: #3b82f6;
+    border-left-color: var(--status-info);
   }
 }
 
@@ -125,23 +125,23 @@ const handleLogin = (alertId: string) => {
   font-weight: bold;
   
   .alert-success & {
-    background: #d1fae5;
-    color: #10b981;
+    background: var(--status-success-bg);
+    color: var(--status-success);
   }
   
   .alert-error & {
-    background: #fee2e2;
-    color: #ef4444;
+    background: var(--status-error-bg);
+    color: var(--status-error);
   }
   
   .alert-warning & {
-    background: #fef3c7;
-    color: #f59e0b;
+    background: var(--status-warning-bg);
+    color: var(--status-warning);
   }
   
   .alert-info & {
-    background: #dbeafe;
-    color: #3b82f6;
+    background: var(--status-info-bg);
+    color: var(--status-info);
   }
 }
 
@@ -154,13 +154,13 @@ const handleLogin = (alertId: string) => {
   margin: 0 0 4px 0;
   font-size: 15px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .alert-message {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1.5;
 }
 
@@ -180,20 +180,20 @@ const handleLogin = (alertId: string) => {
   transition: all 0.2s;
   
   &.alert-btn-primary {
-    background: #047857;
-    color: white;
+    background: var(--status-success-emphasis);
+    color: var(--text-inverse);
     
     &:hover {
-      background: #065f46;
+      background: var(--status-success-emphasis);
     }
   }
   
   &.alert-btn-secondary {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: var(--surface-muted);
+    color: var(--text-muted);
     
     &:hover {
-      background: #e5e7eb;
+      background: var(--border-default);
     }
   }
 }
@@ -204,7 +204,7 @@ const handleLogin = (alertId: string) => {
   height: 24px;
   border: none;
   background: transparent;
-  color: #9ca3af;
+  color: var(--text-placeholder);
   font-size: 24px;
   line-height: 1;
   cursor: pointer;
@@ -212,7 +212,7 @@ const handleLogin = (alertId: string) => {
   transition: color 0.2s;
   
   &:hover {
-    color: #4b5563;
+    color: var(--text-secondary);
   }
 }
 

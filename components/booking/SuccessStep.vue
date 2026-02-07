@@ -154,7 +154,7 @@ const resetBooking = () => {
 .checkmark-circle {
   width: 80px;
   height: 80px;
-  background: var(--color-success, #10b981);
+  background: var(--status-success);
   border-radius: 50%;
   margin: 0 auto 1.5rem;
   display: flex;
@@ -164,7 +164,7 @@ const resetBooking = () => {
   svg {
     width: 40px;
     height: 40px;
-    color: var(--text-white, #fff);
+    color: var(--text-inverse);
   }
 }
 
@@ -241,7 +241,7 @@ const resetBooking = () => {
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  color: white;
+  color: var(--text-inverse);
 }
 .btn-smooth-outline{
   color: var(--accent-primary);

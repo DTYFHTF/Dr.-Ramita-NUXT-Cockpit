@@ -418,7 +418,7 @@ useHead({
 }
 
 .legal-content {
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -437,15 +437,15 @@ useHead({
   }
 
   .important-notice {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
+    background: var(--status-warning-bg);
+    border-left: 4px solid var(--status-warning);
     padding: 1.5rem;
     margin-bottom: 2rem;
     border-radius: 4px;
 
     p {
       margin-bottom: 0.75rem;
-      color: #856404;
+      color: var(--status-warning-text);
       line-height: 1.6;
 
       &:last-child {
@@ -459,15 +459,15 @@ useHead({
   }
 
   .acknowledgement {
-    background: #d4edda;
-    border-left: 4px solid #28a745;
+    background: var(--status-success-bg);
+    border-left: 4px solid var(--status-success);
     padding: 1.5rem;
     margin-top: 2rem;
     border-radius: 4px;
 
     p {
       margin: 0;
-      color: #155724;
+      color: var(--status-success-text);
       font-size: 1.05rem;
       line-height: 1.6;
     }
@@ -490,7 +490,7 @@ useHead({
 
     p {
       line-height: 1.8;
-      color: var(--text-dark);
+      color: var(--text-primary);
       margin-bottom: 1rem;
     }
 
@@ -500,7 +500,7 @@ useHead({
       
       li {
         margin-bottom: 0.5rem;
-      color: var(--text-dark);
+      color: var(--text-primary);
       }
     }
   }
@@ -527,7 +527,7 @@ useHead({
 .cms-content {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -545,7 +545,7 @@ useHead({
 
   :deep(p) {
     line-height: 1.8;
-    color: var(--text-dark);
+    color: var(--text-primary);
     margin-bottom: 1rem;
   }
 

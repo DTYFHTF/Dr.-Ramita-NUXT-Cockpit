@@ -432,7 +432,7 @@ function imageUrl(img: string) {
   width: 100%;
   height: 180px;
   overflow: hidden;
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
 }
 
 .card-img-top {
@@ -554,7 +554,7 @@ function imageUrl(img: string) {
 .quick-view-btn:hover,
 .wishlist-btn:active,
 .quick-view-btn:active {
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
 }
 
 .add-to-cart-btn {
@@ -626,7 +626,7 @@ function imageUrl(img: string) {
 }
 
 .wishlist-toast a {
-  color: white !important;
+  color: var(--text-inverse) !important;
   text-decoration: underline !important;
 }
 

@@ -300,8 +300,8 @@ const handleSubmit = async () => {
 }
 
 .hero-section {
-  background: linear-gradient(135deg, var(--brand-forest) 0%, #1e3624 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--brand-forest) 0%, var(--brand-forest-dark) 100%);
+  color: var(--text-inverse);
   padding: 4rem 0 3rem;
   text-align: center;
   margin-bottom: 3rem;
@@ -324,13 +324,13 @@ const handleSubmit = async () => {
     font-size: 2.5rem;
     margin-bottom: 0.75rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
 
   .tagline {
     font-size: 1.2rem;
-    color: white;
+    color: var(--text-inverse);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
@@ -474,7 +474,7 @@ const handleSubmit = async () => {
 
 .contact-info-section {
   .info-card {
-    background: white;
+    background: var(--surface-primary);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -488,7 +488,7 @@ const handleSubmit = async () => {
     }
 
     p {
-      color: var(--text-dark);
+      color: var(--text-primary);
       line-height: 1.6;
       margin-bottom: 1rem;
 
@@ -518,7 +518,7 @@ const handleSubmit = async () => {
       .details {
         strong {
           display: block;
-          color: var(--text-dark);
+          color: var(--text-primary);
           margin-bottom: 0.25rem;
           font-size: 0.9rem;
         }
@@ -543,7 +543,7 @@ const handleSubmit = async () => {
 
       div {
         padding: 0.5rem 0;
-        color: var(--text-dark);
+        color: var(--text-primary);
 
         strong {
           color: var(--accent-primary);
@@ -588,20 +588,20 @@ const handleSubmit = async () => {
           border-radius: 50%;
           text-decoration: none;
           transition: all 0.3s ease;
-          color: white;
+          color: var(--text-inverse);
 
           &.facebook {
-            background: #1877f2;
+            background: var(--social-facebook);
 
             &:hover {
-              background: #0d66d9;
+              background: var(--social-facebook-hover);
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(24, 119, 242, 0.4);
             }
           }
 
           &.instagram {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            background: linear-gradient(45deg, var(--social-instagram-1), var(--social-instagram-2), var(--social-instagram-3), var(--social-instagram-4), var(--social-instagram-5));
 
             &:hover {
               transform: translateY(-3px);
@@ -610,40 +610,40 @@ const handleSubmit = async () => {
           }
 
           &.youtube {
-            background: #ff0000;
+            background: var(--social-youtube);
 
             &:hover {
-              background: #cc0000;
+              background: var(--social-youtube-hover);
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
             }
           }
 
           &.twitter {
-            background: #1da1f2;
+            background: var(--social-twitter);
 
             &:hover {
-              background: #0c8ad9;
+              background: var(--social-twitter-hover);
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
             }
           }
 
           &.linkedin {
-            background: #0A66C2;
+            background: var(--social-linkedin);
 
             &:hover {
-              background: #084d91;
+              background: var(--social-linkedin-hover);
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
             }
           }
 
           &.whatsapp {
-            background: #25D366;
+            background: var(--social-whatsapp);
 
             &:hover {
-              background: #1da851;
+              background: var(--social-whatsapp-hover);
               transform: translateY(-3px);
               box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
             }
@@ -655,7 +655,7 @@ const handleSubmit = async () => {
 }
 
 .additional-info {
-  background: white;
+  background: var(--surface-primary);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -687,7 +687,7 @@ const handleSubmit = async () => {
       }
 
       p {
-        color: var(--text-dark);
+        color: var(--text-primary);
         line-height: 1.6;
         font-size: 0.95rem;
         margin: 0;

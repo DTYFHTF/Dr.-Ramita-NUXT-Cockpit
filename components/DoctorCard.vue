@@ -131,19 +131,19 @@ const formatMode = (mode: string) => {
     font-weight: 500;
     border: 1px solid var(--border-default);
     &.mode-online {
-      background: #e0f2fe;
-      color: #0277bd;
-      border-color: #81d4fa;
+      background: var(--tag-info-bg);
+      color: var(--tag-info-text);
+      border-color: var(--tag-info-border);
     }
     &.mode-phone {
-      background: #f3e5f5;
-      color: #7b1fa2;
-      border-color: #ce93d8;
+      background: var(--tag-purple-bg);
+      color: var(--tag-purple-text);
+      border-color: var(--tag-purple-border);
     }
     &.mode-in-person {
-      background: #e8f5e8;
-      color: #2e7d32;
-      border-color: #a5d6a7;
+      background: var(--status-success-bg);
+      color: var(--accent-primary);
+      border-color: var(--tag-success-border);
     }
   }
 }

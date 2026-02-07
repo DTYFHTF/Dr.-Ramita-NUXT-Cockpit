@@ -117,7 +117,7 @@ const target = computed(() => {
 
 .overlay-content {
   text-align: center;
-  color: white;
+  color: var(--text-inverse);
   padding: 1.5rem;
 }
 
@@ -125,7 +125,7 @@ const target = computed(() => {
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: white;
+  color: var(--text-inverse);
 }
 
 

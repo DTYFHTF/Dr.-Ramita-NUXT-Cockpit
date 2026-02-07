@@ -44,7 +44,7 @@ const navigateToCategory = () => {
   text-decoration: none;
   padding: 1rem;
   border-radius: 16px;
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   transition: all 0.3s ease;
   border: 1px solid var(--border-default);
   min-height: 200px;

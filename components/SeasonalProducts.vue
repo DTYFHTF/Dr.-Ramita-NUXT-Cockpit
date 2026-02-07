@@ -307,7 +307,7 @@ watch(
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   border: 2px solid var(--border-default);
   border-radius: 50px;
   color: var(--text-secondary);

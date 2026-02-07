@@ -397,7 +397,7 @@ if (error.value) {
 }
 .language-tag {
   background: var(--accent-primary);
-  color: #fff;
+  color: var(--text-inverse);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -421,10 +421,10 @@ if (error.value) {
   }
   .social-link:hover {
     background: var(--accent-primary);
-    color: #fff;
+    color: var(--text-inverse);
   }
   .social-link:hover :deep(.lucide-icon) {
-    color: #fff;
+    color: var(--text-inverse);
   }
 }
 
@@ -533,8 +533,8 @@ if (error.value) {
   gap: 0.5rem;
 }
 .day-badge {
-  background: var(--color-secondary);
-  color: #fff;
+  background: var(--accent-secondary);
+  color: var(--text-inverse);
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
   font-size: 0.8rem;

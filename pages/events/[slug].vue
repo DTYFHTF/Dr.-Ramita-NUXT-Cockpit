@@ -457,7 +457,7 @@ useHead(() => ({
 /* === GENERAL LAYOUT === */
 .event-detail {
   min-height: 100vh;
-  background: var(--background-white, #f7f9fb);
+  background: var(--surface-primary);
 }
 
 .loading-state,
@@ -485,7 +485,7 @@ useHead(() => ({
 .event-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
 }
 
 /* Removed unused .event-meta and .meta-item classes */
@@ -542,7 +542,7 @@ useHead(() => ({
 .content-body {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
 }
 
 /* === SPEAKERS === */
@@ -580,18 +580,18 @@ useHead(() => ({
 .speaker-name {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-primary, #e6eef8);
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .speaker-title {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.75rem;
 }
 
 .speaker-bio {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -614,7 +614,7 @@ useHead(() => ({
 .agenda-time {
   flex-shrink: 0;
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--accent-primary);
   min-width: 80px;
 }
 
@@ -629,13 +629,13 @@ useHead(() => ({
 }
 
 .agenda-description {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
 
 .agenda-speaker {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -658,7 +658,7 @@ useHead(() => ({
 }
 
 .check-icon {
-  color: var(--accent-soft-green, #10b981);
+  color: var(--status-success);
   font-size: 1rem;
 }
 
@@ -688,9 +688,9 @@ useHead(() => ({
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  border-bottom: 1px solid var(--border-default);
   font-size: 0.9rem;
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
 }
 
 .detail-item:last-child {
@@ -698,7 +698,7 @@ useHead(() => ({
 }
 
 .detail-icon {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary);
   font-size: 1rem;
   width: 20px;
   flex-shrink: 0;
@@ -723,8 +723,8 @@ useHead(() => ({
 
 .booking-section {
   padding: 1.5rem;
-  border-top: 1px solid var(--border-color, #e5e7eb);
-  background: var(--background-light, #f7f9fb);
+  border-top: 1px solid var(--border-default);
+  background: var(--surface-muted);
 }
 
 .price-section {
@@ -738,12 +738,12 @@ useHead(() => ({
 .price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--accent-primary);
 }
 
 
 .filling-fast {
-  color: var(--accent-soft-green, #10b981);
+  color: var(--status-success);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -757,8 +757,8 @@ useHead(() => ({
 }
 
 .book-now-btn.disabled {
-  background: var(--border-color, #e5e7eb);
-  color: var(--text-secondary, #6b7280);
+  background: var(--border-default);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 

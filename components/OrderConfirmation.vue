@@ -448,7 +448,7 @@ const hasHsnCodes = computed(() => {
 }
 
 .order-header {
-  background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--status-success) 0%, var(--status-success-emphasis) 100%);
   color: var(--text-white);
   padding: 2rem;
 }
@@ -792,22 +792,22 @@ const hasHsnCodes = computed(() => {
   }
   
   .checkmark-circle {
-    background: #10b981 !important;
+    background: var(--status-success) !important;
     print-color-adjust: exact;
   }
   
   .order-details-card {
     box-shadow: none;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-default);
   }
   
   .order-header {
-    background: #10b981 !important;
+    background: var(--status-success) !important;
     print-color-adjust: exact;
   }
   
   .section-icon {
-    color: #10b981 !important;
+    color: var(--status-success) !important;
     print-color-adjust: exact;
   }
   

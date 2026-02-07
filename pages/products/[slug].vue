@@ -310,7 +310,7 @@ function handleAddToCartProxy(payload: any) {
   // margin-top: 3rem;
   // padding-top: 2rem;
   border-top: 1px solid var(--border-default);
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
 }
 .error {
   color: var(--text-error);
@@ -318,7 +318,7 @@ function handleAddToCartProxy(payload: any) {
   margin: 2rem 0;
 }
 .discount-badge {
-  background: var(--color-secondary) !important;
+  background: var(--accent-secondary) !important;
   color: var(--text-white) !important;
   font-size: 1rem;
   font-weight: 600;

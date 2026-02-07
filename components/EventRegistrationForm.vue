@@ -215,7 +215,7 @@ const initiateEventPayment = async (eventId, eventSlug, price, phone) => {
         },
       },
       theme: {
-        color: '#10b981',
+        color: 'var(--status-success)',
       },
     }
     
@@ -333,7 +333,7 @@ const initiateEnrollmentPayment = async (registrationId, registrationType) => {
         },
       },
       theme: {
-        color: '#10b981',
+        color: 'var(--status-success)',
       },
     }
     
@@ -451,7 +451,7 @@ const verifyEnrollmentPayment = async (registrationId, registrationType, razorpa
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border-top-color: var(--text-inverse);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

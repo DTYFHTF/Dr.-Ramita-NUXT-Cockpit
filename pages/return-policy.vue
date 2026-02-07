@@ -181,7 +181,7 @@ useHead({
 }
 
 .legal-content {
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -212,7 +212,7 @@ useHead({
 
     p {
       line-height: 1.8;
-      color: var(--text-dark);
+      color: var(--text-primary);
       margin-bottom: 1rem;
     }
 
@@ -222,7 +222,7 @@ useHead({
       
       li {
         margin-bottom: 0.5rem;
-      color: var(--text-dark);
+      color: var(--text-primary);
       }
 
       strong {
@@ -253,7 +253,7 @@ useHead({
 .cms-content {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: var(--surface-primary);
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -271,7 +271,7 @@ useHead({
 
   :deep(p) {
     line-height: 1.8;
-    color: var(--text-dark);
+    color: var(--text-primary);
     margin-bottom: 1rem;
   }
 

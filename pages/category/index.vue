@@ -156,12 +156,12 @@ onMounted(() => {
 <style scoped lang="scss">
 .categories-index {
   min-height: 100vh;
-  background: var(--background-light);
+  background: var(--surface-muted);
 }
 
 .categories-hero {
-  background: var(--background-white);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-default);
   
   .hero-title {
     font-size: 3rem;
@@ -184,8 +184,8 @@ onMounted(() => {
 
 .category-card {
   display: block;
-  background: var(--background-white);
-  border: 2px solid var(--border-color);
+  background: var(--surface-primary);
+  border: 2px solid var(--border-default);
   border-radius: 16px;
   padding: 2rem;
   text-decoration: none;
@@ -193,7 +193,7 @@ onMounted(() => {
   height: 100%;
   
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent-primary);
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(var(--color-primary-rgb), 0.15);
     text-decoration: none;
@@ -206,7 +206,7 @@ onMounted(() => {
     .category-icon-wrapper {
       width: 80px;
       height: 80px;
-      background: var(--background-light);
+      background: var(--surface-muted);
       border-radius: 20px;
       display: flex;
       align-items: center;
@@ -215,7 +215,7 @@ onMounted(() => {
       transition: all 0.3s ease;
       
       .category-icon {
-        color: var(--color-primary);
+        color: var(--accent-primary);
       }
     }
     
@@ -243,7 +243,7 @@ onMounted(() => {
           display: block;
           font-size: 1.5rem;
           font-weight: 700;
-          color: var(--color-primary);
+          color: var(--accent-primary);
         }
         
         .stat-label {
@@ -272,15 +272,15 @@ onMounted(() => {
         .subcategory-tag,
         .more-tag {
           font-size: 0.875rem;
-          background: var(--background-light);
+          background: var(--surface-muted);
           color: var(--text-secondary);
           padding: 0.25rem 0.75rem;
           border-radius: 12px;
-          border: 1px solid var(--border-color);
+          border: 1px solid var(--border-default);
         }
         
         .more-tag {
-          color: var(--color-primary);
+          color: var(--accent-primary);
           font-weight: 500;
         }
       }
@@ -291,7 +291,7 @@ onMounted(() => {
     text-align: center;
     
     .explore-link {
-      color: var(--color-primary);
+      color: var(--accent-primary);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -303,7 +303,7 @@ onMounted(() => {
   
   &:hover {
     .category-icon-wrapper {
-      background: var(--color-primary);
+      background: var(--accent-primary);
       
       .category-icon {
         color: var(--text-white);
@@ -314,13 +314,13 @@ onMounted(() => {
 
 .all-categories-section {
   .card {
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-default);
     border-radius: 16px;
-    background: var(--background-white);
+    background: var(--surface-primary);
     
     .card-header {
-      background: var(--background-light);
-      border-bottom: 1px solid var(--border-color);
+      background: var(--surface-muted);
+      border-bottom: 1px solid var(--border-default);
       padding: 1.5rem;
       border-radius: 14px 14px 0 0;
       
@@ -340,7 +340,7 @@ onMounted(() => {
 .loading-state {
   .category-card-skeleton {
     height: 300px;
-    background: linear-gradient(90deg, var(--background-light) 0%, var(--border-color) 50%, var(--background-light) 100%);
+    background: linear-gradient(90deg, var(--surface-muted) 0%, var(--border-default) 50%, var(--surface-muted) 100%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 16px;

@@ -96,7 +96,7 @@ const props = defineProps({
   align-items: center;
   padding: 1rem;
   border-radius: 16px;
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   min-height: 200px;
   justify-content: center;
 }

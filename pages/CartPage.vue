@@ -446,7 +446,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 }
 
 .summary-card {
-  background: var(--background-white);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
@@ -458,7 +458,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid var(--background-light);
+  border-bottom: 2px solid var(--surface-muted);
 }
 
 .summary-icon {
@@ -483,7 +483,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--background-light);
+  border-bottom: 1px solid var(--surface-muted);
 }
 
 .summary-row:last-child {
@@ -500,7 +500,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
 }
 
 .total-row {
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--border-default);
   padding-top: 1rem;
   margin-top: 1rem;
   font-size: 1.125rem;
@@ -540,7 +540,7 @@ const { getImageUrl, handleImageError } = useImageUrl();
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--background-light);
+  background: var(--surface-muted);
   border-radius: 12px;
 }
 

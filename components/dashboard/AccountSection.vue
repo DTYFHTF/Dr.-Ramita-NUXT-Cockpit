@@ -486,16 +486,16 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .alert-success {
-  background-color: var(--success-bg, #d1fae5);
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
+  background-color: var(--status-success-bg);
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 1px solid var(--color-secondary);
+  border: 1px solid var(--accent-secondary);
 }
 
 .alert-danger {
-  background-color: var(--error-bg, #fee2e2);
+  background-color: var(--status-error-bg);
   border-color: var(--text-error);
   color: var(--text-error);
   padding: 0.75rem 1rem;
@@ -504,7 +504,7 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .alert-info {
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   border-color: var(--accent-primary);
   color: var(--text-primary);
   padding: 0.75rem 1rem;

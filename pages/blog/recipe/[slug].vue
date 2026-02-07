@@ -156,7 +156,7 @@ watch(recipeData, (val) => {
   // Recipe Header Styles
   .recipe-header {
     padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-default);
 
     .recipe-description {
       font-size: 1.1rem;
@@ -201,7 +201,7 @@ watch(recipeData, (val) => {
     margin-top: 2rem;
 
     .content-section {
-      background: var(--background-white);
+      background: var(--surface-primary);
       border-radius: 10px;
       padding: 1.8rem;
       margin-bottom: 2rem;
@@ -212,7 +212,7 @@ watch(recipeData, (val) => {
     //Ingredients
     li {
       padding: 0.7rem 0;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-default);
       position: relative;
       padding-left: 1.5rem;
       color: var(--text-primary);
@@ -228,11 +228,11 @@ watch(recipeData, (val) => {
         margin: 0;
         list-style: none;
         li {
-          background-color: var(--color-secondary);
+          background-color: var(--accent-secondary);
           padding: 0.6rem 1.2rem;
           border-radius: 25px;
           font-size: 0.95rem;
-          color: var(--text-white, #fff);
+          color: var(--text-inverse);
           display: inline-flex;
           align-items: center;
         }

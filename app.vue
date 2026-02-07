@@ -43,7 +43,7 @@ const handleError = (error) => {
 
 <style>
 :root {
-  --text-deep-green: #3f5947;
+  --text-deep-green: var(--accent-primary);
   
   /* Font stack with Noto Sans for proper Rupee symbol (₹) support */
   --font-primary: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;

@@ -273,7 +273,7 @@ onMounted(() => {
 .availability-bar {
   width: 70%;
   height: 100%;
-  background-color: var(--color-secondary);
+  background-color: var(--accent-secondary);
   border-radius: 2px;
   opacity: 0.8;
 }
@@ -283,7 +283,7 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--text-white, #fff);
+  color: var(--text-inverse);
   background-color: var(--accent-primary);
   width: 24px;
   height: 24px;
@@ -319,7 +319,7 @@ onMounted(() => {
 }
 
 .disabled {
-  background-color: var(--surface-muted);
+  background-color: var(--text-footer);
   cursor: not-allowed;
   opacity: 0.5;
 }
