@@ -43,8 +43,14 @@
                   <input v-model="shipping.name" type="text" class="form-input" required placeholder="Enter your full name" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Mobile Number <span class="required">*</span></label>
-                  <input v-model="shipping.phone" type="tel" class="form-input" required placeholder="+91 00000 00000" />
+                  <label class="form-label">Phone Number <span class="required">*</span></label>
+                  <PhoneInput
+                    v-model="shipping.phone"
+                    v-model:country-code="shipping.phone_country_code"
+                    placeholder="+91 00000 00000"
+                    :required="true"
+                    :default-country="'IN'"
+                  />
                 </div>
                 <div class="form-group">
                   <label class="form-label">Pin Code <span class="required">*</span></label>
@@ -273,6 +279,7 @@ import { useAlert } from '@/composables/useAlert';
 import type { Order, OrderItem, ShippingInfo, PaymentMethod } from '@/types';
 import LucideIcon from '@/components/LucideIcon.vue';
 import OrderConfirmation from '@/components/OrderConfirmation.vue';
+import PhoneInput from '@/components/PhoneInput.vue';
 
 // Require authentication for checkout
 definePageMeta({
@@ -328,6 +335,7 @@ const getImageUrl = (imagePath: string | null | undefined) => {
 const shipping = ref<ShippingInfo>({
   name: '',
   phone: '',
+  phone_country_code: '',
   pincode: '',
   address: '',
   area: '',

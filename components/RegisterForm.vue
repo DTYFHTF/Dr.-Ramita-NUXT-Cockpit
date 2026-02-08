@@ -34,14 +34,12 @@
       />
     </div>
     <div class="form-group">
-      <label for="phone" class="form-label">Phone<span class="required">*</span></label>
-      <input 
-        v-model="phone" 
-        id="phone" 
-        type="tel" 
-        class="form-input"
+      <label for="phone" class="form-label">Phone Number<span class="required">*</span></label>
+      <PhoneInput
+        v-model="phone"
+        v-model:country-code="phoneCountryCode"
         placeholder="Enter your phone number"
-        required 
+        :required="true"
       />
     </div>
     <div class="form-group">
@@ -87,6 +85,7 @@ const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const phone = ref('')
+const phoneCountryCode = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 
@@ -96,6 +95,7 @@ function onSubmit() {
     last_name: lastName.value,
     email: email.value,
     phone: phone.value,
+    phone_country_code: phoneCountryCode.value,
     password: password.value,
     password_confirmation: passwordConfirmation.value
   })

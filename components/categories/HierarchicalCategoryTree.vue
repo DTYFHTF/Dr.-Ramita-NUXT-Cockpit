@@ -285,12 +285,12 @@ onMounted(() => {
       transition: all 0.2s ease;
       
       &:hover {
-        background-color: var(--text-footer);
+        background-color: var(--surface-footer);
         color: var(--accent-primary);
       }
       
       &.active {
-        background-color: var(--text-footer);
+        background-color: var(--surface-footer);
         color: var(--accent-primary);
         
         .category-icon, .expand-icon {

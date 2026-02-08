@@ -65,21 +65,12 @@
             <label for="phone" class="form-label"
               >Phone Number <span class="text-danger">*</span></label
             >
-            <vue-tel-input
+            <PhoneInput
               v-model="form.phone"
-              mode="international"
-              :preferred-countries="['IN', 'US', 'GB', 'AE']"
-              :dropdown-options="{
-                showSearchBox: true,
-                showDialCodeInSelection: true,
-                showDialCodeInList: true,
-              }"
-              :input-options="{
-                placeholder: 'Enter phone number',
-                required: true,
-              }"
+              v-model:country-code="form.phone_country_code"
+              placeholder="Enter phone number"
+              :required="true"
               @country-changed="handleCountryChange"
-              class="vue-tel-input-custom"
             />
             <span v-if="validationErrors?.phone" class="text-danger small">{{
               validationErrors.phone[0]
@@ -1540,76 +1531,6 @@ onUnmounted(() => {
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
-}
-
-/* Vue Tel Input Dark Mode Fix */
-:deep(.vue-tel-input) {
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-
-  &:focus-within {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
-  }
-
-  .vti__input {
-    padding: 0.75rem;
-    font-size: 1rem;
-    background-color: var(--surface-primary);
-    color: var(--text-primary);
-  }
-
-  /* Fix dropdown visibility in dark mode */
-  .vti__dropdown {
-    background-color: var(--surface-primary);
-    border: 1px solid var(--border-default);
-
-    &-list {
-      background-color: var(--surface-primary);
-      color: var(--text-primary);
-    }
-
-    &-item {
-      color: var(--text-primary);
-      padding: 8px 12px;
-
-      &:hover,
-      &.highlighted {
-        background-color: var(--text-footer);
-      }
-
-      strong {
-        color: var(--text-primary);
-      }
-
-      .vti__flag {
-        margin-right: 8px;
-      }
-    }
-  }
-
-  /* Country code in selection */
-  .vti__selection {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .vti__country-code {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-  }
-
-  /* Search box in dropdown */
-  .vti__search_box {
-    background-color: var(--surface-primary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-default);
-
-    &:focus {
-      border-color: var(--accent-primary);
-    }
-  }
 }
 
 .spinner-border {

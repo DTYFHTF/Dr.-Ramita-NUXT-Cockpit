@@ -134,7 +134,7 @@ useHead({
 }
 
 .form-input:disabled {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   opacity: 0.65;
 }
 

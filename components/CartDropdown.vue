@@ -200,6 +200,8 @@ const removeItem = async (item: any) => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   overflow: hidden;
+  background: var(--surface-base);
+  color: var(--text-primary);
   
   &.show {
     display: block;
@@ -207,10 +209,11 @@ const removeItem = async (item: any) => {
 }
 
 .cart-header {
-  background: var(--bs-light);
+  background: var(--surface-muted);
   
   h6 {
-    color: var(--bs-body-color);
+    color: var(--text-primary);
+    font-weight: 600;
   }
 }
 
@@ -220,37 +223,55 @@ const removeItem = async (item: any) => {
   }
   
   &::-webkit-scrollbar-track {
-    background: var(--bs-light);
+    background: var(--surface-subtle);
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--bs-secondary);
+    background: var(--border-emphasis);
     border-radius: 3px;
     
     &:hover {
-      background: var(--bs-dark);
+      background: var(--border-strong);
     }
   }
 }
 
 .cart-item {
   transition: background-color 0.2s ease;
+  background: var(--surface-base);
   
   &:hover {
-    background: var(--bs-light);
+    background: var(--surface-muted);
   }
   
   .cart-item-image img {
-    border: 1px solid var(--bs-border-color);
+    border: 1px solid var(--border-default);
   }
 
   .hover-underline:hover {
     text-decoration: underline !important;
   }
+
+  .btn-outline-secondary {
+    color: var(--text-primary);
+    border-color: var(--border-default);
+    background: transparent;
+  }
+
+  .btn-outline-secondary:hover {
+    background: var(--surface-subtle);
+    color: var(--text-primary);
+  }
+
+  .btn-outline-secondary:disabled,
+  .btn-outline-secondary.disabled {
+    color: var(--text-secondary);
+    opacity: 0.65;
+  }
 }
 
 .cart-footer {
-  background: var(--bs-body-bg);
+  background: var(--surface-base);
 }
 
 .fade-enter-active,
@@ -263,25 +284,7 @@ const removeItem = async (item: any) => {
   opacity: 0;
 }
 
-// Dark mode support
-[data-bs-theme="dark"] {
-  .cart-dropdown-menu {
-    background: var(--bs-dark);
-    border-color: var(--bs-border-color);
-  }
-  
-  .cart-header {
-    background: var(--bs-gray-800);
-  }
-  
-  .cart-item {
-    &:hover {
-      background: var(--bs-gray-800);
-    }
-  }
-  
-  .cart-footer {
-    background: var(--bs-body-bg);
-  }
-}
+// Dark mode styles are now handled by semantic tokens
+// No need for explicit [data-bs-theme="dark"] overrides
+
 </style>

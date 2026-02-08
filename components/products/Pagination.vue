@@ -75,7 +75,7 @@ const handlePageChange = (page: number) => {
       
       &:hover:not(:disabled) {
         color: var(--accent-primary);
-        background-color: var(--text-footer);
+        background-color: var(--surface-footer);
         border-color: var(--accent-primary);
       }
       

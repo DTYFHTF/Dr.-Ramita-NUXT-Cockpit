@@ -20,14 +20,11 @@
     <form v-else @submit.prevent="submitForm" class="event-registration-form">
       <div class="form-group">
         <label for="phone" class="form-label">Phone (Optional)</label>
-        <input 
-          v-model="form.phone" 
-          id="phone" 
-          type="text" 
-          class="form-input"
+        <PhoneInput
+          v-model="form.phone"
+          v-model:country-code="form.phone_country_code"
           placeholder="Enter your phone number"
-          maxlength="20" 
-          :disabled="loading" 
+          :required="false"
         />
       </div>
       <div v-if="error" class="form-error">{{ error }}</div>
@@ -62,7 +59,8 @@ const emit = defineEmits(['registration-success'])
 const userStore = useUserStore()
 
 const form = ref({
-  phone: ''
+  phone: '',
+  phone_country_code: ''
 })
 const loading = ref(false)
 const error = ref('')
@@ -107,7 +105,10 @@ const submitForm = async () => {
     const registrationResponse = await authApi.post(
       `events/${props.eventSlug}/register`,
       userStore.token,
-      { phone: form.value.phone || null }
+      { 
+        phone: form.value.phone || null,
+        phone_country_code: form.value.phone_country_code || null
+      }
     )
     
     if (!registrationResponse?.data) {
@@ -171,7 +172,8 @@ const initiateEventPayment = async (eventId, eventSlug, price, phone) => {
         registration_type: 'event',
         event_id: eventId,
         event_slug: eventSlug,
-        phone: phone
+        phone: phone,
+        phone_country_code: form.value.phone_country_code || null
       }
     )
     

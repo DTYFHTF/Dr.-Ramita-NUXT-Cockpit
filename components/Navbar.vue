@@ -35,7 +35,7 @@
         </div>
         <!-- User Section -->
         <div
-          class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-1 mt-3 mt-lg-0"
+          class="d-flex align-items-center ms-auto flex-shrink-0 flex-lg-row justify-content-center gap-3 mt-3 mt-lg-0"
         >
           <template v-if="!hydrated">
             <span class="nav-shared-link"></span>

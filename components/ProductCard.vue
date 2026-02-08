@@ -432,7 +432,7 @@ function imageUrl(img: string) {
   width: 100%;
   height: 180px;
   overflow: hidden;
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
 }
 
 .card-img-top {
@@ -554,7 +554,7 @@ function imageUrl(img: string) {
 .quick-view-btn:hover,
 .wishlist-btn:active,
 .quick-view-btn:active {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
 }
 
 .add-to-cart-btn {

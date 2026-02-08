@@ -31,12 +31,15 @@
               :required="true"
             />
 
-            <FormInput
-              v-model="formData.phone"
-              label="Phone Number"
-              type="tel"
-              placeholder="+91 98765 43210"
-            />
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <PhoneInput
+                v-model="formData.phone"
+                v-model:country-code="formData.phoneCountryCode"
+                placeholder="Enter your phone number"
+                :required="false"
+              />
+            </div>
 
             <div class="form-group">
               <label for="subject">Subject <span class="required">*</span></label>
@@ -235,6 +238,7 @@ const formData = reactive({
   name: '',
   email: '',
   phone: '',
+  phoneCountryCode: '',
   subject: '',
   orderNumber: '',
   message: '',
@@ -262,6 +266,7 @@ const handleSubmit = async () => {
         name: formData.name,
         email: formData.email,
         phone: formData.phone || null,
+        phone_country_code: formData.phoneCountryCode || null,
         subject: formData.subject,
         order_number: formData.orderNumber || null,
         message: formData.message,

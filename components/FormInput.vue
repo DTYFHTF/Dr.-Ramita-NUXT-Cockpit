@@ -104,7 +104,7 @@ const inputId = computed(() => props.id || `input-${Math.random().toString(36).s
   }
 
   &:disabled {
-    background-color: var(--text-footer);
+    background-color: var(--surface-footer);
     cursor: not-allowed;
     opacity: 0.6;
   }

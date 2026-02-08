@@ -183,7 +183,7 @@ const handleImageError = (event) => {
 
 <style scoped lang="scss">
 .top-deals-offers {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   color: var(--text-primary);
   padding: 3rem 0;
 }

@@ -319,7 +319,7 @@ onMounted(() => {
 }
 
 .disabled {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   cursor: not-allowed;
   opacity: 0.5;
 }

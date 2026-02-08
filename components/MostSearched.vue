@@ -90,7 +90,7 @@ const categories = computed(() => {
 }
 
 .search-tag:hover {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   transform: translateY(-2px);
   color: var(--text-primary);
   text-decoration: none;

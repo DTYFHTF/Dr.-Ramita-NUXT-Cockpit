@@ -24,7 +24,8 @@ export default defineNuxtConfig({
   
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
-    "@/assets/scss/main.scss" // Adding our global SCSS file
+    "@/assets/scss/main.scss", // Adding our global SCSS file
+    "@/assets/css/vue-tel-input.css" // Phone input component styles (copied into assets)
   ],
   plugins: [
     { src: '~/plugins/prevent-fouc.client.ts', mode: 'client' },

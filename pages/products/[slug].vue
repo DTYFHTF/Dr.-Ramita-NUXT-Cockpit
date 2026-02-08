@@ -310,7 +310,7 @@ function handleAddToCartProxy(payload: any) {
   // margin-top: 3rem;
   // padding-top: 2rem;
   border-top: 1px solid var(--border-default);
-  background-color: var(--text-footer);
+    background-color: var(--surface-muted);
 }
 .error {
   color: var(--text-error);

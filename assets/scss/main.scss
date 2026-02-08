@@ -130,6 +130,7 @@
   --surface-emphasis: #{$light-bg-emphasis};   // Highlighted sections
   --surface-hover: #{$light-bg-muted};         // Hover states
   --surface-active: #{$light-bg-emphasis};     // Active/pressed states
+  --surface-footer: #{$light-bg-muted};        // Footer-specific backgrounds
   
   // --- Text Hierarchy ---
   --text-primary: #{$light-text-primary};      // Headings, body text
@@ -284,6 +285,7 @@
   --surface-emphasis: #{$dark-bg-emphasis};
   --surface-hover: #{$dark-bg-emphasis};
   --surface-active: #323d35;
+  --surface-footer: #{$dark-bg-muted};
   
   // --- Text Hierarchy ---
   --text-primary: #{$dark-text-primary};

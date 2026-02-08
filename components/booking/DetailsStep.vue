@@ -30,12 +30,11 @@
 
       <div class="form-group">
         <label class="form-label">Phone Number<span class="required">*</span></label>
-        <input
+        <PhoneInput
           v-model="form.phone"
-          type="tel"
-          class="form-input"
-          required
-          placeholder="+91 12345 67890"
+          v-model:country-code="form.phone_country_code"
+          placeholder="Enter your phone number"
+          :required="true"
         />
       </div>
 
@@ -71,6 +70,7 @@ const form = reactive({
   name: store.formData.name,
   email: store.formData.email,
   phone: store.formData.phone,
+  phone_country_code: store.formData.phone_country_code || '',
   notes: store.formData.notes
 })
 

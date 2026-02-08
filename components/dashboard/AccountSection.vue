@@ -88,7 +88,12 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Phone Number</label>
-                  <input type="tel" v-model="profileForm.phone" class="form-input">
+                  <PhoneInput
+                    v-model="profileForm.phone"
+                    v-model:country-code="profileForm.phone_country_code"
+                    placeholder="Enter your phone number"
+                    :required="false"
+                  />
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Gender</label>
@@ -162,6 +167,7 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import LucideIcon from '@/components/LucideIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
+import PhoneInput from '@/components/PhoneInput.vue'
 
 const userStore = useUserStore()
 const { user, token, hydrated } = storeToRefs(userStore)
@@ -221,6 +227,7 @@ const profileForm = ref({
   first_name: '',
   last_name: '',
   phone: '',
+  phone_country_code: '',
   gender: '',
   date_of_birth: '',
   address: {
@@ -372,6 +379,7 @@ const updateProfile = async () => {
       formData.append('first_name', firstName)
       formData.append('last_name', lastName)
       formData.append('phone', profileForm.value.phone?.trim() || '')
+      formData.append('phone_country_code', profileForm.value.phone_country_code?.trim() || '')
       formData.append('gender', profileForm.value.gender || '')
       formData.append('date_of_birth', profileForm.value.date_of_birth || '')
       
@@ -403,6 +411,7 @@ const updateProfile = async () => {
         first_name: profileForm.value.first_name,
         last_name: profileForm.value.last_name,
         phone: profileForm.value.phone,
+        phone_country_code: profileForm.value.phone_country_code,
         gender: profileForm.value.gender,
         date_of_birth: profileForm.value.date_of_birth,
         address: profileForm.value.address
@@ -504,7 +513,7 @@ watch(showProfileEdit, (newVal) => {
 }
 
 .alert-info {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   border-color: var(--accent-primary);
   color: var(--text-primary);
   padding: 0.75rem 1rem;

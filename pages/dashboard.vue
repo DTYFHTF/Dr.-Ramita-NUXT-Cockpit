@@ -298,12 +298,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                               <label class="form-label">Phone Number<span class="text-danger">*</span></label>
-                              <input 
-                                type="tel" 
-                                v-model="addressForm.phone" 
-                                class="form-input"
-                                required
-                              >
+                              <PhoneInput
+                                v-model="addressForm.phone"
+                                v-model:country-code="addressForm.phone_country_code"
+                                placeholder="Enter your phone number"
+                                :required="true"
+                              />
                             </div>
                           </div>
                           
@@ -477,6 +477,7 @@ import WishlistSection from '@/components/dashboard/WishlistSection.vue'
 import ActivitySection from '@/components/dashboard/ActivitySection.vue'
 import MyCoursesSection from '@/components/MyCoursesSection.vue'
 import MyEventsSection from '@/components/MyEventsSection.vue'
+import PhoneInput from '@/components/PhoneInput.vue'
 import { useUserStore } from '@/stores/user'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
@@ -659,6 +660,7 @@ const locationPrefs = ref({
 const addressForm = ref({
   name: '',
   phone: '',
+  phone_country_code: '',
   street: '',
   city: '',
   state: '',
@@ -784,7 +786,7 @@ const saveAddress = async () => {
 
 <style scoped lang="scss">
 .dashboard-wrapper {
-  background-color: var(--text-footer);
+  background-color: var(--surface-footer);
   min-height: 100vh;
 }
 

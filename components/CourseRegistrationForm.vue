@@ -20,14 +20,11 @@
     <form v-else @submit.prevent="submitForm" class="course-registration-form">
       <div class="form-group">
         <label for="phone" class="form-label">Phone (Optional)</label>
-        <input 
-          v-model="form.phone" 
-          id="phone" 
-          type="text" 
-          class="form-input"
+        <PhoneInput
+          v-model="form.phone"
+          v-model:country-code="form.phone_country_code"
           placeholder="Enter your phone number"
-          maxlength="20" 
-          :disabled="loading || processingPayment" 
+          :required="false"
         />
       </div>
       <div v-if="error" class="form-error">
@@ -80,7 +77,8 @@ const emit = defineEmits(['enrollment-success'])
 const userStore = useUserStore()
 
 const form = ref({
-  phone: ''
+  phone: '',
+  phone_country_code: ''
 })
 const loading = ref(false)
 const error = ref('')
@@ -129,7 +127,10 @@ const submitForm = async () => {
     const enrollmentResponse = await authApi.post(
       `courses/${props.courseSlug}/enroll`,
       userStore.token,
-      { phone: form.value.phone || null }
+      { 
+        phone: form.value.phone || null,
+        phone_country_code: form.value.phone_country_code || null
+      }
     )
     
     if (!enrollmentResponse) {
@@ -192,6 +193,7 @@ const initiateCoursePayment = async (courseId, courseSlug, courseTitle, price) =
         course_id: courseId,
         course_slug: courseSlug,
         phone: form.value.phone || null,
+        phone_country_code: form.value.phone_country_code || null
       }
     )
     

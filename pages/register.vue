@@ -38,13 +38,13 @@ const config = useRuntimeConfig()
 
 const API_BASE = config.public.apiBase
 
-async function register({ first_name, last_name, email, phone, password, password_confirmation }: { first_name: string, last_name: string, email: string, phone: string, password: string, password_confirmation: string }) {
+async function register({ first_name, last_name, email, phone, phone_country_code, password, password_confirmation }: { first_name: string, last_name: string, email: string, phone: string, phone_country_code: string, password: string, password_confirmation: string }) {
   error.value = ''
   loading.value = true
   try {
     const response = await $fetch(`${API_BASE}/register`, {
       method: 'POST',
-      body: { first_name, last_name, email, phone, password, password_confirmation },
+      body: { first_name, last_name, email, phone, phone_country_code, password, password_confirmation },
       headers: { Accept: 'application/json' }
     }) as { token?: string, user?: any, message?: string }
     
