@@ -223,6 +223,16 @@ const topDeals = computed(() => {
   }
   return [];
 });
+
+// SEO Meta Tags
+const brand = useBrand();
+usePageSeo({
+  title: `${brand.fullName} - Authentic Ayurvedic Products & Wellness Solutions`,
+  description: 'Discover authentic Ayurvedic products, wellness courses, yoga practices, and natural home remedies. Shop trusted Ayurveda marketplace with expert consultations and traditional healing solutions.',
+  keywords: 'ayurveda, ayurvedic products, wellness, natural health, herbal products, yoga, meditation, home remedies',
+  path: '/',
+  appendBrand: false,
+});
 </script>
 
 <style scoped>

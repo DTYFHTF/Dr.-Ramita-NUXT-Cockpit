@@ -714,6 +714,14 @@ const submitOrder = async () => {
     // For Razorpay, isSubmitting is managed in callbacks
   }
 };
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Checkout',
+  description: 'Complete your purchase of authentic Ayurvedic products. Secure checkout with multiple payment options.',
+  path: '/checkout',
+  robots: 'noindex, nofollow',
+});
 </script>
 
 <style scoped>

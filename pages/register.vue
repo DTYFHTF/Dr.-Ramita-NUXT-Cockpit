@@ -62,6 +62,14 @@ async function register({ first_name, last_name, email, phone, phone_country_cod
     loading.value = false
   }
 }
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Create Account',
+  description: 'Create your account to access exclusive Ayurvedic products, personalized wellness recommendations, and expert consultations.',
+  path: '/register',
+  robots: 'noindex, nofollow',
+});
 </script>
 
 <style scoped>

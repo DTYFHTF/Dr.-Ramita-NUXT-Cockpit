@@ -544,6 +544,24 @@ function toggleSort(type: string) {
   }
   currentPage.value = 1;
 }
+
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!currentCategory.value) return null
+    return {
+      title: `${currentCategory.value.name} - Ayurvedic Products`,
+      description: truncateMeta(
+        currentCategory.value.description ||
+        `Shop authentic ${currentCategory.value.name} products. Browse our curated collection of Ayurvedic wellness solutions.`
+      ),
+      keywords: `${currentCategory.value.name}, ayurvedic products, ${currentCategory.value.name} category, natural wellness`,
+      path: `/category/${route.params.slug}`,
+      image: currentCategory.value.image,
+    }
+  },
+  { fallbackTitle: 'Product Category', fallbackDescription: 'Browse our curated collection of authentic Ayurvedic products by category.' }
+);
 </script>
 
 <style scoped lang="scss">

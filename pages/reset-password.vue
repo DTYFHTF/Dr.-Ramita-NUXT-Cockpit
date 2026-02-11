@@ -163,11 +163,11 @@ async function resetPassword() {
 }
 
 // SEO Meta
-useHead({
-  title: 'Reset Password - Ayurveda Marketplace',
-  meta: [
-    { name: 'description', content: 'Set your new password for Ayurveda Marketplace account' }
-  ]
+usePageSeo({
+  title: 'Set New Password',
+  description: 'Set your new password to secure your account.',
+  path: '/reset-password',
+  robots: 'noindex, nofollow',
 })
 </script>
 

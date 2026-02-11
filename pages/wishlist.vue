@@ -15,11 +15,11 @@ definePageMeta({
   middleware: 'auth'
 })
 
-useHead({
+usePageSeo({
   title: 'My Wishlist',
-  meta: [
-    { name: 'description', content: 'Your favorite products saved for later' }
-  ]
+  description: 'Your favorite Ayurvedic products saved for later. View and manage your wishlist.',
+  path: '/wishlist',
+  robots: 'noindex, nofollow',
 })
 </script>
 

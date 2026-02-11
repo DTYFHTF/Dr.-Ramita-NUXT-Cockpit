@@ -95,11 +95,11 @@ const config = useRuntimeConfig();
 definePageMeta({
 })
 
-useHead({
-  title: `FAQ - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Frequently Asked Questions about ${brand.fullName} - Ayurvedic products, consultations, shipping, returns, and more.` }
-  ]
+usePageSeo({
+  title: 'Frequently Asked Questions',
+  description: `Frequently Asked Questions about ${brand.fullName} - Ayurvedic products, consultations, shipping, returns, and more.`,
+  keywords: 'FAQ, frequently asked questions, ayurveda help, shipping info, returns policy, consultation questions',
+  path: '/faq',
 })
 
 const searchQuery = ref('');

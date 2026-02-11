@@ -99,6 +99,14 @@ async function login({ email, password }: { email: string, password: string }) {
     loading.value = false
   }
 }
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Sign In',
+  description: 'Sign in to your account to access personalized wellness recommendations, order history, and exclusive Ayurvedic products.',
+  path: '/login',
+  robots: 'noindex, nofollow',
+});
 </script>
 
 <style scoped>

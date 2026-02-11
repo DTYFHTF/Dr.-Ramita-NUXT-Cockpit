@@ -350,11 +350,10 @@ import PageHero from '@/components/PageHero.vue';
 const { page: cmsPage, pending, formatDate } = await useCMSPage('medical-disclaimer');
 const brand = useBrand();
 
-useHead({
-  title: `Medical Disclaimer - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Medical Disclaimer for ${brand.fullName} - Important information about Ayurvedic products and services` }
-  ]
+usePageSeo({
+  title: 'Medical Disclaimer',
+  description: `Medical Disclaimer for ${brand.fullName} - Important information about Ayurvedic products and services.`,
+  path: '/medical-disclaimer',
 })
 </script>
 

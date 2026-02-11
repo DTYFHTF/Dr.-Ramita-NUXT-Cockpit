@@ -248,6 +248,14 @@ function handleClearPriceRange() {
   priceMax.value = null;
   onSale.value = false;
 }
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Shop Ayurvedic Products - Natural Health & Wellness',
+  description: 'Browse our collection of authentic Ayurvedic products including herbal supplements, skincare, essential oils, and traditional remedies for natural health and wellness.',
+  keywords: 'ayurvedic products, herbal supplements, natural health, ayurveda shop, organic wellness, herbal remedies',
+  path: '/products',
+});
 </script>
 
 <style scoped>

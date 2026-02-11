@@ -188,34 +188,20 @@ watch(
   { immediate: true }
 );
 
-// --- SEO META TAGS ---
-watch(
-  () => product.value,
-  (p) => {
-    if (!p) return;
-    const config = useRuntimeConfig();
-    const url = `${config.public.baseUrl}/products/${p.slug || route.params.slug}`;
-    useHead({
-      title: p.name,
-      meta: [
-        { name: 'description', content: p.description || 'Shop Ayurvedic products.' },
-        { property: 'og:title', content: p.name },
-        { property: 'og:description', content: p.description || 'Shop Ayurvedic products.' },
-        { property: 'og:image', content: imageUrl(p.image) },
-        { property: 'og:url', content: url },
-        { property: 'og:type', content: 'product' },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: p.name },
-        { name: 'twitter:description', content: p.description || 'Shop Ayurvedic products.' },
-        { name: 'twitter:image', content: imageUrl(p.image) },
-        { name: 'twitter:url', content: url },
-      ],
-      link: [
-        { rel: 'canonical', href: url },
-      ],
-    });
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!product.value) return null
+    return {
+      title: product.value.name,
+      description: truncateMeta(stripHtml(product.value.description) || 'Shop authentic Ayurvedic products for natural wellness.'),
+      keywords: `${product.value.name}, ayurvedic product, ${(product.value.categories || []).map((c: any) => c.name).join(', ') || 'natural health'}`,
+      path: `/products/${product.value.slug || route.params.slug}`,
+      image: imageUrl(product.value.image),
+      ogType: 'product',
+    }
   },
-  { immediate: true }
+  { fallbackTitle: 'Ayurvedic Product', fallbackDescription: 'Shop authentic Ayurvedic products for natural wellness.' }
 );
 
 const showNotification = ref(false);

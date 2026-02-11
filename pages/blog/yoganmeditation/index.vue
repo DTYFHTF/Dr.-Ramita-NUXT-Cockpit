@@ -35,5 +35,13 @@ const yogaandmeditation = computed(() => {
     slug: item.slug
   })) || [];
 });
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Yoga & Meditation Practices - Mind-Body Wellness',
+  description: 'Explore transformative yoga and meditation practices for mind-body wellness. Learn asanas, pranayama, and meditation techniques from expert practitioners.',
+  keywords: 'yoga practices, meditation techniques, pranayama, asanas, mindfulness, yoga wellness, mind-body health',
+  path: '/blog/yoganmeditation',
+});
 </script>
 

@@ -38,6 +38,14 @@ watch(remediesData, (val) => {
 
 const homeRemediesWithImages = computed(() => remedies.value);
 
+// SEO Meta Tags
+usePageSeo({
+  title: 'Natural Home Remedies - Ayurvedic Healing Solutions',
+  description: 'Explore natural Ayurvedic home remedies for common health conditions. Traditional healing solutions using herbs, spices, and holistic practices for wellness.',
+  keywords: 'ayurvedic home remedies, natural healing, herbal remedies, traditional medicine, holistic health, dosha remedies',
+  path: '/blog/homeremedy',
+});
+
 </script>
 
 <style scoped>

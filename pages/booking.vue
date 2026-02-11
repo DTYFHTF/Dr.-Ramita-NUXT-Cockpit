@@ -26,14 +26,12 @@ definePageMeta({
 });
 
 // Meta tags
-useHead({
+usePageSeo({
   title: 'Book Consultation - Schedule Your Consultation',
-  meta: [
-    {
-      name: 'description',
-      content: 'Book a consultation with our certified Practitioners. Easy online booking with flexible scheduling options.'
-    }
-  ]
+  description: 'Book a consultation with our certified Ayurvedic practitioners. Easy online booking with flexible scheduling options.',
+  keywords: 'book consultation, ayurveda appointment, doctor booking, wellness consultation',
+  path: '/booking',
+  robots: 'noindex, nofollow',
 });
 
 const route = useRoute();

@@ -309,6 +309,22 @@ watch(() => courseData.value, (newData) => {
     checkEnrollmentStatus();
   }
 });
+
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!course.value) return null
+    return {
+      title: `${course.value.title} - Ayurveda Course`,
+      description: truncateMeta(stripHtml(course.value.description) || `Learn ${course.value.title} from expert Ayurvedic practitioners.`),
+      keywords: `${course.value.title}, ayurveda course, ${course.value.level || 'wellness training'}`,
+      path: `/courses/${route.params.slug}`,
+      image: course.value.imageUrl,
+      ogType: 'article',
+    }
+  },
+  { fallbackTitle: 'Ayurveda Course', fallbackDescription: 'Learn Ayurvedic wisdom from certified instructors.' }
+);
 </script>
 
 <style lang="scss" scoped>

@@ -266,18 +266,24 @@ const doctorImage = computed(() => {
   return getImageUrl(doctor.value?.photo, '/default-doctor.svg');
 });
 
-// Set meta tags
-useHead(() => ({
-  title: doctor.value ? `Dr. ${doctor.value.name} - ${doctor.value.specialization || 'Ayurvedic Practitioner'}` : 'Doctor Profile',
-  meta: [
-    {
-      name: 'description',
-      content: doctor.value 
-        ? `Consult with Dr. ${doctor.value.name}, a certified ${doctor.value.specialization || 'Ayurvedic'} practitioner with ${doctor.value.experience_years || 'several'} years of experience.`
-        : 'Expert doctor profile and consultation booking'
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!doctor.value) return null
+    return {
+      title: `Dr. ${doctor.value.name} - ${doctor.value.specialization || 'Ayurvedic Practitioner'}`,
+      description: truncateMeta(
+        doctor.value.bio ||
+        `Consult with Dr. ${doctor.value.name}, a certified ${doctor.value.specialization || 'Ayurvedic'} practitioner with ${doctor.value.experience_years || 'several'} years of experience.`
+      ),
+      keywords: `Dr. ${doctor.value.name}, ${doctor.value.specialization || 'ayurveda'}, ayurvedic doctor, consultation`,
+      path: `/doctors/${route.params.slug}`,
+      image: doctorImage.value,
+      ogType: 'profile',
     }
-  ]
-}));
+  },
+  { fallbackTitle: 'Doctor Profile', fallbackDescription: 'Consult with expert Ayurvedic practitioners for personalized wellness solutions.' }
+);
 
 // Methods
 const handleImageError = (event: Event) => {

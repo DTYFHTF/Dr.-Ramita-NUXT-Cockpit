@@ -396,11 +396,10 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `Terms of Service - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Terms of Service for ${brand.fullName}` }
-  ]
+usePageSeo({
+  title: 'Terms of Service',
+  description: `Terms of Service for ${brand.fullName} - Rules and guidelines governing use of our platform and services.`,
+  path: '/terms-of-service',
 })
 </script>
 

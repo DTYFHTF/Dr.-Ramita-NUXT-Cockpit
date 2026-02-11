@@ -222,6 +222,22 @@ const retryFetch = async () => {
   await refetch();
 };
 
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!yoga.value) return null
+    const tags = Array.isArray(yoga.value.tags) ? yoga.value.tags.join(', ') : (yoga.value.tags || '')
+    return {
+      title: `${yoga.value.title} - Yoga Practice`,
+      description: truncateMeta(stripHtml(yoga.value.short_description) || 'Discover this transformative yoga and meditation practice for mind-body wellness.'),
+      keywords: `${yoga.value.title}, yoga practice, meditation, ${tags}`,
+      path: `/blog/yoganmeditation/${route.params.slug}`,
+      image: yoga.value.coverImageUrl,
+      ogType: 'article',
+    }
+  },
+  { fallbackTitle: 'Yoga & Meditation', fallbackDescription: 'Discover yoga and meditation practices for holistic wellness.' }
+);
 
 </script>
 <style scoped lang="scss">

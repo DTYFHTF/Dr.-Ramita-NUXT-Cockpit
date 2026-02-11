@@ -123,7 +123,13 @@ const goToRecipesPage = () => navigateTo("blog/recipe");
 const goToHomeRemediesPage = () => navigateTo("blog/homeremedy");
 const goToEventsPage = () => navigateTo("/events");
 
-
+// SEO Meta Tags
+usePageSeo({
+  title: 'Wellness Hub - Courses, Yoga, Recipes & Events',
+  description: 'Explore our comprehensive wellness hub featuring Ayurvedic courses, yoga & meditation practices, healing recipes, natural home remedies, and wellness events.',
+  keywords: 'ayurveda courses, yoga meditation, ayurvedic recipes, home remedies, wellness events, holistic health, natural healing',
+  path: '/wellness',
+});
 
 </script>
 

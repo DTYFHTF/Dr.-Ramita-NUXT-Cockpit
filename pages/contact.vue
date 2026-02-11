@@ -227,11 +227,11 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `Contact Us - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Contact ${brand.fullName} for inquiries about Ayurvedic products, consultations, orders, or general questions. We're here to help!` }
-  ]
+usePageSeo({
+  title: 'Contact Us',
+  description: `Contact ${brand.fullName} for inquiries about Ayurvedic products, consultations, orders, or general questions.`,
+  keywords: 'contact us, support, customer service, inquiries, ayurveda help',
+  path: '/contact',
 })
 
 const formData = reactive({

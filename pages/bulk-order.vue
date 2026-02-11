@@ -173,18 +173,11 @@ definePageMeta({
   layout: 'auth'
 })
 
-useHead({
-  title: `Wholesale & Bulk Orders - ${brand.name}`,
-  meta: [
-    {
-      name: 'description',
-      content: 'Request wholesale pricing and bulk order quotations for authentic Ayurvedic products. Minimum 10 units per product with worldwide shipping available.'
-    },
-    {
-      name: 'keywords',
-      content: 'wholesale ayurveda, bulk orders, ayurvedic products wholesale, bulk purchase, wholesale inquiry'
-    }
-  ]
+usePageSeo({
+  title: 'Wholesale & Bulk Orders',
+  description: 'Request wholesale pricing and bulk order quotations for authentic Ayurvedic products. Minimum 10 units per product with worldwide shipping available.',
+  keywords: 'wholesale ayurveda, bulk orders, ayurvedic products wholesale, bulk purchase, wholesale inquiry',
+  path: '/bulk-order',
 })
 </script>
 

@@ -209,6 +209,22 @@ watch(remedyData, (val) => {
   });
   latestPosts.value = posts.value;
 }, { immediate: true });
+
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!remedy.value) return null
+    return {
+      title: `${remedy.value.disease_name || remedy.value.title} - Natural Remedy`,
+      description: truncateMeta(remedy.value.disease_description || 'Discover natural Ayurvedic remedies for holistic health and wellness.'),
+      keywords: `${remedy.value.disease_name}, ayurvedic remedy, ${(remedy.value.dosha || []).join(', ')}, natural healing`,
+      path: `/blog/homeremedy/${route.params.slug}`,
+      image: remedy.value.imageUrl,
+      ogType: 'article',
+    }
+  },
+  { fallbackTitle: 'Home Remedy', fallbackDescription: 'Discover natural Ayurvedic remedies for holistic health and wellness.' }
+);
 </script>
 
 <style scoped lang="scss">

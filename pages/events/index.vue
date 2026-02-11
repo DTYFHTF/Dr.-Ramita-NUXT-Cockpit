@@ -34,6 +34,14 @@ const eventsWithImages = computed(() => {
     slug: event.slug || event.id
   })) || [];
 });
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Wellness Events & Workshops - Join Our Community',
+  description: 'Join our Ayurvedic wellness events, workshops, and seminars. Learn from experts, connect with like-minded individuals, and deepen your wellness journey.',
+  keywords: 'ayurveda events, wellness workshops, ayurvedic seminars, health events, yoga workshops, meditation retreats',
+  path: '/events',
+});
 </script>
 
 

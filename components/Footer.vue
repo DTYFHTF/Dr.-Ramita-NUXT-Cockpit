@@ -140,8 +140,8 @@
       <!-- Footer Bottom -->
       <div class="footer-bottom">
         <p class="copyright">
-          {{ footerSettings?.copyright_text || brand.copyrightText }}
-        </p>
+            {{ brand.copyrightText || footerSettings?.copyright_text }}
+          </p>
         <div class="payment-methods">
           <span class="payment-label">We Accept:</span>
           <div class="payment-icons">

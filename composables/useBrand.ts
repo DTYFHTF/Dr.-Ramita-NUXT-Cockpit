@@ -8,33 +8,32 @@ export function useBrand() {
   return {
     // Brand Identity
     name: config.public.brandName || 'Rishipath',
-    fullName: config.public.brandFullName || 'Dr. Ramita - Rishipath',
-    companyName: config.public.brandCompanyName || 'Dr. Ramita Ayurveda Pvt. Ltd.',
-    tagline: config.public.brandTagline || 'Authentic Ayurvedic Wellness',
+    fullName: config.public.brandFullName || 'Rishipath',
+    companyName: config.public.brandCompanyName || 'Rishipath International Foundation',
+    tagline: config.public.brandTagline || 'Tapa | Svadhyaya | Dhyan',
     
     // Contact Information
-    email: config.public.brandEmail || 'drramita@rishipath.org',
+    email: config.public.brandEmail || 'contact@rishipath.org',
     supportEmail: config.public.brandSupportEmail || 'support@rishipath.org',
     ordersEmail: config.public.brandOrdersEmail || 'orders@rishipath.org',
     salesEmail: config.public.brandSalesEmail || 'sales@rishipath.org',
     
-    phone: config.public.brandPhone || '+91 98765 43210',
-    phoneDisplay: config.public.brandPhoneDisplay || '+91 987-654-3210',
+    phone: config.public.brandPhone || '+91 81974 62744',
+    phoneDisplay: config.public.brandPhoneDisplay || '+91 81974 62744',
     
     // Business Address
     address: {
-      street: config.public.brandAddressStreet || '',
-      city: config.public.brandAddressCity || 'Kathmandu',
-      state: config.public.brandAddressState || 'Bagmati',
-      country: config.public.brandAddressCountry || 'Nepal',
-      zip: config.public.brandAddressZip || '44600',
+      street: config.public.brandAddressStreet || 'RISHIPATH ASHRAM 1/162, Rishiteertham, Thammapuram',
+      city: config.public.brandAddressCity || 'Bengaluru',
+      state: config.public.brandAddressState || 'Karnataka',
+      country: config.public.brandAddressCountry || 'India',
+      zip: config.public.brandAddressZip || 'TN-635118',
     },
     
-    // Social Media
+    // Social Media (used by useSocialMedia composable)
     social: {
       facebook: config.public.brandFacebookUrl || '',
       instagram: config.public.brandInstagramUrl || '',
-      twitter: config.public.brandTwitterUrl || '',
       youtube: config.public.brandYoutubeUrl || '',
       linkedin: config.public.brandLinkedinUrl || '',
     },
@@ -52,8 +51,8 @@ export function useBrand() {
     },
     
     // Legal & Copyright
-    copyrightName: config.public.brandCopyrightName || 'Dr. Ramita Maharjan',
-    copyrightText: config.public.brandCopyrightText || `© ${new Date().getFullYear()} Dr. Ramita Maharjan. All rights reserved.`,
+    copyrightName: config.public.brandCopyrightName || 'Rishipath International Foundation',
+    copyrightText: config.public.brandCopyrightText || `© ${new Date().getFullYear()} Rishipath International Foundation. All rights reserved.`,
     
     // SEO
     metaDescription: config.public.brandMetaDescription || 'Authentic Ayurvedic products and wellness solutions',

@@ -206,11 +206,11 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `About Us - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Learn about ${brand.fullName} - Your trusted source for authentic Ayurvedic products, consultations, and wellness education.` }
-  ]
+usePageSeo({
+  title: 'About Us',
+  description: `Learn about ${brand.fullName} - Your trusted source for authentic Ayurvedic products, consultations, and wellness education.`,
+  keywords: 'about us, ayurveda, mission, values, team, wellness company',
+  path: '/about',
 })
 </script>
 

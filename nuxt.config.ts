@@ -127,6 +127,13 @@ export default defineNuxtConfig({
       baseUrl: process.env.NUXT_LARAVEL_BASE_URL,
       cockpitToken: process.env.NUXT_COCKPIT_TOKEN,
       razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID,
+      // Note: NUXT_PUBLIC_* env vars are auto-exposed by Nuxt 3
+      // e.g., NUXT_PUBLIC_BRAND_NAME → config.public.brandName (no manual mapping needed)
+      // However, social URLs need explicit mapping (conversion issue with underscores)
+      brandFacebookUrl: process.env.NUXT_PUBLIC_BRAND_FACEBOOK_URL,
+      brandInstagramUrl: process.env.NUXT_PUBLIC_BRAND_INSTAGRAM_URL,
+      brandYoutubeUrl: process.env.NUXT_PUBLIC_BRAND_YOUTUBE_URL,
+      brandLinkedinUrl: process.env.NUXT_PUBLIC_BRAND_LINKEDIN_URL,
     }
   },
   nitro: {

@@ -385,11 +385,10 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `Privacy Policy - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Privacy Policy for ${brand.fullName}` }
-  ]
+usePageSeo({
+  title: 'Privacy Policy',
+  description: `Privacy Policy for ${brand.fullName} - How we collect, use, and protect your personal data.`,
+  path: '/privacy-policy',
 })
 </script>
 

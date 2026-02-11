@@ -38,4 +38,12 @@ watch(coursesData, (val) => {
 const coursesWithImages = computed(() => courses.value);
 const coursesLoading = loading;
 const coursesError = error;
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Ayurveda Courses - Learn Ancient Wisdom',
+  description: 'Explore comprehensive Ayurveda courses taught by expert practitioners. Learn ancient wisdom, holistic healing, wellness practices, and traditional medicine from certified instructors.',
+  keywords: 'ayurveda courses, wellness education, ayurvedic training, holistic health courses, traditional medicine classes, online ayurveda learning',
+  path: '/courses',
+});
 </script>

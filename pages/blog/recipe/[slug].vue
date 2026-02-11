@@ -142,6 +142,21 @@ watch(recipeData, (val) => {
   };
 }, { immediate: true });
 
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!recipe.value) return null
+    return {
+      title: `${recipe.value.title} - Ayurvedic Recipe`,
+      description: truncateMeta(stripHtml(recipe.value.description) || 'Discover this traditional Ayurvedic recipe for healing and wellness.'),
+      keywords: `${recipe.value.title}, ayurvedic recipe, ${recipe.value.category || 'traditional cooking'}, healing food`,
+      path: `/blog/recipe/${route.params.slug}`,
+      image: recipe.value.imageUrl,
+      ogType: 'article',
+    }
+  },
+  { fallbackTitle: 'Ayurvedic Recipe', fallbackDescription: 'Discover traditional Ayurvedic recipes for healing and wellness.' }
+);
 
 </script>
 

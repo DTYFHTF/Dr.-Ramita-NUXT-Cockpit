@@ -159,11 +159,10 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `Return & Refund Policy - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Return and Refund Policy for ${brand.fullName}` }
-  ]
+usePageSeo({
+  title: 'Return & Refund Policy',
+  description: `Return and Refund Policy for ${brand.fullName} - Learn about our return process, refund timelines, and exchange policies.`,
+  path: '/return-policy',
 })
 </script>
 

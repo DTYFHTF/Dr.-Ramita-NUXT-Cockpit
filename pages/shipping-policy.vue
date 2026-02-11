@@ -167,11 +167,10 @@ definePageMeta({
   layout: 'default',
 })
 
-useHead({
-  title: `Shipping Policy - ${brand.fullName}`,
-  meta: [
-    { name: 'description', content: `Shipping Policy for ${brand.fullName}` }
-  ]
+usePageSeo({
+  title: 'Shipping Policy',
+  description: `Shipping Policy for ${brand.fullName} - Delivery timelines, shipping charges, and available regions.`,
+  path: '/shipping-policy',
 })
 </script>
 

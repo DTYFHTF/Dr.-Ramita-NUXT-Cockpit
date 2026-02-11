@@ -53,6 +53,14 @@ definePageMeta({
   description: 'Browse our expert Ayurvedic doctors and book consultations'
 });
 
+// SEO Meta Tags
+usePageSeo({
+  title: 'Our Ayurvedic Doctors - Expert Consultations',
+  description: 'Browse our expert Ayurvedic doctors and practitioners. Book personalized consultations for holistic health, wellness guidance, and traditional Ayurvedic treatments.',
+  keywords: 'ayurvedic doctors, ayurveda consultation, holistic health practitioners, wellness experts, traditional medicine',
+  path: '/doctors',
+});
+
 const doctorStore = useDoctorStore();
 const loading = ref(true);
 const error = ref<Error | null>(null);

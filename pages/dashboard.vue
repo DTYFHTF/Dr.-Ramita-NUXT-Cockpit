@@ -782,6 +782,14 @@ const saveAddress = async () => {
     }, 5000)
   }
 }
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'My Dashboard',
+  description: 'Manage your account, view orders, track shipments, and access personalized wellness recommendations.',
+  path: '/dashboard',
+  robots: 'noindex, nofollow',
+});
 </script>
 
 <style scoped lang="scss">

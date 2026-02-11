@@ -14,6 +14,14 @@ import OrdersSection from '@/components/dashboard/OrdersSection.vue'
 definePageMeta({
   middleware: 'auth'
 })
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'My Orders',
+  description: 'View and track your orders for Ayurvedic products. Access order history, shipment tracking, and order details.',
+  path: '/orders',
+  robots: 'noindex, nofollow',
+});
 </script>
 
 <style scoped>

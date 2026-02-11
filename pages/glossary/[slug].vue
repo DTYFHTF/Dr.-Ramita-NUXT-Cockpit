@@ -100,6 +100,21 @@ const toggleDetails = () => {
   detailsExpanded.value = !detailsExpanded.value;
 };
 
+// SEO Meta Tags
+useDynamicSeo(
+  () => {
+    if (!termData.value) return null
+    return {
+      title: `${termData.value.title} - Glossary Term`,
+      description: truncateMeta(stripHtml(termData.value.excerpt) || `Learn about ${termData.value.title} - yoga and wellness terminology.`),
+      keywords: `${termData.value.title}, ${termData.value.category || 'yoga'}, wellness term, sanskrit, ayurveda`,
+      path: `/glossary/${route.params.slug}`,
+      ogType: 'article',
+    }
+  },
+  { fallbackTitle: 'Glossary Term', fallbackDescription: 'Explore yoga and wellness terminology.' }
+);
+
 const toggleAccordion = (index: number) => {
   expandedIndex.value = expandedIndex.value === index ? null : index;
 };

@@ -151,26 +151,24 @@ const uniqueCategories = computed(() => {
 });
 
 const filteredGroups = computed(() => {
-  const groups: { [key: string]: GlossaryTerm[] } = {};
+  return alphabet.reduce((acc, letter) => {
+    const terms = filteredTerms.value.filter((term: GlossaryTerm) => {
+      const firstLetter = term.title.charAt(0).toUpperCase();
+      return firstLetter === letter;
+    });
+    if (terms.length > 0) {
+      acc[letter] = terms;
+    }
+    return acc;
+  }, {} as Record<string, GlossaryTerm[]>);
+});
 
-  filteredTerms.value.forEach(term => {
-    const letter = term.title[0].toUpperCase();
-    if (!groups[letter]) groups[letter] = [];
-    groups[letter].push(term);
-  });
-
-  // Sort terms within each group alphabetically
-  Object.keys(groups).forEach(letter => {
-    groups[letter].sort((a, b) => a.title.localeCompare(b.title));
-  });
-
-  // Sort groups alphabetically by their keys
-  return Object.keys(groups)
-    .sort()
-    .reduce((sortedGroups, key) => {
-      sortedGroups[key] = groups[key];
-      return sortedGroups;
-    }, {} as { [key: string]: GlossaryTerm[] });
+// SEO Meta Tags
+usePageSeo({
+  title: 'Yoga & Wellness Glossary - 1000+ Terms Defined',
+  description: 'Comprehensive glossary of 1000+ yoga and wellness terms. Learn Sanskrit terminology, Ayurvedic concepts, yoga poses, and holistic health definitions from A to Z.',
+  keywords: 'yoga glossary, ayurveda terms, sanskrit dictionary, wellness vocabulary, yoga terminology, asana definitions, pranayama terms',
+  path: '/glossary',
 });
 
 // Methods

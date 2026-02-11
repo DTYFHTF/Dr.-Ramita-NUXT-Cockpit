@@ -61,4 +61,12 @@ const recipesWithImages = computed(() => {
 
 const recipesLoading = loading;
 const recipesError = error;
+
+// SEO Meta Tags
+usePageSeo({
+  title: 'Ayurvedic Recipes - Healing Foods & Traditional Cooking',
+  description: 'Discover authentic Ayurvedic recipes for healing and wellness. Traditional cooking methods, seasonal ingredients, and dosha-balancing meals for holistic health.',
+  keywords: 'ayurvedic recipes, healing foods, traditional cooking, dosha balancing recipes, seasonal ayurvedic meals, sattvic recipes',
+  path: '/blog/recipe',
+});
 </script>
