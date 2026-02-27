@@ -1,0 +1,94 @@
+name: Deploy Web → rishipath.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:           # Allow manual trigger from GitHub UI
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: false    # Never cancel a running deploy
+
+jobs:
+  deploy:
+    name: Build & Deploy Nuxt
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ─────────────────────────────────────
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Install dependencies ───────────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── 4. Write production .env ─────────────────────────────
+      # Store the full .env content in the NUXT_ENV_FILE GitHub Secret.
+      # This avoids managing 20+ individual secrets.
+      - name: Write production .env
+        run: echo "${{ secrets.NUXT_ENV_FILE }}" > .env
+
+      # ── 5. Build Nuxt for production ──────────────────────────
+      - name: Build Nuxt
+        run: NODE_ENV=production npm run build
+
+      # ── 6. Setup SSH ─────────────────────────────────────────
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      # ── 7. Upload build output to server ─────────────────────
+      - name: Upload .output via rsync
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./.output/ "rishipa2@${{ secrets.DEPLOY_HOST }}:/home/rishipa2/public_applications/.output/"
+
+      - name: Upload server.js + package.json
+        run: |
+          rsync -az \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./server.js ./package.json \
+            "rishipa2@${{ secrets.DEPLOY_HOST }}:/home/rishipa2/public_applications/"
+
+      - name: Upload public/ assets
+        run: |
+          rsync -az --delete \
+            --exclude='*.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./public/ "rishipa2@${{ secrets.DEPLOY_HOST }}:/home/rishipa2/public_applications/public/"
+
+      # ── 8. Restart Node.js app on server ─────────────────────
+      - name: Restart Node.js app
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            "rishipa2@${{ secrets.DEPLOY_HOST }}" bash << 'REMOTE'
+          set -e
+          source ~/nodevenv/public_applications/20/bin/activate
+          cd ~/public_applications
+
+          # Install/update prod dependencies (only if package.json changed)
+          npm install --omit=dev --no-audit 2>&1 | tail -3
+
+          # Restart via cloudlinux-selector
+          /usr/sbin/cloudlinux-selector restart --json --interpreter nodejs \
+            --app-root public_applications 2>&1 || (
+            /usr/sbin/cloudlinux-selector stop   --json --interpreter nodejs --app-root public_applications 2>&1
+            sleep 2
+            /usr/sbin/cloudlinux-selector start  --json --interpreter nodejs --app-root public_applications 2>&1
+          )
+
+          echo "✓ rishipath.com deploy complete"
+          REMOTE
