@@ -20,11 +20,14 @@ export const useImageUrl = () => {
       return imageUrl.replace('http://', 'https://');
     }
     
-    // If it's a relative URL, prepend base URL
+    // If it's a relative URL, prepend storage URL
+    // Laravel stores file paths relative to the storage disk (e.g., "homepage-sections/banners/foo.png")
+    // which are served at /storage/ on the API domain
     const baseUrl = (config.public.baseUrl as string || 'https://ayurveda-marketplace.test').replace(/\/$/, '');
+    const storageUrl = `${baseUrl}/storage`;
     const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
     
-    return `${baseUrl}${cleanPath}`.replace('http://', 'https://');
+    return `${storageUrl}${cleanPath}`.replace('http://', 'https://');
   };
   
   /**
