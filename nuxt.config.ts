@@ -52,7 +52,6 @@ export default defineNuxtConfig({
       }
     },
     server: {
-      allowedHosts: ["74b8-152-58-194-75.ngrok-free.app"],
       hmr: {
         overlay: true
       }
@@ -137,17 +136,9 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
-    // Disable SSL verification for local development with .test domains
     experimental: {
       nodeFetch: true
     },
-    routeRules: {
-      '/**': {
-        headers: {
-          'NODE_TLS_REJECT_UNAUTHORIZED': '0'
-        }
-      }
-    }
   },
   hooks: {
     // Disable SSL certificate verification for .test domains in development
