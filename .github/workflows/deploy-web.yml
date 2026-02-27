@@ -2,7 +2,7 @@ name: Deploy Web → rishipath.com
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:           # Allow manual trigger from GitHub UI
 
 concurrency:
@@ -14,6 +14,7 @@ jobs:
     name: Build & Deploy Nuxt
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: Rishipath   # reads DEPLOY_HOST + DEPLOY_SSH_PRIVATE_KEY from the Rishipath environment
 
     steps:
       # ── 1. Checkout ──────────────────────────────────────────
