@@ -124,10 +124,8 @@ export default defineNuxtConfig({
       // Keys here are runtime-overridable via NUXT_PUBLIC_<KEY> env vars (uppercase).
       // e.g. apiBase → NUXT_PUBLIC_API_BASE, baseUrl → NUXT_PUBLIC_BASE_URL
       // Set defaults here for local dev; production values come from server .env.
-      cockpitUrl: process.env.NUXT_PUBLIC_COCKPIT_URL ?? process.env.NUXT_COCKPIT_URL ?? '',
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? process.env.NUXT_LARAVEL_API_URL ?? '',
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL ?? process.env.NUXT_LARAVEL_BASE_URL ?? '',
-      cockpitToken: process.env.NUXT_PUBLIC_COCKPIT_TOKEN ?? process.env.NUXT_COCKPIT_TOKEN ?? '',
       razorpayKeyId: process.env.NUXT_PUBLIC_RAZORPAY_KEY_ID ?? process.env.NUXT_RAZORPAY_KEY_ID ?? '',
       // Note: NUXT_PUBLIC_* env vars are auto-exposed by Nuxt 3 at runtime.
       // Social URLs need explicit mapping (conversion issue with underscores in key names)
